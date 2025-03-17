@@ -294,7 +294,7 @@ a:hover {
 #output {
   font-size: 14px;
 }
-#output b.log-red {
+#output .log-red {
   background: #c00;
   color: #fff;
 }

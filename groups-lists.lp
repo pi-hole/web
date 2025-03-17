@@ -46,7 +46,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <strong>Hints:</strong>
                 <ol>
                     <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your lists.</li>
-                    <li>Multiple lists can be added by separating each <i>unique</i> URL with a space or comma</li>
+                    <li>Multiple lists can be added by separating each <em>unique</em> URL with a space or comma</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">

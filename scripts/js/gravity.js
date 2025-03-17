@@ -11,20 +11,11 @@ function eventsource() {
   var alSuccess = $("#alSuccess");
   var ta = $("#output");
 
-  // https://caniuse.com/fetch - everything except IE
-  // This is fine, as we dropped support for IE a while ago
-  if (typeof fetch !== "function") {
-    ta.show();
-    ta.html("Updating lists of ad-serving domains is not supported with this browser!");
-    return;
-  }
-
   ta.html("");
   ta.show();
   alInfo.show();
   alSuccess.hide();
 
-  // eslint-disable-next-line compat/compat
   fetch(apiUrl + "/action/gravity", {
     method: "POST",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },

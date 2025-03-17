@@ -1094,10 +1094,6 @@ table.dataTable tbody > tr > .selected {
   padding: 5px;
 }
 
-.faint-border {
-  border-color: rgba(127, 127, 127, 0.1);
-}
-
 .pre-scrollable {
   /* use dynamic unit to account for mobile browser interface height */
   max-height: max(195px, 100dvh - 170px);

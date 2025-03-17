@@ -22,7 +22,7 @@
     "xo:check": "npm run xo",
     "xo:fix": "npm run xo -- --fix",
     "test": "npm run prettier:check && npm run xo:check",
-    "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
+    "testpr": "npm run prefix && npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
   },
   "dependencies": {
     "admin-lte": "2.4.18",
@@ -53,16 +53,19 @@
     "waitme": "1.19.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "eslint-plugin-compat": "^6.0.2",
     "postcss": "^8.5.3",
-    "postcss-cli": "^11.0.0",
+    "postcss-cli": "^11.0.1",
     "prettier": "^3.5.3",
     "xo": "^0.60.0"
   },
   "browserslist": [
-    "defaults",
-    "not IE 11"
+    ">= 0.5%",
+    "last 2 major versions",
+    "not dead",
+    "not op_mini all",
+    "Firefox ESR"
   ],
   "prettier": {
     "arrowParens": "avoid",

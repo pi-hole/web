@@ -20,13 +20,6 @@ function importZIP() {
     return;
   }
 
-  // https://caniuse.com/fetch - everything except IE
-  // This is fine, as we dropped support for IE a while ago
-  if (typeof fetch !== "function") {
-    alert("Importing Tricorder files is not supported with this browser!");
-    return;
-  }
-
   // Get the selected import options
   const imports = {},
     gravity = {};
@@ -44,7 +37,6 @@ function importZIP() {
   const formData = new FormData();
   formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
-  // eslint-disable-next-line compat/compat
   fetch(apiUrl + "/teleporter", {
     method: "POST",
     body: formData,
@@ -93,14 +85,14 @@ $("#GETTeleporter").on("click", function () {
     },
     success: function (data, status, xhr) {
       var a = document.createElement("a");
-      // eslint-disable-next-line compat/compat
       var url = globalThis.URL.createObjectURL(data);
+
       a.href = url;
       a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];
       document.body.append(a);
       a.click();
       a.remove();
-      // eslint-disable-next-line compat/compat
+
       globalThis.URL.revokeObjectURL(url);
     },
   });

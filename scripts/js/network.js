@@ -181,7 +181,7 @@ $(function () {
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
         $("td:eq(1)", row).html(
-          utils.escapeHtml(data.hwaddr) + "<br/>" + utils.escapeHtml(data.macVendor)
+          utils.escapeHtml(data.hwaddr) + "<br>" + utils.escapeHtml(data.macVendor)
         );
       }
 

@@ -535,6 +535,11 @@ p.login-box-msg,
   z-index: 1000;
 }
 
+.dropdown.bootstrap-select {
+  border: none;
+  background: none;
+}
+
 .bootstrap-select > .dropdown-toggle.bs-placeholder,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:active,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:focus {
@@ -608,14 +613,6 @@ p.login-box-msg,
 
 .navbar-custom-menu > .navbar-nav > li {
   flex: 1 1 auto;
-}
-
-#pihole-diagnosis {
-  min-width: 50px;
-}
-
-#pihole-diagnosis svg {
-  font-size: 28px;
 }
 
 .warning-count {
@@ -1022,17 +1019,12 @@ p.login-box-msg,
   margin-top: 20px;
 }
 
-.user-panel .fa-circle path {
-  stroke: rgba(0, 0, 0, 0.5);
-  stroke-width: 5%;
+.user-panel > .info i {
+  text-shadow: 0 0 1px black;
 }
 
-.user-panel .svg-inline--fa {
-  margin-right: 2px;
-}
-
-.user-panel svg.text-orange,
-.user-panel svg.text-red {
+.user-panel > .info i.text-orange,
+.user-panel > .info i.text-red {
   animation: fire 1s ease-in-out 0s infinite;
 }
 
@@ -1155,7 +1147,7 @@ footer a:focus {
   box-shadow: none;
 }
 
-.sidebar-collapse .sidebar-menu svg {
+.sidebar-collapse .sidebar-menu i {
   display: block;
 }
 
@@ -2077,11 +2069,6 @@ td.highlight {
 .small-box .icon,
 .select2-selection__clear {
   font-family: sans-serif;
-}
-
-/*** size correction to fit in one line - Settings/DNS ***/
-#dns .col-md-11 {
-  width: 84%;
 }
 
 /*** add style to the information/about dropdown ***/
