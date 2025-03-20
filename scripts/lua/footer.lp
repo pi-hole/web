@@ -47,6 +47,29 @@ end
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Modal for are you sure ? -->
+    <div class="modal fade" id="areYouSureModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="vertical-center">
+                        <i class="fa fa-link o-50 mr-3"
+                            title="This is an external link"></i>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Return</button>
+                    <button type="button" id="pihole-disable-custom" class="btn btn-primary" data-dismiss="modal">I want to go there</button>
+                </div>
+            </div>
+        </div>
     </div> <!-- /.content-wrapper -->
 
     <footer class="main-footer">
