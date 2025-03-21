@@ -96,7 +96,7 @@ mg.include('scripts/lua/header.lp','r')
                                     a new password (or explicitly disable the password by setting an empty password)
                                     using the command
                                 </p>
-                                <pre>sudo pihole setpassword</pre>
+                                <pre>pihole setpassword</pre>
                             </div>
                         </div>
                     </div>
