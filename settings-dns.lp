@@ -99,7 +99,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             rate-limited clients are short-circuited at the same time.</p>
                         <p>Rate-limiting may be disabled altogether by setting both
                             values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
+                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener" target="_blank">our documentation</a>
                             for further details.</p>
                     </div>
                 </div>
@@ -144,7 +144,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     in your router!) they are safe to use.</p>
                             </div>
                         </div>
-                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
+                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" rel="noopener" target="_blank">our documentation</a> for further technical details.</p>
                     </div>
                 </div>
             </div>

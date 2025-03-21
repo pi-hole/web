@@ -72,7 +72,7 @@ mg.include('scripts/lua/header.lp','r')
                             </div>
                             <div class="box-body">
                                 <p>Your Pi-hole has two-factor authentication enabled. You have to
-                                    enter a valid <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm" target="_blank">TOTP</a>
+                                    enter a valid <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm" rel="noopener" target="_blank">TOTP</a>
                                     token in addition to your password. You see this message because your
                                     token was incorrect or has already expired.</p>
                             </div>
@@ -104,9 +104,9 @@ mg.include('scripts/lua/header.lp','r')
             </div>
             <!-- /.login-card-body -->
             <div class="login-footer" style="margin-top: 15px; display: flex; justify-content: space-between;">
-                <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" rel="noopener" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
             </div>
         </div>
     </section>

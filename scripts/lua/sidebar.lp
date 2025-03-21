@@ -259,7 +259,7 @@
                 <!-- Donate button -->
                 <li class="header text-uppercase">Donate</li>
                 <li class="menu-donate">
-                    <a href="https://pi-hole.net/donate/" target="_blank">
+                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
                         <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
                     </a>
                 </li>
