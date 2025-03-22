@@ -4,6 +4,7 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
+/* global apiUrl: false */
 
 function eventsource() {
   var alInfo = $("#alInfo");
@@ -15,7 +16,7 @@ function eventsource() {
   alInfo.show();
   alSuccess.hide();
 
-  fetch("/api/action/gravity", {
+  fetch(apiUrl + "/action/gravity", {
     method: "POST",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
   })

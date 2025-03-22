@@ -22,7 +22,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
+<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in" data-apiurl="<?=pihole.api_url()?>">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -39,7 +39,7 @@ mg.include('header.lp','r')
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="<?=pihole.webhome()?>" class="logo">
+        <a href="<?=webhome?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<strong>h</strong></span>
             <!-- logo for regular state and mobile devices -->
@@ -68,7 +68,7 @@ mg.include('header.lp','r')
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img class="logo-img" src="<?=pihole.webhome()?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
+                                <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
                                 <p>
                                     Open Source Ad Blocker
                                 </p>

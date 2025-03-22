@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
+/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false, apiUrl: false */
 
 var nextID = 0;
 var lastPID = -1;
@@ -84,7 +84,7 @@ function getData() {
   }
 
   $.ajax({
-    url: "/api/logs/" + GETDict.file + "?nextID=" + nextID,
+    url: apiUrl + "/logs/" + GETDict.file + "?nextID=" + nextID,
     timeout: 5000,
     method: "GET",
   })

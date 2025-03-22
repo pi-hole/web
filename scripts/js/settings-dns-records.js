@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Precord see LICENSE file for your rights under this license. */
 
-/* global utils: false, apiFailure:false, setConfigValues: false */
+/* global utils: false, apiUrl: false, apiFailure:false, setConfigValues: false */
 
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
@@ -156,7 +156,7 @@ function deleteRecord() {
 function delHosts(elem) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting DNS record...", elem);
-  const url = "/api/config/dns/hosts/" + encodeURIComponent(elem);
+  const url = apiUrl + "/config/dns/hosts/" + encodeURIComponent(elem);
 
   $.ajax({
     url: url,
@@ -183,7 +183,7 @@ function delHosts(elem) {
 function delCNAME(elem) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting local CNAME record...", elem);
-  const url = "/api/config/dns/cnameRecords/" + encodeURIComponent(elem);
+  const url = apiUrl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
 
   $.ajax({
     url: url,
@@ -216,7 +216,7 @@ $(document).ready(function () {
   $("#btnAdd-host").on("click", function () {
     utils.disableAll();
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();
-    const url = "/api/config/dns/hosts/" + encodeURIComponent(elem);
+    const url = apiUrl + "/config/dns/hosts/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
       url: url,
@@ -242,7 +242,7 @@ $(document).ready(function () {
     var elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
     var ttlVal = parseInt($("#Cttl").val(), 10);
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
-    const url = "/api/config/dns/cnameRecords/" + encodeURIComponent(elem);
+    const url = apiUrl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
       url: url,

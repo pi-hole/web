@@ -5,11 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils */
+/* global utils: false, apiUrl: false */
 
 $(function () {
   $.ajax({
-    url: "/api/network/gateway",
+    url: apiUrl + "/network/gateway",
     data: { detailed: true },
   }).done(function (data) {
     var intl = new Intl.NumberFormat();

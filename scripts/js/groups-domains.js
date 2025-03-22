@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, apiUrl:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
@@ -91,7 +91,7 @@ function initTable() {
   table = $("#domainsTable").DataTable({
     processing: true,
     ajax: {
-      url: "/api/domains",
+      url: apiUrl + "/domains",
       dataSrc: "domains",
       type: "GET",
     },
@@ -507,7 +507,7 @@ function addDomain() {
   const type = action === "add_deny" ? "deny" : "allow";
 
   $.ajax({
-    url: "/api/domains/" + type + "/" + kind,
+    url: apiUrl + "/domains/" + type + "/" + kind,
     method: "post",
     dataType: "json",
     processData: false,
@@ -596,7 +596,7 @@ function editDomain() {
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
   utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
-    url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
+    url: apiUrl + "/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
     method: "put",
     dataType: "json",
     processData: false,
