@@ -1583,3 +1583,9 @@ textarea.field-sizing-content {
   line-height: 0.5em;
   font-size: 1.7em;
 }
+
+#logout-button {
+  color: inherit;
+  padding: 6px 0;
+  text-decoration: none;
+}

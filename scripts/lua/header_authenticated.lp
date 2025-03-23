@@ -86,7 +86,7 @@ mg.include('header.lp','r')
                                 <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
                                 <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa-solid fa-rocket"></i> Pi-hole Releases</a>
                                 <? if pihole.needLogin() then ?>
-                                <a class="btn-link" href="#" id="logout-button"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</a>
+                                <button type="button" id="logout-button" class="btn-link"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</button>
                                 <? end ?>
                             </li>
                         </ul>
