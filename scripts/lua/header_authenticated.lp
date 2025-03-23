@@ -48,11 +48,10 @@ mg.include('header.lp','r')
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle-svg" data-toggle="push-menu" role="button">
+            <button class="sidebar-toggle-svg" data-toggle="push-menu" aria-label="Toggle Navigation">
                 <i aria-hidden="true" class="fa fa-angle-double-left"></i>
-                <span class="sr-only">Toggle navigation</span>
                 <span class="warning-count hidden" id="top-warning-count"></span>
-            </a>
+            </button>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li<? if string.len(hostname) == 0 then ?> class="hidden"<? end ?>>

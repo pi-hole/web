@@ -414,7 +414,8 @@ tfoot.add-new-item > tr > th {
   position: relative;
   color: #fff;
   float: left;
-  background: none;
+  background-color: transparent;
+  border: none;
   padding: 15px;
   width: 50px;
   text-align: center;
