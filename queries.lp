@@ -154,7 +154,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <h3 class="box-title">Recent Queries</h3>
                 <div class="pull-right align-click-options">
                     <span><input type="checkbox" id="live"><label for="live">Live update</label></span>
-                    <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat">Refresh</a>
+                    <button type="button" id="refresh" class="btn btn-sm btn-info btn-flat">Refresh</button>
                 </div>
             </div>
             <!-- /.box-header -->
