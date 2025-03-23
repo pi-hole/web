@@ -584,7 +584,9 @@ $(function () {
       const dnssec = parseDNSSEC(data);
 
       // Remove HTML from querystatus.fieldtext
-      var rawtext = $("<div/>").html(querystatus.fieldtext).text();
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = querystatus.fieldtext;
+      const rawtext = utils.escapeHtml(tempDiv.textContent || "");
 
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
