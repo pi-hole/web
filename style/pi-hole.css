@@ -1588,4 +1588,7 @@ textarea.field-sizing-content {
   color: inherit;
   padding: 6px 0;
   text-decoration: none;
+  width: 100%;
+  text-align: inherit;
+  border: none;
 }
