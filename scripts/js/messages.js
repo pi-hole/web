@@ -6,6 +6,9 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils: false */
+
+"use strict";
+
 let table;
 const toasts = {};
 

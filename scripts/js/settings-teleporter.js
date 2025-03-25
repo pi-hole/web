@@ -7,6 +7,8 @@
 
 /* global utils:false */
 
+"use strict";
+
 // Add event listener to import button
 document.getElementById("submit-import").addEventListener("click", () => {
   importZIP();

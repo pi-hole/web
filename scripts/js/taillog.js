@@ -7,6 +7,8 @@
 
 /* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
 
+"use strict";
+
 let nextID = 0;
 let lastPID = -1;
 

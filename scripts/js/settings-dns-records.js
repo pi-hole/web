@@ -7,6 +7,8 @@
 
 /* global utils: false, apiFailure:false, setConfigValues: false */
 
+"use strict";
+
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
