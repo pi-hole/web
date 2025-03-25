@@ -7,6 +7,8 @@
 
 /* global apiFailure:false, utils:false, initTable:false, updateFtlInfo:false */
 
+"use strict";
+
 let groups = [];
 
 function populateGroupSelect(selectEl) {

@@ -7,6 +7,8 @@
 
 /* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
 
+"use strict";
+
 let table;
 
 function handleAjaxError(xhr, textStatus) {

@@ -7,6 +7,8 @@
 
 /* global utils:false */
 
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-button");
   const logoutUrl = document.body.dataset.webhome + "login";

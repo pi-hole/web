@@ -7,6 +7,8 @@
 
 /* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
+"use strict";
+
 let hostinfoTimer = null;
 let cachePieChart = null;
 let cacheSize = 0;

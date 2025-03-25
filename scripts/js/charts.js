@@ -7,6 +7,8 @@
 
 /* global upstreams:false */
 
+"use strict";
+
 // eslint-disable-next-line no-unused-vars
 const THEME_COLORS = [
   "#f56954",

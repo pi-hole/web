@@ -5,6 +5,8 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
+"use strict";
+
 // This code has been taken from
 // https://datatables.net/plug-ins/sorting/ip-address
 // and was modified by the Pi-hole team to support

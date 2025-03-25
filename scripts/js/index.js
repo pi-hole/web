@@ -7,6 +7,8 @@
 
 /* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
 
+"use strict";
+
 // Define global variables
 let timeLineChart;
 let clientsChart;

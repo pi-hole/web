@@ -7,6 +7,8 @@
 
 /* global utils:false, apiFailure:false*/
 
+"use strict";
+
 $(() => {
   // Handle hiding of alerts
   $("[data-hide]").on("click", function () {

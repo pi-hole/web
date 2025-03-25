@@ -8,6 +8,8 @@
 /* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
+"use strict";
+
 let table;
 let GETDict = {};
 

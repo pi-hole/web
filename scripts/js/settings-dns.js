@@ -7,6 +7,8 @@
 
 /* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
 
+"use strict";
+
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
   let found = arr.indexOf(what);
@@ -99,9 +101,9 @@ function fillDNSupstreams(value, servers) {
   applyCheckboxRadioStyle();
 }
 
-function setInterfaceName(interface) {
-  $("#interface-name-1").text(interface);
-  $("#interface-name-2").text(interface);
+function setInterfaceName(name) {
+  $("#interface-name-1").text(name);
+  $("#interface-name-2").text(name);
 }
 
 // Update the textfield with all (incl. custom) upstream servers

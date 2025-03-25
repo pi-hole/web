@@ -7,6 +7,8 @@
 
 /* global utils:false, apiFailure:false */
 
+"use strict";
+
 let tableApi;
 
 // How many IPs do we show at most per device?

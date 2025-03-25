@@ -7,6 +7,8 @@
 
 /* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
+"use strict";
+
 $(() => {
   // CSRF protection for AJAX requests, this has to be configured globally
   // because we are using the jQuery $.ajax() function directly in some cases

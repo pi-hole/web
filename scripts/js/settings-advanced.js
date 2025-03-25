@@ -8,6 +8,8 @@
 /* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false, saveSettings:false */
 /* exported createDynamicConfigTabs */
 
+"use strict";
+
 function addAllowedValues(allowed) {
   if (typeof allowed === "object") {
     return (
