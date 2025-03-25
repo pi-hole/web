@@ -7,6 +7,8 @@
 
 /* global utils:false, moment:false */
 
+"use strict";
+
 globalThis._isLoginPage = false;
 
 const REFRESH_INTERVAL = {

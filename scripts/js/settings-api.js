@@ -7,6 +7,8 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
 
+"use strict";
+
 let apiSessionsTable = null;
 let ownSessionID = null;
 let deleted = 0;

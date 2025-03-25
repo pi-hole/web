@@ -75,6 +75,9 @@
     "trailingComma": "es5"
   },
   "xo": {
+    "parserOptions": {
+      "sourceType": "script"
+    },
     "envs": [
       "browser",
       "jquery"
@@ -82,10 +85,6 @@
     "extends": [
       "plugin:compat/recommended"
     ],
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "script"
-    },
     "prettier": true,
     "space": 2,
     "ignores": [
@@ -109,6 +108,7 @@
       "no-console": "error",
       "prefer-arrow-callback": "error",
       "spaced-comment": "off",
+      "strict": "error",
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
       "unicorn/no-negated-condition": "off",

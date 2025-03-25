@@ -7,6 +7,8 @@
 
 /* global utils:false, NProgress:false */
 
+"use strict";
+
 globalThis._isLoginPage = true;
 
 function redirect() {

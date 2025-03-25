@@ -7,6 +7,8 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false */
 
+"use strict";
+
 let dhcpLeaesTable = null;
 const toasts = {};
 
