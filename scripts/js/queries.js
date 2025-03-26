@@ -568,8 +568,8 @@ $(function () {
       { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
-      [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"],
+      [10, 25, 50, 100, 500, 1000],
+      [10, 25, 50, 100, 500, 1000],
     ],
     stateSave: true,
     stateDuration: 0,
