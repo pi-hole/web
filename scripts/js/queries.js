@@ -590,7 +590,7 @@ $(function () {
             " " +
             querystatus.colorClass +
             "' title='" +
-            querystatus.fieldtext +
+            utils.escapeHtml(querystatus.fieldtext) +
             "'></i>"
         );
       } else if (querystatus.colorClass !== false) {
