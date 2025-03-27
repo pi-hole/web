@@ -530,16 +530,9 @@ function getCSSval(cssclass, cssproperty) {
   return val;
 }
 
-function parseQueryString(queryString = globalThis.location.search) {
-  const GETDict = {};
-  queryString
-    .substr(1)
-    .split("&")
-    .forEach(function (item) {
-      GETDict[item.split("=")[0]] = decodeURIComponent(item.split("=")[1]);
-    });
-
-  return GETDict;
+function parseQueryString() {
+  const params = new URLSearchParams(globalThis.location.search);
+  return Object.fromEntries(params.entries());
 }
 
 // https://stackoverflow.com/q/21647928
