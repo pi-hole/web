@@ -583,9 +583,6 @@ $(function () {
       var querystatus = parseQueryStatus(data);
       const dnssec = parseDNSSEC(data);
 
-      // Remove HTML from querystatus.fieldtext
-      var rawtext = $("<div/>").html(querystatus.fieldtext).text();
-
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
           "<i class='fa fa-fw " +
@@ -593,7 +590,7 @@ $(function () {
             " " +
             querystatus.colorClass +
             "' title='" +
-            rawtext +
+            querystatus.fieldtext +
             "'></i>"
         );
       } else if (querystatus.colorClass !== false) {
