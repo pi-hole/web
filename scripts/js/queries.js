@@ -149,6 +149,13 @@ function parseQueryStatus(data) {
       buttontext = "";
       blocked = true;
       break;
+    case "QUERY_EXTERNAL_BLOCKED_EDE15":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (external, EDE15)";
+      buttontext = "";
+      blocked = true;
+      break;
     case "GRAVITY_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
