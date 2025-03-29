@@ -97,11 +97,11 @@ const htmlLegendPlugin = {
 
         textLink.addEventListener("click", () => {
           if (chart.canvas.id === "queryTypePieChart") {
-            globalThis.location.href = "queries.lp?type=" + item.text;
+            globalThis.location.href = "queries?type=" + item.text;
           } else if (chart.canvas.id === "forwardDestinationPieChart") {
             // Encode the forward destination as it may contain an "#" character
             const upstream = encodeURIComponent(upstreams[item.text]);
-            globalThis.location.href = "queries.lp?upstream=" + upstream;
+            globalThis.location.href = "queries?upstream=" + upstream;
           }
         });
       }
