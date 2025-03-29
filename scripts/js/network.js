@@ -163,7 +163,7 @@ $(function () {
 
         // Only add IPs to the table if we have not reached the maximum
         if (index < MAXIPDISPLAY) {
-          ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + iptext + "</a>");
+          ips.push('<a href="queries?client_ip=' + ip.ip + '">' + iptext + "</a>");
         }
       }
 

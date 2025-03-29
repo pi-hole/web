@@ -64,7 +64,7 @@ function doSearch() {
       for (const domain of res.domains) {
         const color = domain.type === "deny" ? "red" : "green";
         result +=
-          "  - <a href='groups-domains.lp?domainid=" +
+          "  - <a href='groups-domains?domainid=" +
           domain.id +
           "' target='_blank'><strong>" +
           utils.escapeHtml(domain.domain) +
@@ -118,7 +118,7 @@ function doSearch() {
         const list = grouped[listId][0];
         const color = list.type === "block" ? "red" : "green";
         result +=
-          "  - <a href='groups-lists.lp?listid=" +
+          "  - <a href='groups-lists?listid=" +
           list.id +
           "' target='_blank'>" +
           utils.escapeHtml(list.address) +

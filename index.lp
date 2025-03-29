@@ -22,7 +22,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-globe-americas"></i>
             </div>
-            <a href="network.lp" class="small-box-footer" title="" id="total_clients">
+            <a href="network" class="small-box-footer" title="" id="total_clients">
                 <span id="active_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -38,7 +38,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-hand-paper"></i>
             </div>
-            <a href="queries.lp?upstream=blocklist" class="small-box-footer" title="">
+            <a href="queries?upstream=blocklist" class="small-box-footer" title="">
                 List blocked queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -54,7 +54,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-chart-pie"></i>
             </div>
-            <a href="queries.lp" class="small-box-footer" title="">
+            <a href="queries" class="small-box-footer" title="">
                 List all queries <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -70,7 +70,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="icon">
                 <i class="fas fa-list-alt"></i>
             </div>
-            <a href="groups-lists.lp" class="small-box-footer" title="">
+            <a href="groups-lists" class="small-box-footer" title="">
                 Manage lists <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>

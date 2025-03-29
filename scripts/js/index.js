@@ -305,7 +305,7 @@ function updateTopClientsTable(blocked) {
       let clientname = client.name;
       if (clientname.length === 0) clientname = client.ip;
       url =
-        '<a href="queries.lp?client_ip=' +
+        '<a href="queries?client_ip=' +
         encodeURIComponent(client.ip) +
         (blocked ? "&upstream=blocklist" : "") +
         '">' +
@@ -366,7 +366,7 @@ function updateTopDomainsTable(blocked) {
       // Substitute "." for empty domain lookups
       urlText = domain === "" ? "." : domain;
       url =
-        '<a href="queries.lp?domain=' +
+        '<a href="queries?domain=' +
         domain +
         (blocked ? "&upstream=blocklist" : "&upstream=permitted") +
         '">' +
@@ -797,7 +797,7 @@ $(function () {
       //get value by index
       var from = label / 1000 - 300;
       var until = label / 1000 + 300;
-      globalThis.location.href = "queries.lp?from=" + from + "&until=" + until;
+      globalThis.location.href = "queries?from=" + from + "&until=" + until;
     }
 
     return false;
@@ -820,7 +820,7 @@ $(function () {
       //get value by index
       var from = label / 1000 - 300;
       var until = label / 1000 + 300;
-      globalThis.location.href = "queries.lp?from=" + from + "&until=" + until;
+      globalThis.location.href = "queries?from=" + from + "&until=" + until;
     }
 
     return false;

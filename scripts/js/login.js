@@ -16,7 +16,7 @@ function redirect() {
 
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {
-    target = "messages.lp";
+    target = "messages";
   }
 
   // Redirect to target
