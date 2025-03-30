@@ -40,7 +40,7 @@ function eventsource() {
               const string = new TextDecoder().decode(value);
               parseLines(ta, string);
 
-              if (string.indexOf("Done.") !== -1) {
+              if (string.includes("Done.")) {
                 alSuccess.show();
               }
 
@@ -69,7 +69,7 @@ $(() => {
   // Do we want to start updating immediately?
   // gravity?go
   const searchString = globalThis.location.search.substring(1);
-  if (searchString.indexOf("go") !== -1) {
+  if (searchString.includes("go")) {
     $("#gravityBtn").prop("disabled", true);
     eventsource();
   }

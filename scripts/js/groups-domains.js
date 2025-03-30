@@ -415,7 +415,7 @@ $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
     .get();
 
   const typeStr = rowData.type + "/" + rowData.kind;
-  if (types.indexOf(typeStr) !== -1) {
+  if (types.includes(typeStr)) {
     return true;
   }
 

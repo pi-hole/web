@@ -119,7 +119,6 @@
       "unicorn/filename-case": "off",
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
-      "unicorn/prefer-includes": "off",
       "unicorn/prefer-module": "off",
       "unicorn/prefer-node-append": "off",
       "unicorn/prefer-number-properties": "off",

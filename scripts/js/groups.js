@@ -200,6 +200,7 @@ $(() => {
 
   table.on("init select deselect", () => {
     // if the Default group is selected, undo the selection of it
+    // eslint-disable-next-line unicorn/prefer-includes
     if (table.rows({ selected: true }).data().pluck("id").indexOf(0) !== -1) {
       table.rows(0).deselect();
     }

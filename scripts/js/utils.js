@@ -621,7 +621,7 @@ function listAlert(type, items, data) {
       if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
         let error = data.processed.errors[item].error;
         // Replace some error messages with a more user-friendly text
-        if (error.indexOf("UNIQUE constraint failed") > -1) {
+        if (error.includes("UNIQUE constraint failed")) {
           error = "Already present";
         }
 
