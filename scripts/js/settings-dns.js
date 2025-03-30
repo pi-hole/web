@@ -9,7 +9,7 @@
 
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
-  var found = arr.indexOf(what);
+  let found = arr.indexOf(what);
 
   while (found !== -1) {
     arr.splice(found, 1);
@@ -18,16 +18,16 @@ function removeFromArray(arr, what) {
 }
 
 function fillDNSupstreams(value, servers) {
-  var disabledStr = "";
+  let disabledStr = "";
   if (value.flags.env_var === true) {
     $("#DNSupstreamsTextfield").prop("disabled", true);
     disabledStr = 'disabled="Disabled"';
   }
 
-  var i = 0;
-  var customServers = value.value.length;
+  let i = 0;
+  let customServers = value.value.length;
   servers.forEach(element => {
-    var row = "<tr>";
+    let row = "<tr>";
     // Build checkboxes for IPv4 and IPv6
     const addresses = [element.v4, element.v6];
     // Loop over address types (IPv4, IPv6)
@@ -36,7 +36,7 @@ function fillDNSupstreams(value, servers) {
       // Loop over available addresses (up to 2)
       for (let index = 0; index < 2; index++) {
         if (address.length > index) {
-          var checkedStr = "";
+          let checkedStr = "";
           if (
             value.value.includes(address[index]) ||
             value.value.includes(address[index] + "#53")
@@ -69,10 +69,10 @@ function fillDNSupstreams(value, servers) {
 
   // Add event listener to checkboxes
   $("input[id^='DNSupstreams-']").on("change", function () {
-    var upstreams = $("#DNSupstreamsTextfield").val().split("\n");
-    var customServers = 0;
+    const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
+    let customServers = 0;
     $("#DNSupstreamsTable input").each(function () {
-      var title = $(this).closest("td").attr("title");
+      const title = $(this).closest("td").attr("title");
       if (this.checked && !upstreams.includes(title)) {
         // Add server to array
         upstreams.push(title);

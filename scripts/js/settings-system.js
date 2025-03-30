@@ -7,9 +7,9 @@
 
 /* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
-var hostinfoTimer = null;
-var cachePieChart = null;
-var cacheSize = 0,
+let hostinfoTimer = null;
+let cachePieChart = null;
+let cacheSize = 0,
   cacheEntries = 0;
 
 // Register the ChartDeferred plugin to all charts:
@@ -20,7 +20,7 @@ Chart.defaults.set("plugins.deferred", {
 });
 
 function updateCachePie(data) {
-  var v = [],
+  let v = [],
     c = [],
     k = [],
     i = 0;
@@ -33,7 +33,7 @@ function updateCachePie(data) {
   });
 
   // Sort data by value, put OTHER always as last
-  var sorted = Object.keys(data).sort(function (a, b) {
+  const sorted = Object.keys(data).sort(function (a, b) {
     if (a === "OTHER") {
       return 1;
     }
@@ -46,7 +46,7 @@ function updateCachePie(data) {
   });
 
   // Rebuild data object
-  var tmp = {};
+  const tmp = {};
   sorted.forEach(function (item) {
     tmp[item] = data[item];
   });
@@ -73,7 +73,7 @@ function updateCachePie(data) {
   });
 
   // Build a single dataset with the data to be pushed
-  var dd = { data: v, backgroundColor: c };
+  const dd = { data: v, backgroundColor: c };
   // and push it at once
   cachePieChart.data.datasets[0] = dd;
   cachePieChart.data.labels = k;
@@ -88,8 +88,8 @@ function updateHostInfo() {
     url: document.body.dataset.apiurl + "/info/host",
   })
     .done(function (data) {
-      var host = data.host;
-      var uname = host.uname;
+      const host = data.host;
+      const uname = host.uname;
       if (uname.domainname !== "(none)") {
         $("#sysinfo-hostname").text(uname.nodename + "." + uname.domainname);
       } else {
@@ -118,7 +118,7 @@ function updateHostInfo() {
 // Walk nested objects, create a dash-separated global key and assign the value
 // to the corresponding element (add percentage for DNS replies)
 function setMetrics(data, prefix) {
-  var cacheData = {};
+  const cacheData = {};
   for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
       // Create table row for each DNS cache entry
@@ -153,14 +153,14 @@ function setMetrics(data, prefix) {
   }
 }
 
-var metricsTimer = null;
+let metricsTimer = null;
 
 function updateMetrics() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/metrics",
   })
     .done(function (data) {
-      var metrics = data.metrics;
+      const metrics = data.metrics;
       $("#dns-cache-table").empty();
 
       // Set global cache size
@@ -324,7 +324,7 @@ $(function () {
   updateMetrics();
   getLoggingButton();
 
-  var ctx = document.getElementById("cachePieChart").getContext("2d");
+  const ctx = document.getElementById("cachePieChart").getContext("2d");
   cachePieChart = new Chart(ctx, {
     type: "doughnut",
     data: {

@@ -265,14 +265,14 @@ function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
     Object.keys(value).forEach(function (subkey) {
-      var subvalue = value[subkey];
+      const subvalue = value[subkey];
       generateRow(topic, key + "." + subkey, subvalue);
     });
     return;
   }
 
   // else: we have a setting we can display
-  var box =
+  const box =
     '<div class="box settings-box">' +
     '<div class="box-header with-border">' +
     '<h3 class="box-title" data-key="' +
@@ -291,8 +291,8 @@ function generateRow(topic, key, value) {
     valueDetails(key, value) +
     "</div></div> ";
 
-  var topKey = key.split(".")[0];
-  var elem = $("#advanced-content-" + topKey + "-flex");
+  const topKey = key.split(".")[0];
+  const elem = $("#advanced-content-" + topKey + "-flex");
   elem.append(box);
 }
 
@@ -303,7 +303,7 @@ function createDynamicConfigTabs() {
     .done(function (data) {
       // Create the tabs for the advanced dynamic config topics
       Object.keys(data.topics).forEach(function (n) {
-        var topic = data.topics[n];
+        const topic = data.topics[n];
 
         $("#advanced-settings-tabs").append(`
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
@@ -324,7 +324,7 @@ function createDynamicConfigTabs() {
 
       // Dynamically fill the tabs with config topics
       Object.keys(data.config).forEach(function (topic) {
-        var value = data.config[topic];
+        const value = data.config[topic];
         generateRow(topic, topic, value);
       });
       $("#advanced-overlay").hide();

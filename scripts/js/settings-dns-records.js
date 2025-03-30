@@ -46,7 +46,7 @@ function CNAMEttl(data) {
 }
 
 function populateDataTable(endpoint) {
-  var columns = "";
+  let columns = "";
   if (endpoint === "hosts") {
     columns = [
       { data: null, render: hostsDomain },
@@ -62,7 +62,7 @@ function populateDataTable(endpoint) {
     ];
   }
 
-  var setByEnv = false;
+  const setByEnv = false;
   $.ajax({
     url: `/api/config/dns/${endpoint}?detailed=true`,
   }).done(function (data) {
@@ -97,7 +97,7 @@ function populateDataTable(endpoint) {
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data);
-      var button = `<button type="button"
+      const button = `<button type="button"
                       class="btn btn-danger btn-xs"
                       id="delete${endpoint}${utils.hexEncode(data)}"
                       data-tag="${data}"
@@ -131,7 +131,7 @@ function populateDataTable(endpoint) {
       utils.stateSaveCallback(`${endpoint}-records-table`, data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback(`${endpoint}-records-table`);
+      const data = utils.stateLoadCallback(`${endpoint}-records-table`);
       // Return if not available
       if (data === null) {
         return null;
@@ -239,8 +239,8 @@ $(document).ready(function () {
 
   $("#btnAdd-cname").on("click", function () {
     utils.disableAll();
-    var elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
-    var ttlVal = parseInt($("#Cttl").val(), 10);
+    let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
+    const ttlVal = parseInt($("#Cttl").val(), 10);
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);

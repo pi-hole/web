@@ -7,7 +7,7 @@
 
 /* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
 
-var table;
+let table;
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -56,15 +56,15 @@ $(function () {
     drawCallback: function () {
       // Hide buttons if all groups were deleted
       // if there is one row, it's the default group
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 1;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 1;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
     rowCallback: function (row, data) {
-      var dataId = utils.hexEncode(data.name);
+      const dataId = utils.hexEncode(data.name);
       $(row).attr("data-id", dataId);
-      var tooltip =
+      const tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
         "\nLast modified: " +
@@ -74,7 +74,7 @@ $(function () {
       $("td:eq(1)", row).html(
         '<input id="name_' + dataId + '" title="' + tooltip + '" class="form-control">'
       );
-      var nameEl = $("#name_" + dataId, row);
+      const nameEl = $("#name_" + dataId, row);
       nameEl.val(data.name);
       nameEl.on("change", editGroup);
 
@@ -85,7 +85,7 @@ $(function () {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      var enabledEl = $("#enabled_" + dataId, row);
+      const enabledEl = $("#enabled_" + dataId, row);
       enabledEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -96,15 +96,15 @@ $(function () {
       enabledEl.on("change", editGroup);
 
       $("td:eq(3)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      var comment = data.comment !== null ? data.comment : "";
-      var commentEl = $("#comment_" + dataId, row);
+      const comment = data.comment !== null ? data.comment : "";
+      const commentEl = $("#comment_" + dataId, row);
       commentEl.val(comment);
       commentEl.on("change", editGroup);
 
       $("td:eq(4)", row).empty();
       // Show delete button for all but the default group
       if (data.id !== 0) {
-        var button =
+        const button =
           '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
           dataId +
           '" data-id="' +
@@ -149,7 +149,7 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
+          const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
             ids.push({ item: $(this).attr("data-id") });
@@ -175,7 +175,7 @@ $(function () {
       utils.stateSaveCallback("groups-table", data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-table");
+      const data = utils.stateLoadCallback("groups-table");
 
       // Return if not available
       if (data === null) {
@@ -190,7 +190,7 @@ $(function () {
   });
 
   // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
+  const input = document.querySelector("input[type=search]");
   if (input !== null) {
     input.setAttribute("autocomplete", "off");
     input.setAttribute("autocorrect", "off");
@@ -208,7 +208,7 @@ $(function () {
   });
 
   table.on("order.dt", function () {
-    var order = table.order();
+    const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
     } else {
@@ -237,7 +237,7 @@ function addGroup() {
   // Check if the user wants to add multiple groups (space or newline separated)
   // If so, split the input and store it in an array, however, do not split
   // group names enclosed in quotes
-  var names = utils
+  let names = utils
     .escapeHtml($("#new_name"))
     .val()
     .match(/(?:[^\s"]+|"[^"]*")+/g)
@@ -300,8 +300,8 @@ function editGroup() {
   const enabled = tr.find("#enabled_" + id).is(":checked");
   const comment = tr.find("#comment_" + id).val();
 
-  var done = "edited";
-  var notDone = "editing";
+  let done = "edited";
+  let notDone = "editing";
   switch (elem) {
     case "enabled_" + id:
       if (!enabled) {

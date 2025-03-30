@@ -7,8 +7,8 @@
 
 /* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
 
-var nextID = 0;
-var lastPID = -1;
+let nextID = 0;
+let lastPID = -1;
 
 // Maximum number of lines to display
 const maxlines = 5000;
@@ -77,7 +77,7 @@ function getData() {
     return;
   }
 
-  var GETDict = utils.parseQueryString();
+  const GETDict = utils.parseQueryString();
   if (!("file" in GETDict)) {
     globalThis.location.href += "?file=dnsmasq";
     return;
@@ -142,7 +142,7 @@ function getData() {
       });
 
       // Limit output to <maxlines> lines
-      var lines = $("#output").val().split("\n");
+      const lines = $("#output").val().split("\n");
       if (lines.length > maxlines) {
         lines.splice(0, lines.length - maxlines);
         $("#output").val(lines.join("\n"));

@@ -7,7 +7,7 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false */
 
-var dhcpLeaesTable = null,
+let dhcpLeaesTable = null,
   toasts = {};
 
 // DHCP leases tooltips
@@ -64,7 +64,7 @@ $(function () {
       $('button[id^="deleteLease_"]').on("click", deleteLease);
 
       // Hide buttons if all messages were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       // Remove visible dropdown to prevent orphaning
@@ -72,7 +72,7 @@ $(function () {
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.ip);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteLease_' +
         data.ip +
         '" data-del-ip="' +
@@ -142,7 +142,7 @@ $(function () {
       utils.stateSaveCallback("dhcp-leases-table", data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("dhcp-leases-table");
+      const data = utils.stateLoadCallback("dhcp-leases-table");
       // Return if not available
       if (data === null) {
         return null;

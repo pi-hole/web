@@ -7,16 +7,16 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
 
-var apiSessionsTable = null;
-var ownSessionID = null;
-var deleted = 0;
-var TOTPdata = null;
-var apppwSet = false;
+let apiSessionsTable = null;
+let ownSessionID = null;
+let deleted = 0;
+let TOTPdata = null;
+let apppwSet = false;
 
 function renderBool(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
-    var icon = "fa-xmark text-danger";
+    let icon = "fa-xmark text-danger";
     if (data === true) {
       icon = "fa-check text-success";
     }
@@ -67,7 +67,7 @@ $(function () {
       $('button[id^="deleteSession_"]').on("click", deleteThisSession);
 
       // Hide buttons if all messages were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       // Remove visible dropdown to prevent orphaning
@@ -75,7 +75,7 @@ $(function () {
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteSession_' +
         data.id +
         '" data-del-id="' +
@@ -151,7 +151,7 @@ $(function () {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
+          const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
             ids.push(parseInt($(this).attr("data-id"), 10));
@@ -180,7 +180,7 @@ $(function () {
       utils.stateSaveCallback("api-sessions-table", data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("api-sessions-table");
+      const data = utils.stateLoadCallback("api-sessions-table");
       // Return if not available
       if (data === null) {
         return null;
@@ -296,7 +296,7 @@ $("#modal-totp").on("shown.bs.modal", function () {
     .done(function (data) {
       TOTPdata = data.totp;
       $("#totp_secret").text(data.totp.secret);
-      var qrlink =
+      const qrlink =
         "otpauth://totp/" +
         data.totp.issuer +
         ":" +
@@ -326,7 +326,7 @@ $("#modal-totp").on("shown.bs.modal", function () {
     });
 });
 
-var apppwhash = null;
+let apppwhash = null;
 $("#modal-apppw").on("shown.bs.modal", function () {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth/app",
@@ -413,7 +413,7 @@ $("#totp_code").on("paste", function (e) {
 });
 
 $("#totp_code").on("keyup", function () {
-  var code = parseInt($(this).val(), 10);
+  const code = parseInt($(this).val(), 10);
   if (TOTPdata.codes.includes(code)) {
     $("#totp_div").removeClass("has-error");
     $("#totp_div").addClass("has-success");
@@ -438,7 +438,7 @@ function setTOTPSecret(secret) {
       $("#button-disable-totp").removeClass("hidden");
       $("#totp_code").val("");
       $("#modal-totp").modal("hide");
-      var verb = secret.length > 0 ? "enabled" : "disabled";
+      const verb = secret.length > 0 ? "enabled" : "disabled";
       alert(
         "Two-factor authentication has been " +
           verb +

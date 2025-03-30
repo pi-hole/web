@@ -18,14 +18,14 @@ $.extend($.fn.dataTableExt.oSort, {
       return Infinity;
     }
 
-    var i, item;
+    let i, item;
     // Use the first IP in case there is a list of IPs
     // for a given device
     if (Array.isArray(a)) {
       a = a[0];
     }
 
-    var m = a.split("."),
+    let m = a.split("."),
       n = a.split(":"),
       x = "",
       xa = "",
@@ -51,7 +51,7 @@ $.extend($.fn.dataTableExt.oSort, {
       }
     } else if (n.length > 0) {
       // IPV6 (possibly with CIDR)
-      var count = 0;
+      let count = 0;
       for (i = 0; i < n.length; i++) {
         item = n[i];
 
@@ -96,12 +96,12 @@ $.extend($.fn.dataTableExt.oSort, {
 
       // Padding the ::
       n = xa.split(":");
-      var paddDone = 0;
+      let paddDone = 0;
 
       for (i = 0; i < n.length; i++) {
         item = n[i];
         if (item.length === 0 && paddDone === 0) {
-          for (var padding = 0; padding < 32 - count; padding++) {
+          for (let padding = 0; padding < 32 - count; padding++) {
             x += "0";
             paddDone = 1;
           }
