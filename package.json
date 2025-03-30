@@ -124,8 +124,7 @@
       "unicorn/prefer-string-slice": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/switch-case-braces": "off",
-      "unicorn/no-negated-condition": "off",
-      "prefer-object-has-own": "off"
+      "unicorn/no-negated-condition": "off"
     }
   }
 }
