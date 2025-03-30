@@ -5,12 +5,11 @@ name: Close stale PR
 
 on:
   schedule:
-    - cron: '0 10 * * *'
+    - cron: "0 10 * * *"
   workflow_dispatch:
 
 jobs:
   stale:
-
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -27,9 +26,9 @@ jobs:
           # Close PRs immediately, after marking them 'stale'
           days-before-pr-close: 0
           # only run the action on merge conflict PR
-          any-of-labels: 'Merge Conflicts'
-          exempt-pr-labels: 'internal, never-stale, ON HOLD, WIP'
+          any-of-labels: "Merge Conflicts"
+          exempt-pr-labels: "internal, never-stale, ON HOLD, WIP"
           exempt-all-pr-assignees: true
           operations-per-run: 300
-          stale-pr-message: ''
-          close-pr-message: 'Existing merge conflicts have not been addressed. This PR is considered abandoned.'
+          stale-pr-message: ""
+          close-pr-message: "Existing merge conflicts have not been addressed. This PR is considered abandoned."

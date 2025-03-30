@@ -20,11 +20,13 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4.3.0
         with:
-          node-version: "20.x"
+          node-version: "22.x"
           cache: npm
 
       - name: Install npm dependencies
