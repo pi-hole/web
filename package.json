@@ -123,10 +123,8 @@
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/prefer-logical-operator-over-ternary": "off",
       "unicorn/switch-case-braces": "off",
       "unicorn/no-negated-condition": "off",
-      "logical-assignment-operators": "off",
       "prefer-object-has-own": "off"
     }
   }
