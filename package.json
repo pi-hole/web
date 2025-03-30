@@ -118,7 +118,6 @@
       ],
       "unicorn/filename-case": "off",
       "unicorn/no-anonymous-default-export": "off",
-      "unicorn/no-for-loop": "off",
       "unicorn/no-document-cookie": "off",
       "unicorn/numeric-separators-style": "off",
       "unicorn/prefer-includes": "off",

@@ -216,16 +216,16 @@ function initTable() {
       );
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
-      for (let i = 0; i < groups.length; i++) {
+      for (const group of groups) {
         let dataSub = "";
-        if (!groups[i].enabled) {
+        if (!group.enabled) {
           dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
           $("<option " + dataSub + "/>")
-            .val(groups[i].id)
-            .text(groups[i].name)
+            .val(group.id)
+            .text(group.name)
         );
       }
 
@@ -435,9 +435,9 @@ function deleteDomain() {
 
 function deleteDomains(encodedIds) {
   const decodedIds = [];
-  for (let i = 0; i < encodedIds.length; i++) {
+  for (const [i, encodedId] of encodedIds.entries()) {
     // Decode domain, type, and kind and add to array
-    const parts = encodedIds[i].split("_");
+    const parts = encodedId.split("_");
     decodedIds[i] = {
       item: parts[0],
       type: parts[1],

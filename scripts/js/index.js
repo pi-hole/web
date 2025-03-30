@@ -49,7 +49,7 @@ function updateQueriesOverTime() {
     const colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
-    for (let i = 0; i < labels.length; i++) {
+    for (const [i, label] of labels.entries()) {
       timeLineChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
@@ -57,7 +57,7 @@ function updateQueriesOverTime() {
         pointRadius: 0,
         pointHitRadius: 5,
         pointHoverRadius: 5,
-        label: labels[i],
+        label,
         cubicInterpolationMode: "monotone",
       });
     }

@@ -171,16 +171,16 @@ function initTable() {
       );
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
-      for (let i = 0; i < groups.length; i++) {
+      for (const group of groups) {
         let dataSub = "";
-        if (!groups[i].enabled) {
+        if (!group.enabled) {
           dataSub = 'data-subtext="(disabled)"';
         }
 
         selectEl.append(
           $("<option " + dataSub + "/>")
-            .val(groups[i].id)
-            .text(groups[i].name)
+            .val(group.id)
+            .text(group.name)
         );
       }
 
