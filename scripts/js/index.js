@@ -8,8 +8,10 @@
 /* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
 
 // Define global variables
-let timeLineChart, clientsChart;
-let queryTypePieChart, forwardDestinationPieChart;
+let timeLineChart;
+let clientsChart;
+let queryTypePieChart;
+let forwardDestinationPieChart;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -93,11 +95,11 @@ function updateQueriesOverTime() {
 
 function updateQueryTypesPie() {
   $.getJSON(document.body.dataset.apiurl + "/stats/query_types", function (data) {
-    let v = [],
-      c = [],
-      k = [],
-      i = 0,
-      sum = 0;
+    const v = [];
+    const c = [];
+    const k = [];
+    let i = 0;
+    let sum = 0;
 
     // Compute total number of queries
     Object.keys(data.types).forEach(function (item) {
@@ -143,8 +145,8 @@ function updateClientsOverTime() {
     }
 
     let numClients = 0;
-    const labels = [],
-      clients = {};
+    const labels = [];
+    const clients = {};
     Object.keys(data.clients).forEach(function (ip) {
       clients[ip] = numClients++;
       labels.push(data.clients[ip].name !== null ? data.clients[ip].name : ip);
@@ -213,12 +215,12 @@ function updateClientsOverTime() {
 const upstreams = {};
 function updateForwardDestinationsPie() {
   $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", function (data) {
-    let v = [],
-      c = [],
-      k = [],
-      i = 0,
-      sum = 0,
-      values = [];
+    const v = [];
+    const c = [];
+    const k = [];
+    let i = 0;
+    let sum = 0;
+    const values = [];
 
     // Compute total number of queries
     data.upstreams.forEach(function (item) {
@@ -271,7 +273,11 @@ function updateForwardDestinationsPie() {
 }
 
 function updateTopClientsTable(blocked) {
-  let api, style, tablecontent, overlay, clienttable;
+  let api;
+  let style;
+  let tablecontent;
+  let overlay;
+  let clienttable;
   if (blocked) {
     api = document.body.dataset.apiurl + "/stats/top_clients?blocked=true";
     style = "queries-blocked";
@@ -289,7 +295,8 @@ function updateTopClientsTable(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    let url, percentage;
+    let url;
+    let percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // Add note if there are no results (e.g. privacy mode enabled)
@@ -331,7 +338,11 @@ function updateTopClientsTable(blocked) {
 }
 
 function updateTopDomainsTable(blocked) {
-  let api, style, tablecontent, overlay, domaintable;
+  let api;
+  let style;
+  let tablecontent;
+  let overlay;
+  let domaintable;
   if (blocked) {
     api = document.body.dataset.apiurl + "/stats/top_domains?blocked=true";
     style = "queries-blocked";
@@ -349,7 +360,10 @@ function updateTopDomainsTable(blocked) {
   $.getJSON(api, function (data) {
     // Clear tables before filling them with data
     tablecontent.remove();
-    let url, domain, percentage, urlText;
+    let url;
+    let domain;
+    let percentage;
+    let urlText;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // Add note if there are no results (e.g. privacy mode enabled)

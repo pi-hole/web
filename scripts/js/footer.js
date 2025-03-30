@@ -225,7 +225,8 @@ function initCheckboxRadioStyle() {
   }
 }
 
-let systemTimer, versionTimer;
+let systemTimer;
+let versionTimer;
 function updateInfo() {
   updateSystemInfo();
   updateVersionInfo();
@@ -443,8 +444,8 @@ function apiFailure(data) {
 // Credits: https://www.geeksforgeeks.org/compare-two-version-numbers/
 function versionCompare(v1, v2) {
   // vnum stores each numeric part of version
-  let vnum1 = 0,
-    vnum2 = 0;
+  let vnum1 = 0;
+  let vnum2 = 0;
 
   // Remove possible leading "v" in v1 and v2
   if (v1[0] === "v") {

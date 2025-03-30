@@ -202,7 +202,9 @@ const customTooltips = function (context) {
   const caretX = tooltip.caretX;
   const caretY = tooltip.caretY;
   const caretPadding = tooltip.options.caretPadding;
-  let tooltipX, tooltipY, arrowX;
+  let tooltipX;
+  let tooltipY;
+  let arrowX;
   const arrowMinIndent = 2 * tooltip.options.cornerRadius;
   const arrowSize = 5;
 

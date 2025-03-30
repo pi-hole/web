@@ -86,19 +86,19 @@ function padNumber(num) {
 let showAlertBox = null;
 function showAlert(type, icon, title, message, toast) {
   const options = {
-      title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
-      message: escapeHtml(message),
-      icon,
+    title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+    message: escapeHtml(message),
+    icon,
+  };
+  const settings = {
+    type,
+    delay: 5000, // default value
+    mouse_over: "pause",
+    animate: {
+      enter: "animate__animated animate__fadeInDown",
+      exit: "animate__animated animate__fadeOutUp",
     },
-    settings = {
-      type,
-      delay: 5000, // default value
-      mouse_over: "pause",
-      animate: {
-        enter: "animate__animated animate__fadeInDown",
-        exit: "animate__animated animate__fadeOutUp",
-      },
-    };
+  };
   switch (type) {
     case "info":
       options.icon = icon !== null && icon.len > 0 ? icon : "fas fa-clock";
@@ -532,8 +532,8 @@ function changeTableButtonStates(table) {
 }
 
 function getCSSval(cssclass, cssproperty) {
-  const elem = $("<div class='" + cssclass + "'></div>"),
-    val = elem.appendTo("body").css(cssproperty);
+  const elem = $("<div class='" + cssclass + "'></div>");
+  const val = elem.appendTo("body").css(cssproperty);
   elem.remove();
   return val;
 }
@@ -545,7 +545,8 @@ function parseQueryString() {
 
 // https://stackoverflow.com/q/21647928
 function hexEncode(string) {
-  let hex, i;
+  let hex;
+  let i;
 
   let result = "";
   for (i = 0; i < string.length; i++) {

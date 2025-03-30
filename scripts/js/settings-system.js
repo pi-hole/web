@@ -9,8 +9,8 @@
 
 let hostinfoTimer = null;
 let cachePieChart = null;
-let cacheSize = 0,
-  cacheEntries = 0;
+let cacheSize = 0;
+let cacheEntries = 0;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -20,10 +20,10 @@ Chart.defaults.set("plugins.deferred", {
 });
 
 function updateCachePie(data) {
-  let v = [],
-    c = [],
-    k = [],
-    i = 0;
+  const v = [];
+  const c = [];
+  const k = [];
+  let i = 0;
 
   // Compute total number of cache entries
   cacheEntries = 0;
