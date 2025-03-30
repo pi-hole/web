@@ -560,7 +560,7 @@ function hexDecode(string) {
   const hexes = string.match(/.{1,4}/g) || [];
   let back = "";
   for (j = 0; j < hexes.length; j++) {
-    back += String.fromCodePoint(parseInt(hexes[j], 16));
+    back += String.fromCodePoint(Number.parseInt(hexes[j], 16));
   }
 
   return back;

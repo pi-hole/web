@@ -155,7 +155,7 @@ function deleteMessage() {
 }
 
 function delMsg(id) {
-  id = parseInt(id, 10);
+  id = Number.parseInt(id, 10);
   utils.disableAll();
   toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
 

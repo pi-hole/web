@@ -41,14 +41,16 @@ function format(data) {
       : "N/A";
   const numberOfEntries =
     (data.number !== null && numbers === true
-      ? parseInt(data.number, 10).toLocaleString()
+      ? Number.parseInt(data.number, 10).toLocaleString()
       : "N/A") +
-    (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
-      ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
+    (data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true
+      ? " (out of which " +
+        Number.parseInt(data.abp_entries, 10).toLocaleString() +
+        " are in ABP-style)"
       : "");
   const nonDomains =
     data.invalid_domains !== null && numbers === true
-      ? parseInt(data.invalid_domains, 10).toLocaleString()
+      ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
       : "N/A";
 
   return `<table>
@@ -83,7 +85,7 @@ function format(data) {
 
 // Define the status icon element
 function setStatusIcon(data) {
-  const statusCode = parseInt(data.status, 10);
+  const statusCode = Number.parseInt(data.status, 10);
   const statusTitle = setStatusText(data) + "\nClick for details about this list";
   let statusIcon;
 
@@ -113,7 +115,7 @@ function setStatusText(data, showdetails = false) {
   let statusText = "Unknown";
   let statusDetails = "";
   if (data.status !== null) {
-    switch (parseInt(data.status, 10)) {
+    switch (Number.parseInt(data.status, 10)) {
       case 0:
         statusText =
           data.enabled === 0
@@ -140,7 +142,8 @@ function setStatusText(data, showdetails = false) {
 
       default:
         statusText = "Unknown";
-        statusDetails = ' (<span class="list-status-0">' + parseInt(data.status, 10) + "</span>)";
+        statusDetails =
+          ' (<span class="list-status-0">' + Number.parseInt(data.status, 10) + "</span>)";
         break;
     }
   }
@@ -218,7 +221,7 @@ function initTable() {
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
       if (data.status !== null && data.enabled) {
-        statusCode = parseInt(data.status, 10);
+        statusCode = Number.parseInt(data.status, 10);
       }
 
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
@@ -337,7 +340,7 @@ function initTable() {
         );
 
       // Highlight row (if url parameter "listid=" is used)
-      if ("listid" in GETDict && data.id === parseInt(GETDict.listid, 10)) {
+      if ("listid" in GETDict && data.id === Number.parseInt(GETDict.listid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -428,7 +431,7 @@ function initTable() {
         const pos = table
           .column(0, { order: "current" })
           .data()
-          .indexOf(parseInt(GETDict.listid, 10));
+          .indexOf(Number.parseInt(GETDict.listid, 10));
         if (pos !== -1) {
           const page = Math.floor(pos / table.page.info().length);
           table.page(page).draw(false);

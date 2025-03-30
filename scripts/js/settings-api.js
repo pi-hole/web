@@ -154,7 +154,7 @@ $(() => {
           const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            ids.push(Number.parseInt($(this).attr("data-id"), 10));
           });
           // Delete all selected rows at once
           deleteMultipleSessions(ids);
@@ -198,7 +198,7 @@ $(() => {
 function deleteThisSession() {
   // This function is called when a red trash button is clicked
   // We get the ID of the current item from the data-del-id attribute
-  const thisID = parseInt($(this).attr("data-del-id"), 10);
+  const thisID = Number.parseInt($(this).attr("data-del-id"), 10);
   deleted = 0;
   deleteOneSession(thisID, 1, false);
 }
@@ -217,7 +217,7 @@ function deleteMultipleSessions(ids) {
 
   // Convert all ids to integers
   ids = ids.map(value => {
-    return parseInt(value, 10);
+    return Number.parseInt(value, 10);
   });
 
   // Check if own session is selected and remove it when deleting multiple
@@ -413,7 +413,7 @@ $("#totp_code").on("paste", e => {
 });
 
 $("#totp_code").on("keyup", function () {
-  const code = parseInt($(this).val(), 10);
+  const code = Number.parseInt($(this).val(), 10);
   if (TOTPdata.codes.includes(code)) {
     $("#totp_div").removeClass("has-error");
     $("#totp_div").addClass("has-success");

@@ -64,7 +64,7 @@ function updateQueriesOverTime() {
 
     // Add data for each dataset that is available
     for (const item of data.history) {
-      const timestamp = new Date(1000 * parseInt(item.timestamp, 10));
+      const timestamp = new Date(1000 * Number.parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
       const other = item.total - (item.blocked + item.cached + item.forwarded);
@@ -188,7 +188,7 @@ function updateClientsOverTime() {
 
     // Extract data timestamps
     for (const item of data.history) {
-      const d = new Date(1000 * parseInt(item.timestamp, 10));
+      const d = new Date(1000 * Number.parseInt(item.timestamp, 10));
       clientsChart.data.labels.push(d);
     }
 
@@ -424,20 +424,20 @@ let firstSummaryUpdate = true;
 function updateSummaryData(runOnce = false) {
   $.getJSON(document.body.dataset.apiurl + "/stats/summary", data => {
     const intl = new Intl.NumberFormat();
-    const newCount = parseInt(data.queries.total, 10);
+    const newCount = Number.parseInt(data.queries.total, 10);
 
     $("span#dns_queries").text(intl.format(newCount));
-    $("span#active_clients").text(intl.format(parseInt(data.clients.active, 10)));
+    $("span#active_clients").text(intl.format(Number.parseInt(data.clients.active, 10)));
     $("a#total_clients").attr(
       "title",
-      intl.format(parseInt(data.clients.total, 10)) + " total clients"
+      intl.format(Number.parseInt(data.clients.total, 10)) + " total clients"
     );
-    $("span#blocked_queries").text(intl.format(parseFloat(data.queries.blocked)));
+    $("span#blocked_queries").text(intl.format(Number.parseFloat(data.queries.blocked)));
     const formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
     updateQueryFrequency(intl, data.queries.frequency);
 
-    const lastupdate = parseInt(data.gravity.last_update, 10);
+    const lastupdate = Number.parseInt(data.gravity.last_update, 10);
     let updatetxt = "Lists were never updated";
     if (lastupdate > 0) {
       updatetxt =
@@ -448,7 +448,7 @@ function updateSummaryData(runOnce = false) {
         ")";
     }
 
-    const gravityCount = parseInt(data.gravity.domains_being_blocked, 10);
+    const gravityCount = Number.parseInt(data.gravity.domains_being_blocked, 10);
     if (gravityCount < 0) {
       // Error. Change the title text and show the error code in parentheses
       updatetxt = "Error! Update gravity to reset this value.";
@@ -490,11 +490,11 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   const keys = Object.keys(tooltipLabel.parsed._stacks.y);
   for (let i = 0; i < keys.length; i++) {
     if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
-    sum += parseInt(tooltipLabel.parsed._stacks.y[i], 10);
+    sum += Number.parseInt(tooltipLabel.parsed._stacks.y[i], 10);
   }
 
   let percentage = 0;
-  const data = parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
+  const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
   if (sum > 0) {
     percentage = (100 * data) / sum;
   }
@@ -615,8 +615,8 @@ $(() => {
             title(tooltipTitle) {
               const label = tooltipTitle[0].label;
               const time = label.match(/(\d?\d):?(\d?\d?)/);
-              const h = parseInt(time[1], 10);
-              const m = parseInt(time[2], 10) || 0;
+              const h = Number.parseInt(time[1], 10);
+              const m = Number.parseInt(time[2], 10) || 0;
               const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
               const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
               return "Queries from " + from + " to " + to;
@@ -719,8 +719,8 @@ $(() => {
               title(tooltipTitle) {
                 const label = tooltipTitle[0].label;
                 const time = label.match(/(\d?\d):?(\d?\d?)/);
-                const h = parseInt(time[1], 10);
-                const m = parseInt(time[2], 10) || 0;
+                const h = Number.parseInt(time[1], 10);
+                const m = Number.parseInt(time[2], 10) || 0;
                 const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
                 const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
                 return "Client activity from " + from + " to " + to;

@@ -41,8 +41,8 @@ function piholeChanged(blocking, timer = null) {
   const dis = $("#pihole-disable");
   const enaT = $("#enableTimer");
 
-  if (timer !== null && parseFloat(timer) > 0) {
-    enaT.html(Date.now() + parseFloat(timer) * 1000);
+  if (timer !== null && Number.parseFloat(timer) > 0) {
+    enaT.html(Date.now() + Number.parseFloat(timer) * 1000);
     setTimeout(countDown, 100);
   }
 
@@ -85,7 +85,7 @@ function piholeChanged(blocking, timer = null) {
 function countDown() {
   const ena = $("#enableLabel");
   const enaT = $("#enableTimer");
-  const target = new Date(parseInt(enaT.text(), 10));
+  const target = new Date(Number.parseInt(enaT.text(), 10));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   //Stop and remove timer when user enabled early
@@ -150,7 +150,7 @@ function piholeChange(action, duration) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       blocking: action === "enable",
-      timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,
+      timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
     }),
   })
     .done(data => {
@@ -235,7 +235,7 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(intl, frequency) {
-  let freq = parseFloat(frequency) * 60;
+  let freq = Number.parseFloat(frequency) * 60;
   let unit = "q/min";
   let title = "Queries per minute";
   if (freq > 100) {
@@ -622,7 +622,7 @@ function updateVersionInfo() {
 $(() => {
   if (!_isLoginPage) updateInfo();
   const enaT = $("#enableTimer");
-  const target = new Date(parseInt(enaT.html(), 10));
+  const target = new Date(Number.parseInt(enaT.html(), 10));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
@@ -741,8 +741,8 @@ function addAdvancedInfo() {
   const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
   const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
-  const starttime = parseFloat(advancedInfoSource.data("starttime"));
-  const endtime = parseFloat(advancedInfoSource.data("endtime"));
+  const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
+  const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
 
   // Show advanced info
