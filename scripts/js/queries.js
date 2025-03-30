@@ -7,8 +7,8 @@
 
 /* global moment:false, utils:false, REFRESH_INTERVAL:false */
 
-const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
-const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
+const beginningOfTime = 1_262_304_000; // Jan 01 2010, 00:00 in seconds
+const endOfTime = 2_147_483_647; // Jan 19, 2038, 03:14 in seconds
 let from = beginningOfTime;
 let until = endOfTime;
 

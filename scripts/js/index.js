@@ -163,7 +163,7 @@ function updateClientsOverTime() {
         backgroundColor:
           i < THEME_COLORS.length
             ? THEME_COLORS[i]
-            : "#" + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6),
+            : "#" + (0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16).substr(1, 6),
         pointRadius: 0,
         pointHitRadius: 5,
         pointHoverRadius: 5,
