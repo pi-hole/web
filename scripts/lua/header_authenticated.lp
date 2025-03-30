@@ -9,20 +9,20 @@
 ]]--
 mg.include('header.lp','r')
 ?>
-    <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs-adapter-moment/chartjs-adapter-moment.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/hammer/hammer.min.js')?>"></script> <!-- Needed for chartjs-plugin-zoom --->
-    <script src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/chartjs/chart.umd.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/chartjs-adapter-moment/chartjs-adapter-moment.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/hammer/hammer.min.js')?>"></script> <!-- Needed for chartjs-plugin-zoom -->
+    <script defer src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in">
+<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in" data-apiurl="<?=pihole.api_url()?>" data-logout-url="<?=webhome .. 'login'?>">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -39,7 +39,7 @@ mg.include('header.lp','r')
 <div class="wrapper">
     <header class="main-header">
         <!-- Logo -->
-        <a href="<?=pihole.webhome()?>" class="logo">
+        <a href="<?=webhome?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">P<strong>h</strong></span>
             <!-- logo for regular state and mobile devices -->
@@ -48,11 +48,10 @@ mg.include('header.lp','r')
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle-svg" data-toggle="push-menu" role="button">
+            <button class="sidebar-toggle-svg" data-toggle="push-menu" aria-label="Toggle Navigation">
                 <i aria-hidden="true" class="fa fa-angle-double-left"></i>
-                <span class="sr-only">Toggle navigation</span>
                 <span class="warning-count hidden" id="top-warning-count"></span>
-            </a>
+            </button>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li<? if string.len(hostname) == 0 then ?> class="hidden"<? end ?>>
@@ -68,7 +67,7 @@ mg.include('header.lp','r')
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img class="logo-img" src="<?=pihole.webhome()?>img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
+                                <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
                                 <p>
                                     Open Source Ad Blocker
                                 </p>
@@ -78,7 +77,7 @@ mg.include('header.lp','r')
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">
-                                    <svg class="svg-inline--fa fa-fw menu-icon" style="height: 1.25em"><use xlink:href="<?=pihole.webhome()?>img/pihole_icon.svg#pihole-svg-logo"/></svg>
+                                    <? mg.include('../../img/logo-bw.svg', 'r') ?>
                                     Pi-hole Website
                                 </a>
                                 <hr>

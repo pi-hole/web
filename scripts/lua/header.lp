@@ -11,6 +11,7 @@
 starttime = mg.time(true)
 hostname = pihole.hostname()
 webhome = pihole.webhome()
+theme = pihole.webtheme()
 
 -- Get name of script by matching whatever is after the last "/" in the URI
 scriptname = mg.request_info.request_uri:match(webhome.."(.*)$")
@@ -39,9 +40,6 @@ function in_array (val, tab)
     return false
 end
 
--- Connection is considered secure if running natively on HTTPS
-is_secure = mg.request_info.https
-
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
@@ -49,51 +47,46 @@ is_authenticated = mg.request_info.is_authenticated
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
-    <meta http-equiv="cache-control" content="max-age=60,private">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Pi-hole <?=hostname?></title>
 
     <meta name="csrf-token" content="<?=mg.request_info.csrf_token?>">
 
-    <link rel="apple-touch-icon" href="<?=pihole.webhome()?>img/favicons/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="<?=pihole.webhome()?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="manifest" href="<?=pihole.webhome()?>img/favicons/manifest.json">
-    <? theme = pihole.webtheme() ?>
-    <link rel="mask-icon" href="<?=pihole.webhome()?>img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
-    <link rel="shortcut icon" href="<?=pihole.webhome()?>img/favicons/favicon.ico">
+    <link rel="apple-touch-icon" href="<?=webhome?>img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="<?=webhome?>img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="<?=webhome?>img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="<?=webhome?>img/favicons/manifest.json">
+    <link rel="mask-icon" href="<?=webhome?>img/favicons/safari-pinned-tab.svg" color="<?=theme.color?>">
+    <link rel="shortcut icon" href="<?=webhome?>img/favicons/favicon.ico">
     <meta name="msapplication-TileColor" content="<?=theme.color?>">
-    <meta name="msapplication-TileImage" content="<?=pihole.webhome()?>img/favicons/mstile-150x150.png">
-
-    <!-- Theme styles -->
+    <meta name="msapplication-TileImage" content="<?=webhome?>img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="<?=theme.color?>">
-
-<? if theme.dark then ?>
-    <style>
-        html { background-color: #000; }
-    </style>
-<? end ?>
-    <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
 
     <!-- Theme fonts -->
 <? if theme.name == 'lcars' then ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/ubuntu-mono/ubuntu-mono.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/antonio/antonio.css')?>">
 <? else ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/SourceSansPro/SourceSansPro.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/source-sans-pro/source-sans-pro.css')?>">
+<? end ?>
+
+<? if theme.dark then ?>
+    <style>
+        html { background-color: #000; }
+    </style>
 <? end ?>
 
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
-<?
-if startsWith(scriptname, 'groups') then
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
+
+<? if startsWith(scriptname, 'groups') then
     -- Group management styles
 ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
@@ -105,21 +98,26 @@ if startsWith(scriptname, 'groups') then
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
 <? end ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe-js/waitMe.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
-    <!-- Theme styles -->
+    <!-- Theme styles (<?= theme.name ?>) -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/'..theme.name..'.css')?>">
+<? if theme.name == "default-auto" then ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/default-dark.css')?>" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/default-light.css')?>" media="not (prefers-color-scheme: dark)">
+<? else ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('style/themes/' ..theme.name.. '.css')?>">
+<? end ?>
 
     <noscript><link rel="stylesheet" href="<?=pihole.fileversion('vendor/js-warn/js-warn.css')?>"></noscript>
 
     <!-- scripts -->
-    <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/font-awesome/all.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/waitMe/waitMe.min.js')?>"></script>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe/waitMe.min.css')?>">
+    <script defer src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>

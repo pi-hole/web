@@ -13,13 +13,13 @@
             <!-- Sidebar user panel -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole logo">
+                    <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" width="52" height="75">
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <span id="status"></span><br/>
-                    <span id="query_frequency"></span><br/>
-                    <span id="cpu"></span><br/>
+                    <span id="status"></span><br>
+                    <span id="query_frequency"></span><br>
+                    <span id="cpu"></span><br>
                     <span id="memory"></span>
                 </div>
             </div>
@@ -43,35 +43,43 @@
                 <!-- Group Management -->
                 <li class="menu-group<? if scriptname == 'groups' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i> <span>Groups
-                        <span class="pull-right-container">
-                            <span class="label label-primary pull-right" id="num_groups" title="Number of enabled groups"></span>
+                        <i class="fa fa-fw menu-icon fa-user-friends"></i>
+                        <span>Groups
+                            <span class="pull-right-container">
+                                <span class="label label-primary pull-right" id="num_groups" title="Number of enabled groups"></span>
+                            </span>
                         </span>
                     </a>
                 </li>
                 <li class="menu-group<? if scriptname == 'groups/clients' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups/clients">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i> <span>Clients
-                        <span class="pull-right-container">
-                            <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
+                        <i class="fa fa-fw menu-icon fa-laptop"></i>
+                        <span>Clients
+                            <span class="pull-right-container">
+                                <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
+                            </span>
                         </span>
                     </a>
                 </li>
                 <li class="menu-group<? if scriptname == 'groups/domains' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups/domains">
-                        <i class="fa fa-fw menu-icon fa-list"></i> <span>Domains
-                        <span class="pull-right-container">
-                            <span class="label bg-red pull-right" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
-                            <span class="label bg-green pull-right" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
+                        <i class="fa fa-fw menu-icon fa-list"></i>
+                        <span>Domains
+                            <span class="pull-right-container">
+                                <span class="label bg-red pull-right" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
+                                <span class="label bg-green pull-right" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
+                            </span>
                         </span>
                     </a>
                 </li>
                 <li class="menu-group<? if scriptname == 'groups/lists' then ?> active<? end ?>">
                     <a href="<?=webhome?>groups/lists">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i> <span>Lists
-                        <span class="pull-right-container">
-                            <span class="label bg-blue pull-right" id="num_lists" title="Number of subscribed and enabled lists"></span>
-                            <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
+                        <i class="fa fa-fw menu-icon fa-shield-alt"></i>
+                        <span>Lists
+                            <span class="pull-right-container">
+                                <span class="label bg-blue pull-right" id="num_lists" title="Number of subscribed and enabled lists"></span>
+                                <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
+                            </span>
                         </span>
                     </a>
                 </li>
@@ -251,7 +259,7 @@
                 <!-- Donate button -->
                 <li class="header text-uppercase">Donate</li>
                 <li class="menu-donate">
-                    <a href="https://pi-hole.net/donate/" target="_blank">
+                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
                         <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
                     </a>
                 </li>

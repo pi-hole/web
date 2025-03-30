@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, apiUrl: false */
 
 // Add event listener to import button
 document.getElementById("submit-import").addEventListener("click", function () {
@@ -17,13 +17,6 @@ function importZIP() {
   var file = document.getElementById("file").files[0];
   if (file === undefined) {
     alert("Please select a file to import.");
-    return;
-  }
-
-  // https://caniuse.com/fetch - everything except IE
-  // This is fine, as we dropped support for IE a while ago
-  if (typeof fetch !== "function") {
-    alert("Importing Tricorder files is not supported with this browser!");
     return;
   }
 
@@ -44,8 +37,7 @@ function importZIP() {
   const formData = new FormData();
   formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
-  // eslint-disable-next-line compat/compat
-  fetch("/api/teleporter", {
+  fetch(apiUrl + "/teleporter", {
     method: "POST",
     body: formData,
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
@@ -85,7 +77,7 @@ function importZIP() {
 // Inspired by https://stackoverflow.com/a/59576416/2087442
 $("#GETTeleporter").on("click", function () {
   $.ajax({
-    url: "/api/teleporter",
+    url: apiUrl + "/teleporter",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
     method: "GET",
     xhrFields: {
@@ -93,15 +85,22 @@ $("#GETTeleporter").on("click", function () {
     },
     success: function (data, status, xhr) {
       var a = document.createElement("a");
-      // eslint-disable-next-line compat/compat
       var url = globalThis.URL.createObjectURL(data);
+
       a.href = url;
       a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];
       document.body.append(a);
       a.click();
       a.remove();
-      // eslint-disable-next-line compat/compat
+
       globalThis.URL.revokeObjectURL(url);
     },
   });
+});
+
+$(function () {
+  // Show warning if not accessed over HTTPS
+  if (location.protocol !== "https:") {
+    $("#encryption-warning").show();
+  }
 });

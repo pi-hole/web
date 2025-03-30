@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, REFRESH_INTERVAL:false */
+/* global moment:false, utils:false, apiUrl:false, REFRESH_INTERVAL:false */
 
 const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
 const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
@@ -146,6 +146,13 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (external, NXRA)";
+      buttontext = "";
+      blocked = true;
+      break;
+    case "QUERY_EXTERNAL_BLOCKED_EDE15":
+      colorClass = "text-red";
+      icon = "fa-solid fa-ban";
+      fieldtext = "Blocked (external, EDE15)";
       buttontext = "";
       blocked = true;
       break;
@@ -424,7 +431,7 @@ function addSelectSuggestion(name, dict, data) {
 
 function getSuggestions(dict) {
   $.get(
-    "/api/queries/suggestions",
+    apiUrl + "/queries/suggestions",
     function (data) {
       for (var key in filters) {
         if (Object.hasOwnProperty.call(filters, key)) {
@@ -455,7 +462,7 @@ function filterOn(param, dict) {
 }
 
 function getAPIURL(filters) {
-  var apiurl = "/api/queries?";
+  var apiurl = apiUrl + "/queries?";
   for (var key in filters) {
     if (Object.hasOwnProperty.call(filters, key)) {
       var filter = filters[key];
@@ -568,8 +575,8 @@ $(function () {
       { data: null, width: "10%", sortable: false, searchable: false },
     ],
     lengthMenu: [
-      [10, 25, 50, 100, -1],
-      [10, 25, 50, 100, "All"],
+      [10, 25, 50, 100, 500, 1000],
+      [10, 25, 50, 100, 500, 1000],
     ],
     stateSave: true,
     stateDuration: 0,
@@ -583,9 +590,6 @@ $(function () {
       var querystatus = parseQueryStatus(data);
       const dnssec = parseDNSSEC(data);
 
-      // Remove HTML from querystatus.fieldtext
-      var rawtext = $("<div/>").html(querystatus.fieldtext).text();
-
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
           "<i class='fa fa-fw " +
@@ -593,7 +597,7 @@ $(function () {
             " " +
             querystatus.colorClass +
             "' title='" +
-            rawtext +
+            utils.escapeHtml(querystatus.fieldtext) +
             "'></i>"
         );
       } else if (querystatus.colorClass !== false) {

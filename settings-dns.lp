@@ -99,7 +99,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             rate-limited clients are short-circuited at the same time.</p>
                         <p>Rate-limiting may be disabled altogether by setting both
                             values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" target="_blank">our documentation</a>
+                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener" target="_blank">our documentation</a>
                             for further details.</p>
                     </div>
                 </div>
@@ -144,7 +144,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     in your router!) they are safe to use.</p>
                             </div>
                         </div>
-                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" target="_blank">our documentation</a> for further technical details.</p>
+                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" rel="noopener" target="_blank">our documentation</a> for further technical details.</p>
                     </div>
                 </div>
             </div>
@@ -175,7 +175,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 with "no such domain" rather than being forwarded upstream. The set
                                 of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
                                 <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
-                                but may also prevent you from being able to access to access local hostnames if the Pi-hole is not used as DHCP server.
+                                but may also prevent you from being able to access local hostnames if the Pi-hole is not used as DHCP server.
                                 Make sure you have set up conditional forwarding in this case.</p>
                         </div>
                         <br>
@@ -238,8 +238,8 @@ mg.include('scripts/lua/settings_header.lp','r')
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings-dns.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/settings-dns.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

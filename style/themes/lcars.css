@@ -306,6 +306,7 @@ textarea:-webkit-autofill,
 select:-webkit-autofill {
   -webkit-text-fill-color: #fff !important;
   -webkit-box-shadow: 0 0 0 1000px #000 inset;
+  -webkit-transition: background-color 1s ease-in-out 0s;
   transition: background-color 1s ease-in-out 0s;
 }
 
@@ -346,13 +347,16 @@ p.login-box-msg,
   z-index: 1;
 }
 
+.form-control::-moz-placeholder {
+  color: #456;
+}
+
 .form-control::placeholder {
   color: #456;
 }
 
 .form-control:focus {
   border-color: #48f;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
@@ -531,6 +535,11 @@ p.login-box-msg,
   z-index: 1000;
 }
 
+.dropdown.bootstrap-select {
+  border: none;
+  background: none;
+}
+
 .bootstrap-select > .dropdown-toggle.bs-placeholder,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:active,
 .bootstrap-select > .dropdown-toggle.bs-placeholder:focus {
@@ -589,8 +598,6 @@ p.login-box-msg,
 }
 
 .nav.navbar-nav {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -606,14 +613,6 @@ p.login-box-msg,
 
 .navbar-custom-menu > .navbar-nav > li {
   flex: 1 1 auto;
-}
-
-#pihole-diagnosis {
-  min-width: 50px;
-}
-
-#pihole-diagnosis svg {
-  font-size: 28px;
 }
 
 .warning-count {
@@ -931,7 +930,7 @@ p.login-box-msg,
   margin-right: -9px;
 }
 
-.sidebar-menu li a > svg {
+.sidebar-menu li a > i {
   display: none;
 }
 
@@ -939,7 +938,7 @@ p.login-box-msg,
   margin-right: 0;
 }
 
-.treeview-menu li a svg {
+.treeview-menu li a i {
   display: inherit;
   position: absolute;
   right: 16px;
@@ -990,7 +989,7 @@ p.login-box-msg,
   position: absolute !important;
 }
 
-.sidebar-collapse .treeview-menu li a svg {
+.sidebar-collapse .treeview-menu li a i {
   top: auto;
   right: auto;
   bottom: 6px;
@@ -1020,17 +1019,12 @@ p.login-box-msg,
   margin-top: 20px;
 }
 
-.user-panel .fa-circle path {
-  stroke: rgba(0, 0, 0, 0.5);
-  stroke-width: 5%;
+.user-panel > .info i {
+  text-shadow: 0 0 1px black;
 }
 
-.user-panel .svg-inline--fa {
-  margin-right: 2px;
-}
-
-.user-panel svg.text-orange,
-.user-panel svg.text-red {
+.user-panel > .info i.text-orange,
+.user-panel > .info i.text-red {
   animation: fire 1s ease-in-out 0s infinite;
 }
 
@@ -1153,7 +1147,7 @@ footer a:focus {
   box-shadow: none;
 }
 
-.sidebar-collapse .sidebar-menu svg {
+.sidebar-collapse .sidebar-menu i {
   display: block;
 }
 
@@ -1569,38 +1563,6 @@ table.dataTable {
 }
 
 /*** Animation keyframes ***/
-@-webkit-keyframes flash {
-  0% {
-    filter: opacity(0.35) contrast(2);
-  }
-  5% {
-    filter: opacity(0.7) contrast(2);
-  }
-  10% {
-    filter: opacity(0.35) contrast(2);
-  }
-  15% {
-    filter: opacity(0.7) contrast(2);
-  }
-  20% {
-    filter: opacity(0.35) contrast(2);
-  }
-  25% {
-    filter: opacity(0.7) contrast(2);
-  }
-  30% {
-    filter: opacity(0.35) contrast(2);
-  }
-  35% {
-    filter: opacity(0.7) contrast(1);
-  }
-  70% {
-    filter: opacity(1) contrast(1) brightness(1.2);
-  }
-  90% {
-    filter: none;
-  }
-}
 
 @keyframes flash {
   0% {
@@ -1635,34 +1597,12 @@ table.dataTable {
   }
 }
 
-@-webkit-keyframes fire {
-  0% {
-    filter: drop-shadow(0 0 2px #f90);
-  }
-  60% {
-    filter: none;
-  }
-}
-
 @keyframes fire {
   0% {
     filter: drop-shadow(0 0 2px #f90);
   }
   60% {
-    -webkit-filter: none;
     filter: none;
-  }
-}
-
-@-webkit-keyframes warningPulse {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }
 
@@ -2131,11 +2071,6 @@ td.highlight {
   font-family: sans-serif;
 }
 
-/*** size correction to fit in one line - Settings/DNS ***/
-#dns .col-md-11 {
-  width: 84%;
-}
-
 /*** add style to the information/about dropdown ***/
 .navbar-nav > .user-menu > .dropdown-menu > .user-header,
 .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
@@ -2187,4 +2122,10 @@ td.highlight {
 .bstreeview .list-group-item {
   padding-top: 0.2em;
   padding-bottom: 0.55em;
+}
+
+/*** 🖖 ***/
+.fas.fa-hand-paper {
+  --fa: "\f259" !important;
+  --fa--fa: "\f259\f259" !important;
 }

@@ -7,8 +7,8 @@
 
 /* global utils:false, moment:false */
 
-//The following functions allow us to display time until pi-hole is enabled after disabling.
-//Works between all pages
+var _isLoginPage = false;
+const apiUrl = document.body.dataset.apiurl;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
@@ -115,7 +115,7 @@ function checkBlocking() {
   }
 
   $.ajax({
-    url: "/api/dns/blocking",
+    url: apiUrl + "/dns/blocking",
     method: "GET",
   })
     .done(function (data) {
@@ -144,7 +144,7 @@ function piholeChange(action, duration) {
 
   btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
   $.ajax({
-    url: "/api/dns/blocking",
+    url: apiUrl + "/dns/blocking",
     method: "POST",
     dataType: "json",
     processData: false,
@@ -206,7 +206,7 @@ function initCheckboxRadioStyle() {
     chkboxStyle = "primary";
   }
 
-  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet" />');
+  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet">');
   // Only add the stylesheet if it's not already present
   if ($("link[href='" + boxsheet.attr("href") + "']").length === 0) boxsheet.appendTo("head");
 
@@ -220,7 +220,7 @@ function initCheckboxRadioStyle() {
     iCheckStyle.on("change", function () {
       var themename = $(this).val();
       localStorage.setItem("theme_icheck", themename);
-      applyCheckboxRadioStyle(themename);
+      applyCheckboxRadioStyle();
     });
   }
 }
@@ -267,7 +267,7 @@ function updateQueryFrequency(intl, frequency) {
 var ftlinfoTimer = null;
 function updateFtlInfo() {
   $.ajax({
-    url: "/api/info/ftl",
+    url: apiUrl + "/info/ftl",
   })
     .done(function (data) {
       var ftl = data.ftl;
@@ -324,7 +324,7 @@ function updateFtlInfo() {
 
 function updateSystemInfo() {
   $.ajax({
-    url: "/api/info/system",
+    url: apiUrl + "/info/system",
   })
     .done(function (data) {
       var system = data.system;
@@ -372,39 +372,33 @@ function updateSystemInfo() {
         $("#sysinfo-memory-swap").text("No swap space available");
       }
 
-      color = system.cpu.load.percent[0] > 100 ? "text-red" : "text-green-light";
+      color = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
       $("#cpu").html(
         '<i class="fa fa-fw fa-microchip ' +
           color +
-          '"></i>&nbsp;&nbsp;CPU:&nbsp;' +
-          system.cpu.load.percent[0].toFixed(1) +
-          "&thinsp;%"
+          '"></i>&nbsp;&nbsp;Load:&nbsp;' +
+          system.cpu.load.raw[0].toFixed(2) +
+          "&nbsp;/&nbsp;" +
+          system.cpu.load.raw[1].toFixed(2) +
+          "&nbsp;/&nbsp;" +
+          system.cpu.load.raw[2].toFixed(2)
       );
       $("#cpu").prop(
         "title",
-        "Load: " +
-          system.cpu.load.raw[0].toFixed(2) +
-          " " +
-          system.cpu.load.raw[1].toFixed(2) +
-          " " +
-          system.cpu.load.raw[2].toFixed(2) +
-          " on " +
+        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
           system.cpu.nprocs +
           " core" +
           (system.cpu.nprocs > 1 ? "s" : "") +
           " running " +
           system.procs +
-          " processes"
+          " processes " +
+          (system.cpu.load.raw[0] > system.cpu.nprocs
+            ? " (load is higher than the number of cores)"
+            : "")
       );
-      $("#sysinfo-cpu").text(
-        system.cpu.load.percent[0].toFixed(1) +
-          "% (load: " +
-          system.cpu.load.raw[0].toFixed(2) +
-          " " +
-          system.cpu.load.raw[1].toFixed(2) +
-          " " +
-          system.cpu.load.raw[2].toFixed(2) +
-          ") on " +
+      $("#sysinfo-cpu").html(
+        system.cpu["%cpu"].toFixed(1) +
+          "% on " +
           system.cpu.nprocs +
           " core" +
           (system.cpu.nprocs > 1 ? "s" : "") +
@@ -490,7 +484,7 @@ function versionCompare(v1, v2) {
 
 function updateVersionInfo() {
   $.ajax({
-    url: "/api/info/version",
+    url: apiUrl + "/info/version",
   }).done(function (data) {
     var version = data.version;
     var updateAvailable = false;
@@ -509,7 +503,7 @@ function updateVersionInfo() {
       },
       {
         name: "Core",
-        local: version.core.local.version,
+        local: version.core.local.version || "N/A",
         remote: version.core.remote.version,
         branch: version.core.local.branch,
         hash: version.core.local.hash,
@@ -518,7 +512,7 @@ function updateVersionInfo() {
       },
       {
         name: "FTL",
-        local: version.ftl.local.version,
+        local: version.ftl.local.version || "N/A",
         remote: version.ftl.remote.version,
         branch: version.ftl.local.branch,
         hash: version.ftl.local.hash,
@@ -527,7 +521,7 @@ function updateVersionInfo() {
       },
       {
         name: "Web interface",
-        local: version.web.local.version,
+        local: version.web.local.version || "N/A",
         remote: version.web.remote.version,
         branch: version.web.local.branch,
         hash: version.web.local.hash,
@@ -592,7 +586,7 @@ function updateVersionInfo() {
         }
 
         // Display update information of individual components only if we are not running in a Docker container
-        if ((!isDocker || (isDocker && v.name === "Docker Tag")) && updateComponentAvailable) {
+        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
           $("#versions").append(
             "<li><strong>" +
               v.name +
@@ -625,7 +619,7 @@ function updateVersionInfo() {
 }
 
 $(function () {
-  if (globalThis.location.pathname !== "/admin/login") updateInfo();
+  if (!_isLoginPage) updateInfo();
   var enaT = $("#enableTimer");
   var target = new Date(parseInt(enaT.html(), 10));
   var seconds = Math.round((target.getTime() - Date.now()) / 1000);
@@ -640,7 +634,7 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  if (globalThis.location.pathname !== "/admin/login") {
+  if (!_isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
@@ -742,7 +736,7 @@ function applyExpertSettings() {
 function addAdvancedInfo() {
   const advancedInfoSource = $("#advanced-info-data");
   const advancedInfoTarget = $("#advanced-info");
-  const isTLS = advancedInfoSource.data("tls");
+  const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
   const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
   const starttime = parseFloat(advancedInfoSource.data("starttime"));
@@ -755,7 +749,7 @@ function addAdvancedInfo() {
   // Add TLS and client IP info
   advancedInfoTarget.append(
     'Client: <i class="fa-solid fa-fw fa-lock' +
-      (isTLS ? "" : "-open") +
+      (isTLS ? " text-green" : "-open") +
       '" title="Your connection is ' +
       (isTLS ? "" : "NOT ") +
       'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'

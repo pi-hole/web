@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
+/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false, apiUrl: false */
 
 var nextID = 0;
 var lastPID = -1;
@@ -26,10 +26,10 @@ function formatDnsmasq(line) {
 
   if (line.includes("denied") || line.includes("gravity blocked")) {
     // Red bold text for blocked domains
-    txt = `<b class="log-red">${txt}</b>`;
+    txt = `<strong class="log-red">${txt}</strong>`;
   } else if (line.includes("query[A") || line.includes("query[DHCP")) {
     // Bold text for initial query lines
-    txt = `<b>${txt}</b>`;
+    txt = `<strong>${txt}</strong>`;
   } else {
     // Grey text for all other lines
     txt = `<span class="text-muted">${txt}</span>`;
@@ -84,7 +84,7 @@ function getData() {
   }
 
   $.ajax({
-    url: "/api/logs/" + GETDict.file + "?nextID=" + nextID,
+    url: apiUrl + "/logs/" + GETDict.file + "?nextID=" + nextID,
     timeout: 5000,
     method: "GET",
   })

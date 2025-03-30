@@ -19,10 +19,10 @@
     "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/**/*.js\"",
     "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/**/*.js\"",
     "xo": "xo",
-    "xo:check": "npm run xo -- \"style/*.css\" \"style/themes/*.css\" \"scripts/**\"",
-    "xo:fix": "npm run xo -- --fix \"style/*.css\" \"style/themes/*.css\" \"scripts/**\"",
+    "xo:check": "npm run xo",
+    "xo:fix": "npm run xo -- --fix",
     "test": "npm run prettier:check && npm run xo:check",
-    "testpr": "npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
+    "testpr": "npm run prefix && npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
   },
   "dependencies": {
     "admin-lte": "2.4.18",
@@ -45,24 +45,27 @@
     "icheck-bootstrap": "3.0.1",
     "icheck-material": "1.0.1",
     "jquery": "3.7.1",
+    "modernized-waitme": "1.0.0",
     "moment": "2.30.1",
     "myclabs.jquery.confirm": "2.7.0",
     "nprogress": "0.2.0",
     "qrious": "4.0.2",
-    "select2": "4.0.13",
-    "waitme": "1.19.0"
+    "select2": "4.0.13"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "eslint-plugin-compat": "^6.0.2",
     "postcss": "^8.5.3",
-    "postcss-cli": "^11.0.0",
-    "prettier": "^3.5.2",
+    "postcss-cli": "^11.0.1",
+    "prettier": "^3.5.3",
     "xo": "^0.60.0"
   },
   "browserslist": [
-    "defaults",
-    "not IE 11"
+    ">= 0.5%",
+    "last 2 major versions",
+    "not dead",
+    "not op_mini all",
+    "Firefox ESR"
   ],
   "prettier": {
     "arrowParens": "avoid",
@@ -119,11 +122,13 @@
         }
       ],
       "unicorn/filename-case": "off",
+      "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-array-for-each": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/no-document-cookie": "off",
       "unicorn/numeric-separators-style": "off",
       "unicorn/prefer-includes": "off",
+      "unicorn/prefer-module": "off",
       "unicorn/prefer-node-append": "off",
       "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-query-selector": "off",

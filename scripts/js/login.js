@@ -5,7 +5,9 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, NProgress:false */
+/* global utils:false, apiUrl: false, NProgress:false */
+
+var _isLoginPage = true;
 
 function redirect() {
   // Login succeeded or not needed (empty password)
@@ -14,7 +16,7 @@ function redirect() {
 
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {
-    target = "messages.lp";
+    target = "messages";
   }
 
   // Redirect to target
@@ -89,7 +91,7 @@ function doLogin(password) {
   NProgress.start();
   utils.disableAll();
   $.ajax({
-    url: "/api/auth",
+    url: apiUrl + "/auth",
     method: "POST",
     dataType: "json",
     processData: false,
@@ -134,7 +136,7 @@ $("#totp").on("input", function () {
 // Toggle password visibility button
 $("#toggle-password").on("click", function () {
   // Toggle font-awesome classes to change the svg icon on the button
-  $("svg", this).toggleClass("fa-eye fa-eye-slash");
+  $(".field-icon", this).toggleClass("fa-eye fa-eye-slash");
 
   // Password field
   var $pwd = $("#current-password");
@@ -161,7 +163,7 @@ function showDNSfailure() {
 $(function () {
   // Check if we need to login at all
   $.ajax({
-    url: "/api/auth",
+    url: apiUrl + "/auth",
   })
     .done(function (data) {
       // If we are already logged in, redirect to dashboard
@@ -180,7 +182,7 @@ $(function () {
 
   // Get information about HTTPS port and DNS status
   $.ajax({
-    url: "/api/info/login",
+    url: apiUrl + "/info/login",
   }).done(function (data) {
     if (data.dns === false) showDNSfailure();
 

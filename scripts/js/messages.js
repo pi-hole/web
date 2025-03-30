@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils: false, apiUrl: false */
 var table,
   toasts = {};
 
@@ -13,7 +13,7 @@ $(function () {
   var ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  var url = "/api/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
+  var url = apiUrl + "/info/messages" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
   table = $("#messagesTable").DataTable({
     ajax: {
       url: url,
@@ -157,7 +157,7 @@ function delMsg(id) {
   toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
 
   $.ajax({
-    url: "/api/info/messages/" + id,
+    url: apiUrl + "/info/messages/" + id,
     method: "DELETE",
   })
     .done(function (response) {

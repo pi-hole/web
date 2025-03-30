@@ -46,7 +46,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <strong>Hints:</strong>
                 <ol>
                     <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your lists.</li>
-                    <li>Multiple lists can be added by separating each <i>unique</i> URL with a space or comma</li>
+                    <li>Multiple lists can be added by separating each <em>unique</em> URL with a space or comma</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
@@ -94,9 +94,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/groups-lists.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/groups-lists.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

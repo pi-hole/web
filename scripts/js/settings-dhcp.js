@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, apiUrl:false, setConfigValues: false, apiFailure: false */
 
 var dhcpLeaesTable = null,
   toasts = {};
@@ -32,7 +32,7 @@ function renderHostnameCLID(data, type) {
 $(function () {
   dhcpLeaesTable = $("#DHCPLeasesTable").DataTable({
     ajax: {
-      url: "/api/dhcp/leases",
+      url: apiUrl + "/dhcp/leases",
       type: "GET",
       dataSrc: "leases",
     },
@@ -167,7 +167,7 @@ function delLease(ip) {
   toasts[ip] = utils.showAlert("info", "", "Deleting lease...", ip, null);
 
   $.ajax({
-    url: "/api/dhcp/leases/" + encodeURIComponent(ip),
+    url: apiUrl + "/dhcp/leases/" + encodeURIComponent(ip),
     method: "DELETE",
   })
     .done(function (response) {
@@ -214,7 +214,7 @@ function fillDHCPhosts(data) {
 
 function processDHCPConfig() {
   $.ajax({
-    url: "/api/config/dhcp?detailed=true",
+    url: apiUrl + "/config/dhcp?detailed=true",
   })
     .done(function (data) {
       fillDHCPhosts(data.config.dhcp.hosts);

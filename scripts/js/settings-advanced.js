@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false, saveSettings:false */
+/* global utils:false, apiUrl:false, apiFailure: false, applyCheckboxRadioStyle: false, saveSettings:false */
 /* exported createDynamicConfigTabs */
 
 function addAllowedValues(allowed) {
@@ -296,7 +296,7 @@ function generateRow(topic, key, value) {
 
 function createDynamicConfigTabs() {
   $.ajax({
-    url: "/api/config?detailed=true",
+    url: apiUrl + "/config?detailed=true",
   })
     .done(function (data) {
       // Create the tabs for the advanced dynamic config topics
@@ -323,7 +323,7 @@ function createDynamicConfigTabs() {
       // Dynamically fill the tabs with config topics
       Object.keys(data.config).forEach(function (topic) {
         var value = data.config[topic];
-        generateRow(topic, topic, value, data);
+        generateRow(topic, topic, value);
       });
       $("#advanced-overlay").hide();
 

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, apiUrl:false, groups:false,, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
@@ -63,29 +63,23 @@ function showSuggestDomains(value) {
   var newDomainEl = $("#new_domain");
   var suggestDomainEl = $("#suggest_domains");
 
-  try {
-    // URL is not supported in all browsers, but we are in a try-block so we can ignore it
-    // eslint-disable-next-line compat/compat
-    var parts = new URL(value).hostname.split(".");
-    var table = $("<table>");
+  var parts = new URL(value).hostname.split(".");
+  var table = $("<table>");
 
-    for (var i = 0; i < parts.length - 1; ++i) {
-      var hostname = parts.slice(i).join(".");
+  for (var i = 0; i < parts.length - 1; ++i) {
+    var hostname = parts.slice(i).join(".");
 
-      table.append(
-        $("<tr>")
-          .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
-          .append($("<td>").append(createButton(hostname)))
-      );
-    }
-
-    suggestDomainEl.slideUp("fast", function () {
-      suggestDomainEl.html(table);
-      suggestDomainEl.slideDown("fast");
-    });
-  } catch {
-    hideSuggestDomains();
+    table.append(
+      $("<tr>")
+        .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
+        .append($("<td>").append(createButton(hostname)))
+    );
   }
+
+  suggestDomainEl.slideUp("fast", function () {
+    suggestDomainEl.html(table);
+    suggestDomainEl.slideDown("fast");
+  });
 }
 
 function hideSuggestDomains() {
@@ -97,7 +91,7 @@ function initTable() {
   table = $("#domainsTable").DataTable({
     processing: true,
     ajax: {
-      url: "/api/domains",
+      url: apiUrl + "/domains",
       dataSrc: "domains",
       type: "GET",
     },
@@ -513,7 +507,7 @@ function addDomain() {
   const type = action === "add_deny" ? "deny" : "allow";
 
   $.ajax({
-    url: "/api/domains/" + type + "/" + kind,
+    url: apiUrl + "/domains/" + type + "/" + kind,
     method: "post",
     dataType: "json",
     processData: false,
@@ -602,7 +596,7 @@ function editDomain() {
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
   utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
-    url: "/api/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
+    url: apiUrl + "/domains/" + newTypestr + "/" + encodeURIComponent(domainDecoded),
     method: "put",
     dataType: "json",
     processData: false,

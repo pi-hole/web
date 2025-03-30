@@ -4,27 +4,19 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
+/* global apiUrl: false */
 
 function eventsource() {
   var alInfo = $("#alInfo");
   var alSuccess = $("#alSuccess");
   var ta = $("#output");
 
-  // https://caniuse.com/fetch - everything except IE
-  // This is fine, as we dropped support for IE a while ago
-  if (typeof fetch !== "function") {
-    ta.show();
-    ta.html("Updating lists of ad-serving domains is not supported with this browser!");
-    return;
-  }
-
   ta.html("");
   ta.show();
   alInfo.show();
   alSuccess.hide();
 
-  // eslint-disable-next-line compat/compat
-  fetch("/api/action/gravity", {
+  fetch(apiUrl + "/action/gravity", {
     method: "POST",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
   })
@@ -76,7 +68,7 @@ $(function () {
   });
 
   // Do we want to start updating immediately?
-  // gravity.lp?go
+  // gravity?go
   var searchString = globalThis.location.search.substring(1);
   if (searchString.indexOf("go") !== -1) {
     $("#gravityBtn").prop("disabled", true);

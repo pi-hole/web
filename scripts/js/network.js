@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global utils:false, apiFailure:false */
+/* global utils:false, apiUrl:false, apiFailure:false */
 
 var tableApi;
 
@@ -64,7 +64,7 @@ function deleteNetworkEntry() {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting network table entry...");
   $.ajax({
-    url: "/api/network/devices/" + id,
+    url: apiUrl + "/network/devices/" + id,
     method: "DELETE",
     success: function () {
       utils.enableAll();
@@ -138,6 +138,19 @@ $(function () {
       var ips = [],
         iptitles = [];
 
+      // Sort IPs, IPv4 before IPv6, then alphabetically
+      data.ips.sort(function (a, b) {
+        if (a.ip.includes(":") && !b.ip.includes(":")) {
+          return 1;
+        }
+
+        if (!a.ip.includes(":") && b.ip.includes(":")) {
+          return -1;
+        }
+
+        return a.ip.localeCompare(b.ip);
+      });
+
       for (index = 0; index < data.ips.length; index++) {
         var ip = data.ips[index],
           iptext = ip.ip;
@@ -150,7 +163,7 @@ $(function () {
 
         // Only add IPs to the table if we have not reached the maximum
         if (index < MAXIPDISPLAY) {
-          ips.push('<a href="queries.lp?client_ip=' + ip.ip + '">' + iptext + "</a>");
+          ips.push('<a href="queries?client_ip=' + ip.ip + '">' + iptext + "</a>");
         }
       }
 
@@ -168,7 +181,7 @@ $(function () {
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
         $("td:eq(1)", row).html(
-          utils.escapeHtml(data.hwaddr) + "<br/>" + utils.escapeHtml(data.macVendor)
+          utils.escapeHtml(data.hwaddr) + "<br>" + utils.escapeHtml(data.macVendor)
         );
       }
 
@@ -195,7 +208,7 @@ $(function () {
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     ajax: {
-      url: "/api/network/devices",
+      url: apiUrl + "/network/devices",
       type: "GET",
       dataType: "json",
       data: {

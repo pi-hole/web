@@ -194,7 +194,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-md-6 col-md-offset-3">
                         <div id="totp_div" class="has-feedback has-error">
                             <div class="pwd-field form-group">
-                                <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder=""/>
+                                <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
                             </div>
                             <i class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></i>
                         </div>
@@ -246,10 +246,10 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

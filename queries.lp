@@ -154,7 +154,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <h3 class="box-title">Recent Queries</h3>
                 <div class="pull-right align-click-options">
                     <span><input type="checkbox" id="live"><label for="live">Live update</label></span>
-                    <a id="refresh" href="#" class="btn btn-sm btn-info btn-flat">Refresh</a>
+                    <button type="button" id="refresh" class="btn btn-sm btn-info btn-flat">Refresh</button>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -194,9 +194,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/queries.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/queries.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>
