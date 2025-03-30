@@ -45,12 +45,12 @@
     "icheck-bootstrap": "3.0.1",
     "icheck-material": "1.0.1",
     "jquery": "3.7.1",
+    "modernized-waitme": "1.0.0",
     "moment": "2.30.1",
     "myclabs.jquery.confirm": "2.7.0",
     "nprogress": "0.2.0",
     "qrious": "4.0.2",
-    "select2": "4.0.13",
-    "modernized-waitme": "1.0.0"
+    "select2": "4.0.13"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
