@@ -536,7 +536,7 @@ function updateVersionInfo() {
       isDocker = true;
     }
 
-    versions.forEach(v => {
+    for (const v of versions) {
       if (v.local !== null) {
         // reset update status for each component
         let updateComponentAvailable = false;
@@ -603,7 +603,7 @@ function updateVersionInfo() {
           $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
         }
       }
-    });
+    }
 
     if (dockerUpdate)
       $("#update-hint").html(

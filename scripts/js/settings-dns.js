@@ -26,7 +26,7 @@ function fillDNSupstreams(value, servers) {
 
   let i = 0;
   let customServers = value.value.length;
-  servers.forEach(element => {
+  for (const element of servers) {
     let row = "<tr>";
     // Build checkboxes for IPv4 and IPv6
     const addresses = [element.v4, element.v6];
@@ -65,7 +65,7 @@ function fillDNSupstreams(value, servers) {
 
     // Add row to table
     $("#DNSupstreamsTable").append(row);
-  });
+  }
 
   // Add event listener to checkboxes
   $("input[id^='DNSupstreams-']").on("change", () => {

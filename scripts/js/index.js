@@ -63,7 +63,7 @@ function updateQueriesOverTime() {
     }
 
     // Add data for each dataset that is available
-    data.history.forEach(item => {
+    for (const item of data.history) {
       const timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
@@ -72,7 +72,7 @@ function updateQueriesOverTime() {
       timeLineChart.data.datasets[1].data.push(item.blocked);
       timeLineChart.data.datasets[2].data.push(item.cached);
       timeLineChart.data.datasets[3].data.push(item.forwarded);
-    });
+    }
 
     $("#queries-over-time .overlay").hide();
     timeLineChart.update();
@@ -102,12 +102,12 @@ function updateQueryTypesPie() {
     let sum = 0;
 
     // Compute total number of queries
-    Object.keys(data.types).forEach(item => {
+    for (const item of Object.keys(data.types)) {
       sum += data.types[item];
-    });
+    }
 
     // Fill chart with data (only include query types which appeared recently)
-    Object.keys(data.types).forEach(item => {
+    for (const item of Object.keys(data.types)) {
       if (data.types[item] > 0) {
         v.push((100 * data.types[item]) / sum);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
@@ -115,7 +115,7 @@ function updateQueryTypesPie() {
       }
 
       i++;
-    });
+    }
 
     // Build a single dataset with the data to be pushed
     const dd = { data: v, backgroundColor: c };
@@ -147,10 +147,10 @@ function updateClientsOverTime() {
     let numClients = 0;
     const labels = [];
     const clients = {};
-    Object.keys(data.clients).forEach(ip => {
+    for (const ip of Object.keys(data.clients)) {
       clients[ip] = numClients++;
       labels.push(data.clients[ip].name !== null ? data.clients[ip].name : ip);
-    });
+    }
 
     // Remove possibly already existing data
     clientsChart.data.labels = [];
@@ -174,8 +174,8 @@ function updateClientsOverTime() {
 
     // Add data for each dataset that is available
     // We need to iterate over all time slots and fill in the data for each client
-    Object.keys(data.history).forEach(item => {
-      Object.keys(clients).forEach(client => {
+    for (const item of Object.keys(data.history)) {
+      for (const client of Object.keys(clients)) {
         if (data.history[item].data[client] === undefined) {
           // If there is no data for this client in this timeslot, we push 0
           clientsChart.data.datasets[clients[client]].data.push(0);
@@ -183,14 +183,14 @@ function updateClientsOverTime() {
           // Otherwise, we push the data
           clientsChart.data.datasets[clients[client]].data.push(data.history[item].data[client]);
         }
-      });
-    });
+      }
+    }
 
     // Extract data timestamps
-    data.history.forEach(item => {
+    for (const item of data.history) {
       const d = new Date(1000 * parseInt(item.timestamp, 10));
       clientsChart.data.labels.push(d);
-    });
+    }
 
     $("#clients .overlay").hide();
     clientsChart.update();
@@ -223,12 +223,12 @@ function updateForwardDestinationsPie() {
     const values = [];
 
     // Compute total number of queries
-    data.upstreams.forEach(item => {
+    for (const item of data.upstreams) {
       sum += item.count;
-    });
+    }
 
     // Collect values and colors
-    data.upstreams.forEach(item => {
+    for (const item of data.upstreams) {
       let label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
       if (item.port > 0) {
         label += "#" + item.port;
@@ -242,14 +242,14 @@ function updateForwardDestinationsPie() {
 
       const percent = (100 * item.count) / sum;
       values.push([label, percent, THEME_COLORS[i++ % THEME_COLORS.length]]);
-    });
+    }
 
     // Split data into individual arrays for the graphs
-    values.forEach(value => {
+    for (const value of values) {
       k.push(value[0]);
       v.push(value[1]);
       c.push(value[2]);
-    });
+    }
 
     // Build a single dataset with the data to be pushed
     const dd = { data: v, backgroundColor: c };
@@ -307,7 +307,7 @@ function updateTopClientsTable(blocked) {
     }
 
     // Populate table with content
-    data.clients.forEach(client => {
+    for (const client of data.clients) {
       // Sanitize client
       let clientname = client.name;
       if (clientname.length === 0) clientname = client.ip;
@@ -328,7 +328,7 @@ function updateTopClientsTable(blocked) {
           utils.addTD(utils.colorBar(percentage, sum, style)) +
           "</tr> "
       );
-    });
+    }
 
     // Hide overlay
     overlay.hide();
@@ -374,7 +374,7 @@ function updateTopDomainsTable(blocked) {
     }
 
     // Populate table with content
-    data.domains.forEach(item => {
+    for (const item of data.domains) {
       // Sanitize domain
       domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
@@ -394,7 +394,7 @@ function updateTopDomainsTable(blocked) {
           utils.addTD(utils.colorBar(percentage, sum, style)) +
           "</tr> "
       );
-    });
+    }
 
     overlay.hide();
   }).fail(data => {

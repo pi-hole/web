@@ -214,7 +214,7 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      value.allowed.forEach((option, i) => {
+      for (const [i, option] of value.allowed.entries()) {
         content +=
           "<div>" +
           // Radio button
@@ -229,7 +229,8 @@ function valueDetails(key, value) {
           // Paragraph with description
           `<p class="help-block">${option.description}</p>` +
           "</div>";
-      });
+      }
+
       content += "</div>";
 
       break;
@@ -264,10 +265,11 @@ function valueDetails(key, value) {
 function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    Object.keys(value).forEach(subkey => {
+    for (const subkey of Object.keys(value)) {
       const subvalue = value[subkey];
       generateRow(topic, key + "." + subkey, subvalue);
-    });
+    }
+
     return;
   }
 
@@ -302,7 +304,7 @@ function createDynamicConfigTabs() {
   })
     .done(data => {
       // Create the tabs for the advanced dynamic config topics
-      Object.keys(data.topics).forEach(n => {
+      for (const n of Object.keys(data.topics)) {
         const topic = data.topics[n];
 
         $("#advanced-settings-tabs").append(`
@@ -320,13 +322,14 @@ function createDynamicConfigTabs() {
             <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="pill" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
         `);
-      });
+      }
 
       // Dynamically fill the tabs with config topics
-      Object.keys(data.config).forEach(topic => {
+      for (const topic of Object.keys(data.config)) {
         const value = data.config[topic];
         generateRow(topic, topic, value);
-      });
+      }
+
       $("#advanced-overlay").hide();
 
       // Select the first tab and show the content

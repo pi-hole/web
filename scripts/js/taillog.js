@@ -120,7 +120,7 @@ function getData() {
         $("#output").append('<hr class="hr-small">').children(":last").fadeOut(2000);
       }
 
-      data.log.forEach(line => {
+      for (const line of data.log) {
         // Escape HTML
         line.message = utils.escapeHtml(line.message);
         // Format line if applicable
@@ -139,7 +139,7 @@ function getData() {
           //$(".left-line:last").fadeOut(2000);
           $("#output").children(":last").hide().fadeIn("fast");
         }
-      });
+      }
 
       // Limit output to <maxlines> lines
       const lines = $("#output").val().split("\n");

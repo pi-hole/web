@@ -32,7 +32,7 @@ $(() => {
     const masterInterfaces = {};
 
     // For each interface in data.interface, create a new object and push it to json
-    data.interfaces.forEach(interface => {
+    for (const interface of data.interfaces) {
       const carrierColor = interface.carrier ? "text-green" : "text-red";
       let stateText = interface.state.toUpperCase();
       if (stateText === "UNKNOWN" && interface.flags !== undefined && interface.flags.length > 0) {
@@ -417,7 +417,7 @@ $(() => {
       }
 
       interfaces[interface.name] = obj;
-    });
+    }
 
     // Sort interfaces based on masterInterfaces. If an item is found in
     // masterInterfaces, it should be placed after the master interface
