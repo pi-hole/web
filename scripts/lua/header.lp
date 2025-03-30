@@ -49,7 +49,6 @@ is_authenticated = mg.request_info.is_authenticated
     <meta charset="utf-8">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
-    <meta http-equiv="cache-control" content="max-age=60,private">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Pi-hole <?=hostname?></title>
