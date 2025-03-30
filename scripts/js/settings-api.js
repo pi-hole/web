@@ -212,7 +212,7 @@ function deleteMultipleSessions(ids) {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (const id of ids) {
-    if (Object.hasOwnProperty.call(ids, id) && isNaN(ids[id])) return;
+    if (Object.hasOwn(ids, id) && isNaN(ids[id])) return;
   }
 
   // Convert all ids to integers

@@ -595,7 +595,7 @@ function listAlert(type, items, data) {
 
     // Loop over data.processed.success and print "item"
     for (const item in data.processed.success) {
-      if (Object.prototype.hasOwnProperty.call(data.processed.success, item)) {
+      if (Object.hasOwn(data.processed.success, item)) {
         message += "\n- " + data.processed.success[item].item;
       }
     }
@@ -618,7 +618,7 @@ function listAlert(type, items, data) {
 
     // Loop over data.processed.errors and print "item: error"
     for (const item in data.processed.errors) {
-      if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
+      if (Object.hasOwn(data.processed.errors, item)) {
         let error = data.processed.errors[item].error;
         // Replace some error messages with a more user-friendly text
         if (error.includes("UNIQUE constraint failed")) {

@@ -415,7 +415,7 @@ function addSelectSuggestion(name, dict, data) {
 
   // Add data obtained from API
   for (const key in data) {
-    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+    if (!Object.hasOwn(data, key)) {
       continue;
     }
 
@@ -434,7 +434,7 @@ function getSuggestions(dict) {
     document.body.dataset.apiurl + "/queries/suggestions",
     data => {
       for (const key in filters) {
-        if (Object.hasOwnProperty.call(filters, key)) {
+        if (Object.hasOwn(filters, key)) {
           const f = filters[key];
           addSelectSuggestion(f, dict, data.suggestions[f]);
         }
@@ -447,7 +447,7 @@ function getSuggestions(dict) {
 function parseFilters() {
   const filter = {};
   for (const key in filters) {
-    if (Object.hasOwnProperty.call(filters, key)) {
+    if (Object.hasOwn(filters, key)) {
       const f = filters[key];
       filter[f] = $("#" + f + "_filter").val();
     }
@@ -464,7 +464,7 @@ function filterOn(param, dict) {
 function getAPIURL(filters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
   for (const key in filters) {
-    if (Object.hasOwnProperty.call(filters, key)) {
+    if (Object.hasOwn(filters, key)) {
       const filter = filters[key];
       if (filterOn(key, filters)) {
         if (!apiurl.endsWith("?")) apiurl += "&";
@@ -502,7 +502,7 @@ $(() => {
   const GETDict = utils.parseQueryString();
 
   for (const sel in filters) {
-    if (Object.hasOwnProperty.call(filters, sel)) {
+    if (Object.hasOwn(filters, sel)) {
       const element = filters[sel];
       $("#" + element + "_filter").select2({
         width: "100%",
