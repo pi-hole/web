@@ -522,7 +522,7 @@ $(function () {
         enabled: true,
       },
       mode: "y",
-      onZoom: function ({ chart, trigger }) {
+      onZoom({ chart, trigger }) {
         if (trigger === "api") {
           // Ignore onZoom triggered by the chart.zoomScale api call below
           return;
@@ -594,11 +594,11 @@ $(function () {
           enabled: true,
           intersect: false,
           yAlign: "bottom",
-          itemSort: function (a, b) {
+          itemSort(a, b) {
             return b.datasetIndex - a.datasetIndex;
           },
           callbacks: {
-            title: function (tooltipTitle) {
+            title(tooltipTitle) {
               const label = tooltipTitle[0].label;
               const time = label.match(/(\d?\d):?(\d?\d?)/);
               const h = parseInt(time[1], 10);
@@ -607,7 +607,7 @@ $(function () {
               const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
               return "Queries from " + from + " to " + to;
             },
-            label: function (tooltipLabel) {
+            label(tooltipLabel) {
               return labelWithPercentage(tooltipLabel);
             },
           },
@@ -698,11 +698,11 @@ $(function () {
             intersect: false,
             external: customTooltips,
             yAlign: "top",
-            itemSort: function (a, b) {
+            itemSort(a, b) {
               return b.raw - a.raw;
             },
             callbacks: {
-              title: function (tooltipTitle) {
+              title(tooltipTitle) {
                 const label = tooltipTitle[0].label;
                 const time = label.match(/(\d?\d):?(\d?\d?)/);
                 const h = parseInt(time[1], 10);
@@ -711,7 +711,7 @@ $(function () {
                 const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
                 return "Client activity from " + from + " to " + to;
               },
-              label: function (tooltipLabel) {
+              label(tooltipLabel) {
                 return labelWithPercentage(tooltipLabel, true);
               },
             },
@@ -855,7 +855,7 @@ $(function () {
             enabled: false,
             external: customTooltips,
             callbacks: {
-              title: function () {
+              title() {
                 return "Query type";
               },
               label: doughnutTooltip,
@@ -901,7 +901,7 @@ $(function () {
             enabled: false,
             external: customTooltips,
             callbacks: {
-              title: function () {
+              title() {
                 return "Upstream server";
               },
               label: doughnutTooltip,

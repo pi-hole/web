@@ -44,7 +44,7 @@ $(function () {
       {
         targets: 1,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -53,7 +53,7 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       // Hide buttons if all groups were deleted
       // if there is one row, it's the default group
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 1;
@@ -61,7 +61,7 @@ $(function () {
 
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       const dataId = utils.hexEncode(data.name);
       $(row).attr("data-id", dataId);
       const tooltip =
@@ -125,7 +125,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -133,7 +133,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -147,7 +147,7 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           const ids = [];
           $("tr.selected").each(function () {
@@ -171,10 +171,10 @@ $(function () {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("groups-table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-table");
 
       // Return if not available
@@ -268,10 +268,10 @@ function addGroup() {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       name: names,
-      comment: comment,
+      comment,
       enabled: true,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       utils.listsAlert("group", names, data);
       $("#new_name").val("");
@@ -282,7 +282,7 @@ function addGroup() {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", data.responseText);
@@ -335,16 +335,16 @@ function editGroup() {
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
-      name: name,
-      comment: comment,
-      enabled: enabled,
+      name,
+      comment,
+      enabled,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       processGroupResult(data, "group", done, notDone);
       table.ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(

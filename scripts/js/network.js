@@ -66,7 +66,7 @@ function deleteNetworkEntry() {
   $.ajax({
     url: document.body.dataset.apiurl + "/network/devices/" + id,
     method: "DELETE",
-    success: function () {
+    success() {
       utils.enableAll();
       utils.showAlert(
         "success",
@@ -76,7 +76,7 @@ function deleteNetworkEntry() {
       );
       tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(
@@ -92,7 +92,7 @@ function deleteNetworkEntry() {
 
 $(function () {
   tableApi = $("#network-entries").DataTable({
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       let color;
       let index;
       let iconClasses;
@@ -229,7 +229,7 @@ $(function () {
       {
         data: "firstSeen",
         width: "8%",
-        render: function (data, type) {
+        render(data, type) {
           if (type === "display") {
             return utils.datetime(data);
           }
@@ -240,7 +240,7 @@ $(function () {
       {
         data: "lastQuery",
         width: "8%",
-        render: function (data, type) {
+        render(data, type) {
           if (type === "display") {
             return utils.datetime(data);
           }
@@ -254,7 +254,7 @@ $(function () {
       { data: "ips[].name", visible: false, class: "hide" },
     ],
 
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
@@ -265,10 +265,10 @@ $(function () {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("network_table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       return utils.stateLoadCallback("network_table");
     },
     columnDefs: [

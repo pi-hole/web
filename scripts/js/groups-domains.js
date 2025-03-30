@@ -121,13 +121,13 @@ function initTable() {
       {
         targets: 1,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
       {
         targets: 3,
-        render: function (data) {
+        render(data) {
           return data.kind + "_" + data.type;
         },
       },
@@ -136,7 +136,7 @@ function initTable() {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       // Hide buttons if all domains were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
@@ -145,7 +145,7 @@ function initTable() {
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       const dataId = utils.hexEncode(data.domain) + "_" + data.type + "_" + data.kind;
       $(row).attr("data-id", dataId);
       // Tooltip for domain
@@ -314,7 +314,7 @@ function initTable() {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -322,7 +322,7 @@ function initTable() {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -336,7 +336,7 @@ function initTable() {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           const ids = [];
           $("tr.selected").each(function () {
@@ -360,10 +360,10 @@ function initTable() {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("groups-domains-table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-domains-table");
 
       // Return if not available
@@ -376,7 +376,7 @@ function initTable() {
       // Apply loaded state to table
       return data;
     },
-    initComplete: function () {
+    initComplete() {
       if ("domainid" in GETDict) {
         const pos = table
           .column(0, { order: "current" })
@@ -525,12 +525,12 @@ function addDomain() {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       domain: domains,
-      comment: comment,
-      type: type,
-      kind: kind,
+      comment,
+      type,
+      kind,
       groups: group,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       utils.listsAlert("domain", domains, data);
       $("#new_domain").val("");
@@ -543,7 +543,7 @@ function addDomain() {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new domain", data.responseText);
@@ -618,18 +618,18 @@ function editDomain() {
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
-      groups: groups,
-      comment: comment,
-      enabled: enabled,
+      groups,
+      comment,
+      enabled,
       type: oldType,
       kind: oldKind,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       processGroupResult(data, "domain", done, notDone);
       table.ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(

@@ -15,7 +15,7 @@ function reloadClientSuggestions() {
     url: document.body.dataset.apiurl + "/clients/_suggestions",
     type: "GET",
     dataType: "json",
-    success: function (data) {
+    success(data) {
       const sel = $("#select");
       sel.empty();
 
@@ -113,7 +113,7 @@ function initTable() {
       {
         targets: 1,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -122,7 +122,7 @@ function initTable() {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       // Hide buttons if all clients were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
@@ -131,7 +131,7 @@ function initTable() {
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       const dataId = utils.hexEncode(data.client);
       $(row).attr("data-id", dataId);
       const tooltip =
@@ -250,7 +250,7 @@ function initTable() {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -258,7 +258,7 @@ function initTable() {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -272,7 +272,7 @@ function initTable() {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           const ids = [];
           $("tr.selected").each(function () {
@@ -296,10 +296,10 @@ function initTable() {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("groups-clients-table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-clients-table");
 
       // Return if not available
@@ -407,8 +407,8 @@ function addClient() {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ client: ips, comment: comment, groups: group }),
-    success: function (data) {
+    data: JSON.stringify({ client: ips, comment, groups: group }),
+    success(data) {
       utils.enableAll();
       utils.listsAlert("client", ips, data);
       reloadClientSuggestions();
@@ -419,7 +419,7 @@ function addClient() {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new client", data.responseText);
@@ -465,15 +465,15 @@ function editClient() {
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
-      groups: groups,
-      comment: comment,
+      groups,
+      comment,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       processGroupResult(data, "client", done, notDone);
       table.ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(

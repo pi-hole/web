@@ -227,13 +227,13 @@ function parseQueryStatus(data) {
     colorClass === "text-green" ? "allowed" : colorClass === "text-red" ? "blocked" : "matched";
 
   return {
-    fieldtext: fieldtext,
-    buttontext: buttontext,
-    colorClass: colorClass,
-    icon: icon,
-    isCNAME: isCNAME,
-    matchText: matchText,
-    blocked: blocked,
+    fieldtext,
+    buttontext,
+    colorClass,
+    icon,
+    isCNAME,
+    matchText,
+    blocked,
   };
 }
 
@@ -283,7 +283,7 @@ function parseDNSSEC(data) {
       icon = "";
   }
 
-  return { text: text, icon: icon, color: color };
+  return { text, icon, color };
 }
 
 function formatInfo(data) {
@@ -533,10 +533,10 @@ $(function () {
       url: apiURL,
       error: handleAjaxError,
       dataSrc: "queries",
-      data: function (d) {
+      data(d) {
         if (cursor !== null) d.cursor = cursor;
       },
-      dataFilter: function (d) {
+      dataFilter(d) {
         const json = jQuery.parseJSON(d);
         cursor = json.cursor; // Extract cursor from original data
         if (liveMode) {
@@ -558,7 +558,7 @@ $(function () {
       {
         data: "time",
         width: "10%",
-        render: function (data, type) {
+        render(data, type) {
           if (type === "display") {
             return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
           }
@@ -580,13 +580,13 @@ $(function () {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("query_log_table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       return utils.stateLoadCallback("query_log_table");
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       const querystatus = parseQueryStatus(data);
       const dnssec = parseDNSSEC(data);
 
@@ -648,7 +648,7 @@ $(function () {
         $("td:eq(6)", row).html(querystatus.buttontext);
       }
     },
-    initComplete: function () {
+    initComplete() {
       this.api()
         .columns()
         .every(function () {

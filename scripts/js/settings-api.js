@@ -54,7 +54,7 @@ $(function () {
         targets: 0,
         orderable: false,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -63,7 +63,7 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteSession_"]').on("click", deleteThisSession);
 
       // Hide buttons if all messages were deleted
@@ -73,7 +73,7 @@ $(function () {
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data.id);
       const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteSession_' +
@@ -127,7 +127,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           apiSessionsTable.rows({ page: "current" }).select();
         },
       },
@@ -135,7 +135,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           apiSessionsTable.rows({ page: "current" }).select();
         },
       },
@@ -149,7 +149,7 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           const ids = [];
           $("tr.selected").each(function () {
@@ -176,10 +176,10 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("api-sessions-table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback("api-sessions-table");
       // Return if not available
       if (data === null) {
@@ -353,7 +353,7 @@ $("#apppw_submit").on("click", function () {
     text: "Are you sure you want to replace your previous app password? You will need to re-login to continue using the web interface.",
     title: "Confirmation required",
     confirm: setAppPassword,
-    cancel: function () {
+    cancel() {
       // nothing to do
     },
     confirmButton: "Yes, replace password",
@@ -459,11 +459,11 @@ $("#totp_submit").on("click", function () {
 $("#button-disable-totp").confirm({
   text: "Are you sure you want to disable 2FA authentication on your Pi-hole?",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     // Disable TOTP
     setTOTPSecret("");
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, disable 2FA",

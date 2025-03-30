@@ -98,7 +98,7 @@ function doLogin(password) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
+    data: JSON.stringify({ password, totp: parseInt($("#totp").val(), 10) }),
   })
     .done(function (data) {
       wrongPassword(false, true, data);

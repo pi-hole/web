@@ -42,7 +42,7 @@ function getGroups(groupSelector) {
     url: document.body.dataset.apiurl + "/groups",
     type: "GET",
     dataType: "json",
-    success: function (data) {
+    success(data) {
       groups = data.groups;
 
       // Get all all <select> elements with the class "selectpicker"
@@ -55,7 +55,7 @@ function getGroups(groupSelector) {
       // Actually load table contents
       initTable();
     },
-    error: function (data) {
+    error(data) {
       apiFailure(data);
     },
   });
@@ -103,7 +103,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
   utils.showAlert("info", "", "Deleting " + ids.length + " " + type + "...", idstring);
 
   $.ajax({
-    url: url,
+    url,
     data: JSON.stringify(ids),
     contentType: "application/json",
     method: "POST",

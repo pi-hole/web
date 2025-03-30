@@ -82,20 +82,20 @@ function populateDataTable(endpoint) {
       dataSrc: `config.dns.${endpoint}`,
     },
     autoWidth: false,
-    columns: columns,
+    columns,
     columnDefs: [
       {
         targets: "_all",
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $(`button[id^="delete${endpoint}"]`).on("click", deleteRecord);
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data);
       const button = `<button type="button"
                       class="btn btn-danger btn-xs"
@@ -118,7 +118,7 @@ function populateDataTable(endpoint) {
       [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: function () {
+      emptyTable() {
         return endpoint === "hosts"
           ? "No local DNS records defined."
           : "No local CNAME records defined.";
@@ -127,10 +127,10 @@ function populateDataTable(endpoint) {
     stateSave: true,
     stateDuration: 0,
     processing: true,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback(`${endpoint}-records-table`, data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback(`${endpoint}-records-table`);
       // Return if not available
       if (data === null) {
@@ -159,7 +159,7 @@ function delHosts(elem) {
   const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
 
   $.ajax({
-    url: url,
+    url,
     method: "DELETE",
   })
     .done(function () {
@@ -186,7 +186,7 @@ function delCNAME(elem) {
   const url = document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
 
   $.ajax({
-    url: url,
+    url,
     method: "DELETE",
   })
     .done(function () {
@@ -219,7 +219,7 @@ $(document).ready(function () {
     const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
-      url: url,
+      url,
       method: "PUT",
     })
       .done(function () {
@@ -246,7 +246,7 @@ $(document).ready(function () {
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
-      url: url,
+      url,
       method: "PUT",
     })
       .done(function () {
