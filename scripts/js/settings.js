@@ -26,12 +26,13 @@ $(() => {
 function setConfigValues(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    Object.keys(value).forEach(subkey => {
+    for (const subkey of Object.keys(value)) {
       const subvalue = value[subkey];
       // If the key is empty, we are at the top level
       const newKey = key === "" ? subkey : key + "." + subkey;
       setConfigValues(topic, newKey, subvalue);
-    });
+    }
+
     return;
   }
 
@@ -71,13 +72,14 @@ function setConfigValues(topic, key, value) {
       // Remove all options from select
       $("#" + escapedKey + " option").remove();
       // Add allowed select items (if available)
-      value.allowed.forEach(allowedValue => {
+      for (const allowedValue of value.allowed) {
         $("#" + escapedKey + "-" + allowedValue.item).prop("disabled", value.flags.env_var);
         const newopt = $("<option></option>")
           .attr("value", allowedValue.item)
           .text(allowedValue.description);
         $("#" + escapedKey).append(newopt);
-      });
+      }
+
       // Select the current value
       $("#" + escapedKey)
         .val(value.value)

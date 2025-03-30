@@ -27,10 +27,10 @@ function updateCachePie(data) {
 
   // Compute total number of cache entries
   cacheEntries = 0;
-  Object.keys(data).forEach(item => {
+  for (const item of Object.keys(data)) {
     cacheEntries += data[item].valid;
     cacheEntries += data[item].stale;
-  });
+  }
 
   // Sort data by value, put OTHER always as last
   const sorted = Object.keys(data).sort((a, b) => {
@@ -47,9 +47,10 @@ function updateCachePie(data) {
 
   // Rebuild data object
   const tmp = {};
-  sorted.forEach(item => {
+  for (const item of sorted) {
     tmp[item] = data[item];
-  });
+  }
+
   data = tmp;
 
   // Add empty space to chart
@@ -57,7 +58,7 @@ function updateCachePie(data) {
   data.empty.valid = cacheSize - cacheEntries;
 
   // Fill chart with data
-  Object.keys(data).forEach(item => {
+  for (const item of Object.keys(data)) {
     if (data[item].valid > 0) {
       v.push((100 * data[item].valid) / cacheSize);
       c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
@@ -70,7 +71,7 @@ function updateCachePie(data) {
       c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
       k.push(item + " (stale)");
     }
-  });
+  }
 
   // Build a single dataset with the data to be pushed
   const dd = { data: v, backgroundColor: c };

@@ -57,7 +57,7 @@ const htmlLegendPlugin = {
       ul.firstChild.remove();
     }
 
-    items.forEach(item => {
+    for (const item of items) {
       const li = document.createElement("li");
       li.style.alignItems = "center";
       li.style.cursor = "pointer";
@@ -114,7 +114,7 @@ const htmlLegendPlugin = {
 
       li.append(boxSpan, textLink);
       ul.append(li);
-    });
+    }
   },
 };
 
@@ -161,14 +161,15 @@ const customTooltips = function (context) {
     });
     let innerHtml = "<thead>";
 
-    titleLines.forEach(title => {
+    for (const title of titleLines) {
       innerHtml += "<tr><th>" + title + "</th></tr>";
-    });
+    }
+
     innerHtml += "</thead><tbody>";
     let printed = 0;
 
     const devicePixel = (1 / window.devicePixelRatio).toFixed(1);
-    bodyLines.forEach((body, i) => {
+    for (const [i, body] of bodyLines.entries()) {
       const labelColors = tooltip.labelColors[i];
       let style = "background-color: " + labelColors.backgroundColor;
       style += "; outline: 1px solid " + labelColors.backgroundColor;
@@ -182,7 +183,8 @@ const customTooltips = function (context) {
         innerHtml += "<tr><td>" + span + body + "</td></tr>";
         printed++;
       }
-    });
+    }
+
     if (printed < 1) {
       innerHtml += "<tr><td>No activity recorded</td></tr>";
     }
