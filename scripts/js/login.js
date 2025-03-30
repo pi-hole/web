@@ -25,8 +25,8 @@ function redirect() {
 
 function wrongPassword(isError = false, isSuccess = false, data = null) {
   if (isError) {
-    let isErrorResponse = false,
-      isInvalidTOTP = false;
+    let isErrorResponse = false;
+    let isInvalidTOTP = false;
 
     // Reset hint and error message
     $("#error-message").text("");

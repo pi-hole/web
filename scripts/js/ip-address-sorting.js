@@ -18,18 +18,19 @@ $.extend($.fn.dataTableExt.oSort, {
       return Infinity;
     }
 
-    let i, item;
+    let i;
+    let item;
     // Use the first IP in case there is a list of IPs
     // for a given device
     if (Array.isArray(a)) {
       a = a[0];
     }
 
-    let m = a.split("."),
-      n = a.split(":"),
-      x = "",
-      xa = "",
-      cidr = [];
+    let m = a.split(".");
+    let n = a.split(":");
+    let x = "";
+    let xa = "";
+    let cidr = [];
     if (m.length === 4) {
       // IPV4 (possibly with CIDR)
       cidr = m[3].split("/");

@@ -21,8 +21,8 @@ function importZIP() {
   }
 
   // Get the selected import options
-  const imports = {},
-    gravity = {};
+  const imports = {};
+  const gravity = {};
   imports.config = document.getElementById("import.config").checked;
   imports.dhcp_leases = document.getElementById("import.dhcp_leases").checked;
   gravity.group = document.getElementById("import.gravity.group").checked;

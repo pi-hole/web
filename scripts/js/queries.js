@@ -81,12 +81,12 @@ function handleAjaxError(xhr, textStatus) {
 
 function parseQueryStatus(data) {
   // Parse query status
-  let fieldtext,
-    buttontext,
-    icon = null,
-    colorClass = false,
-    blocked = false,
-    isCNAME = false;
+  let fieldtext;
+  let buttontext;
+  let icon = null;
+  let colorClass = false;
+  let blocked = false;
+  let isCNAME = false;
   switch (data.status) {
     case "GRAVITY":
       colorClass = "text-red";
@@ -256,9 +256,9 @@ function formatReplyTime(replyTime, type) {
 
 // Parse DNSSEC status
 function parseDNSSEC(data) {
-  let icon = "", // Icon to display
-    color = "", // Class to apply to text
-    text = data.dnssec; // Text to display
+  let icon = ""; // Icon to display
+  let color = ""; // Class to apply to text
+  let text = data.dnssec; // Text to display
   switch (text) {
     case "SECURE":
       icon = "fa-solid fa-lock";
@@ -303,8 +303,8 @@ function formatInfo(data) {
       "</span></strong></div>";
   }
 
-  let listInfo = "",
-    cnameInfo = "";
+  let listInfo = "";
+  let cnameInfo = "";
   if (data.list_id !== null && data.list_id !== -1) {
     // Some list matched - add link to search page
 
@@ -396,8 +396,8 @@ function formatInfo(data) {
 }
 
 function addSelectSuggestion(name, dict, data) {
-  let obj = $("#" + name + "_filter"),
-    value = "";
+  const obj = $("#" + name + "_filter");
+  let value = "";
   obj.empty();
 
   // In order for the placeholder value to appear, we have to have a blank

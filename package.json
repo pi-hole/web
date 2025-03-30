@@ -108,7 +108,6 @@
       ],
       "no-alert": "off",
       "no-console": "error",
-      "one-var": "off",
       "prefer-arrow-callback": "off",
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [

@@ -455,7 +455,10 @@ function addDomain() {
   const wildcardChecked = wildcardEl.prop("checked");
 
   // current tab's inputs
-  let kind, domainEl, commentEl, groupEl;
+  let kind;
+  let domainEl;
+  let commentEl;
+  let groupEl;
   if (tabHref === "#tab_domain") {
     kind = "exact";
     domainEl = $("#new_domain");

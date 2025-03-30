@@ -6,8 +6,8 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils: false */
-let table,
-  toasts = {};
+let table;
+const toasts = {};
 
 $(function () {
   const ignoreNonfatal = localStorage

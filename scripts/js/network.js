@@ -135,8 +135,8 @@ $(function () {
       // Set number of queries to localized string (add thousand separators)
       $("td:eq(5)", row).html(data.numQueries.toLocaleString());
 
-      const ips = [],
-        iptitles = [];
+      const ips = [];
+      const iptitles = [];
 
       // Sort IPs, IPv4 before IPv6, then alphabetically
       data.ips.sort(function (a, b) {
@@ -152,8 +152,8 @@ $(function () {
       });
 
       for (index = 0; index < data.ips.length; index++) {
-        let ip = data.ips[index],
-          iptext = ip.ip;
+        const ip = data.ips[index];
+        let iptext = ip.ip;
 
         if (ip.name !== null && ip.name.length > 0) {
           iptext = iptext + " (" + ip.name + ")";

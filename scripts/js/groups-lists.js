@@ -30,26 +30,26 @@ function format(data) {
   }
 
   // Compile extra info for displaying
-  const dateAddedISO = utils.datetime(data.date_added, false),
-    dateModifiedISO = utils.datetime(data.date_modified, false),
-    dateUpdated =
-      data.date_updated > 0
-        ? utils.datetimeRelative(data.date_updated) +
-          "&nbsp;(" +
-          utils.datetime(data.date_updated, false) +
-          ")"
-        : "N/A",
-    numberOfEntries =
-      (data.number !== null && numbers === true
-        ? parseInt(data.number, 10).toLocaleString()
-        : "N/A") +
-      (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
-        ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
-        : ""),
-    nonDomains =
-      data.invalid_domains !== null && numbers === true
-        ? parseInt(data.invalid_domains, 10).toLocaleString()
-        : "N/A";
+  const dateAddedISO = utils.datetime(data.date_added, false);
+  const dateModifiedISO = utils.datetime(data.date_modified, false);
+  const dateUpdated =
+    data.date_updated > 0
+      ? utils.datetimeRelative(data.date_updated) +
+        "&nbsp;(" +
+        utils.datetime(data.date_updated, false) +
+        ")"
+      : "N/A";
+  const numberOfEntries =
+    (data.number !== null && numbers === true
+      ? parseInt(data.number, 10).toLocaleString()
+      : "N/A") +
+    (data.abp_entries !== null && parseInt(data.abp_entries, 10) > 0 && numbers === true
+      ? " (out of which " + parseInt(data.abp_entries, 10).toLocaleString() + " are in ABP-style)"
+      : "");
+  const nonDomains =
+    data.invalid_domains !== null && numbers === true
+      ? parseInt(data.invalid_domains, 10).toLocaleString()
+      : "N/A";
 
   return `<table>
       <tr class="dataTables-child">
@@ -83,9 +83,9 @@ function format(data) {
 
 // Define the status icon element
 function setStatusIcon(data) {
-  let statusCode = parseInt(data.status, 10),
-    statusTitle = setStatusText(data) + "\nClick for details about this list",
-    statusIcon;
+  const statusCode = parseInt(data.status, 10);
+  const statusTitle = setStatusText(data) + "\nClick for details about this list";
+  let statusIcon;
 
   switch (statusCode) {
     case 1:
@@ -110,8 +110,8 @@ function setStatusIcon(data) {
 
 // Define human-friendly status string
 function setStatusText(data, showdetails = false) {
-  let statusText = "Unknown",
-    statusDetails = "";
+  let statusText = "Unknown";
+  let statusDetails = "";
   if (data.status !== null) {
     switch (parseInt(data.status, 10)) {
       case 0:
@@ -152,8 +152,8 @@ function setStatusText(data, showdetails = false) {
 function setTypeIcon(type) {
   //Add red ban icon if data["type"] is "block"
   //Add green check icon if data["type"] is "allow"
-  let iconClass = "fa-question text-orange",
-    title = "This list is of unknown type";
+  let iconClass = "fa-question text-orange";
+  let title = "This list is of unknown type";
   if (type === "block") {
     iconClass = "fa-ban text-red";
     title = "This is a blocklist";

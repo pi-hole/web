@@ -7,8 +7,8 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false */
 
-let dhcpLeaesTable = null,
-  toasts = {};
+let dhcpLeaesTable = null;
+const toasts = {};
 
 // DHCP leases tooltips
 $(function () {
