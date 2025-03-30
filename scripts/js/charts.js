@@ -156,19 +156,19 @@ const customTooltips = function (context) {
   // Set Text
   if (tooltip.body) {
     const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(function (bodyItem) {
+    const bodyLines = tooltip.body.map(bodyItem => {
       return bodyItem.lines;
     });
     let innerHtml = "<thead>";
 
-    titleLines.forEach(function (title) {
+    titleLines.forEach(title => {
       innerHtml += "<tr><th>" + title + "</th></tr>";
     });
     innerHtml += "</thead><tbody>";
     let printed = 0;
 
     const devicePixel = (1 / window.devicePixelRatio).toFixed(1);
-    bodyLines.forEach(function (body, i) {
+    bodyLines.forEach((body, i) => {
       const labelColors = tooltip.labelColors[i];
       let style = "background-color: " + labelColors.backgroundColor;
       style += "; outline: 1px solid " + labelColors.backgroundColor;

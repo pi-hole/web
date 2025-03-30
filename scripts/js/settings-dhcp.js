@@ -11,7 +11,7 @@ let dhcpLeaesTable = null;
 const toasts = {};
 
 // DHCP leases tooltips
-$(function () {
+$(() => {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
@@ -29,7 +29,7 @@ function renderHostnameCLID(data, type) {
   return data;
 }
 
-$(function () {
+$(() => {
   dhcpLeaesTable = $("#DHCPLeasesTable").DataTable({
     ajax: {
       url: document.body.dataset.apiurl + "/dhcp/leases",
@@ -152,7 +152,7 @@ $(function () {
       return data;
     },
   });
-  dhcpLeaesTable.on("init select deselect", function () {
+  dhcpLeaesTable.on("init select deselect", () => {
     utils.changeTableButtonStates(dhcpLeaesTable);
   });
 });
@@ -170,7 +170,7 @@ function delLease(ip) {
     url: document.body.dataset.apiurl + "/dhcp/leases/" + encodeURIComponent(ip),
     method: "DELETE",
   })
-    .done(function (response) {
+    .done(response => {
       utils.enableAll();
       if (response === undefined) {
         utils.showAlert(
@@ -195,7 +195,7 @@ function delLease(ip) {
       dhcpLeaesTable.rows().deselect();
       utils.changeTableButtonStates(dhcpLeaesTable);
     })
-    .fail(function (jqXHR, exception) {
+    .fail((jqXHR, exception) => {
       utils.enableAll();
       utils.showAlert(
         "error",
@@ -216,15 +216,15 @@ function processDHCPConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dhcp?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       fillDHCPhosts(data.config.dhcp.hosts);
       setConfigValues("dhcp", "dhcp", data.config.dhcp);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   processDHCPConfig();
 });

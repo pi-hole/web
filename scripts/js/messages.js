@@ -9,7 +9,7 @@
 let table;
 const toasts = {};
 
-$(function () {
+$(() => {
   const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
@@ -141,7 +141,7 @@ $(function () {
       return data;
     },
   });
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     utils.changeTableButtonStates(table);
   });
 });
@@ -163,7 +163,7 @@ function delMsg(id) {
     url: document.body.dataset.apiurl + "/info/messages/" + id,
     method: "DELETE",
   })
-    .done(function (response) {
+    .done(response => {
       utils.enableAll();
       if (response === undefined) {
         utils.showAlert(
@@ -193,7 +193,7 @@ function delMsg(id) {
     .done(
       utils.checkMessages // Update icon warnings count
     )
-    .fail(function (jqXHR, exception) {
+    .fail((jqXHR, exception) => {
       utils.enableAll();
       utils.showAlert(
         "error",

@@ -100,19 +100,19 @@ function doLogin(password) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({ password, totp: parseInt($("#totp").val(), 10) }),
   })
-    .done(function (data) {
+    .done(data => {
       wrongPassword(false, true, data);
       NProgress.done();
       redirect();
     })
-    .fail(function (data) {
+    .fail(data => {
       wrongPassword(true, false, data);
       NProgress.done();
       utils.enableAll();
     });
 }
 
-$("#loginform").submit(function (e) {
+$("#loginform").submit(e => {
   // Cancel the native submit event (prevent the form from being
   // submitted) because we want to do a two-step challenge-response login
   e.preventDefault();
@@ -162,16 +162,16 @@ function showDNSfailure() {
   $("#login-box").addClass("error-box");
 }
 
-$(function () {
+$(() => {
   // Check if we need to login at all
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
   })
-    .done(function (data) {
+    .done(data => {
       // If we are already logged in, redirect to dashboard
       if (data.session.valid === true) redirect();
     })
-    .fail(function (xhr) {
+    .fail(xhr => {
       const session = xhr.responseJSON.session;
       // If TOPT is enabled, show the input field and add the required attribute
       if (session.totp === true) {
@@ -185,7 +185,7 @@ $(function () {
   // Get information about HTTPS port and DNS status
   $.ajax({
     url: document.body.dataset.apiurl + "/info/login",
-  }).done(function (data) {
+  }).done(data => {
     if (data.dns === false) showDNSfailure();
 
     // Generate HTTPS redirection link (only used if not already HTTPS)

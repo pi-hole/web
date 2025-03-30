@@ -11,7 +11,7 @@
 let table;
 let GETDict = {};
 
-$(function () {
+$(() => {
   GETDict = utils.parseQueryString();
 
   // Tabs: Domain/Regex handling
@@ -38,7 +38,7 @@ $(function () {
 
   // Domain suggestion handling
   let suggestTimeout;
-  $("#new_domain").on("input", function (e) {
+  $("#new_domain").on("input", e => {
     hideSuggestDomains();
     clearTimeout(suggestTimeout);
     suggestTimeout = setTimeout(showSuggestDomains, 1000, e.target.value);
@@ -54,7 +54,7 @@ function showSuggestDomains(value) {
     // Purposefully omit 'btn' class to save space on padding
     return $('<button type="button" class="btn-link btn-block text-right">')
       .append($("<i>").text(hostname))
-      .on("click", function () {
+      .on("click", () => {
         hideSuggestDomains();
         newDomainEl.val(hostname);
       });
@@ -76,7 +76,7 @@ function showSuggestDomains(value) {
     );
   }
 
-  suggestDomainEl.slideUp("fast", function () {
+  suggestDomainEl.slideUp("fast", () => {
     suggestDomainEl.html(table);
     suggestDomainEl.slideDown("fast");
   });
@@ -235,7 +235,7 @@ function initTable() {
       const applyBtn = "#btn_apply_" + dataId;
       selectEl
         // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function () {
+        .on("show.bs.select", () => {
           const winWidth = $(globalThis).width();
           const dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
@@ -247,14 +247,14 @@ function initTable() {
             }
           }
         })
-        .on("changed.bs.select", function () {
+        .on("changed.bs.select", () => {
           // enable Apply button if changes were made to the drop-down menu
           // and have it call editDomain() on click
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
-              .on("click", function () {
+              .on("click", () => {
                 editDomain.call(selectEl);
               });
           }
@@ -387,11 +387,11 @@ function initTable() {
     input.setAttribute("spellcheck", false);
   }
 
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     utils.changeBulkDeleteStates(table);
   });
 
-  table.on("order.dt", function () {
+  table.on("order.dt", () => {
     const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
@@ -400,14 +400,14 @@ function initTable() {
     }
   });
 
-  $("#resetButton").on("click", function () {
+  $("#resetButton").on("click", () => {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
 }
 
 // Enable "filter by type" functionality, using checkboxes
-$.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData) {
+$.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
   const types = $(".filter_types input:checkbox:checked")
     .map(function () {
       return this.value;
@@ -421,7 +421,7 @@ $.fn.dataTable.ext.search.push(function (settings, searchData, index, rowData) {
 
   return false;
 });
-$(".filter_types input:checkbox").on("change", function () {
+$(".filter_types input:checkbox").on("change", () => {
   table.draw();
 });
 
@@ -479,7 +479,7 @@ function addDomain() {
   // If so, split the input and store it in an array
   let domains = domainEl.val().split(/\s+/);
   // Remove empty elements
-  domains = domains.filter(function (el) {
+  domains = domains.filter(el => {
     return el !== "";
   });
   const domainStr = JSON.stringify(domains);

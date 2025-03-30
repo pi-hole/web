@@ -28,7 +28,7 @@ function renderBool(data, type) {
   return data;
 }
 
-$(function () {
+$(() => {
   apiSessionsTable = $("#APISessionsTable").DataTable({
     ajax: {
       url: document.body.dataset.apiurl + "/auth/sessions",
@@ -190,7 +190,7 @@ $(function () {
       return data;
     },
   });
-  apiSessionsTable.on("init select deselect", function () {
+  apiSessionsTable.on("init select deselect", () => {
     utils.changeTableButtonStates(apiSessionsTable);
   });
 });
@@ -216,7 +216,7 @@ function deleteMultipleSessions(ids) {
   }
 
   // Convert all ids to integers
-  ids = ids.map(function (value) {
+  ids = ids.map(value => {
     return parseInt(value, 10);
   });
 
@@ -228,7 +228,7 @@ function deleteMultipleSessions(ids) {
   if (ids.includes(ownSessionID) && ids.length > 1) {
     ownSessionDelete = true;
     // Strip own session ID from array
-    ids = ids.filter(function (value) {
+    ids = ids.filter(value => {
       return value !== ownSessionID;
     });
   }
@@ -250,7 +250,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
     url: document.body.dataset.apiurl + "/auth/session/" + id,
     method: "DELETE",
   })
-    .done(function () {
+    .done(() => {
       // Do not reload page when deleting multiple sessions
       if (++deleted < len) return;
 
@@ -265,7 +265,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
         location.reload();
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -274,7 +274,7 @@ function processWebServerConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/webserver?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       setConfigValues("webserver", "webserver", data.config.webserver);
       if (data.config.webserver.api.app_pwhash.value.length > 0) {
         apppwSet = true;
@@ -284,16 +284,16 @@ function processWebServerConfig() {
         $("#apppw_submit").addClass("btn-warning");
       } else $("#apppw_clear").hide();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$("#modal-totp").on("shown.bs.modal", function () {
+$("#modal-totp").on("shown.bs.modal", () => {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth/totp",
   })
-    .done(function (data) {
+    .done(data => {
       TOTPdata = data.totp;
       $("#totp_secret").text(data.totp.secret);
       const qrlink =
@@ -321,28 +321,28 @@ $("#modal-totp").on("shown.bs.modal", function () {
       $("#qrcode-spinner").hide();
       $("#qrcode").show();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 });
 
 let apppwhash = null;
-$("#modal-apppw").on("shown.bs.modal", function () {
+$("#modal-apppw").on("shown.bs.modal", () => {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth/app",
   })
-    .done(function (data) {
+    .done(data => {
       apppwhash = data.app.hash;
       $("#password_code").text(data.app.password);
       $("#password_display").removeClass("hidden");
       $("#password-spinner").hide();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 });
 
-$("#apppw_submit").on("click", function () {
+$("#apppw_submit").on("click", () => {
   // Enable app password
   if (!apppwSet) {
     return setAppPassword();
@@ -365,7 +365,7 @@ $("#apppw_submit").on("click", function () {
   });
 });
 
-$("#apppw_clear").on("click", function () {
+$("#apppw_clear").on("click", () => {
   // Disable app password
   apppwhash = "";
   setAppPassword();
@@ -380,7 +380,7 @@ function setAppPassword() {
     data: JSON.stringify({ config: { webserver: { api: { app_pwhash: apppwhash } } } }),
     contentType: "application/json; charset=utf-8",
   })
-    .done(function () {
+    .done(() => {
       $("#modal-apppw").modal("hide");
       const verb = apppwhash.length > 0 ? "enabled" : "disabled";
       const verb2 = apppwhash.length > 0 ? "will" : "may";
@@ -393,7 +393,7 @@ function setAppPassword() {
       );
       location.reload();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -408,7 +408,7 @@ $("#password_code").on("mouseout blur", function () {
 });
 
 // Trigger keyup event when pasting into the TOTP code input field
-$("#totp_code").on("paste", function (e) {
+$("#totp_code").on("paste", e => {
   $(e.target).keyup();
 });
 
@@ -433,7 +433,7 @@ function setTOTPSecret(secret) {
     data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
     contentType: "application/json; charset=utf-8",
   })
-    .done(function () {
+    .done(() => {
       $("#button-enable-totp").addClass("hidden");
       $("#button-disable-totp").removeClass("hidden");
       $("#totp_code").val("");
@@ -446,12 +446,12 @@ function setTOTPSecret(secret) {
       );
       location.reload();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$("#totp_submit").on("click", function () {
+$("#totp_submit").on("click", () => {
   // Enable TOTP
   setTOTPSecret(TOTPdata.secret);
 });
@@ -474,12 +474,12 @@ $("#button-disable-totp").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(document).ready(function () {
+$(document).ready(() => {
   processWebServerConfig();
   // Check if TOTP is enabled
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
-  }).done(function (data) {
+  }).done(data => {
     if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
     else $("#button-disable-totp").removeClass("hidden");
   });

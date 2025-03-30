@@ -108,7 +108,7 @@
       ],
       "no-alert": "off",
       "no-console": "error",
-      "prefer-arrow-callback": "off",
+      "prefer-arrow-callback": "error",
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [
         "error",

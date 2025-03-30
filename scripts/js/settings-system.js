@@ -27,13 +27,13 @@ function updateCachePie(data) {
 
   // Compute total number of cache entries
   cacheEntries = 0;
-  Object.keys(data).forEach(function (item) {
+  Object.keys(data).forEach(item => {
     cacheEntries += data[item].valid;
     cacheEntries += data[item].stale;
   });
 
   // Sort data by value, put OTHER always as last
-  const sorted = Object.keys(data).sort(function (a, b) {
+  const sorted = Object.keys(data).sort((a, b) => {
     if (a === "OTHER") {
       return 1;
     }
@@ -47,7 +47,7 @@ function updateCachePie(data) {
 
   // Rebuild data object
   const tmp = {};
-  sorted.forEach(function (item) {
+  sorted.forEach(item => {
     tmp[item] = data[item];
   });
   data = tmp;
@@ -57,7 +57,7 @@ function updateCachePie(data) {
   data.empty.valid = cacheSize - cacheEntries;
 
   // Fill chart with data
-  Object.keys(data).forEach(function (item) {
+  Object.keys(data).forEach(item => {
     if (data[item].valid > 0) {
       v.push((100 * data[item].valid) / cacheSize);
       c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
@@ -87,7 +87,7 @@ function updateHostInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/host",
   })
-    .done(function (data) {
+    .done(data => {
       const host = data.host;
       const uname = host.uname;
       if (uname.domainname !== "(none)") {
@@ -110,7 +110,7 @@ function updateHostInfo() {
       clearTimeout(hostinfoTimer);
       hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -159,7 +159,7 @@ function updateMetrics() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/metrics",
   })
-    .done(function (data) {
+    .done(data => {
       const metrics = data.metrics;
       $("#dns-cache-table").empty();
 
@@ -177,7 +177,7 @@ function updateMetrics() {
       clearTimeout(metricsTimer);
       metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -200,10 +200,10 @@ function getLoggingButton() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dns/queryLogging",
   })
-    .done(function (data) {
+    .done(data => {
       showQueryLoggingButton(data.config.dns.queryLogging);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -218,7 +218,7 @@ $(".confirm-restartdns").confirm({
     $.ajax({
       url: document.body.dataset.apiurl + "/action/restartdns",
       type: "POST",
-    }).fail(function (data) {
+    }).fail(data => {
       apiFailure(data);
     });
   },
@@ -242,7 +242,7 @@ $(".confirm-flushlogs").confirm({
     $.ajax({
       url: document.body.dataset.apiurl + "/action/flush/logs",
       type: "POST",
-    }).fail(function (data) {
+    }).fail(data => {
       apiFailure(data);
     });
   },
@@ -266,7 +266,7 @@ $(".confirm-flusharp").confirm({
     $.ajax({
       url: document.body.dataset.apiurl + "/action/flush/arp",
       type: "POST",
-    }).fail(function (data) {
+    }).fail(data => {
       apiFailure(data);
     });
   },
@@ -301,10 +301,10 @@ $("#loggingButton").confirm({
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(data),
     })
-      .done(function (data) {
+      .done(data => {
         showQueryLoggingButton(data.config.dns.queryLogging);
       })
-      .fail(function (data) {
+      .fail(data => {
         apiFailure(data);
       });
   },
@@ -319,7 +319,7 @@ $("#loggingButton").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(function () {
+$(() => {
   updateHostInfo();
   updateMetrics();
   getLoggingButton();
@@ -368,7 +368,7 @@ $(function () {
   $.ajax({
     url: document.body.dataset.apiurl + "/network/gateway",
   })
-    .done(function (data) {
+    .done(data => {
       const gateway = data.gateway;
       // Get first object in gateway that has family == "inet"
       const inet = gateway.find(obj => obj.family === "inet");
@@ -380,7 +380,7 @@ $(function () {
       $("#sysinfo-gw-v6-addr").text(inet6 ? inet6.local.join("\n") : "N/A");
       $("#sysinfo-gw-v6-iface").text(inet6 ? inet6.interface : "N/A");
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 });

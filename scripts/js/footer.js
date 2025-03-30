@@ -117,11 +117,11 @@ function checkBlocking() {
     url: document.body.dataset.apiurl + "/dns/blocking",
     method: "GET",
   })
-    .done(function (data) {
+    .done(data => {
       piholeChanged(data.blocking, data.timer);
       utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
       utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
     });
@@ -153,13 +153,13 @@ function piholeChange(action, duration) {
       timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,
     }),
   })
-    .done(function (data) {
+    .done(data => {
       if (data.blocking === action + "d") {
         btnStatus.html("");
         piholeChanged(data.blocking, data.timer);
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -270,7 +270,7 @@ function updateFtlInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/ftl",
   })
-    .done(function (data) {
+    .done(data => {
       const ftl = data.ftl;
       const database = ftl.database;
       const intl = new Intl.NumberFormat();
@@ -318,7 +318,7 @@ function updateFtlInfo() {
       clearTimeout(ftlinfoTimer);
       ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -327,7 +327,7 @@ function updateSystemInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/system",
   })
-    .done(function (data) {
+    .done(data => {
       const system = data.system;
       const percentRAM = system.memory.ram["%used"];
       const percentSwap = system.memory.swap["%used"];
@@ -427,7 +427,7 @@ function updateSystemInfo() {
       clearTimeout(systemTimer);
       systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -486,7 +486,7 @@ function versionCompare(v1, v2) {
 function updateVersionInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/version",
-  }).done(function (data) {
+  }).done(data => {
     const version = data.version;
     let updateAvailable = false;
     let dockerUpdate = false;
@@ -536,7 +536,7 @@ function updateVersionInfo() {
       isDocker = true;
     }
 
-    versions.forEach(function (v) {
+    versions.forEach(v => {
       if (v.local !== null) {
         // reset update status for each component
         let updateComponentAvailable = false;
@@ -619,7 +619,7 @@ function updateVersionInfo() {
   });
 }
 
-$(function () {
+$(() => {
   if (!_isLoginPage) updateInfo();
   const enaT = $("#enableTimer");
   const target = new Date(parseInt(enaT.html(), 10));
@@ -644,28 +644,28 @@ $(function () {
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", function (e) {
+$("#pihole-enable").on("click", e => {
   e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-indefinitely").on("click", function (e) {
+$("#pihole-disable-indefinitely").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", function (e) {
+$("#pihole-disable-10s").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", function (e) {
+$("#pihole-disable-30s").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", function (e) {
+$("#pihole-disable-5m").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", function (e) {
+$("#pihole-disable-custom").on("click", e => {
   e.preventDefault();
   let custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
@@ -775,7 +775,7 @@ function addAdvancedInfo() {
   advancedInfoTarget.show();
 }
 
-$(function () {
+$(() => {
   initSettingsLevel();
   addAdvancedInfo();
 });

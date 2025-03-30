@@ -58,7 +58,7 @@ function initDateRangePicker() {
       showDropdowns: true,
       autoUpdateInput: true,
     },
-    function (startt, endt) {
+    (startt, endt) => {
       // Update global variables
       // Convert milliseconds (JS) to seconds (API)
       from = moment(startt).utc().valueOf() / 1000;
@@ -432,7 +432,7 @@ function addSelectSuggestion(name, dict, data) {
 function getSuggestions(dict) {
   $.get(
     document.body.dataset.apiurl + "/queries/suggestions",
-    function (data) {
+    data => {
       for (const key in filters) {
         if (Object.hasOwnProperty.call(filters, key)) {
           const f = filters[key];
@@ -497,7 +497,7 @@ function liveUpdate() {
   }
 }
 
-$(function () {
+$(() => {
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 

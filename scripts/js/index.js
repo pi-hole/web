@@ -24,7 +24,7 @@ Chart.defaults.set("plugins.deferred", {
 
 let failures = 0;
 function updateQueriesOverTime() {
-  $.getJSON(document.body.dataset.apiurl + "/history", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/history", data => {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
@@ -63,7 +63,7 @@ function updateQueriesOverTime() {
     }
 
     // Add data for each dataset that is available
-    data.history.forEach(function (item) {
+    data.history.forEach(item => {
       const timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
@@ -77,24 +77,24 @@ function updateQueriesOverTime() {
     $("#queries-over-time .overlay").hide();
     timeLineChart.update();
   })
-    .done(function () {
+    .done(() => {
       failures = 0;
       utils.setTimer(updateQueriesOverTime, REFRESH_INTERVAL.history);
     })
-    .fail(function () {
+    .fail(() => {
       failures++;
       if (failures < 5) {
         // Try again ´only if this has not failed more than five times in a row
         utils.setTimer(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
 function updateQueryTypesPie() {
-  $.getJSON(document.body.dataset.apiurl + "/stats/query_types", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/stats/query_types", data => {
     const v = [];
     const c = [];
     const k = [];
@@ -102,12 +102,12 @@ function updateQueryTypesPie() {
     let sum = 0;
 
     // Compute total number of queries
-    Object.keys(data.types).forEach(function (item) {
+    Object.keys(data.types).forEach(item => {
       sum += data.types[item];
     });
 
     // Fill chart with data (only include query types which appeared recently)
-    Object.keys(data.types).forEach(function (item) {
+    Object.keys(data.types).forEach(item => {
       if (data.types[item] > 0) {
         v.push((100 * data.types[item]) / sum);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
@@ -127,16 +127,16 @@ function updateQueryTypesPie() {
     //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
     queryTypePieChart.update("none");
   })
-    .done(function () {
+    .done(() => {
       utils.setTimer(updateQueryTypesPie, REFRESH_INTERVAL.query_types);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
 function updateClientsOverTime() {
-  $.getJSON(document.body.dataset.apiurl + "/history/clients", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/history/clients", data => {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
@@ -147,7 +147,7 @@ function updateClientsOverTime() {
     let numClients = 0;
     const labels = [];
     const clients = {};
-    Object.keys(data.clients).forEach(function (ip) {
+    Object.keys(data.clients).forEach(ip => {
       clients[ip] = numClients++;
       labels.push(data.clients[ip].name !== null ? data.clients[ip].name : ip);
     });
@@ -174,8 +174,8 @@ function updateClientsOverTime() {
 
     // Add data for each dataset that is available
     // We need to iterate over all time slots and fill in the data for each client
-    Object.keys(data.history).forEach(function (item) {
-      Object.keys(clients).forEach(function (client) {
+    Object.keys(data.history).forEach(item => {
+      Object.keys(clients).forEach(client => {
         if (data.history[item].data[client] === undefined) {
           // If there is no data for this client in this timeslot, we push 0
           clientsChart.data.datasets[clients[client]].data.push(0);
@@ -187,7 +187,7 @@ function updateClientsOverTime() {
     });
 
     // Extract data timestamps
-    data.history.forEach(function (item) {
+    data.history.forEach(item => {
       const d = new Date(1000 * parseInt(item.timestamp, 10));
       clientsChart.data.labels.push(d);
     });
@@ -195,26 +195,26 @@ function updateClientsOverTime() {
     $("#clients .overlay").hide();
     clientsChart.update();
   })
-    .done(function () {
+    .done(() => {
       // Reload graph after 10 minutes
       failures = 0;
       utils.setTimer(updateClientsOverTime, REFRESH_INTERVAL.clients);
     })
-    .fail(function () {
+    .fail(() => {
       failures++;
       if (failures < 5) {
         // Try again only if this has not failed more than five times in a row
         utils.setTimer(updateClientsOverTime, 0.1 * REFRESH_INTERVAL.clients);
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
 const upstreams = {};
 function updateForwardDestinationsPie() {
-  $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", data => {
     const v = [];
     const c = [];
     const k = [];
@@ -223,12 +223,12 @@ function updateForwardDestinationsPie() {
     const values = [];
 
     // Compute total number of queries
-    data.upstreams.forEach(function (item) {
+    data.upstreams.forEach(item => {
       sum += item.count;
     });
 
     // Collect values and colors
-    data.upstreams.forEach(function (item) {
+    data.upstreams.forEach(item => {
       let label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
       if (item.port > 0) {
         label += "#" + item.port;
@@ -245,7 +245,7 @@ function updateForwardDestinationsPie() {
     });
 
     // Split data into individual arrays for the graphs
-    values.forEach(function (value) {
+    values.forEach(value => {
       k.push(value[0]);
       v.push(value[1]);
       c.push(value[2]);
@@ -264,10 +264,10 @@ function updateForwardDestinationsPie() {
     queryTypePieChart.update("none");
     forwardDestinationPieChart.update("none");
   })
-    .done(function () {
+    .done(() => {
       utils.setTimer(updateForwardDestinationsPie, REFRESH_INTERVAL.upstreams);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -292,7 +292,7 @@ function updateTopClientsTable(blocked) {
     clienttable = $("#client-frequency").find("tbody:last");
   }
 
-  $.getJSON(api, function (data) {
+  $.getJSON(api, data => {
     // Clear tables before filling them with data
     tablecontent.remove();
     let url;
@@ -307,7 +307,7 @@ function updateTopClientsTable(blocked) {
     }
 
     // Populate table with content
-    data.clients.forEach(function (client) {
+    data.clients.forEach(client => {
       // Sanitize client
       let clientname = client.name;
       if (clientname.length === 0) clientname = client.ip;
@@ -332,7 +332,7 @@ function updateTopClientsTable(blocked) {
 
     // Hide overlay
     overlay.hide();
-  }).fail(function (data) {
+  }).fail(data => {
     apiFailure(data);
   });
 }
@@ -357,7 +357,7 @@ function updateTopDomainsTable(blocked) {
     domaintable = $("#domain-frequency").find("tbody:last");
   }
 
-  $.getJSON(api, function (data) {
+  $.getJSON(api, data => {
     // Clear tables before filling them with data
     tablecontent.remove();
     let url;
@@ -374,7 +374,7 @@ function updateTopDomainsTable(blocked) {
     }
 
     // Populate table with content
-    data.domains.forEach(function (item) {
+    data.domains.forEach(item => {
       // Sanitize domain
       domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
@@ -397,7 +397,7 @@ function updateTopDomainsTable(blocked) {
     });
 
     overlay.hide();
-  }).fail(function (data) {
+  }).fail(data => {
     apiFailure(data);
   });
 }
@@ -422,7 +422,7 @@ function updateTopLists() {
 let previousCount = 0;
 let firstSummaryUpdate = true;
 function updateSummaryData(runOnce = false) {
-  $.getJSON(document.body.dataset.apiurl + "/stats/summary", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/stats/summary", data => {
     const intl = new Intl.NumberFormat();
     const newCount = parseInt(data.queries.total, 10);
 
@@ -474,10 +474,10 @@ function updateSummaryData(runOnce = false) {
     previousCount = newCount;
     firstSummaryUpdate = false;
   })
-    .done(function () {
+    .done(() => {
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
     })
-    .fail(function (data) {
+    .fail(data => {
       utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
       apiFailure(data);
     });
@@ -510,7 +510,7 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   );
 }
 
-$(function () {
+$(() => {
   // Pull in data via AJAX
   updateSummaryData();
 
@@ -795,7 +795,7 @@ $(function () {
 
   updateTopLists();
 
-  $("#queryOverTimeChart").on("click", function (evt) {
+  $("#queryOverTimeChart").on("click", evt => {
     const activePoints = timeLineChart.getElementsAtEventForMode(
       evt,
       "nearest",
@@ -817,7 +817,7 @@ $(function () {
     return false;
   });
 
-  $("#clientsChart").on("click", function (evt) {
+  $("#clientsChart").on("click", evt => {
     const activePoints = clientsChart.getElementsAtEventForMode(
       evt,
       "nearest",
@@ -934,11 +934,11 @@ $(function () {
 });
 
 //destroy all chartjs customTooltips on window resize
-window.addEventListener("resize", function () {
+window.addEventListener("resize", () => {
   $(".chartjs-tooltip").remove();
 });
 
 // Tooltips
-$(function () {
+$(() => {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
