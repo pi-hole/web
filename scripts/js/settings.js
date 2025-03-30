@@ -27,17 +27,17 @@ function setConfigValues(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
     Object.keys(value).forEach(function (subkey) {
-      var subvalue = value[subkey];
+      const subvalue = value[subkey];
       // If the key is empty, we are at the top level
-      var newKey = key === "" ? subkey : key + "." + subkey;
+      const newKey = key === "" ? subkey : key + "." + subkey;
       setConfigValues(topic, newKey, subvalue);
     });
     return;
   }
 
   // else: we have a setting we can set
-  var escapedKey = key.replaceAll(".", "\\.");
-  var envTitle = $(`[data-configkeys~='${key}']`);
+  const escapedKey = key.replaceAll(".", "\\.");
+  const envTitle = $(`[data-configkeys~='${key}']`);
 
   if (
     envTitle.parents().parents().hasClass("settings-level-expert") &&
@@ -73,7 +73,7 @@ function setConfigValues(topic, key, value) {
       // Add allowed select items (if available)
       value.allowed.forEach(function (allowedValue) {
         $("#" + escapedKey + "-" + allowedValue.item).prop("disabled", value.flags.env_var);
-        var newopt = $("<option></option>")
+        const newopt = $("<option></option>")
           .attr("value", allowedValue.item)
           .text(allowedValue.description);
         $("#" + escapedKey).append(newopt);
@@ -116,11 +116,11 @@ function setConfigValues(topic, key, value) {
 }
 
 function saveSettings() {
-  var settings = {};
+  const settings = {};
   utils.disableAll();
   $("[data-key]").each(function () {
-    var key = $(this).data("key");
-    var value = $(this).val();
+    const key = $(this).data("key");
+    let value = $(this).val();
 
     // If this is a checkbox, use the checked state
     if ($(this).is(":checkbox")) {
@@ -148,10 +148,10 @@ function saveSettings() {
 
     // Build deep object
     // Transform "foo.bar.baz" into {foo: {bar: {baz: value}}}
-    var parts = key.split(".");
-    var obj = {};
-    var tmp = obj;
-    for (var i = 0; i < parts.length - 1; i++) {
+    const parts = key.split(".");
+    const obj = {};
+    let tmp = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
       tmp[parts[i]] = {};
       tmp = tmp[parts[i]];
     }

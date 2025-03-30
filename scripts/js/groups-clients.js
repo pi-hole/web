@@ -8,7 +8,7 @@
 /* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
-var table;
+let table;
 
 function reloadClientSuggestions() {
   $.ajax({
@@ -16,7 +16,7 @@ function reloadClientSuggestions() {
     type: "GET",
     dataType: "json",
     success: function (data) {
-      var sel = $("#select");
+      const sel = $("#select");
       sel.empty();
 
       // In order for the placeholder value to appear, we have to have a blank
@@ -27,11 +27,11 @@ function reloadClientSuggestions() {
       sel.append($("<option />"));
 
       // Add data obtained from API
-      for (var i = 0; i < data.clients.length; i++) {
+      for (let i = 0; i < data.clients.length; i++) {
         const client = data.clients[i];
         let mockDevice = false;
-        var text = client.hwaddr.toUpperCase();
-        var key = text;
+        let text = client.hwaddr.toUpperCase();
+        let key = text;
         if (key.startsWith("IP-")) {
           // Mock MAC address for address-only devices
           mockDevice = true;
@@ -40,10 +40,10 @@ function reloadClientSuggestions() {
         }
 
         // Append additional infos if available
-        var extraInfo = "";
+        let extraInfo = "";
         if (client.names !== null && client.names.length > 0) {
           // Count number of "," in client.names to determine number of hostnames
-          var numHostnames = client.names.split(",").length;
+          const numHostnames = client.names.split(",").length;
           const pluralHostnames = numHostnames > 1 ? "s" : "";
           extraInfo =
             numHostnames + " hostname" + pluralHostnames + ": " + utils.escapeHtml(client.names);
@@ -59,7 +59,7 @@ function reloadClientSuggestions() {
         if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
           if (extraInfo.length > 0) extraInfo += "; ";
           // Count number of "," in client.addresses to determine number of addresses
-          var numAddresses = client.addresses.split(",").length;
+          const numAddresses = client.addresses.split(",").length;
           const pluralAddresses = numAddresses > 1 ? "es" : "";
           extraInfo +=
             numAddresses + " address" + pluralAddresses + ": " + utils.escapeHtml(client.addresses);
@@ -124,7 +124,7 @@ function initTable() {
     ],
     drawCallback: function () {
       // Hide buttons if all clients were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteClient_"]').on("click", deleteClient);
@@ -132,16 +132,16 @@ function initTable() {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback: function (row, data) {
-      var dataId = utils.hexEncode(data.client);
+      const dataId = utils.hexEncode(data.client);
       $(row).attr("data-id", dataId);
-      var tooltip =
+      const tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
         "\nLast modified: " +
         utils.datetime(data.date_modified, false) +
         "\nDatabase ID: " +
         data.id;
-      var ipName =
+      let ipName =
         '<code id="ip_' +
         dataId +
         '" title="' +
@@ -161,7 +161,7 @@ function initTable() {
       $("td:eq(1)", row).html(ipName);
 
       $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      var commentEl = $("#comment_" + dataId, row);
+      const commentEl = $("#comment_" + dataId, row);
       commentEl.val(data.comment);
       commentEl.on("change", editClient);
 
@@ -169,10 +169,10 @@ function initTable() {
       $("td:eq(3)", row).append(
         '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
       );
-      var selectEl = $("#multiselect_" + dataId, row);
+      const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
-      for (var i = 0; i < groups.length; i++) {
-        var dataSub = "";
+      for (let i = 0; i < groups.length; i++) {
+        let dataSub = "";
         if (!groups[i].enabled) {
           dataSub = 'data-subtext="(disabled)"';
         }
@@ -190,12 +190,12 @@ function initTable() {
       selectEl
         // fix dropdown if it would stick out right of the viewport
         .on("show.bs.select", function () {
-          var winWidth = $(globalThis).width();
-          var dropdownEl = $("body > .bootstrap-select.dropdown");
+          const winWidth = $(globalThis).width();
+          const dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
             dropdownEl.removeClass("align-right");
-            var width = dropdownEl.width();
-            var left = dropdownEl.offset().left;
+            const width = dropdownEl.width();
+            const left = dropdownEl.offset().left;
             if (left + width > winWidth) {
               dropdownEl.addClass("align-right");
             }
@@ -230,7 +230,7 @@ function initTable() {
 
       var applyBtn = "#btn_apply_" + dataId;
 
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
         dataId +
         '" data-id="' +
@@ -274,7 +274,7 @@ function initTable() {
         className: "btn-sm datatable-bt deleteSelected",
         action: function () {
           // For each ".selected" row ...
-          var ids = [];
+          const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
             ids.push({ item: $(this).attr("data-id") });
@@ -300,7 +300,7 @@ function initTable() {
       utils.stateSaveCallback("groups-clients-table", data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-clients-table");
+      const data = utils.stateLoadCallback("groups-clients-table");
 
       // Return if not available
       if (data === null) {
@@ -315,7 +315,7 @@ function initTable() {
   });
 
   // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
+  const input = document.querySelector("input[type=search]");
   if (input !== null) {
     input.setAttribute("autocomplete", "off");
     input.setAttribute("autocorrect", "off");
@@ -328,7 +328,7 @@ function initTable() {
   });
 
   table.on("order.dt", function () {
-    var order = table.order();
+    const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
     } else {
@@ -358,7 +358,7 @@ function addClient() {
 
   // Check if the user wants to add multiple IPs (space or newline separated)
   // If so, split the input and store it in an array
-  var ips = $("#select")
+  let ips = $("#select")
     .val()
     .trim()
     .split(/[\s,]+/);
@@ -373,7 +373,7 @@ function addClient() {
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
   // - host name (arbitrary form, we're only checking against some reserved characters)
-  for (var i = 0; i < ips.length; i++) {
+  for (let i = 0; i < ips.length; i++) {
     if (
       utils.validateIPv4CIDR(ips[i]) ||
       utils.validateIPv6CIDR(ips[i]) ||
@@ -439,8 +439,8 @@ function editClient() {
     .map(Number);
   const comment = tr.find("#comment_" + client).val();
 
-  var done = "edited";
-  var notDone = "editing";
+  let done = "edited";
+  let notDone = "editing";
   switch (elem) {
     case "multiselect_" + client:
       done = "edited groups of";

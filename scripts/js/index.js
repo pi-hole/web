@@ -8,8 +8,8 @@
 /* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
 
 // Define global variables
-var timeLineChart, clientsChart;
-var queryTypePieChart, forwardDestinationPieChart;
+let timeLineChart, clientsChart;
+let queryTypePieChart, forwardDestinationPieChart;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -20,7 +20,7 @@ Chart.defaults.set("plugins.deferred", {
 
 // Functions to update data in page
 
-var failures = 0;
+let failures = 0;
 function updateQueriesOverTime() {
   $.getJSON(document.body.dataset.apiurl + "/history", function (data) {
     // Remove graph if there are no results (e.g. new
@@ -34,20 +34,20 @@ function updateQueriesOverTime() {
     timeLineChart.data.labels = [];
     timeLineChart.data.datasets = [];
 
-    var labels = [
+    const labels = [
       "Other DNS Queries",
       "Blocked DNS Queries",
       "Cached DNS Queries",
       "Forwarded DNS Queries",
     ];
-    var cachedColor = utils.getCSSval("queries-cached", "background-color");
-    var blockedColor = utils.getCSSval("queries-blocked", "background-color");
-    var permittedColor = utils.getCSSval("queries-permitted", "background-color");
-    var otherColor = utils.getCSSval("queries-other", "background-color");
-    var colors = [otherColor, blockedColor, cachedColor, permittedColor];
+    const cachedColor = utils.getCSSval("queries-cached", "background-color");
+    const blockedColor = utils.getCSSval("queries-blocked", "background-color");
+    const permittedColor = utils.getCSSval("queries-permitted", "background-color");
+    const otherColor = utils.getCSSval("queries-other", "background-color");
+    const colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
-    for (var i = 0; i < labels.length; i++) {
+    for (let i = 0; i < labels.length; i++) {
       timeLineChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
@@ -62,10 +62,10 @@ function updateQueriesOverTime() {
 
     // Add data for each dataset that is available
     data.history.forEach(function (item) {
-      var timestamp = new Date(1000 * parseInt(item.timestamp, 10));
+      const timestamp = new Date(1000 * parseInt(item.timestamp, 10));
 
       timeLineChart.data.labels.push(timestamp);
-      var other = item.total - (item.blocked + item.cached + item.forwarded);
+      const other = item.total - (item.blocked + item.cached + item.forwarded);
       timeLineChart.data.datasets[0].data.push(other);
       timeLineChart.data.datasets[1].data.push(item.blocked);
       timeLineChart.data.datasets[2].data.push(item.cached);
@@ -93,7 +93,7 @@ function updateQueriesOverTime() {
 
 function updateQueryTypesPie() {
   $.getJSON(document.body.dataset.apiurl + "/stats/query_types", function (data) {
-    var v = [],
+    let v = [],
       c = [],
       k = [],
       i = 0,
@@ -116,7 +116,7 @@ function updateQueryTypesPie() {
     });
 
     // Build a single dataset with the data to be pushed
-    var dd = { data: v, backgroundColor: c };
+    const dd = { data: v, backgroundColor: c };
     // and push it at once
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
@@ -186,7 +186,7 @@ function updateClientsOverTime() {
 
     // Extract data timestamps
     data.history.forEach(function (item) {
-      var d = new Date(1000 * parseInt(item.timestamp, 10));
+      const d = new Date(1000 * parseInt(item.timestamp, 10));
       clientsChart.data.labels.push(d);
     });
 
@@ -210,10 +210,10 @@ function updateClientsOverTime() {
     });
 }
 
-var upstreams = {};
+const upstreams = {};
 function updateForwardDestinationsPie() {
   $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", function (data) {
-    var v = [],
+    let v = [],
       c = [],
       k = [],
       i = 0,
@@ -227,7 +227,7 @@ function updateForwardDestinationsPie() {
 
     // Collect values and colors
     data.upstreams.forEach(function (item) {
-      var label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
+      let label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
       if (item.port > 0) {
         label += "#" + item.port;
       }
@@ -238,7 +238,7 @@ function updateForwardDestinationsPie() {
         upstreams[label] += "#" + item.port;
       }
 
-      var percent = (100 * item.count) / sum;
+      const percent = (100 * item.count) / sum;
       values.push([label, percent, THEME_COLORS[i++ % THEME_COLORS.length]]);
     });
 
@@ -250,7 +250,7 @@ function updateForwardDestinationsPie() {
     });
 
     // Build a single dataset with the data to be pushed
-    var dd = { data: v, backgroundColor: c };
+    const dd = { data: v, backgroundColor: c };
     // and push it at once
     forwardDestinationPieChart.data.labels = k;
     forwardDestinationPieChart.data.datasets[0] = dd;
@@ -405,11 +405,11 @@ function updateTopLists() {
   utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
 }
 
-var previousCount = 0;
-var firstSummaryUpdate = true;
+let previousCount = 0;
+let firstSummaryUpdate = true;
 function updateSummaryData(runOnce = false) {
   $.getJSON(document.body.dataset.apiurl + "/stats/summary", function (data) {
-    var intl = new Intl.NumberFormat();
+    const intl = new Intl.NumberFormat();
     const newCount = parseInt(data.queries.total, 10);
 
     $("span#dns_queries").text(intl.format(newCount));
@@ -419,12 +419,12 @@ function updateSummaryData(runOnce = false) {
       intl.format(parseInt(data.clients.total, 10)) + " total clients"
     );
     $("span#blocked_queries").text(intl.format(parseFloat(data.queries.blocked)));
-    var formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
+    const formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
     updateQueryFrequency(intl, data.queries.frequency);
 
     const lastupdate = parseInt(data.gravity.last_update, 10);
-    var updatetxt = "Lists were never updated";
+    let updatetxt = "Lists were never updated";
     if (lastupdate > 0) {
       updatetxt =
         "Lists updated " +
@@ -570,9 +570,9 @@ $(function () {
     },
   };
 
-  var gridColor = utils.getCSSval("graphs-grid", "background-color");
-  var ticksColor = utils.getCSSval("graphs-ticks", "color");
-  var ctx = document.getElementById("queryOverTimeChart").getContext("2d");
+  const gridColor = utils.getCSSval("graphs-grid", "background-color");
+  const ticksColor = utils.getCSSval("graphs-ticks", "color");
+  let ctx = document.getElementById("queryOverTimeChart").getContext("2d");
   timeLineChart = new Chart(ctx, {
     type: "bar",
     data: {
@@ -599,12 +599,12 @@ $(function () {
           },
           callbacks: {
             title: function (tooltipTitle) {
-              var label = tooltipTitle[0].label;
-              var time = label.match(/(\d?\d):?(\d?\d?)/);
-              var h = parseInt(time[1], 10);
-              var m = parseInt(time[2], 10) || 0;
-              var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-              var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+              const label = tooltipTitle[0].label;
+              const time = label.match(/(\d?\d):?(\d?\d?)/);
+              const h = parseInt(time[1], 10);
+              const m = parseInt(time[2], 10) || 0;
+              const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+              const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
               return "Queries from " + from + " to " + to;
             },
             label: function (tooltipLabel) {
@@ -672,7 +672,7 @@ $(function () {
   updateQueriesOverTime();
 
   // Create / load "Top Clients over Time" only if authorized
-  var clientsChartEl = document.getElementById("clientsChart");
+  const clientsChartEl = document.getElementById("clientsChart");
   if (clientsChartEl) {
     ctx = clientsChartEl.getContext("2d");
     clientsChart = new Chart(ctx, {
@@ -703,12 +703,12 @@ $(function () {
             },
             callbacks: {
               title: function (tooltipTitle) {
-                var label = tooltipTitle[0].label;
-                var time = label.match(/(\d?\d):?(\d?\d?)/);
-                var h = parseInt(time[1], 10);
-                var m = parseInt(time[2], 10) || 0;
-                var from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-                var to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
+                const label = tooltipTitle[0].label;
+                const time = label.match(/(\d?\d):?(\d?\d?)/);
+                const h = parseInt(time[1], 10);
+                const m = parseInt(time[2], 10) || 0;
+                const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
+                const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
                 return "Client activity from " + from + " to " + to;
               },
               label: function (tooltipLabel) {
@@ -782,7 +782,7 @@ $(function () {
   updateTopLists();
 
   $("#queryOverTimeChart").on("click", function (evt) {
-    var activePoints = timeLineChart.getElementsAtEventForMode(
+    const activePoints = timeLineChart.getElementsAtEventForMode(
       evt,
       "nearest",
       { intersect: true },
@@ -790,13 +790,13 @@ $(function () {
     );
     if (activePoints.length > 0) {
       //get the internal index
-      var clickedElementindex = activePoints[0].index;
+      const clickedElementindex = activePoints[0].index;
       //get specific label by index
-      var label = timeLineChart.data.labels[clickedElementindex];
+      const label = timeLineChart.data.labels[clickedElementindex];
 
       //get value by index
-      var from = label / 1000 - 300;
-      var until = label / 1000 + 300;
+      const from = label / 1000 - 300;
+      const until = label / 1000 + 300;
       globalThis.location.href = "queries?from=" + from + "&until=" + until;
     }
 
@@ -804,7 +804,7 @@ $(function () {
   });
 
   $("#clientsChart").on("click", function (evt) {
-    var activePoints = clientsChart.getElementsAtEventForMode(
+    const activePoints = clientsChart.getElementsAtEventForMode(
       evt,
       "nearest",
       { intersect: true },
@@ -812,14 +812,14 @@ $(function () {
     );
     if (activePoints.length > 0) {
       //get the internal index
-      var clickedElementindex = activePoints[0].index;
+      const clickedElementindex = activePoints[0].index;
 
       //get specific label by index
-      var label = clientsChart.data.labels[clickedElementindex];
+      const label = clientsChart.data.labels[clickedElementindex];
 
       //get value by index
-      var from = label / 1000 - 300;
-      var until = label / 1000 + 300;
+      const from = label / 1000 - 300;
+      const until = label / 1000 + 300;
       globalThis.location.href = "queries?from=" + from + "&until=" + until;
     }
 

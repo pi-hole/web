@@ -9,14 +9,14 @@
 
 const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
 const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
-var from = beginningOfTime;
-var until = endOfTime;
+let from = beginningOfTime;
+let until = endOfTime;
 
-var dateformat = "MMM Do YYYY, HH:mm";
+const dateformat = "MMM Do YYYY, HH:mm";
 
-var table = null;
-var cursor = null;
-var filters = [
+let table = null;
+let cursor = null;
+const filters = [
   "client_ip",
   "client_name",
   "domain",
@@ -81,7 +81,7 @@ function handleAjaxError(xhr, textStatus) {
 
 function parseQueryStatus(data) {
   // Parse query status
-  var fieldtext,
+  let fieldtext,
     buttontext,
     icon = null,
     colorClass = false,
@@ -223,7 +223,7 @@ function parseQueryStatus(data) {
       buttontext = "";
   }
 
-  var matchText =
+  const matchText =
     colorClass === "text-green" ? "allowed" : colorClass === "text-red" ? "blocked" : "matched";
 
   return {
@@ -256,7 +256,7 @@ function formatReplyTime(replyTime, type) {
 
 // Parse DNSSEC status
 function parseDNSSEC(data) {
-  var icon = "", // Icon to display
+  let icon = "", // Icon to display
     color = "", // Class to apply to text
     text = data.dnssec; // Text to display
   switch (text) {
@@ -288,10 +288,10 @@ function parseDNSSEC(data) {
 
 function formatInfo(data) {
   // Parse Query Status
-  var dnssec = parseDNSSEC(data);
-  var queryStatus = parseQueryStatus(data);
-  var divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
-  var statusInfo = "";
+  const dnssec = parseDNSSEC(data);
+  const queryStatus = parseQueryStatus(data);
+  const divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
+  let statusInfo = "";
   if (queryStatus.colorClass !== false) {
     statusInfo =
       divStart +
@@ -303,12 +303,12 @@ function formatInfo(data) {
       "</span></strong></div>";
   }
 
-  var listInfo = "",
+  let listInfo = "",
     cnameInfo = "";
   if (data.list_id !== null && data.list_id !== -1) {
     // Some list matched - add link to search page
 
-    var listLink =
+    const listLink =
       '<a href="search?domain=' +
       encodeURIComponent(data.domain) +
       '" target="_blank">search lists</a>';
@@ -321,7 +321,7 @@ function formatInfo(data) {
   }
 
   // Show TTL if applicable
-  var ttlInfo = "";
+  let ttlInfo = "";
   if (data.ttl > 0) {
     ttlInfo =
       divStart +
@@ -333,14 +333,14 @@ function formatInfo(data) {
   }
 
   // Show client information, show hostname only if available
-  var ipInfo =
+  const ipInfo =
     data.client.name !== null && data.client.name.length > 0
       ? utils.escapeHtml(data.client.name) + " (" + data.client.ip + ")"
       : data.client.ip;
-  var clientInfo = divStart + "Client:&nbsp;&nbsp;<strong>" + ipInfo + "</strong></div>";
+  const clientInfo = divStart + "Client:&nbsp;&nbsp;<strong>" + ipInfo + "</strong></div>";
 
   // Show DNSSEC status if applicable
-  var dnssecInfo = "";
+  let dnssecInfo = "";
   if (dnssec.color !== "") {
     dnssecInfo =
       divStart +
@@ -352,20 +352,20 @@ function formatInfo(data) {
   }
 
   // Show long-term database information if applicable
-  var dbInfo = "";
+  let dbInfo = "";
   if (data.dbid !== false) {
     dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
   }
 
   // Always show reply info, add reply delay if applicable
-  var replyInfo = "";
+  let replyInfo = "";
   replyInfo =
     data.reply.type !== "UNKNOWN"
       ? divStart + "Reply:&nbsp&nbsp;" + data.reply.type + "</div>"
       : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
 
   // Show extended DNS error if applicable
-  var edeInfo = "";
+  let edeInfo = "";
   if (data.ede !== null && data.ede.text !== null) {
     edeInfo = divStart + "Extended DNS error:&nbsp;&nbsp;<strong";
     if (dnssec.color !== "") {
@@ -396,7 +396,7 @@ function formatInfo(data) {
 }
 
 function addSelectSuggestion(name, dict, data) {
-  var obj = $("#" + name + "_filter"),
+  let obj = $("#" + name + "_filter"),
     value = "";
   obj.empty();
 
@@ -414,12 +414,12 @@ function addSelectSuggestion(name, dict, data) {
   }
 
   // Add data obtained from API
-  for (var key in data) {
+  for (const key in data) {
     if (!Object.prototype.hasOwnProperty.call(data, key)) {
       continue;
     }
 
-    var text = data[key];
+    const text = data[key];
     obj.append($("<option />").val(text).text(text));
   }
 
@@ -433,9 +433,9 @@ function getSuggestions(dict) {
   $.get(
     document.body.dataset.apiurl + "/queries/suggestions",
     function (data) {
-      for (var key in filters) {
+      for (const key in filters) {
         if (Object.hasOwnProperty.call(filters, key)) {
-          var f = filters[key];
+          const f = filters[key];
           addSelectSuggestion(f, dict, data.suggestions[f]);
         }
       }
@@ -445,10 +445,10 @@ function getSuggestions(dict) {
 }
 
 function parseFilters() {
-  var filter = {};
-  for (var key in filters) {
+  const filter = {};
+  for (const key in filters) {
     if (Object.hasOwnProperty.call(filters, key)) {
-      var f = filters[key];
+      const f = filters[key];
       filter[f] = $("#" + f + "_filter").val();
     }
   }
@@ -462,10 +462,10 @@ function filterOn(param, dict) {
 }
 
 function getAPIURL(filters) {
-  var apiurl = document.body.dataset.apiurl + "/queries?";
-  for (var key in filters) {
+  let apiurl = document.body.dataset.apiurl + "/queries?";
+  for (const key in filters) {
     if (Object.hasOwnProperty.call(filters, key)) {
-      var filter = filters[key];
+      const filter = filters[key];
       if (filterOn(key, filters)) {
         if (!apiurl.endsWith("?")) apiurl += "&";
         apiurl += key + "=" + encodeURIComponent(filter);
@@ -484,7 +484,7 @@ function getAPIURL(filters) {
   return encodeURI(apiurl);
 }
 
-var liveMode = false;
+let liveMode = false;
 $("#live").prop("checked", liveMode);
 $("#live").on("click", function () {
   liveMode = $(this).prop("checked");
@@ -499,11 +499,11 @@ function liveUpdate() {
 
 $(function () {
   // Do we want to filter queries?
-  var GETDict = utils.parseQueryString();
+  const GETDict = utils.parseQueryString();
 
-  for (var sel in filters) {
+  for (const sel in filters) {
     if (Object.hasOwnProperty.call(filters, sel)) {
-      var element = filters[sel];
+      const element = filters[sel];
       $("#" + element + "_filter").select2({
         width: "100%",
         tags: sel < 3, // Only the first three are allowed to freely specify input
@@ -514,7 +514,7 @@ $(function () {
   }
 
   getSuggestions(GETDict);
-  var apiURL = getAPIURL(GETDict);
+  const apiURL = getAPIURL(GETDict);
 
   if ("from" in GETDict) {
     from = GETDict.from;
@@ -537,7 +537,7 @@ $(function () {
         if (cursor !== null) d.cursor = cursor;
       },
       dataFilter: function (d) {
-        var json = jQuery.parseJSON(d);
+        const json = jQuery.parseJSON(d);
         cursor = json.cursor; // Extract cursor from original data
         if (liveMode) {
           utils.setTimer(liveUpdate, REFRESH_INTERVAL.query_log);
@@ -587,7 +587,7 @@ $(function () {
       return utils.stateLoadCallback("query_log_table");
     },
     rowCallback: function (row, data) {
-      var querystatus = parseQueryStatus(data);
+      const querystatus = parseQueryStatus(data);
       const dnssec = parseDNSSEC(data);
 
       if (querystatus.icon !== false) {
@@ -608,10 +608,10 @@ $(function () {
       $(row).addClass(querystatus.blocked === true ? "blocked-row" : "allowed-row");
 
       // Substitute domain by "." if empty
-      var domain = data.domain === 0 ? "." : data.domain;
+      let domain = data.domain === 0 ? "." : data.domain;
 
       // Prefix colored DNSSEC icon to domain text
-      var dnssecIcon = "";
+      let dnssecIcon = "";
       dnssecIcon =
         '<i class="mr-2 fa fa-fw ' +
         dnssec.icon +
@@ -678,11 +678,11 @@ $(function () {
 
   // Add event listener for adding domains to the allow-/blocklist
   $("#all-queries tbody").on("click", "button", function (event) {
-    var button = $(this);
-    var tr = button.parents("tr");
-    var allowButton = button[0].classList.contains("text-green");
-    var denyButton = button[0].classList.contains("text-red");
-    var data = table.row(tr).data();
+    const button = $(this);
+    const tr = button.parents("tr");
+    const allowButton = button[0].classList.contains("text-green");
+    const denyButton = button[0].classList.contains("text-red");
+    const data = table.row(tr).data();
     if (denyButton) {
       utils.addFromQueryLog(data.domain, "deny");
     } else if (allowButton) {
@@ -696,8 +696,8 @@ $(function () {
 
   // Add event listener for opening and closing details, except on rows with "details-row" class
   $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
-    var tr = $(this);
-    var row = table.row(tr);
+    const tr = $(this);
+    const row = table.row(tr);
 
     if (globalThis.getSelection().toString().length > 0) {
       // This event was triggered by a selection, so don't open the row
@@ -737,9 +737,9 @@ function refreshTable() {
   table.clear();
 
   // Source data from API
-  var filters = parseFilters();
+  const filters = parseFilters();
   filters.from = from;
   filters.until = until;
-  var apiUrl = getAPIURL(filters);
+  const apiUrl = getAPIURL(filters);
   table.ajax.url(apiUrl).draw();
 }

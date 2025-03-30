@@ -14,7 +14,7 @@ document.getElementById("submit-import").addEventListener("click", function () {
 
 // Upload file to Pi-hole
 function importZIP() {
-  var file = document.getElementById("file").files[0];
+  const file = document.getElementById("file").files[0];
   if (file === undefined) {
     alert("Please select a file to import.");
     return;
@@ -56,8 +56,8 @@ function importZIP() {
       } else if ("files" in data) {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
-        var text = "<p>Processed files:</p><ul>";
-        for (var i = 0; i < data.files.length; i++) {
+        let text = "<p>Processed files:</p><ul>";
+        for (let i = 0; i < data.files.length; i++) {
           text += "<li>" + utils.escapeHtml(data.files[i]) + "</li>";
         }
 
@@ -84,8 +84,8 @@ $("#GETTeleporter").on("click", function () {
       responseType: "blob",
     },
     success: function (data, status, xhr) {
-      var a = document.createElement("a");
-      var url = globalThis.URL.createObjectURL(data);
+      const a = document.createElement("a");
+      const url = globalThis.URL.createObjectURL(data);
 
       a.href = url;
       a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];

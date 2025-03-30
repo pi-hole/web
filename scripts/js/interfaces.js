@@ -12,7 +12,7 @@ $(function () {
     url: document.body.dataset.apiurl + "/network/gateway",
     data: { detailed: true },
   }).done(function (data) {
-    var intl = new Intl.NumberFormat();
+    const intl = new Intl.NumberFormat();
     const gateway = data.gateway;
     // Get all objects in gateway that has family == "inet"
     const inet = gateway.find(obj => obj.family === "inet");
@@ -28,8 +28,8 @@ $(function () {
       gateways.add(inet6.gateway);
     }
 
-    var interfaces = {};
-    var masterInterfaces = {};
+    const interfaces = {};
+    const masterInterfaces = {};
 
     // For each interface in data.interface, create a new object and push it to json
     data.interfaces.forEach(function (interface) {
@@ -57,7 +57,7 @@ $(function () {
       const indentIcon =
         master === null ? "" : "<span class='child-interface-icon'>&nbsp;&rdca;</span> ";
 
-      var obj = {
+      const obj = {
         text: indentIcon + interface.name + " - " + status,
         class: gateways.has(interface.name) ? "text-bold" : null,
         icon: master === null ? "fa fa-network-wired fa-fw" : "",

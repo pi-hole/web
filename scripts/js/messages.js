@@ -6,14 +6,14 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils: false */
-var table,
+let table,
   toasts = {};
 
 $(function () {
-  var ignoreNonfatal = localStorage
+  const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  var url =
+  const url =
     document.body.dataset.apiurl +
     "/info/messages" +
     (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
@@ -50,7 +50,7 @@ $(function () {
       $('button[id^="deleteMessage_"]').on("click", deleteMessage);
 
       // Hide buttons if all messages were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       // Remove visible dropdown to prevent orphaning
@@ -58,7 +58,7 @@ $(function () {
     },
     rowCallback: function (row, data) {
       $(row).attr("data-id", data.id);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
         data.id +
         '" data-del-id="' +
@@ -128,7 +128,7 @@ $(function () {
       utils.stateSaveCallback("messages-table", data);
     },
     stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("messages-table");
+      const data = utils.stateLoadCallback("messages-table");
       // Return if not available
       if (data === null) {
         return null;

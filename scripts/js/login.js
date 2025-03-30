@@ -7,12 +7,12 @@
 
 /* global utils:false, NProgress:false */
 
-var _isLoginPage = true;
+const _isLoginPage = true;
 
 function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to dashboard
-  var target = ".";
+  let target = ".";
 
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {
@@ -141,7 +141,7 @@ $("#toggle-password").on("click", function () {
   $(".field-icon", this).toggleClass("fa-eye fa-eye-slash");
 
   // Password field
-  var $pwd = $("#current-password");
+  const $pwd = $("#current-password");
   if ($pwd.attr("type") === "password") {
     $pwd.attr("type", "text");
     $pwd.attr("title", "Hide password");

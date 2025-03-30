@@ -6,7 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false, apiFailure:false */
-var GETDict = {};
+let GETDict = {};
 
 $(function () {
   GETDict = utils.parseQueryString();
@@ -31,7 +31,7 @@ function doSearch() {
     return;
   }
 
-  var verb = partial ? "partially" : "exactly";
+  const verb = partial ? "partially" : "exactly";
 
   $.ajax({
     method: "GET",
@@ -47,7 +47,7 @@ function doSearch() {
       ta.show();
 
       const res = data.search;
-      var result = "";
+      let result = "";
       const numDomains = res.domains.length;
       result =
         "Found " +
@@ -91,7 +91,7 @@ function doSearch() {
       }
 
       // Group results in res.gravity by res.gravity[].address
-      var grouped = {};
+      const grouped = {};
       for (const list of res.gravity) {
         if (grouped[list.address + "_" + list.type] === undefined) {
           grouped[list.address + "_" + list.type] = [];

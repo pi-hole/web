@@ -6,9 +6,9 @@
  *  Please see LICENSE file for your rights under this license. */
 
 function eventsource() {
-  var alInfo = $("#alInfo");
-  var alSuccess = $("#alSuccess");
-  var ta = $("#output");
+  const alInfo = $("#alInfo");
+  const alSuccess = $("#alSuccess");
+  const ta = $("#output");
 
   ta.html("");
   ta.show();
@@ -37,7 +37,7 @@ function eventsource() {
 
               // Enqueue the next data chunk into our target stream
               controller.enqueue(value);
-              var string = new TextDecoder().decode(value);
+              const string = new TextDecoder().decode(value);
               parseLines(ta, string);
 
               if (string.indexOf("Done.") !== -1) {
@@ -68,7 +68,7 @@ $(function () {
 
   // Do we want to start updating immediately?
   // gravity?go
-  var searchString = globalThis.location.search.substring(1);
+  const searchString = globalThis.location.search.substring(1);
   if (searchString.indexOf("go") !== -1) {
     $("#gravityBtn").prop("disabled", true);
     eventsource();
@@ -80,7 +80,7 @@ function parseLines(ta, str) {
   // We want to split the text before an "OVER" escape sequence to allow overwriting previous line when needed
 
   // Splitting the text on "\r"
-  var lines = str.split(/(?=\r)/g);
+  const lines = str.split(/(?=\r)/g);
 
   for (let i = 0; i < lines.length; i++) {
     if (lines[i][0] === "\r") {

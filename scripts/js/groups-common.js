@@ -7,7 +7,7 @@
 
 /* global apiFailure:false, utils:false, initTable:false, updateFtlInfo:false */
 
-var groups = [];
+let groups = [];
 
 function populateGroupSelect(selectEl) {
   if (selectEl.length === 0) {
@@ -16,8 +16,8 @@ function populateGroupSelect(selectEl) {
   }
 
   // Add all known groups
-  for (var i = 0; i < groups.length; i++) {
-    var dataSub = "";
+  for (let i = 0; i < groups.length; i++) {
+    let dataSub = "";
     if (!groups[i].enabled) {
       dataSub = 'data-subtext="(disabled)"';
     }
@@ -46,9 +46,9 @@ function getGroups(groupSelector) {
       groups = data.groups;
 
       // Get all all <select> elements with the class "selectpicker"
-      var groupSelector = $(".selectpicker");
+      const groupSelector = $(".selectpicker");
       // Populate the groupSelector with the groups
-      for (var i = 0; i < groupSelector.length; i++) {
+      for (let i = 0; i < groupSelector.length; i++) {
         populateGroupSelect($(groupSelector[i]));
       }
 
@@ -83,7 +83,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
 
   // use utils.hexDecode() to decode all clients
   let idstring = "";
-  for (var i = 0; i < ids.length; i++) {
+  for (let i = 0; i < ids.length; i++) {
     ids[i].item = utils.hexDecode(ids[i].item);
     idstring += ids[i].item + ", ";
   }

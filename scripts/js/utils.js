@@ -19,7 +19,7 @@ $(function () {
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
-  var map = {
+  const map = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
@@ -36,7 +36,7 @@ function escapeHtml(text) {
 }
 
 function unescapeHtml(text) {
-  var map = {
+  const map = {
     "&amp;": "&",
     "&lt;": "<",
     "&gt;": ">",
@@ -63,15 +63,15 @@ function unescapeHtml(text) {
 
 // Helper function for converting Objects to Arrays after sorting the keys
 function objectToArray(obj) {
-  var arr = [];
-  var idx = [];
-  var keys = Object.keys(obj);
+  const arr = [];
+  const idx = [];
+  const keys = Object.keys(obj);
 
   keys.sort(function (a, b) {
     return a - b;
   });
 
-  for (var i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i++) {
     arr.push(obj[keys[i]]);
     idx.push(keys[i]);
   }
@@ -83,7 +83,7 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-var showAlertBox = null;
+let showAlertBox = null;
 function showAlert(type, icon, title, message, toast) {
   const options = {
       title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
@@ -120,7 +120,7 @@ function showAlert(type, icon, title, message, toast) {
       // If the message is an API object, nicely format the error message
       // Try to parse message as JSON
       try {
-        var data = JSON.parse(message);
+        const data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
           options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
@@ -172,8 +172,9 @@ function datetime(date, html, humanReadable) {
     return "Never";
   }
 
-  var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  var timestr = moment.unix(Math.floor(date)).format(format).trim();
+  const format =
+    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+  const timestr = moment.unix(Math.floor(date)).format(format).trim();
   return humanReadable
     ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
     : timestr;
@@ -197,7 +198,7 @@ function enableAll() {
   $("textarea").prop("disabled", false);
 
   // Enable custom input field only if applicable
-  var ip = $("#select") ? $("#select").val() : null;
+  const ip = $("#select") ? $("#select").val() : null;
   if (ip !== null && ip !== "custom") {
     $("#ip-custom").prop("disabled", true);
   }
@@ -206,10 +207,10 @@ function enableAll() {
 // Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
 function validateIPv4CIDR(ip) {
   // One IPv4 element is 8bit: 0 - 256
-  var ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+  const ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
   // CIDR for IPv4 is 1 - 32 bit
-  var v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
-  var ipv4validator = new RegExp(
+  const v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
+  const ipv4validator = new RegExp(
     "^" + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + v4cidr + "$"
   );
   return ipv4validator.test(ip);
@@ -218,10 +219,10 @@ function validateIPv4CIDR(ip) {
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
-  var ipv6elem = "[0-9A-Fa-f]{1,4}";
+  const ipv6elem = "[0-9A-Fa-f]{1,4}";
   // CIDR for IPv6 is 1- 128 bit
-  var v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
-  var ipv6validator = new RegExp(
+  const v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
+  const ipv6validator = new RegExp(
     "^(((?:" +
       ipv6elem +
       "))*((?::" +
@@ -242,18 +243,18 @@ function validateIPv6CIDR(ip) {
 }
 
 function validateMAC(mac) {
-  var macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/;
+  const macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/;
   return macvalidator.test(mac);
 }
 
 function validateHostname(name) {
-  var namevalidator = /[^<>;"]/;
+  const namevalidator = /[^<>;"]/;
   return namevalidator.test(name);
 }
 
 // set bootstrap-select defaults
 function setBsSelectDefaults() {
-  var bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
+  const bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
   bsSelectDefaults.noneSelectedText = "none selected";
   bsSelectDefaults.selectedTextFormat = "count > 1";
   bsSelectDefaults.actionsBox = true;
@@ -271,7 +272,7 @@ function setBsSelectDefaults() {
   };
 }
 
-var backupStorage = {};
+const backupStorage = {};
 function stateSaveCallback(itemName, data) {
   if (localStorage === null) {
     backupStorage[itemName] = JSON.stringify(data);
@@ -281,10 +282,10 @@ function stateSaveCallback(itemName, data) {
 }
 
 function stateLoadCallback(itemName) {
-  var data;
+  let data;
   // Receive previous state from client's local storage area
   if (localStorage === null) {
-    var item = backupStorage[itemName];
+    const item = backupStorage[itemName];
     data = item === "undefined" ? null : item;
   } else {
     data = localStorage.getItem(itemName);
@@ -312,21 +313,21 @@ function stateLoadCallback(itemName) {
 }
 
 function addFromQueryLog(domain, list) {
-  var alertModal = $("#alertModal");
-  var alProcessing = alertModal.find(".alProcessing");
-  var alSuccess = alertModal.find(".alSuccess");
-  var alFailure = alertModal.find(".alFailure");
-  var alNetworkErr = alertModal.find(".alFailure #alNetErr");
-  var alCustomErr = alertModal.find(".alFailure #alCustomErr");
-  var alList = "#alList";
-  var alDomain = "#alDomain";
+  const alertModal = $("#alertModal");
+  const alProcessing = alertModal.find(".alProcessing");
+  const alSuccess = alertModal.find(".alSuccess");
+  const alFailure = alertModal.find(".alFailure");
+  const alNetworkErr = alertModal.find(".alFailure #alNetErr");
+  const alCustomErr = alertModal.find(".alFailure #alCustomErr");
+  const alList = "#alList";
+  const alDomain = "#alDomain";
 
   // Exit the function here if the Modal is already shown (multiple running interlock)
   if (alertModal.css("display") !== "none") {
     return;
   }
 
-  var listtype = list === "allow" ? "Allowlist" : "Denylist";
+  const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   alProcessing.children(alDomain).text(domain);
   alProcessing.children(alList).text(listtype);
@@ -411,7 +412,7 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  var ignoreNonfatal = localStorage
+  const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
   $.ajax({
@@ -424,8 +425,8 @@ function checkMessages() {
   })
     .done(function (data) {
       if (data.count > 0) {
-        var more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
-        var title =
+        const more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
+        const title =
           data.count > 1
             ? "There are " + data.count + " warnings." + more
             : "There is one warning." + more;
@@ -445,9 +446,9 @@ function checkMessages() {
 
 // Show only the appropriate delete buttons in datatables
 function changeBulkDeleteStates(table) {
-  var allRows = table.rows({ filter: "applied" }).data().length;
-  var pageLength = table.page.len();
-  var selectedRows = table.rows(".selected").data().length;
+  const allRows = table.rows({ filter: "applied" }).data().length;
+  const pageLength = table.page.len();
+  const selectedRows = table.rows(".selected").data().length;
 
   if (selectedRows === 0) {
     // Nothing selected
@@ -505,9 +506,9 @@ function htmlPass(data, _type) {
 
 // Show only the appropriate buttons
 function changeTableButtonStates(table) {
-  var allRows = table.rows({ filter: "applied" }).data().length;
-  var pageLength = table.page.len();
-  var selectedRows = table.rows(".selected").data().length;
+  const allRows = table.rows({ filter: "applied" }).data().length;
+  const pageLength = table.page.len();
+  const selectedRows = table.rows(".selected").data().length;
 
   if (selectedRows === 0) {
     // Nothing selected
@@ -531,7 +532,7 @@ function changeTableButtonStates(table) {
 }
 
 function getCSSval(cssclass, cssproperty) {
-  var elem = $("<div class='" + cssclass + "'></div>"),
+  const elem = $("<div class='" + cssclass + "'></div>"),
     val = elem.appendTo("body").css(cssproperty);
   elem.remove();
   return val;
@@ -544,9 +545,9 @@ function parseQueryString() {
 
 // https://stackoverflow.com/q/21647928
 function hexEncode(string) {
-  var hex, i;
+  let hex, i;
 
-  var result = "";
+  let result = "";
   for (i = 0; i < string.length; i++) {
     hex = string.codePointAt(i).toString(16);
     result += ("000" + hex).slice(-4);
@@ -557,9 +558,9 @@ function hexEncode(string) {
 
 // https://stackoverflow.com/q/21647928
 function hexDecode(string) {
-  var j;
-  var hexes = string.match(/.{1,4}/g) || [];
-  var back = "";
+  let j;
+  const hexes = string.match(/.{1,4}/g) || [];
+  let back = "";
   for (j = 0; j < hexes.length; j++) {
     back += String.fromCodePoint(parseInt(hexes[j], 16));
   }
