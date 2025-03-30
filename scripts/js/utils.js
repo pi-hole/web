@@ -68,9 +68,9 @@ function objectToArray(obj) {
     return a - b;
   });
 
-  for (let i = 0; i < keys.length; i++) {
-    arr.push(obj[keys[i]]);
-    idx.push(keys[i]);
+  for (const key of keys) {
+    arr.push(obj[key]);
+    idx.push(key);
   }
 
   return [idx, arr];

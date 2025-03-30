@@ -16,16 +16,16 @@ function populateGroupSelect(selectEl) {
   }
 
   // Add all known groups
-  for (let i = 0; i < groups.length; i++) {
+  for (const group of groups) {
     let dataSub = "";
-    if (!groups[i].enabled) {
+    if (!group.enabled) {
       dataSub = 'data-subtext="(disabled)"';
     }
 
     selectEl.append(
       $("<option " + dataSub + "/>")
-        .val(groups[i].id)
-        .text(groups[i].name)
+        .val(group.id)
+        .text(group.name)
     );
   }
 
@@ -48,8 +48,8 @@ function getGroups(groupSelector) {
       // Get all all <select> elements with the class "selectpicker"
       const groupSelector = $(".selectpicker");
       // Populate the groupSelector with the groups
-      for (let i = 0; i < groupSelector.length; i++) {
-        populateGroupSelect($(groupSelector[i]));
+      for (const element of groupSelector) {
+        populateGroupSelect($(element));
       }
 
       // Actually load table contents
@@ -84,9 +84,9 @@ function delGroupItems(type, ids, table, listType = undefined) {
 
   // use utils.hexDecode() to decode all clients
   let idstring = "";
-  for (let i = 0; i < ids.length; i++) {
-    ids[i].item = utils.hexDecode(ids[i].item);
-    idstring += ids[i].item + ", ";
+  for (const id of ids) {
+    id.item = utils.hexDecode(id.item);
+    idstring += id.item + ", ";
   }
 
   // Remove last comma and space from idstring
