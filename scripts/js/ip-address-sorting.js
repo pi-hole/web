@@ -11,7 +11,7 @@
 // CIDR notation and be more robust against invalid
 // input data (like empty IP addresses)
 $.extend($.fn.dataTableExt.oSort, {
-  "ip-address-pre": function (a) {
+  "ip-address-pre"(a) {
     // Skip empty fields (IP address might have expired or
     // reassigned to a different device)
     if (!a || a.length === 0) {
@@ -127,11 +127,11 @@ $.extend($.fn.dataTableExt.oSort, {
     return x;
   },
 
-  "ip-address-asc": function (a, b) {
+  "ip-address-asc"(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
   },
 
-  "ip-address-desc": function (a, b) {
+  "ip-address-desc"(a, b) {
     return a < b ? 1 : a > b ? -1 : 0;
   },
 });

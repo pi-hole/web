@@ -19,7 +19,7 @@ $(function () {
     (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
   table = $("#messagesTable").DataTable({
     ajax: {
-      url: url,
+      url,
       type: "GET",
       dataSrc: "messages",
     },
@@ -37,7 +37,7 @@ $(function () {
         targets: 1,
         orderable: false,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -46,7 +46,7 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteMessage_"]').on("click", deleteMessage);
 
       // Hide buttons if all messages were deleted
@@ -56,7 +56,7 @@ $(function () {
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data.id);
       const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
@@ -78,7 +78,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -86,7 +86,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -100,7 +100,7 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           $("tr.selected").each(function () {
             // ... delete the row identified by "data-id".
@@ -124,10 +124,10 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("messages-table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback("messages-table");
       // Return if not available
       if (data === null) {

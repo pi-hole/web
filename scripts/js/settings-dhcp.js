@@ -51,7 +51,7 @@ $(function () {
         targets: 0,
         orderable: false,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -60,7 +60,7 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteLease_"]').on("click", deleteLease);
 
       // Hide buttons if all messages were deleted
@@ -70,7 +70,7 @@ $(function () {
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data.ip);
       const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteLease_' +
@@ -92,7 +92,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           dhcpLeaesTable.rows({ page: "current" }).select();
         },
       },
@@ -100,7 +100,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           dhcpLeaesTable.rows({ page: "current" }).select();
         },
       },
@@ -114,7 +114,7 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           $("tr.selected").each(function () {
             // ... delete the row identified by "data-id".
@@ -138,10 +138,10 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("dhcp-leases-table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       const data = utils.stateLoadCallback("dhcp-leases-table");
       // Return if not available
       if (data === null) {

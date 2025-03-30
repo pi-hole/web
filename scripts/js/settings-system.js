@@ -214,7 +214,7 @@ $(".confirm-restartdns").confirm({
     "This will clear the DNS cache and may temporarily interrupt your internet connection.<br>" +
     "Furthermore, you will be logged out of the web interface as consequence of this action.",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     $.ajax({
       url: document.body.dataset.apiurl + "/action/restartdns",
       type: "POST",
@@ -222,7 +222,7 @@ $(".confirm-restartdns").confirm({
       apiFailure(data);
     });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, restart DNS server",
@@ -238,7 +238,7 @@ $(".confirm-flushlogs").confirm({
     "Are you sure you want to flush your logs?<br><br>" +
     "<strong>This will clear all logs and cannot be undone.</strong>",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     $.ajax({
       url: document.body.dataset.apiurl + "/action/flush/logs",
       type: "POST",
@@ -246,7 +246,7 @@ $(".confirm-flushlogs").confirm({
       apiFailure(data);
     });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, flush logs",
@@ -262,7 +262,7 @@ $(".confirm-flusharp").confirm({
     "Are you sure you want to flush your network table?<br><br>" +
     "<strong>This will clear all entries and cannot be undone.</strong>",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     $.ajax({
       url: document.body.dataset.apiurl + "/action/flush/arp",
       type: "POST",
@@ -270,7 +270,7 @@ $(".confirm-flusharp").confirm({
       apiFailure(data);
     });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, flush my network table",
@@ -288,7 +288,7 @@ $("#loggingButton").confirm({
     "As consequence of this action, your DNS cache will be cleared and you may temporarily loose your internet connection.<br>" +
     "Furthermore, you will be logged out of the web interface.",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     const data = {};
     data.config = {};
     data.config.dns = {};
@@ -308,7 +308,7 @@ $("#loggingButton").confirm({
         apiFailure(data);
       });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, change query logging",
@@ -352,7 +352,7 @@ $(function () {
           enabled: false,
           external: customTooltips,
           callbacks: {
-            title: function () {
+            title() {
               return "Cache content";
             },
             label: doughnutTooltip,

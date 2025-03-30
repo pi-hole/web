@@ -38,8 +38,8 @@ function doSearch() {
     url: document.body.dataset.apiurl + "/search/" + encodeURIComponent(q),
     async: false,
     data: {
-      partial: partial,
-      N: N,
+      partial,
+      N,
     },
   })
     .done(function (data) {

@@ -88,10 +88,10 @@ function showAlert(type, icon, title, message, toast) {
   const options = {
       title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
       message: escapeHtml(message),
-      icon: icon,
+      icon,
     },
     settings = {
-      type: type,
+      type,
       delay: 5000, // default value
       mouse_over: "pause",
       animate: {
@@ -342,12 +342,12 @@ function addFromQueryLog(domain, list) {
       processData: false,
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
-        domain: domain,
+        domain,
         comment: "Added from Query Log",
         type: list,
         kind: "exact",
       }),
-      success: function (response) {
+      success(response) {
         alProcessing.hide();
         if ("domains" in response && response.domains.length > 0) {
           // Success
@@ -369,7 +369,7 @@ function addFromQueryLog(domain, list) {
           }, 10000);
         }
       },
-      error: function () {
+      error() {
         // Network Error
         alProcessing.hide();
         alNetworkErr.show();
@@ -722,40 +722,40 @@ function setInter(func, interval) {
 
 globalThis.utils = (function () {
   return {
-    escapeHtml: escapeHtml,
-    unescapeHtml: unescapeHtml,
-    objectToArray: objectToArray,
-    padNumber: padNumber,
-    showAlert: showAlert,
-    datetime: datetime,
-    datetimeRelative: datetimeRelative,
-    disableAll: disableAll,
-    enableAll: enableAll,
-    validateIPv4CIDR: validateIPv4CIDR,
-    validateIPv6CIDR: validateIPv6CIDR,
-    setBsSelectDefaults: setBsSelectDefaults,
-    stateSaveCallback: stateSaveCallback,
-    stateLoadCallback: stateLoadCallback,
-    validateMAC: validateMAC,
-    validateHostname: validateHostname,
-    addFromQueryLog: addFromQueryLog,
-    addTD: addTD,
-    toPercent: toPercent,
-    colorBar: colorBar,
-    checkMessages: checkMessages,
-    changeBulkDeleteStates: changeBulkDeleteStates,
-    doLogout: doLogout,
-    renderTimestamp: renderTimestamp,
-    renderTimespan: renderTimespan,
-    htmlPass: htmlPass,
-    changeTableButtonStates: changeTableButtonStates,
-    getCSSval: getCSSval,
-    parseQueryString: parseQueryString,
-    hexEncode: hexEncode,
-    hexDecode: hexDecode,
+    escapeHtml,
+    unescapeHtml,
+    objectToArray,
+    padNumber,
+    showAlert,
+    datetime,
+    datetimeRelative,
+    disableAll,
+    enableAll,
+    validateIPv4CIDR,
+    validateIPv6CIDR,
+    setBsSelectDefaults,
+    stateSaveCallback,
+    stateLoadCallback,
+    validateMAC,
+    validateHostname,
+    addFromQueryLog,
+    addTD,
+    toPercent,
+    colorBar,
+    checkMessages,
+    changeBulkDeleteStates,
+    doLogout,
+    renderTimestamp,
+    renderTimespan,
+    htmlPass,
+    changeTableButtonStates,
+    getCSSval,
+    parseQueryString,
+    hexEncode,
+    hexDecode,
     listsAlert: listAlert,
-    loadingOverlay: loadingOverlay,
-    setTimer: setTimer,
-    setInter: setInter,
+    loadingOverlay,
+    setTimer,
+    setInter,
   };
 })();

@@ -83,7 +83,7 @@ $("#GETTeleporter").on("click", function () {
     xhrFields: {
       responseType: "blob",
     },
-    success: function (data, status, xhr) {
+    success(data, status, xhr) {
       const a = document.createElement("a");
       const url = globalThis.URL.createObjectURL(data);
 
