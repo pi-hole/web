@@ -7,11 +7,11 @@
 
 /* global utils: false */
 
-$(function () {
+$(() => {
   $.ajax({
     url: document.body.dataset.apiurl + "/network/gateway",
     data: { detailed: true },
-  }).done(function (data) {
+  }).done(data => {
     const intl = new Intl.NumberFormat();
     const gateway = data.gateway;
     // Get all objects in gateway that has family == "inet"
@@ -32,7 +32,7 @@ $(function () {
     const masterInterfaces = {};
 
     // For each interface in data.interface, create a new object and push it to json
-    data.interfaces.forEach(function (interface) {
+    data.interfaces.forEach(interface => {
       const carrierColor = interface.carrier ? "text-green" : "text-red";
       let stateText = interface.state.toUpperCase();
       if (stateText === "UNKNOWN" && interface.flags !== undefined && interface.flags.length > 0) {

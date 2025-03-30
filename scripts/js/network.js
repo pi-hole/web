@@ -90,7 +90,7 @@ function deleteNetworkEntry() {
   });
 }
 
-$(function () {
+$(() => {
   tableApi = $("#network-entries").DataTable({
     rowCallback(row, data) {
       let color;
@@ -139,7 +139,7 @@ $(function () {
       const iptitles = [];
 
       // Sort IPs, IPv4 before IPv6, then alphabetically
-      data.ips.sort(function (a, b) {
+      data.ips.sort((a, b) => {
         if (a.ip.includes(":") && !b.ip.includes(":")) {
           return 1;
         }

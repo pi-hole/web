@@ -53,13 +53,13 @@ function eventsource() {
     .catch(error => console.error(error)); // eslint-disable-line no-console
 }
 
-$("#gravityBtn").on("click", function () {
+$("#gravityBtn").on("click", () => {
   $("#gravityBtn").prop("disabled", true);
   eventsource();
 });
 
 // Handle hiding of alerts
-$(function () {
+$(() => {
   $("[data-hide]").on("click", function () {
     $(this)
       .closest("." + $(this).attr("data-hide"))

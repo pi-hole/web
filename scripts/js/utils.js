@@ -7,7 +7,7 @@
 
 /* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
-$(function () {
+$(() => {
   // CSRF protection for AJAX requests, this has to be configured globally
   // because we are using the jQuery $.ajax() function directly in some cases
   // Furthermore, has this to be done before any AJAX request is made so that
@@ -30,7 +30,7 @@ function escapeHtml(text) {
   // Return early when text is not a string
   if (typeof text !== "string") return text;
 
-  return text.replaceAll(/[&<>"']/g, function (m) {
+  return text.replaceAll(/[&<>"']/g, m => {
     return map[m];
   });
 }
@@ -53,12 +53,9 @@ function unescapeHtml(text) {
 
   if (text === null) return null;
 
-  return text.replaceAll(
-    /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
-    function (m) {
-      return map[m];
-    }
-  );
+  return text.replaceAll(/&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g, m => {
+    return map[m];
+  });
 }
 
 // Helper function for converting Objects to Arrays after sorting the keys
@@ -67,7 +64,7 @@ function objectToArray(obj) {
   const idx = [];
   const keys = Object.keys(obj);
 
-  keys.sort(function (a, b) {
+  keys.sort((a, b) => {
     return a - b;
   });
 
@@ -300,7 +297,7 @@ function stateLoadCallback(itemName) {
   data = JSON.parse(data);
 
   // Clear possible filtering settings
-  data.columns.forEach(function (value, index) {
+  data.columns.forEach((value, index) => {
     data.columns[index].search.search = "";
   });
 
@@ -334,7 +331,7 @@ function addFromQueryLog(domain, list) {
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", function () {
+  alertModal.one("shown.bs.modal", () => {
     $.ajax({
       url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
       method: "post",
@@ -356,7 +353,7 @@ function addFromQueryLog(domain, list) {
           alSuccess.fadeIn(1000);
           // Update domains counter in the menu
           updateFtlInfo();
-          setTimeout(function () {
+          setTimeout(() => {
             alertModal.modal("hide");
           }, 2000);
         } else {
@@ -364,7 +361,7 @@ function addFromQueryLog(domain, list) {
           alNetworkErr.hide();
           alCustomErr.html(response.message);
           alFailure.fadeIn(1000);
-          setTimeout(function () {
+          setTimeout(() => {
             alertModal.modal("hide");
           }, 10000);
         }
@@ -374,7 +371,7 @@ function addFromQueryLog(domain, list) {
         alProcessing.hide();
         alNetworkErr.show();
         alFailure.fadeIn(1000);
-        setTimeout(function () {
+        setTimeout(() => {
           alertModal.modal("hide");
         }, 8000);
       },
@@ -382,7 +379,7 @@ function addFromQueryLog(domain, list) {
   });
 
   // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", function () {
+  alertModal.one("hidden.bs.modal", () => {
     alProcessing.show();
     alSuccess.add(alFailure).hide();
     alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
@@ -423,7 +420,7 @@ function checkMessages() {
     method: "GET",
     dataType: "json",
   })
-    .done(function (data) {
+    .done(data => {
       if (data.count > 0) {
         const more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
         const title =
@@ -438,7 +435,7 @@ function checkMessages() {
         $(".warning-count").addClass("hidden");
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       $(".warning-count").addClass("hidden");
       apiFailure(data);
     });
@@ -475,7 +472,7 @@ function doLogout(url) {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
     method: "DELETE",
-  }).always(function () {
+  }).always(() => {
     globalThis.location = url;
   });
 }
@@ -654,7 +651,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
     cache: false,
     dataType: "json",
   })
-    .done(function () {
+    .done(() => {
       // FTL is running again, hide loading overlay
       NProgress.done();
       if (reloadAfterTimeout) {
@@ -663,7 +660,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
         waitMe.hideAll();
       }
     })
-    .fail(function () {
+    .fail(() => {
       // FTL is not running yet, try again in 500ms
       setTimeout(loadingOverlayTimeoutCallback, 500, reloadAfterTimeout);
     });

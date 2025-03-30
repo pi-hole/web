@@ -73,7 +73,7 @@ function reloadClientSuggestions() {
   });
 }
 
-$(function () {
+$(() => {
   $("#btnAdd").on("click", addClient);
   $("#select").select2({
     tags: true,
@@ -85,7 +85,7 @@ $(function () {
   utils.setBsSelectDefaults();
   getGroups();
 
-  $("#select").on("change", function () {
+  $("#select").on("change", () => {
     $("#ip-custom").val("");
     $("#ip-custom").prop("disabled", $("#select option:selected").val() !== "custom");
   });
@@ -189,7 +189,7 @@ function initTable() {
       // Initialize bootstrap-select
       selectEl
         // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function () {
+        .on("show.bs.select", () => {
           const winWidth = $(globalThis).width();
           const dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
@@ -201,13 +201,13 @@ function initTable() {
             }
           }
         })
-        .on("changed.bs.select", function () {
+        .on("changed.bs.select", () => {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
-              .on("click", function () {
+              .on("click", () => {
                 editClient.call(selectEl);
               });
           }
@@ -323,11 +323,11 @@ function initTable() {
     input.setAttribute("spellcheck", false);
   }
 
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     utils.changeBulkDeleteStates(table);
   });
 
-  table.on("order.dt", function () {
+  table.on("order.dt", () => {
     const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
@@ -336,7 +336,7 @@ function initTable() {
     }
   });
 
-  $("#resetButton").on("click", function () {
+  $("#resetButton").on("click", () => {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
@@ -363,7 +363,7 @@ function addClient() {
     .trim()
     .split(/[\s,]+/);
   // Remove empty elements
-  ips = ips.filter(function (el) {
+  ips = ips.filter(el => {
     return el !== "";
   });
   const ipStr = JSON.stringify(ips);

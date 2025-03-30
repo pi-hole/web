@@ -8,7 +8,7 @@
 /* global utils:false, apiFailure:false */
 let GETDict = {};
 
-$(function () {
+$(() => {
   GETDict = utils.parseQueryString();
   if (GETDict.domain !== undefined) {
     $("input[id^='domain']").val(GETDict.domain);
@@ -42,7 +42,7 @@ function doSearch() {
       N,
     },
   })
-    .done(function (data) {
+    .done(data => {
       ta.empty();
       ta.show();
 
@@ -190,13 +190,13 @@ function doSearch() {
 
       ta.append(result);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
 // Handle enter key
-$("#domain").on("keypress", function (e) {
+$("#domain").on("keypress", e => {
   if (e.which === 13) {
     // Enter was pressed, and the input has focus
     doSearch();
@@ -204,6 +204,6 @@ $("#domain").on("keypress", function (e) {
 });
 
 // Handle search buttons
-$("button[id='btnSearch']").on("click", function () {
+$("button[id='btnSearch']").on("click", () => {
   doSearch();
 });

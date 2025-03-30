@@ -8,7 +8,7 @@
 /* global utils:false */
 
 // Add event listener to import button
-document.getElementById("submit-import").addEventListener("click", function () {
+document.getElementById("submit-import").addEventListener("click", () => {
   importZIP();
 });
 
@@ -75,7 +75,7 @@ function importZIP() {
 }
 
 // Inspired by https://stackoverflow.com/a/59576416/2087442
-$("#GETTeleporter").on("click", function () {
+$("#GETTeleporter").on("click", () => {
   $.ajax({
     url: document.body.dataset.apiurl + "/teleporter",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
@@ -98,7 +98,7 @@ $("#GETTeleporter").on("click", function () {
   });
 });
 
-$(function () {
+$(() => {
   // Show warning if not accessed over HTTPS
   if (location.protocol !== "https:") {
     $("#encryption-warning").show();

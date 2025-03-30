@@ -20,7 +20,7 @@ function handleAjaxError(xhr, textStatus) {
   table.draw();
 }
 
-$(function () {
+$(() => {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
@@ -198,7 +198,7 @@ $(function () {
     input.setAttribute("spellcheck", false);
   }
 
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     // if the Default group is selected, undo the selection of it
     if (table.rows({ selected: true }).data().pluck("id").indexOf(0) !== -1) {
       table.rows(0).deselect();
@@ -207,7 +207,7 @@ $(function () {
     utils.changeBulkDeleteStates(table);
   });
 
-  table.on("order.dt", function () {
+  table.on("order.dt", () => {
     const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
@@ -216,7 +216,7 @@ $(function () {
     }
   });
 
-  $("#resetButton").on("click", function () {
+  $("#resetButton").on("click", () => {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
@@ -241,11 +241,11 @@ function addGroup() {
     .escapeHtml($("#new_name"))
     .val()
     .match(/(?:[^\s"]+|"[^"]*")+/g)
-    .map(function (name) {
+    .map(name => {
       return name.replaceAll(/(^"|"$)/g, "");
     });
   // Remove empty elements
-  names = names.filter(function (el) {
+  names = names.filter(el => {
     return el !== "";
   });
   const groupStr = JSON.stringify(names);

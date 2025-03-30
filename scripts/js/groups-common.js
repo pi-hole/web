@@ -64,11 +64,11 @@ function getGroups(groupSelector) {
 // eslint-disable-next-line no-unused-vars
 function processGroupResult(data, type, done, notDone) {
   // Loop over data.processed.success and show toasts
-  data.processed.success.forEach(function (item) {
+  data.processed.success.forEach(item => {
     utils.showAlert("success", "fas fa-pencil-alt", `Successfully ${done} ${type}`, item);
   });
   // Loop over errors and display them
-  data.processed.errors.forEach(function (error) {
+  data.processed.errors.forEach(error => {
     console.log(error); // eslint-disable-line no-console
     utils.showAlert("error", "", `Error while ${notDone} ${type} ${error.item}`, error.error);
   });
@@ -108,7 +108,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
     contentType: "application/json",
     method: "POST",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       utils.showAlert("success", "far fa-trash-alt", "Successfully deleted " + type, idstring);
       table.ajax.reload(null, false);
@@ -120,7 +120,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
       // Update number of <type> items in the sidebar
       updateFtlInfo();
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting " + type, data.responseText);

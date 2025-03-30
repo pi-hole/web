@@ -7,7 +7,7 @@
 
 /* global utils:false, apiFailure:false*/
 
-$(function () {
+$(() => {
   // Handle hiding of alerts
   $("[data-hide]").on("click", function () {
     $(this)
@@ -16,7 +16,7 @@ $(function () {
   });
 
   // Handle saving of settings
-  $(".save-button").on("click", function () {
+  $(".save-button").on("click", () => {
     saveSettings();
   });
 });
@@ -26,7 +26,7 @@ $(function () {
 function setConfigValues(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    Object.keys(value).forEach(function (subkey) {
+    Object.keys(value).forEach(subkey => {
       const subvalue = value[subkey];
       // If the key is empty, we are at the top level
       const newKey = key === "" ? subkey : key + "." + subkey;
@@ -71,7 +71,7 @@ function setConfigValues(topic, key, value) {
       // Remove all options from select
       $("#" + escapedKey + " option").remove();
       // Add allowed select items (if available)
-      value.allowed.forEach(function (allowedValue) {
+      value.allowed.forEach(allowedValue => {
         $("#" + escapedKey + "-" + allowedValue.item).prop("disabled", value.flags.env_var);
         const newopt = $("<option></option>")
           .attr("value", allowedValue.item)
@@ -171,7 +171,7 @@ function saveSettings() {
     data: JSON.stringify({ config: settings }),
     contentType: "application/json; charset=utf-8",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       // Success
       utils.showAlert(
@@ -183,7 +183,7 @@ function saveSettings() {
       // Show loading overlay
       utils.loadingOverlay(true);
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       utils.enableAll();
       utils.showAlert("error", "", "Error while applying settings", data.responseText);
       console.log(exception); // eslint-disable-line no-console

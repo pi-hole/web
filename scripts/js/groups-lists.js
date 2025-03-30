@@ -11,7 +11,7 @@
 let table;
 let GETDict = {};
 
-$(function () {
+$(() => {
   GETDict = utils.parseQueryString();
 
   $("#btnAddAllow").on("click", { type: "allow" }, addList);
@@ -297,7 +297,7 @@ function initTable() {
       // Initialize bootstrap-select
       selectEl
         // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", function () {
+        .on("show.bs.select", () => {
           const winWidth = $(globalThis).width();
           const dropdownEl = $("body > .bootstrap-select.dropdown");
           if (dropdownEl.length > 0) {
@@ -309,13 +309,13 @@ function initTable() {
             }
           }
         })
-        .on("changed.bs.select", function () {
+        .on("changed.bs.select", () => {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
-              .on("click", function () {
+              .on("click", () => {
                 editList.call(selectEl);
               });
           }
@@ -437,11 +437,11 @@ function initTable() {
     },
   });
 
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     utils.changeBulkDeleteStates(table);
   });
 
-  table.on("order.dt", function () {
+  table.on("order.dt", () => {
     const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
@@ -450,7 +450,7 @@ function initTable() {
     }
   });
 
-  $("#resetButton").on("click", function () {
+  $("#resetButton").on("click", () => {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
@@ -503,7 +503,7 @@ function addList(event) {
     .val()
     .split(/[\s,]+/);
   // Remove empty elements
-  addresses = addresses.filter(function (el) {
+  addresses = addresses.filter(el => {
     return el !== "";
   });
   const addressestr = JSON.stringify(addresses);

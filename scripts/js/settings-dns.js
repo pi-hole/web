@@ -68,7 +68,7 @@ function fillDNSupstreams(value, servers) {
   });
 
   // Add event listener to checkboxes
-  $("input[id^='DNSupstreams-']").on("change", function () {
+  $("input[id^='DNSupstreams-']").on("change", () => {
     const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
     let customServers = 0;
     $("#DNSupstreamsTable input").each(function () {
@@ -116,17 +116,17 @@ function processDNSConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
   })
-    .done(function (data) {
+    .done(data => {
       // Initialize the DNS upstreams
       fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
       setInterfaceName(data.config.dns.interface.value);
       setConfigValues("dns", "dns", data.config.dns);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   processDNSConfig();
 });

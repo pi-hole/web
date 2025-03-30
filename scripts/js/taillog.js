@@ -88,7 +88,7 @@ function getData() {
     timeout: 5000,
     method: "GET",
   })
-    .done(function (data) {
+    .done(data => {
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
@@ -120,7 +120,7 @@ function getData() {
         $("#output").append('<hr class="hr-small">').children(":last").fadeOut(2000);
       }
 
-      data.log.forEach(function (line) {
+      data.log.forEach(line => {
         // Escape HTML
         line.message = utils.escapeHtml(line.message);
         // Format line if applicable
@@ -162,14 +162,14 @@ function getData() {
 
       utils.setTimer(getData, REFRESH_INTERVAL.logs);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
       utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }
 
 var gAutoScrolling = true;
-$("#output").on("scroll", function () {
+$("#output").on("scroll", () => {
   // Check if we are at the bottom of the output
   //
   // - $("#output")[0].scrollHeight: This gets the entire height of the content
@@ -199,7 +199,7 @@ $("#output").on("scroll", function () {
   }
 });
 
-$(function () {
+$(() => {
   getData();
 
   // Clicking on the element with class "fa-spinner" will toggle the play/pause state

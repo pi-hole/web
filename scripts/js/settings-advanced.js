@@ -13,7 +13,7 @@ function addAllowedValues(allowed) {
     return (
       "<p>Available options:</p><ul><li>" +
       allowed
-        .map(function (option) {
+        .map(option => {
           return "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description);
         })
         .join("</li><li>") +
@@ -214,7 +214,7 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      value.allowed.forEach(function (option, i) {
+      value.allowed.forEach((option, i) => {
         content +=
           "<div>" +
           // Radio button
@@ -264,7 +264,7 @@ function valueDetails(key, value) {
 function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    Object.keys(value).forEach(function (subkey) {
+    Object.keys(value).forEach(subkey => {
       const subvalue = value[subkey];
       generateRow(topic, key + "." + subkey, subvalue);
     });
@@ -300,9 +300,9 @@ function createDynamicConfigTabs() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       // Create the tabs for the advanced dynamic config topics
-      Object.keys(data.topics).forEach(function (n) {
+      Object.keys(data.topics).forEach(n => {
         const topic = data.topics[n];
 
         $("#advanced-settings-tabs").append(`
@@ -323,7 +323,7 @@ function createDynamicConfigTabs() {
       });
 
       // Dynamically fill the tabs with config topics
-      Object.keys(data.config).forEach(function (topic) {
+      Object.keys(data.config).forEach(topic => {
         const value = data.config[topic];
         generateRow(topic, topic, value);
       });
@@ -333,14 +333,14 @@ function createDynamicConfigTabs() {
       $("#advanced-settings-menu ul li:first-child").addClass("active");
       $("#advanced-settings-tabs > div:first-child").addClass("active in");
 
-      $("button[id='save']").on("click", function () {
+      $("button[id='save']").on("click", () => {
         saveSettings();
       });
 
       applyCheckboxRadioStyle();
       applyOnlyChanged();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -403,7 +403,7 @@ function applyOnlyChanged() {
   }
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   createDynamicConfigTabs();
   initOnlyChanged();
 });

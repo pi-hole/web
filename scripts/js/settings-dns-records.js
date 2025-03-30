@@ -65,7 +65,7 @@ function populateDataTable(endpoint) {
   const setByEnv = false;
   $.ajax({
     url: `/api/config/dns/${endpoint}?detailed=true`,
-  }).done(function (data) {
+  }).done(data => {
     // Set the title icons if needed
     setConfigValues("dns", "dns", data.config.dns);
 
@@ -143,7 +143,7 @@ function populateDataTable(endpoint) {
   });
 }
 
-$(function () {
+$(() => {
   populateDataTable("hosts");
   populateDataTable("cnameRecords");
 });
@@ -162,12 +162,12 @@ function delHosts(elem) {
     url,
     method: "DELETE",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted DNS record", elem);
       $("#hosts-Table").DataTable().ajax.reload(null, false);
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       utils.enableAll();
       apiFailure(data);
       utils.showAlert(
@@ -189,7 +189,7 @@ function delCNAME(elem) {
     url,
     method: "DELETE",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       utils.showAlert(
         "success",
@@ -199,7 +199,7 @@ function delCNAME(elem) {
       );
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       utils.enableAll();
       apiFailure(data);
       utils.showAlert(
@@ -212,8 +212,8 @@ function delCNAME(elem) {
     });
 }
 
-$(document).ready(function () {
-  $("#btnAdd-host").on("click", function () {
+$(document).ready(() => {
+  $("#btnAdd-host").on("click", () => {
     utils.disableAll();
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();
     const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
@@ -222,14 +222,14 @@ $(document).ready(function () {
       url,
       method: "PUT",
     })
-      .done(function () {
+      .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
         $("#Hdomain").val("");
         $("#Hip").val("");
         $("#hosts-Table").DataTable().ajax.reload(null, false);
       })
-      .fail(function (data, exception) {
+      .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
         utils.showAlert("error", "", "Error while deleting DNS record", data.responseText);
@@ -237,7 +237,7 @@ $(document).ready(function () {
       });
   });
 
-  $("#btnAdd-cname").on("click", function () {
+  $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
     let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
     const ttlVal = parseInt($("#Cttl").val(), 10);
@@ -249,14 +249,14 @@ $(document).ready(function () {
       url,
       method: "PUT",
     })
-      .done(function () {
+      .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
         $("#Cdomain").val("");
         $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
       })
-      .fail(function (data, exception) {
+      .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
         utils.showAlert("error", "", "Error while deleting CNAME record", data.responseText);
