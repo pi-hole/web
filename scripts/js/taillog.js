@@ -185,7 +185,7 @@ $("#output").on("scroll", () => {
   const bottom =
     $("#output")[0].scrollHeight - $("#output").innerHeight() - $("#output").scrollTop();
   // Add a tolerance of four line heights
-  const tolerance = 4 * parseFloat($("#output").css("line-height"));
+  const tolerance = 4 * Number.parseFloat($("#output").css("line-height"));
   if (bottom <= tolerance) {
     // Auto-scrolling is enabled
     gAutoScrolling = true;

@@ -130,7 +130,7 @@ const customTooltips = function (context) {
     tooltipEl.innerHTML = "<div class='arrow'></div> <table></table>";
     // avoid browser's font-zoom since we know that <body>'s
     // font-size was set to 14px by bootstrap's css
-    const fontZoom = parseFloat($("body").css("font-size")) / 14;
+    const fontZoom = Number.parseFloat($("body").css("font-size")) / 14;
     // set styles and font
     tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
     tooltipEl.style.borderRadius = tooltip.options.cornerRadius + "px";

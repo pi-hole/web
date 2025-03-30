@@ -278,7 +278,7 @@ function initTable() {
         );
 
       // Highlight row (if url parameter "domainid=" is used)
-      if ("domainid" in GETDict && data.id === parseInt(GETDict.domainid, 10)) {
+      if ("domainid" in GETDict && data.id === Number.parseInt(GETDict.domainid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -370,7 +370,7 @@ function initTable() {
         const pos = table
           .column(0, { order: "current" })
           .data()
-          .indexOf(parseInt(GETDict.domainid, 10));
+          .indexOf(Number.parseInt(GETDict.domainid, 10));
         if (pos !== -1) {
           const page = Math.floor(pos / table.page.info().length);
           table.page(page).draw(false);

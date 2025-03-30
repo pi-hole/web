@@ -240,7 +240,7 @@ $(document).ready(() => {
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
     let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
-    const ttlVal = parseInt($("#Cttl").val(), 10);
+    const ttlVal = Number.parseInt($("#Cttl").val(), 10);
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);

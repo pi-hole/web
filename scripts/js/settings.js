@@ -140,12 +140,12 @@ function saveSettings() {
 
     // If this is an integer number, parse it accordingly
     if ($(this).data("type") === "integer") {
-      value = parseInt(value, 10);
+      value = Number.parseInt(value, 10);
     }
 
     // If this is a floating point value, parse it accordingly
     if ($(this).data("type") === "float") {
-      value = parseFloat(value);
+      value = Number.parseFloat(value);
     }
 
     // Build deep object

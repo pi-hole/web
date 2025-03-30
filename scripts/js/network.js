@@ -96,7 +96,7 @@ $(() => {
       let color;
       let index;
       let iconClasses;
-      const lastQuery = parseInt(data.lastQuery, 10);
+      const lastQuery = Number.parseInt(data.lastQuery, 10);
       const diff = getTimestamp() - lastQuery;
       const networkRecent = $(".network-recent").css("background-color");
       const networkOld = $(".network-old").css("background-color");

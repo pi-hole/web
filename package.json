@@ -120,8 +120,6 @@
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
       "unicorn/prefer-module": "off",
-      "unicorn/prefer-node-append": "off",
-      "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
       "unicorn/prevent-abbreviations": "off",
