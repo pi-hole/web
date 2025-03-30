@@ -179,7 +179,7 @@ $(() => {
 
           if (addr.prefered !== undefined) {
             const pref =
-              addr.prefered === 4294967295 ? "forever" : intl.format(addr.prefered) + " s";
+              addr.prefered === 4_294_967_295 ? "forever" : intl.format(addr.prefered) + " s";
             jaddr.nodes.push({
               text: "Preferred lifetime: " + pref,
               icon: "fa fa-clock fa-fw",
@@ -187,7 +187,7 @@ $(() => {
           }
 
           if (addr.valid !== undefined) {
-            const valid = addr.valid === 4294967295 ? "forever" : intl.format(addr.valid) + " s";
+            const valid = addr.valid === 4_294_967_295 ? "forever" : intl.format(addr.valid) + " s";
             jaddr.nodes.push({
               text: "Valid lifetime: " + valid,
               icon: "fa fa-clock fa-fw",

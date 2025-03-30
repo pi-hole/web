@@ -363,7 +363,7 @@ function addFromQueryLog(domain, list) {
           alFailure.fadeIn(1000);
           setTimeout(() => {
             alertModal.modal("hide");
-          }, 10000);
+          }, 10_000);
         }
       },
       error() {
