@@ -206,7 +206,7 @@ Lists, domains (block or allow) and regex entries can be managed through groups.
 
 **Local DNS Settings:**
   - Local DNS records
-  - Local CNAME records records
+  - Local CNAME records
 
 **All Settings** (only visible in Expert mode):
   - Advanced settings page, containing all available options
