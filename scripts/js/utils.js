@@ -502,11 +502,21 @@ function changeTableButtonStates(table) {
   }
 }
 
-function getCSSval(cssclass, cssproperty) {
-  const elem = $("<div class='" + cssclass + "'></div>");
-  const val = elem.appendTo("body").css(cssproperty);
-  elem.remove();
-  return val;
+// Get a CSS property value from a specified class
+function getStylePropertyFromClass(className, propertyName) {
+  // Find an element with the given class name
+  let element = document.querySelector(`.${className}`);
+  if (element) {
+    return globalThis.getComputedStyle(element).getPropertyValue(propertyName).trim();
+  }
+
+  // Create a temporary element to get the CSS property value
+  element = document.createElement("div");
+  element.className = className;
+  document.body.append(element);
+  const value = getStylePropertyFromClass(className, propertyName);
+  element.remove();
+  return value;
 }
 
 function parseQueryString() {
@@ -726,7 +736,7 @@ globalThis.utils = (function () {
     renderTimestamp,
     renderTimespan,
     changeTableButtonStates,
-    getCSSval,
+    getStylePropertyFromClass,
     parseQueryString,
     hexEncode,
     hexDecode,

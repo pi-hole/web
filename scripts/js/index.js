@@ -42,11 +42,13 @@ function initPrivacyLevel() {
 
 let failures = 0;
 function updateQueriesOverTime() {
-  $.getJSON(document.body.dataset.apiurl + "/history", data => {
-    // Remove graph if there are no results (e.g. new
-    // installation or privacy mode enabled)
+  const queriesOverTime = document.getElementById("queries-over-time");
+  const queriesOverlay = queriesOverTime.querySelector(".overlay");
+
+  $.getJSON(`${document.body.dataset.apiurl}/history`, data => {
+    // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
-      $("#queries-over-time").remove();
+      queriesOverTime.remove();
       return;
     }
 
@@ -60,10 +62,10 @@ function updateQueriesOverTime() {
       "Cached DNS Queries",
       "Forwarded DNS Queries",
     ];
-    const cachedColor = utils.getCSSval("queries-cached", "background-color");
-    const blockedColor = utils.getCSSval("queries-blocked", "background-color");
-    const permittedColor = utils.getCSSval("queries-permitted", "background-color");
-    const otherColor = utils.getCSSval("queries-other", "background-color");
+    const cachedColor = utils.getStylePropertyFromClass("queries-cached", "background-color");
+    const blockedColor = utils.getStylePropertyFromClass("queries-blocked", "background-color");
+    const permittedColor = utils.getStylePropertyFromClass("queries-permitted", "background-color");
+    const otherColor = utils.getStylePropertyFromClass("queries-other", "background-color");
     const colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
@@ -92,7 +94,7 @@ function updateQueriesOverTime() {
       timeLineChart.data.datasets[3].data.push(item.forwarded);
     }
 
-    $("#queries-over-time .overlay").hide();
+    queriesOverlay.classList.add("d-none");
     timeLineChart.update();
   })
     .done(() => {
@@ -102,7 +104,7 @@ function updateQueriesOverTime() {
     .fail(() => {
       failures++;
       if (failures < 5) {
-        // Try again ´only if this has not failed more than five times in a row
+        // Try again only if this has not failed more than five times in a row
         utils.setTimer(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
       }
     })
@@ -140,7 +142,7 @@ function updateQueryTypesPie() {
     // and push it at once
     queryTypePieChart.data.datasets[0] = dd;
     queryTypePieChart.data.labels = k;
-    $("#query-types-pie .overlay").hide();
+    document.querySelector("#query-types-pie .overlay").classList.add("d-none");
     // Passing 'none' will prevent rotation animation for further updates
     //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
     queryTypePieChart.update("none");
@@ -155,10 +157,10 @@ function updateQueryTypesPie() {
 
 function updateClientsOverTime() {
   $.getJSON(document.body.dataset.apiurl + "/history/clients", data => {
-    // Remove graph if there are no results (e.g. new
-    // installation or privacy mode enabled)
+    const clientsElement = document.getElementById("clients");
+    // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
-      $("#clients").remove();
+      clientsElement.remove();
       return;
     }
 
@@ -206,7 +208,7 @@ function updateClientsOverTime() {
       clientsChart.data.labels.push(d);
     }
 
-    $("#clients .overlay").hide();
+    clientsElement.querySelector(".overlay").classList.add("d-none");
     clientsChart.update();
   })
     .done(() => {
@@ -271,7 +273,7 @@ function updateForwardDestinationsPie() {
     forwardDestinationPieChart.data.labels = k;
     forwardDestinationPieChart.data.datasets[0] = dd;
     // and push it at once
-    $("#forward-destinations-pie .overlay").hide();
+    document.querySelector("#forward-destinations-pie .overlay").classList.add("d-none");
 
     // Passing 'none' will prevent rotation animation for further updates
     //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
@@ -287,33 +289,26 @@ function updateForwardDestinationsPie() {
 }
 
 function updateTopClientsTable(blocked) {
-  let api;
-  let style;
-  let table;
-  let tablecontent;
-  let overlay;
-  let clienttable;
-  if (blocked) {
-    api = document.body.dataset.apiurl + "/stats/top_clients?blocked=true";
-    style = "queries-blocked";
-    table = $("#client-frequency-blocked");
-    tablecontent = $("#client-frequency-blocked td").parent();
-    overlay = $("#client-frequency-blocked .overlay");
-    clienttable = $("#client-frequency-blocked").find("tbody:last");
-  } else {
-    api = document.body.dataset.apiurl + "/stats/top_clients";
-    style = "queries-permitted";
-    table = $("#client-frequency");
-    tablecontent = $("#client-frequency td").parent();
-    overlay = $("#client-frequency .overlay");
-    clienttable = $("#client-frequency").find("tbody:last");
-  }
+  const $clientFrequencyBlocked = $("#client-frequency-blocked");
+  const $clientFrequency = $("#client-frequency");
+  const $tableContent = blocked
+    ? $clientFrequencyBlocked.find("td").parent()
+    : $clientFrequency.find("td").parent();
+  const $overlay = blocked
+    ? $clientFrequencyBlocked.find(".overlay")
+    : $clientFrequency.find(".overlay");
+  const $clientTable = blocked
+    ? $clientFrequencyBlocked.find("tbody:last")
+    : $clientFrequency.find("tbody:last");
+
+  const api = blocked
+    ? `${document.body.dataset.apiurl}/stats/top_clients?blocked=true`
+    : `${document.body.dataset.apiurl}/stats/top_clients`;
+  const style = blocked ? "queries-blocked" : "queries-permitted";
 
   $.getJSON(api, data => {
     // Clear tables before filling them with data
-    tablecontent.remove();
-    let url;
-    let percentage;
+    $tableContent.remove();
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // When there is no data...
@@ -321,10 +316,10 @@ function updateTopClientsTable(blocked) {
     // b) add note if there are no results (e.g. new installation)
     if (jQuery.isEmptyObject(data.clients)) {
       if (privacyLevel > 1) {
-        table.remove();
+        $clientTable.remove();
       } else {
-        clienttable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
-        overlay.hide();
+        $clientTable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+        $overlay.hide();
       }
 
       return;
@@ -335,17 +330,17 @@ function updateTopClientsTable(blocked) {
       // Sanitize client
       let clientname = client.name;
       if (clientname.length === 0) clientname = client.ip;
-      url =
+      const url =
         '<a href="queries?client_ip=' +
         encodeURIComponent(client.ip) +
         (blocked ? "&upstream=blocklist" : "") +
         '">' +
         utils.escapeHtml(clientname) +
         "</a>";
-      percentage = (client.count / sum) * 100;
+      const percentage = (client.count / sum) * 100;
 
       // Add row to table
-      clienttable.append(
+      $clientTable.append(
         "<tr> " +
           utils.addTD(url) +
           utils.addTD(client.count) +
@@ -355,42 +350,31 @@ function updateTopClientsTable(blocked) {
     }
 
     // Hide overlay
-    overlay.hide();
+    $overlay.hide();
   }).fail(data => {
     apiFailure(data);
   });
 }
 
 function updateTopDomainsTable(blocked) {
-  let api;
-  let style;
-  let table;
-  let tablecontent;
-  let overlay;
-  let domaintable;
-  if (blocked) {
-    api = document.body.dataset.apiurl + "/stats/top_domains?blocked=true";
-    style = "queries-blocked";
-    table = $("#ad-frequency");
-    tablecontent = $("#ad-frequency td").parent();
-    overlay = $("#ad-frequency .overlay");
-    domaintable = $("#ad-frequency").find("tbody:last");
-  } else {
-    api = document.body.dataset.apiurl + "/stats/top_domains";
-    style = "queries-permitted";
-    table = $("#domain-frequency");
-    tablecontent = $("#domain-frequency td").parent();
-    overlay = $("#domain-frequency .overlay");
-    domaintable = $("#domain-frequency").find("tbody:last");
-  }
+  const $adFrequency = $("#ad-frequency");
+  const $domainFrequency = $("#domain-frequency");
+  const $tableContent = blocked
+    ? $adFrequency.find("td").parent()
+    : $domainFrequency.find("td").parent();
+  const $overlay = blocked ? $adFrequency.find(".overlay") : $domainFrequency.find(".overlay");
+  const $domainTable = blocked
+    ? $adFrequency.find("tbody:last")
+    : $domainFrequency.find("tbody:last");
+
+  const api = blocked
+    ? `${document.body.dataset.apiurl}/stats/top_domains?blocked=true`
+    : `${document.body.dataset.apiurl}/stats/top_domains`;
+  const style = blocked ? "queries-blocked" : "queries-permitted";
 
   $.getJSON(api, data => {
     // Clear tables before filling them with data
-    tablecontent.remove();
-    let url;
-    let domain;
-    let percentage;
-    let urlText;
+    $tableContent.remove();
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // When there is no data...
@@ -398,10 +382,10 @@ function updateTopDomainsTable(blocked) {
     // b) add note if there are no results (e.g. new installation)
     if (jQuery.isEmptyObject(data.domains)) {
       if (privacyLevel > 0) {
-        table.remove();
+        $domainTable.remove();
       } else {
-        domaintable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
-        overlay.hide();
+        $domainTable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+        $overlay.hide();
       }
 
       return;
@@ -410,18 +394,19 @@ function updateTopDomainsTable(blocked) {
     // Populate table with content
     for (const item of data.domains) {
       // Sanitize domain
-      domain = encodeURIComponent(item.domain);
+      const domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
-      urlText = domain === "" ? "." : domain;
-      url =
+      const urlText = domain === "" ? "." : domain;
+      const url =
         '<a href="queries?domain=' +
         domain +
         (blocked ? "&upstream=blocklist" : "&upstream=permitted") +
         '">' +
         urlText +
         "</a>";
-      percentage = (item.count / sum) * 100;
-      domaintable.append(
+      const percentage = (item.count / sum) * 100;
+
+      $domainTable.append(
         "<tr> " +
           utils.addTD(url) +
           utils.addTD(item.count) +
@@ -430,7 +415,7 @@ function updateTopDomainsTable(blocked) {
       );
     }
 
-    overlay.hide();
+    $overlay.hide();
   }).fail(data => {
     apiFailure(data);
   });
@@ -455,65 +440,74 @@ function updateTopLists() {
 
 let previousCount = 0;
 let firstSummaryUpdate = true;
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
 function updateSummaryData(runOnce = false) {
-  $.getJSON(document.body.dataset.apiurl + "/stats/summary", data => {
-    const intl = new Intl.NumberFormat();
-    const newCount = Number.parseInt(data.queries.total, 10);
-
-    $("span#dns_queries").text(intl.format(newCount));
-    $("span#active_clients").text(intl.format(Number.parseInt(data.clients.active, 10)));
-    $("a#total_clients").attr(
-      "title",
-      intl.format(Number.parseInt(data.clients.total, 10)) + " total clients"
-    );
-    $("span#blocked_queries").text(intl.format(Number.parseFloat(data.queries.blocked)));
-    const formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
-    $("span#percent_blocked").text(formattedPercentage);
-    updateQueryFrequency(intl, data.queries.frequency);
-
-    const lastupdate = Number.parseInt(data.gravity.last_update, 10);
-    let updatetxt = "Lists were never updated";
-    if (lastupdate > 0) {
-      updatetxt =
-        "Lists updated " +
-        utils.datetimeRelative(lastupdate) +
-        "\n(" +
-        utils.datetime(lastupdate, false, false) +
-        ")";
-    }
-
-    const gravityCount = Number.parseInt(data.gravity.domains_being_blocked, 10);
-    if (gravityCount < 0) {
-      // Error. Change the title text and show the error code in parentheses
-      updatetxt = "Error! Update gravity to reset this value.";
-      $("span#gravity_size").text("Error (" + gravityCount + ")");
-    } else {
-      $("span#gravity_size").text(intl.format(gravityCount));
-    }
-
-    $(".small-box:has(#gravity_size)").attr("title", updatetxt);
-
-    if (2 * previousCount < newCount && newCount > 100 && !firstSummaryUpdate) {
-      // Update the charts if the number of queries has increased significantly
-      // Do not run this on the first update as reloading the same data after
-      // creating the charts happens asynchronously and can cause a race
-      // condition
-      updateQueriesOverTime();
-      updateClientsOverTime();
-      updateQueryTypesPie();
-      updateForwardDestinationsPie();
-      updateTopLists();
-    }
-
-    previousCount = newCount;
-    firstSummaryUpdate = false;
+  fetch(`${document.body.dataset.apiurl}/stats/summary`, {
+    headers: { "X-CSRF-TOKEN": csrfToken },
   })
-    .done(() => {
+    .then(response => response.json())
+    .then(data => {
+      const intl = new Intl.NumberFormat();
+      const newCount = Number.parseInt(data.queries.total, 10);
+      const dnsQueriesElement = document.getElementById("dns_queries");
+      const activeClientsElement = document.getElementById("active_clients");
+
+      dnsQueriesElement.textContent = intl.format(newCount);
+      activeClientsElement.textContent = intl.format(Number.parseInt(data.clients.active, 10));
+
+      const totalClientsElement = document.getElementById("total_clients");
+      totalClientsElement.title = `${intl.format(Number.parseInt(data.clients.total, 10))} total clients`;
+
+      const blockedQueriesElement = document.getElementById("blocked_queries");
+      blockedQueriesElement.textContent = intl.format(Number.parseFloat(data.queries.blocked));
+      const percentBlockedElement = document.getElementById("percent_blocked");
+      percentBlockedElement.textContent = utils.toPercent(data.queries.percent_blocked, 1);
+
+      updateQueryFrequency(intl, data.queries.frequency);
+
+      const lastupdate = Number.parseInt(data.gravity.last_update, 10);
+      let updatetxt = "Lists were never updated";
+      if (lastupdate > 0) {
+        const relativeTime = utils.datetimeRelative(lastupdate);
+        const absoluteTime = utils.datetime(lastupdate, false, false);
+        updatetxt = `Lists updated ${relativeTime}\n(${absoluteTime})`;
+      }
+
+      const gravitySizeElement = document.getElementById("gravity_size");
+      const gravityCount = Number.parseInt(data.gravity.domains_being_blocked, 10);
+      if (gravityCount < 0) {
+        // Error. Change the title text and show the error code in parentheses
+        updatetxt = "Error! Update gravity to reset this value.";
+        gravitySizeElement.textContent = `Error (${gravityCount})`;
+      } else {
+        gravitySizeElement.textContent = intl.format(gravityCount);
+      }
+
+      const gravitySizeContainer = gravitySizeElement.closest(".small-box");
+      if (gravitySizeContainer) {
+        gravitySizeContainer.title = updatetxt;
+      }
+
+      if (2 * previousCount < newCount && newCount > 100 && !firstSummaryUpdate) {
+        // Update the charts if the number of queries has increased significantly
+        // Do not run this on the first update as reloading the same data after
+        // creating the charts happens asynchronously and can cause a race condition
+        updateQueriesOverTime();
+        updateClientsOverTime();
+        updateQueryTypesPie();
+        updateForwardDestinationsPie();
+        updateTopLists();
+      }
+
+      previousCount = newCount;
+      firstSummaryUpdate = false;
+
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
     })
-    .fail(data => {
+    .catch(error => {
       utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
-      apiFailure(data);
+      apiFailure(error);
     });
 }
 
@@ -527,11 +521,8 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
     if (num) sum += num;
   }
 
-  let percentage = 0;
   const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
-  if (sum > 0) {
-    percentage = (100 * data) / sum;
-  }
+  const percentage = sum > 0 ? (100 * data) / sum : 0;
 
   if (skipZero && data === 0) return undefined;
   return (
@@ -544,7 +535,7 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   );
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   // Pull in data via AJAX
   updateSummaryData();
 
@@ -618,10 +609,12 @@ $(() => {
     },
   };
 
-  const gridColor = utils.getCSSval("graphs-grid", "background-color");
-  const ticksColor = utils.getCSSval("graphs-ticks", "color");
-  let ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-  timeLineChart = new Chart(ctx, {
+  const gridColor = utils.getStylePropertyFromClass("graphs-grid", "background-color");
+  const ticksColor = utils.getStylePropertyFromClass("graphs-ticks", "color");
+
+  const queryOverTimeChartEl = document.getElementById("queryOverTimeChart");
+
+  timeLineChart = new Chart(queryOverTimeChartEl.getContext("2d"), {
     type: "bar",
     data: {
       labels: [],
@@ -722,8 +715,7 @@ $(() => {
   // Create / load "Top Clients over Time" only if authorized
   const clientsChartEl = document.getElementById("clientsChart");
   if (clientsChartEl) {
-    ctx = clientsChartEl.getContext("2d");
-    clientsChart = new Chart(ctx, {
+    clientsChart = new Chart(clientsChartEl.getContext("2d"), {
       type: "bar",
       data: {
         labels: [],
@@ -833,54 +825,68 @@ $(() => {
     updateTopLists();
   });
 
-  $("#queryOverTimeChart").on("click", evt => {
+  // Add chart click handler function
+  function addChartClickHandler(chartElement, chartInstance) {
+    chartElement.addEventListener("click", event => {
+      const activePoints = chartInstance.getElementsAtEventForMode(
+        event,
+        "nearest",
+        { intersect: true },
+        false
+      );
+
+      if (activePoints.length === 0) return false;
+
+      // Get the internal index
+      const clickedElementindex = activePoints[0].index;
+      // Get specific label by index
+      const label = chartInstance.data.labels[clickedElementindex];
+
+      // Get value by index
+      const from = label / 1000 - 300;
+      const until = label / 1000 + 300;
+      globalThis.location.href = `queries?from=${from}&until=${until}`;
+
+      return false;
+    });
+  }
+
+  queryOverTimeChartEl.addEventListener("click", event => {
     const activePoints = timeLineChart.getElementsAtEventForMode(
-      evt,
+      event,
       "nearest",
       { intersect: true },
       false
     );
-    if (activePoints.length > 0) {
-      //get the internal index
-      const clickedElementindex = activePoints[0].index;
-      //get specific label by index
-      const label = timeLineChart.data.labels[clickedElementindex];
 
-      //get value by index
-      const from = label / 1000 - 300;
-      const until = label / 1000 + 300;
-      globalThis.location.href = "queries?from=" + from + "&until=" + until;
-    }
+    if (activePoints.length === 0) return false;
 
-    return false;
-  });
+    // Get the internal index
+    const clickedElementindex = activePoints[0].index;
+    // Get specific label by index
+    const label = timeLineChart.data.labels[clickedElementindex];
 
-  $("#clientsChart").on("click", evt => {
-    const activePoints = clientsChart.getElementsAtEventForMode(
-      evt,
-      "nearest",
-      { intersect: true },
-      false
-    );
-    if (activePoints.length > 0) {
-      //get the internal index
-      const clickedElementindex = activePoints[0].index;
-
-      //get specific label by index
-      const label = clientsChart.data.labels[clickedElementindex];
-
-      //get value by index
-      const from = label / 1000 - 300;
-      const until = label / 1000 + 300;
-      globalThis.location.href = "queries?from=" + from + "&until=" + until;
-    }
+    // Get value by index
+    const from = label / 1000 - 300;
+    const until = label / 1000 + 300;
+    globalThis.location.href = `queries?from=${from}&until=${until}`;
 
     return false;
   });
 
-  if (document.getElementById("queryTypePieChart")) {
-    ctx = document.getElementById("queryTypePieChart").getContext("2d");
-    queryTypePieChart = new Chart(ctx, {
+  // Add click handler to queryOverTimeChart
+  addChartClickHandler(queryOverTimeChartEl, timeLineChart);
+
+  // Add click handler to clientsChart if it exists
+  if (clientsChartEl) {
+    addChartClickHandler(clientsChartEl, clientsChart);
+  }
+
+  const boxEl = document.querySelector(".box");
+  const queryTypePieChartEl = document.getElementById("queryTypePieChart");
+
+  if (queryTypePieChartEl) {
+    queryTypePieChart = new Chart(queryTypePieChartEl.getContext("2d"), {
       type: "doughnut",
       data: {
         labels: [],
@@ -892,7 +898,7 @@ $(() => {
         maintainAspectRatio: true,
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color"),
+            borderColor: getComputedStyle(boxEl).backgroundColor,
           },
         },
         plugins: {
@@ -924,9 +930,9 @@ $(() => {
     updateQueryTypesPie();
   }
 
-  if (document.getElementById("forwardDestinationPieChart")) {
-    ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
-    forwardDestinationPieChart = new Chart(ctx, {
+  const forwardDestinationPieChartEl = document.getElementById("forwardDestinationPieChart");
+  if (forwardDestinationPieChartEl) {
+    forwardDestinationPieChart = new Chart(forwardDestinationPieChartEl.getContext("2d"), {
       type: "doughnut",
       data: {
         labels: [],
@@ -938,7 +944,7 @@ $(() => {
         maintainAspectRatio: true,
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color"),
+            borderColor: getComputedStyle(boxEl).backgroundColor,
           },
         },
         plugins: {
@@ -971,12 +977,15 @@ $(() => {
   }
 });
 
-//destroy all chartjs customTooltips on window resize
+// Destroy all chartjs tooltips on window resize
 window.addEventListener("resize", () => {
-  $(".chartjs-tooltip").remove();
+  const chartJsTooltips = document.querySelectorAll(".chartjs-tooltip");
+  for (const chartJsTooltip of chartJsTooltips) {
+    chartJsTooltip.remove();
+  }
 });
 
 // Tooltips
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
