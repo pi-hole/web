@@ -271,16 +271,18 @@ function updateForwardDestinationsPie() {
 }
 
 function updateTopClientsTable(blocked) {
-  let api, style, tablecontent, overlay, clienttable;
+  let api, style, table, tablecontent, overlay, clienttable;
   if (blocked) {
     api = apiUrl + "/stats/top_clients?blocked=true";
     style = "queries-blocked";
+    table = $("#client-frequency-blocked");
     tablecontent = $("#client-frequency-blocked td").parent();
     overlay = $("#client-frequency-blocked .overlay");
     clienttable = $("#client-frequency-blocked").find("tbody:last");
   } else {
     api = apiUrl + "/stats/top_clients";
     style = "queries-permitted";
+    table = $("#client-frequency");
     tablecontent = $("#client-frequency td").parent();
     overlay = $("#client-frequency .overlay");
     clienttable = $("#client-frequency").find("tbody:last");
@@ -292,10 +294,10 @@ function updateTopClientsTable(blocked) {
     let url, percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Add note if there are no results (e.g. privacy mode enabled)
+    // Remove table if there are no results (e.g. new
+    // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.clients)) {
-      clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
-      overlay.hide();
+      table.remove();
       return;
     }
 
@@ -331,16 +333,18 @@ function updateTopClientsTable(blocked) {
 }
 
 function updateTopDomainsTable(blocked) {
-  let api, style, tablecontent, overlay, domaintable;
+  let api, style, table, tablecontent, overlay, domaintable;
   if (blocked) {
     api = apiUrl + "/stats/top_domains?blocked=true";
     style = "queries-blocked";
+    table = $("#ad-frequency");
     tablecontent = $("#ad-frequency td").parent();
     overlay = $("#ad-frequency .overlay");
     domaintable = $("#ad-frequency").find("tbody:last");
   } else {
     api = apiUrl + "/stats/top_domains";
     style = "queries-permitted";
+    table = $("#domain-frequency");
     tablecontent = $("#domain-frequency td").parent();
     overlay = $("#domain-frequency .overlay");
     domaintable = $("#domain-frequency").find("tbody:last");
@@ -352,10 +356,10 @@ function updateTopDomainsTable(blocked) {
     let url, domain, percentage, urlText;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Add note if there are no results (e.g. privacy mode enabled)
+    // Remove table if there are no results (e.g. new
+    // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.domains)) {
-      domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
-      overlay.hide();
+      table.remove();
       return;
     }
 
