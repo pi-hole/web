@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, apiUrl:false, REFRESH_INTERVAL:false */
+/* global moment:false, utils:false, REFRESH_INTERVAL:false */
 
 const beginningOfTime = 1262304000; // Jan 01 2010, 00:00 in seconds
 const endOfTime = 2147483647; // Jan 19, 2038, 03:14 in seconds
@@ -431,7 +431,7 @@ function addSelectSuggestion(name, dict, data) {
 
 function getSuggestions(dict) {
   $.get(
-    apiUrl + "/queries/suggestions",
+    document.body.dataset.apiurl + "/queries/suggestions",
     function (data) {
       for (var key in filters) {
         if (Object.hasOwnProperty.call(filters, key)) {
@@ -462,7 +462,7 @@ function filterOn(param, dict) {
 }
 
 function getAPIURL(filters) {
-  var apiurl = apiUrl + "/queries?";
+  var apiurl = document.body.dataset.apiurl + "/queries?";
   for (var key in filters) {
     if (Object.hasOwnProperty.call(filters, key)) {
       var filter = filters[key];
@@ -514,7 +514,7 @@ $(function () {
   }
 
   getSuggestions(GETDict);
-  var apiurl = getAPIURL(GETDict);
+  var apiURL = getAPIURL(GETDict);
 
   if ("from" in GETDict) {
     from = GETDict.from;
@@ -530,7 +530,7 @@ $(function () {
 
   table = $("#all-queries").DataTable({
     ajax: {
-      url: apiurl,
+      url: apiURL,
       error: handleAjaxError,
       dataSrc: "queries",
       data: function (d) {
@@ -740,6 +740,6 @@ function refreshTable() {
   var filters = parseFilters();
   filters.from = from;
   filters.until = until;
-  var apiurl = getAPIURL(filters);
-  table.ajax.url(apiurl).draw();
+  var apiUrl = getAPIURL(filters);
+  table.ajax.url(apiUrl).draw();
 }

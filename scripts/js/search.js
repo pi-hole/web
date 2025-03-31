@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, apiFailure:false */
+/* global utils:false, apiFailure:false */
 var GETDict = {};
 
 $(function () {
@@ -35,7 +35,7 @@ function doSearch() {
 
   $.ajax({
     method: "GET",
-    url: apiUrl + "/search/" + encodeURIComponent(q),
+    url: document.body.dataset.apiurl + "/search/" + encodeURIComponent(q),
     async: false,
     data: {
       partial: partial,

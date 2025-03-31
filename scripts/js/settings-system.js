@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, apiUrl: false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
+/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
 var hostinfoTimer = null;
 var cachePieChart = null;
@@ -83,7 +83,7 @@ function updateCachePie(data) {
 
 function updateHostInfo() {
   $.ajax({
-    url: apiUrl + "/info/host",
+    url: document.body.dataset.apiurl + "/info/host",
   })
     .done(function (data) {
       var host = data.host;
@@ -155,7 +155,7 @@ var metricsTimer = null;
 
 function updateMetrics() {
   $.ajax({
-    url: apiUrl + "/info/metrics",
+    url: document.body.dataset.apiurl + "/info/metrics",
   })
     .done(function (data) {
       var metrics = data.metrics;
@@ -196,7 +196,7 @@ function showQueryLoggingButton(state) {
 
 function getLoggingButton() {
   $.ajax({
-    url: apiUrl + "/config/dns/queryLogging",
+    url: document.body.dataset.apiurl + "/config/dns/queryLogging",
   })
     .done(function (data) {
       showQueryLoggingButton(data.config.dns.queryLogging);
@@ -214,7 +214,7 @@ $(".confirm-restartdns").confirm({
   title: "Confirmation required",
   confirm: function () {
     $.ajax({
-      url: apiUrl + "/action/restartdns",
+      url: document.body.dataset.apiurl + "/action/restartdns",
       type: "POST",
     }).fail(function (data) {
       apiFailure(data);
@@ -238,7 +238,7 @@ $(".confirm-flushlogs").confirm({
   title: "Confirmation required",
   confirm: function () {
     $.ajax({
-      url: apiUrl + "/action/flush/logs",
+      url: document.body.dataset.apiurl + "/action/flush/logs",
       type: "POST",
     }).fail(function (data) {
       apiFailure(data);
@@ -262,7 +262,7 @@ $(".confirm-flusharp").confirm({
   title: "Confirmation required",
   confirm: function () {
     $.ajax({
-      url: apiUrl + "/action/flush/arp",
+      url: document.body.dataset.apiurl + "/action/flush/arp",
       type: "POST",
     }).fail(function (data) {
       apiFailure(data);
@@ -292,7 +292,7 @@ $("#loggingButton").confirm({
     data.config.dns = {};
     data.config.dns.queryLogging = $("#loggingButton").data("state") !== "enabled";
     $.ajax({
-      url: apiUrl + "/config/dns/queryLogging",
+      url: document.body.dataset.apiurl + "/config/dns/queryLogging",
       type: "PATCH",
       dataType: "json",
       processData: false,
@@ -364,7 +364,7 @@ $(function () {
   });
 
   $.ajax({
-    url: apiUrl + "/network/gateway",
+    url: document.body.dataset.apiurl + "/network/gateway",
   })
     .done(function (data) {
       const gateway = data.gateway;

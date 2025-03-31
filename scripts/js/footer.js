@@ -8,7 +8,6 @@
 /* global utils:false, moment:false */
 
 var _isLoginPage = false;
-const apiUrl = document.body.dataset.apiurl;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
@@ -115,7 +114,7 @@ function checkBlocking() {
   }
 
   $.ajax({
-    url: apiUrl + "/dns/blocking",
+    url: document.body.dataset.apiurl + "/dns/blocking",
     method: "GET",
   })
     .done(function (data) {
@@ -144,7 +143,7 @@ function piholeChange(action, duration) {
 
   btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
   $.ajax({
-    url: apiUrl + "/dns/blocking",
+    url: document.body.dataset.apiurl + "/dns/blocking",
     method: "POST",
     dataType: "json",
     processData: false,
@@ -267,7 +266,7 @@ function updateQueryFrequency(intl, frequency) {
 var ftlinfoTimer = null;
 function updateFtlInfo() {
   $.ajax({
-    url: apiUrl + "/info/ftl",
+    url: document.body.dataset.apiurl + "/info/ftl",
   })
     .done(function (data) {
       var ftl = data.ftl;
@@ -324,7 +323,7 @@ function updateFtlInfo() {
 
 function updateSystemInfo() {
   $.ajax({
-    url: apiUrl + "/info/system",
+    url: document.body.dataset.apiurl + "/info/system",
   })
     .done(function (data) {
       var system = data.system;
@@ -484,7 +483,7 @@ function versionCompare(v1, v2) {
 
 function updateVersionInfo() {
   $.ajax({
-    url: apiUrl + "/info/version",
+    url: document.body.dataset.apiurl + "/info/version",
   }).done(function (data) {
     var version = data.version;
     var updateAvailable = false;

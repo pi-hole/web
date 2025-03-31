@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, utils:false, apiUrl:false, initTable:false, updateFtlInfo:false */
+/* global apiFailure:false, utils:false, initTable:false, updateFtlInfo:false */
 
 var groups = [];
 
@@ -39,7 +39,7 @@ function populateGroupSelect(selectEl) {
 // eslint-disable-next-line no-unused-vars
 function getGroups(groupSelector) {
   $.ajax({
-    url: apiUrl + "/groups",
+    url: document.body.dataset.apiurl + "/groups",
     type: "GET",
     dataType: "json",
     success: function (data) {
@@ -79,7 +79,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  const url = apiUrl + "/" + type + "s:batchDelete";
+  const url = document.body.dataset.apiurl + "/" + type + "s:batchDelete";
 
   // use utils.hexDecode() to decode all clients
   let idstring = "";

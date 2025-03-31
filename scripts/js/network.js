@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global utils:false, apiUrl:false, apiFailure:false */
+/* global utils:false, apiFailure:false */
 
 var tableApi;
 
@@ -64,7 +64,7 @@ function deleteNetworkEntry() {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting network table entry...");
   $.ajax({
-    url: apiUrl + "/network/devices/" + id,
+    url: document.body.dataset.apiurl + "/network/devices/" + id,
     method: "DELETE",
     success: function () {
       utils.enableAll();
@@ -208,7 +208,7 @@ $(function () {
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     ajax: {
-      url: apiUrl + "/network/devices",
+      url: document.body.dataset.apiurl + "/network/devices",
       type: "GET",
       dataType: "json",
       data: {

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiUrl: false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
 $(function () {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -331,7 +331,7 @@ function addFromQueryLog(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", function () {
     $.ajax({
-      url: apiUrl + "/domains/" + list + "/exact",
+      url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
       method: "post",
       dataType: "json",
       processData: false,
@@ -411,7 +411,10 @@ function checkMessages() {
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
   $.ajax({
-    url: apiUrl + "/info/messages/count" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    url:
+      document.body.dataset.apiurl +
+      "/info/messages/count" +
+      (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
     method: "GET",
     dataType: "json",
   })
@@ -465,7 +468,7 @@ function changeBulkDeleteStates(table) {
 
 function doLogout(url) {
   $.ajax({
-    url: apiUrl + "/auth",
+    url: document.body.dataset.apiurl + "/auth",
     method: "DELETE",
   }).always(function () {
     globalThis.location = url;
@@ -640,7 +643,7 @@ let waitMe = null;
 function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
   // Try to ping FTL to see if it finished restarting
   $.ajax({
-    url: apiUrl + "/info/login",
+    url: document.body.dataset.apiurl + "/info/login",
     method: "GET",
     cache: false,
     dataType: "json",

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
+/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
 
 // Define global variables
 var timeLineChart, clientsChart;
@@ -22,7 +22,7 @@ Chart.defaults.set("plugins.deferred", {
 
 var failures = 0;
 function updateQueriesOverTime() {
-  $.getJSON(apiUrl + "/history", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/history", function (data) {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
@@ -92,7 +92,7 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesPie() {
-  $.getJSON(apiUrl + "/stats/query_types", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/stats/query_types", function (data) {
     var v = [],
       c = [],
       k = [],
@@ -134,7 +134,7 @@ function updateQueryTypesPie() {
 }
 
 function updateClientsOverTime() {
-  $.getJSON(apiUrl + "/history/clients", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/history/clients", function (data) {
     // Remove graph if there are no results (e.g. new
     // installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
@@ -212,7 +212,7 @@ function updateClientsOverTime() {
 
 var upstreams = {};
 function updateForwardDestinationsPie() {
-  $.getJSON(apiUrl + "/stats/upstreams", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", function (data) {
     var v = [],
       c = [],
       k = [],
@@ -273,13 +273,13 @@ function updateForwardDestinationsPie() {
 function updateTopClientsTable(blocked) {
   let api, style, tablecontent, overlay, clienttable;
   if (blocked) {
-    api = apiUrl + "/stats/top_clients?blocked=true";
+    api = document.body.dataset.apiurl + "/stats/top_clients?blocked=true";
     style = "queries-blocked";
     tablecontent = $("#client-frequency-blocked td").parent();
     overlay = $("#client-frequency-blocked .overlay");
     clienttable = $("#client-frequency-blocked").find("tbody:last");
   } else {
-    api = apiUrl + "/stats/top_clients";
+    api = document.body.dataset.apiurl + "/stats/top_clients";
     style = "queries-permitted";
     tablecontent = $("#client-frequency td").parent();
     overlay = $("#client-frequency .overlay");
@@ -333,13 +333,13 @@ function updateTopClientsTable(blocked) {
 function updateTopDomainsTable(blocked) {
   let api, style, tablecontent, overlay, domaintable;
   if (blocked) {
-    api = apiUrl + "/stats/top_domains?blocked=true";
+    api = document.body.dataset.apiurl + "/stats/top_domains?blocked=true";
     style = "queries-blocked";
     tablecontent = $("#ad-frequency td").parent();
     overlay = $("#ad-frequency .overlay");
     domaintable = $("#ad-frequency").find("tbody:last");
   } else {
-    api = apiUrl + "/stats/top_domains";
+    api = document.body.dataset.apiurl + "/stats/top_domains";
     style = "queries-permitted";
     tablecontent = $("#domain-frequency td").parent();
     overlay = $("#domain-frequency .overlay");
@@ -408,7 +408,7 @@ function updateTopLists() {
 var previousCount = 0;
 var firstSummaryUpdate = true;
 function updateSummaryData(runOnce = false) {
-  $.getJSON(apiUrl + "/stats/summary", function (data) {
+  $.getJSON(document.body.dataset.apiurl + "/stats/summary", function (data) {
     var intl = new Intl.NumberFormat();
     const newCount = parseInt(data.queries.total, 10);
 
