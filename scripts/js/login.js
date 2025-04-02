@@ -7,12 +7,14 @@
 
 /* global utils:false, NProgress:false */
 
-var _isLoginPage = true;
+"use strict";
+
+globalThis._isLoginPage = true;
 
 function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to dashboard
-  var target = ".";
+  let target = ".";
 
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {
@@ -25,8 +27,8 @@ function redirect() {
 
 function wrongPassword(isError = false, isSuccess = false, data = null) {
   if (isError) {
-    let isErrorResponse = false,
-      isInvalidTOTP = false;
+    let isErrorResponse = false;
+    let isInvalidTOTP = false;
 
     // Reset hint and error message
     $("#error-message").text("");
@@ -71,7 +73,9 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     }
 
     return;
-  } else if (isSuccess) {
+  }
+
+  if (isSuccess) {
     $("#pw-field").addClass("has-success");
     $("#totp_input").addClass("has-success");
   } else {
@@ -96,21 +100,21 @@ function doLogin(password) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
+    data: JSON.stringify({ password, totp: Number.parseInt($("#totp").val(), 10) }),
   })
-    .done(function (data) {
+    .done(data => {
       wrongPassword(false, true, data);
       NProgress.done();
       redirect();
     })
-    .fail(function (data) {
+    .fail(data => {
       wrongPassword(true, false, data);
       NProgress.done();
       utils.enableAll();
     });
 }
 
-$("#loginform").submit(function (e) {
+$("#loginform").submit(e => {
   // Cancel the native submit event (prevent the form from being
   // submitted) because we want to do a two-step challenge-response login
   e.preventDefault();
@@ -139,7 +143,7 @@ $("#toggle-password").on("click", function () {
   $(".field-icon", this).toggleClass("fa-eye fa-eye-slash");
 
   // Password field
-  var $pwd = $("#current-password");
+  const $pwd = $("#current-password");
   if ($pwd.attr("type") === "password") {
     $pwd.attr("type", "text");
     $pwd.attr("title", "Hide password");
@@ -160,16 +164,16 @@ function showDNSfailure() {
   $("#login-box").addClass("error-box");
 }
 
-$(function () {
+$(() => {
   // Check if we need to login at all
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
   })
-    .done(function (data) {
+    .done(data => {
       // If we are already logged in, redirect to dashboard
       if (data.session.valid === true) redirect();
     })
-    .fail(function (xhr) {
+    .fail(xhr => {
       const session = xhr.responseJSON.session;
       // If TOPT is enabled, show the input field and add the required attribute
       if (session.totp === true) {
@@ -183,7 +187,7 @@ $(function () {
   // Get information about HTTPS port and DNS status
   $.ajax({
     url: document.body.dataset.apiurl + "/info/login",
-  }).done(function (data) {
+  }).done(data => {
     if (data.dns === false) showDNSfailure();
 
     // Generate HTTPS redirection link (only used if not already HTTPS)

@@ -7,6 +7,8 @@
 
 /* global utils: false, apiFailure:false, setConfigValues: false */
 
+"use strict";
+
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
@@ -46,7 +48,7 @@ function CNAMEttl(data) {
 }
 
 function populateDataTable(endpoint) {
-  var columns = "";
+  let columns = "";
   if (endpoint === "hosts") {
     columns = [
       { data: null, render: hostsDomain },
@@ -62,10 +64,10 @@ function populateDataTable(endpoint) {
     ];
   }
 
-  var setByEnv = false;
+  const setByEnv = false;
   $.ajax({
     url: `/api/config/dns/${endpoint}?detailed=true`,
-  }).done(function (data) {
+  }).done(data => {
     // Set the title icons if needed
     setConfigValues("dns", "dns", data.config.dns);
 
@@ -82,22 +84,22 @@ function populateDataTable(endpoint) {
       dataSrc: `config.dns.${endpoint}`,
     },
     autoWidth: false,
-    columns: columns,
+    columns,
     columnDefs: [
       {
         targets: "_all",
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $(`button[id^="delete${endpoint}"]`).on("click", deleteRecord);
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data);
-      var button = `<button type="button"
+      const button = `<button type="button"
                       class="btn btn-danger btn-xs"
                       id="delete${endpoint}${utils.hexEncode(data)}"
                       data-tag="${data}"
@@ -118,7 +120,7 @@ function populateDataTable(endpoint) {
       [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: function () {
+      emptyTable() {
         return endpoint === "hosts"
           ? "No local DNS records defined."
           : "No local CNAME records defined.";
@@ -127,11 +129,11 @@ function populateDataTable(endpoint) {
     stateSave: true,
     stateDuration: 0,
     processing: true,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback(`${endpoint}-records-table`, data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback(`${endpoint}-records-table`);
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback(`${endpoint}-records-table`);
       // Return if not available
       if (data === null) {
         return null;
@@ -143,7 +145,7 @@ function populateDataTable(endpoint) {
   });
 }
 
-$(function () {
+$(() => {
   populateDataTable("hosts");
   populateDataTable("cnameRecords");
 });
@@ -159,15 +161,15 @@ function delHosts(elem) {
   const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
 
   $.ajax({
-    url: url,
+    url,
     method: "DELETE",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted DNS record", elem);
       $("#hosts-Table").DataTable().ajax.reload(null, false);
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       utils.enableAll();
       apiFailure(data);
       utils.showAlert(
@@ -186,10 +188,10 @@ function delCNAME(elem) {
   const url = document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
 
   $.ajax({
-    url: url,
+    url,
     method: "DELETE",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       utils.showAlert(
         "success",
@@ -199,7 +201,7 @@ function delCNAME(elem) {
       );
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       utils.enableAll();
       apiFailure(data);
       utils.showAlert(
@@ -212,24 +214,24 @@ function delCNAME(elem) {
     });
 }
 
-$(document).ready(function () {
-  $("#btnAdd-host").on("click", function () {
+$(document).ready(() => {
+  $("#btnAdd-host").on("click", () => {
     utils.disableAll();
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();
     const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
-      url: url,
+      url,
       method: "PUT",
     })
-      .done(function () {
+      .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
         $("#Hdomain").val("");
         $("#Hip").val("");
         $("#hosts-Table").DataTable().ajax.reload(null, false);
       })
-      .fail(function (data, exception) {
+      .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
         utils.showAlert("error", "", "Error while deleting DNS record", data.responseText);
@@ -237,26 +239,28 @@ $(document).ready(function () {
       });
   });
 
-  $("#btnAdd-cname").on("click", function () {
+  $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
-    var elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
-    var ttlVal = parseInt($("#Cttl").val(), 10);
+    let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
+    const ttlVal = Number.parseInt($("#Cttl").val(), 10);
+    // TODO Fix eslint
+    // eslint-disable-next-line unicorn/prefer-number-properties
     if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
-      url: url,
+      url,
       method: "PUT",
     })
-      .done(function () {
+      .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
         $("#Cdomain").val("");
         $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
       })
-      .fail(function (data, exception) {
+      .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
         utils.showAlert("error", "", "Error while deleting CNAME record", data.responseText);
