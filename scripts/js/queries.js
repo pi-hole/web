@@ -416,12 +416,7 @@ function addSelectSuggestion(name, dict, data) {
   }
 
   // Add data obtained from API
-  for (const key in data) {
-    if (!Object.hasOwn(data, key)) {
-      continue;
-    }
-
-    const text = data[key];
+  for (const text of Object.values(data)) {
     obj.append($("<option />").val(text).text(text));
   }
 
@@ -435,11 +430,8 @@ function getSuggestions(dict) {
   $.get(
     document.body.dataset.apiurl + "/queries/suggestions",
     data => {
-      for (const key in filters) {
-        if (Object.hasOwn(filters, key)) {
-          const f = filters[key];
-          addSelectSuggestion(f, dict, data.suggestions[f]);
-        }
+      for (const filter of Object.values(filters)) {
+        addSelectSuggestion(filter, dict, data.suggestions[filter]);
       }
     },
     "json"
@@ -447,15 +439,7 @@ function getSuggestions(dict) {
 }
 
 function parseFilters() {
-  const filter = {};
-  for (const key in filters) {
-    if (Object.hasOwn(filters, key)) {
-      const f = filters[key];
-      filter[f] = $("#" + f + "_filter").val();
-    }
-  }
-
-  return filter;
+  return Object.fromEntries(filters.map(filter => [filter, $(`#${filter}_filter`).val()]));
 }
 
 function filterOn(param, dict) {
@@ -465,13 +449,10 @@ function filterOn(param, dict) {
 
 function getAPIURL(filters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
-  for (const key in filters) {
-    if (Object.hasOwn(filters, key)) {
-      const filter = filters[key];
-      if (filterOn(key, filters)) {
-        if (!apiurl.endsWith("?")) apiurl += "&";
-        apiurl += key + "=" + encodeURIComponent(filter);
-      }
+  for (const [key, filter] of Object.entries(filters)) {
+    if (filterOn(key, filters)) {
+      if (!apiurl.endsWith("?")) apiurl += "&";
+      apiurl += `${key}=${encodeURIComponent(filter)}`;
     }
   }
 
@@ -503,16 +484,13 @@ $(() => {
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 
-  for (const sel in filters) {
-    if (Object.hasOwn(filters, sel)) {
-      const element = filters[sel];
-      $("#" + element + "_filter").select2({
-        width: "100%",
-        tags: sel < 4, // Only the first four (client(IP/name), domain, upstream) are allowed to freely specify input
-        placeholder: "Select...",
-        allowClear: true,
-      });
-    }
+  for (const [sel, element] of Object.entries(filters)) {
+    $(`#${element}_filter`).select2({
+      width: "100%",
+      tags: sel < 4, // Only the first four (client(IP/name), domain, upstream) are allowed to freely specify input
+      placeholder: "Select...",
+      allowClear: true,
+    });
   }
 
   getSuggestions(GETDict);

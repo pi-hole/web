@@ -539,12 +539,9 @@ function parseQueryString() {
 
 // https://stackoverflow.com/q/21647928
 function hexEncode(string) {
-  let hex;
-  let i;
-
   let result = "";
-  for (i = 0; i < string.length; i++) {
-    hex = string.codePointAt(i).toString(16);
+  for (let i = 0; i < string.length; i++) {
+    const hex = string.codePointAt(i).toString(16);
     result += ("000" + hex).slice(-4);
   }
 
@@ -553,11 +550,10 @@ function hexEncode(string) {
 
 // https://stackoverflow.com/q/21647928
 function hexDecode(string) {
-  let j;
   const hexes = string.match(/.{1,4}/g) || [];
   let back = "";
-  for (j = 0; j < hexes.length; j++) {
-    back += String.fromCodePoint(Number.parseInt(hexes[j], 16));
+  for (const hex of hexes) {
+    back += String.fromCodePoint(Number.parseInt(hex, 16));
   }
 
   return back;
@@ -566,7 +562,10 @@ function hexDecode(string) {
 function listsAlert(type, items, data) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
-  if (data.processed === undefined || data.processed.success.length === items.length) {
+  const successLength = data.processed.success.length;
+  const errorsLength = data.processed.errors.length;
+
+  if (data.processed === undefined || successLength === items.length) {
     showAlert(
       "success",
       "fas fa-plus",
@@ -581,54 +580,40 @@ function listsAlert(type, items, data) {
   let message = "";
 
   // Show a list of successful items if there are any
-  if (data.processed.success.length > 0) {
+  if (successLength > 0) {
     message +=
-      "Successfully added " +
-      data.processed.success.length +
-      " " +
-      type +
-      (data.processed.success.length !== 1 ? "s" : "") +
-      ":";
+      "Successfully added " + successLength + " " + type + (successLength !== 1 ? "s" : "") + ":";
 
     // Loop over data.processed.success and print "item"
-    for (const item in data.processed.success) {
-      if (Object.hasOwn(data.processed.success, item)) {
-        message += "\n- " + data.processed.success[item].item;
-      }
+    for (const item of Object.values(data.processed.success)) {
+      message += "\n- " + item.item;
     }
   }
 
   // Add a line break if there are both successful and failed items
-  if (data.processed.success.length > 0 && data.processed.errors.length > 0) {
+  if (successLength > 0 && errorsLength > 0) {
     message += "\n\n";
   }
 
   // Show a list of failed items if there are any
-  if (data.processed.errors.length > 0) {
+  if (errorsLength > 0) {
     message +=
-      "Failed to add " +
-      data.processed.errors.length +
-      " " +
-      type +
-      (data.processed.errors.length !== 1 ? "s" : "") +
-      ":\n";
+      "Failed to add " + errorsLength + " " + type + (errorsLength !== 1 ? "s" : "") + ":\n";
 
     // Loop over data.processed.errors and print "item: error"
-    for (const item in data.processed.errors) {
-      if (Object.hasOwn(data.processed.errors, item)) {
-        let error = data.processed.errors[item].error;
-        // Replace some error messages with a more user-friendly text
-        if (error.includes("UNIQUE constraint failed")) {
-          error = "Already present";
-        }
-
-        message += "\n- " + data.processed.errors[item].item + ": " + error;
+    for (const errorItem of Object.values(data.processed.errors)) {
+      let error = errorItem.error;
+      // Replace some error messages with a more user-friendly text
+      if (error.includes("UNIQUE constraint failed")) {
+        error = "Already present";
       }
+
+      message += `\n- ${errorItem.item}: ${error}`;
     }
   }
 
   // Show the warning message
-  const total = data.processed.success.length + data.processed.errors.length;
+  const total = successLength + errorsLength;
   const processed = "(" + total + " " + type + (total !== 1 ? "s" : "") + " processed)";
   showAlert(
     "warning",

@@ -485,10 +485,10 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   // Sum all queries for the current time by iterating over all keys in the
   // current dataset
   let sum = 0;
-  const keys = Object.keys(tooltipLabel.parsed._stacks.y);
-  for (let i = 0; i < keys.length; i++) {
-    if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
-    sum += Number.parseInt(tooltipLabel.parsed._stacks.y[i], 10);
+  for (const value of Object.values(tooltipLabel.parsed._stacks.y)) {
+    if (value === undefined) continue;
+    const num = Number.parseInt(value, 10);
+    if (num) sum += num;
   }
 
   let percentage = 0;
