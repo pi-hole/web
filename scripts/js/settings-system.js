@@ -60,16 +60,16 @@ function updateCachePie(data) {
   data.empty.valid = cacheSize - cacheEntries;
 
   // Fill chart with data
-  for (const item of Object.keys(data)) {
-    if (data[item].valid > 0) {
-      v.push((100 * data[item].valid) / cacheSize);
+  for (const [item, value] of Object.entries(data)) {
+    if (value.valid > 0) {
+      v.push((100 * value.valid) / cacheSize);
       c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
       k.push(item);
     }
 
-    if (data[item].stale > 0) {
+    if (value.stale > 0) {
       // There are no stale empty entries
-      v.push((100 * data[item].stale) / cacheSize);
+      v.push((100 * value.stale) / cacheSize);
       c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
       k.push(item + " (stale)");
     }

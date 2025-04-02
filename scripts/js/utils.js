@@ -294,9 +294,8 @@ function stateLoadCallback(itemName) {
   data = JSON.parse(data);
 
   // Clear possible filtering settings
-  // TODO Maybe Object.values() is meant to be used here?
-  for (const [index, _value] of data.columns.entries()) {
-    data.columns[index].search.search = "";
+  for (const column of Object.values(data.columns)) {
+    column.search.search = "";
   }
 
   // Always start on the first page to show most recent queries
