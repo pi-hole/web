@@ -59,7 +59,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     <div class="col-md-12 col-lg-6">
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records records</h3>
+                <h3 class="box-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records</h3>
             </div>
             <div class="box-body">
                 <div class="row">
