@@ -197,7 +197,8 @@ function applyCheckboxRadioStyle() {
 function initCheckboxRadioStyle() {
   function getCheckboxURL(style) {
     var extra = style.startsWith("material-") ? "material" : "bootstrap";
-    return "/admin/vendor/icheck/icheck-" + extra + ".min.css";
+    const webhome = document.body.dataset.webhome;
+    return webhome + "vendor/icheck/icheck-" + extra + ".min.css";
   }
 
   // Read from local storage, initialize if needed
@@ -728,7 +729,8 @@ function applyExpertSettings() {
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
     if ($(".settings-selector").length > 0 && $(".box:visible").length === 0) {
-      globalThis.location.href = "/admin/settings/system";
+      const webhome = document.body.dataset.webhome;
+      globalThis.location.href = webhome + "settings/system";
     }
   }
 }
