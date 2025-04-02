@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
@@ -170,7 +170,7 @@ function initTable() {
   table = $("#listsTable").DataTable({
     processing: true,
     ajax: {
-      url: apiUrl + "/lists",
+      url: document.body.dataset.apiurl + "/lists",
       dataSrc: "lists",
       type: "GET",
     },
@@ -519,7 +519,7 @@ function addList(event) {
   }
 
   $.ajax({
-    url: apiUrl + "/lists",
+    url: document.body.dataset.apiurl + "/lists",
     method: "post",
     dataType: "json",
     processData: false,
@@ -588,7 +588,7 @@ function editList() {
   utils.disableAll();
   utils.showAlert("info", "", "Editing address...", address);
   $.ajax({
-    url: apiUrl + "/lists/" + encodeURIComponent(address) + "?type=" + type,
+    url: document.body.dataset.apiurl + "/lists/" + encodeURIComponent(address) + "?type=" + type,
     method: "put",
     dataType: "json",
     processData: false,

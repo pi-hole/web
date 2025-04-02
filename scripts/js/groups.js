@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
 
 var table;
 
@@ -26,7 +26,7 @@ $(function () {
   table = $("#groupsTable").DataTable({
     processing: true,
     ajax: {
-      url: apiUrl + "/groups",
+      url: document.body.dataset.apiurl + "/groups",
       error: handleAjaxError,
       dataSrc: "groups",
       type: "GET",
@@ -261,7 +261,7 @@ function addGroup() {
   }
 
   $.ajax({
-    url: apiUrl + "/groups",
+    url: document.body.dataset.apiurl + "/groups",
     method: "post",
     dataType: "json",
     processData: false,
@@ -329,7 +329,7 @@ function editGroup() {
   utils.disableAll();
   utils.showAlert("info", "", "Editing group...", oldName);
   $.ajax({
-    url: apiUrl + "/groups/" + oldName,
+    url: document.body.dataset.apiurl + "/groups/" + oldName,
     method: "put",
     dataType: "json",
     processData: false,

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, apiFailure:false*/
+/* global utils:false, apiFailure:false*/
 
 $(function () {
   // Handle hiding of alerts
@@ -164,7 +164,7 @@ function saveSettings() {
 
   // Apply changes
   $.ajax({
-    url: apiUrl + "/config",
+    url: document.body.dataset.apiurl + "/config",
     method: "PATCH",
     dataType: "json",
     processData: false,

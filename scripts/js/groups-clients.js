@@ -5,14 +5,14 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, groups:false,, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
 /* exported initTable */
 
 var table;
 
 function reloadClientSuggestions() {
   $.ajax({
-    url: apiUrl + "/clients/_suggestions",
+    url: document.body.dataset.apiurl + "/clients/_suggestions",
     type: "GET",
     dataType: "json",
     success: function (data) {
@@ -96,7 +96,7 @@ function initTable() {
   table = $("#clientsTable").DataTable({
     processing: true,
     ajax: {
-      url: apiUrl + "/clients",
+      url: document.body.dataset.apiurl + "/clients",
       dataSrc: "clients",
       type: "GET",
     },
@@ -402,7 +402,7 @@ function addClient() {
   }
 
   $.ajax({
-    url: apiUrl + "/clients",
+    url: document.body.dataset.apiurl + "/clients",
     method: "post",
     dataType: "json",
     processData: false,
@@ -459,7 +459,7 @@ function editClient() {
   const clientDecoded = utils.hexDecode(client);
   utils.showAlert("info", "", "Editing client...", clientDecoded);
   $.ajax({
-    url: apiUrl + "/clients/" + encodeURIComponent(clientDecoded),
+    url: document.body.dataset.apiurl + "/clients/" + encodeURIComponent(clientDecoded),
     method: "put",
     dataType: "json",
     processData: false,

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams */
+/* global upstreams:false */
 
 // eslint-disable-next-line no-unused-vars
 var THEME_COLORS = [

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, setConfigValues: false, apiFailure: false, QRious: false */
+/* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
 
 var apiSessionsTable = null;
 var ownSessionID = null;
@@ -31,7 +31,7 @@ function renderBool(data, type) {
 $(function () {
   apiSessionsTable = $("#APISessionsTable").DataTable({
     ajax: {
-      url: apiUrl + "/auth/sessions",
+      url: document.body.dataset.apiurl + "/auth/sessions",
       type: "GET",
       dataSrc: "sessions",
     },
@@ -247,7 +247,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
   // our own session is then triggered by the last successful deletion of
   // another session (ownSessionDelete == true, len == global deleted)
   $.ajax({
-    url: apiUrl + "/auth/session/" + id,
+    url: document.body.dataset.apiurl + "/auth/session/" + id,
     method: "DELETE",
   })
     .done(function () {
@@ -272,7 +272,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
 
 function processWebServerConfig() {
   $.ajax({
-    url: apiUrl + "/config/webserver?detailed=true",
+    url: document.body.dataset.apiurl + "/config/webserver?detailed=true",
   })
     .done(function (data) {
       setConfigValues("webserver", "webserver", data.config.webserver);
@@ -291,7 +291,7 @@ function processWebServerConfig() {
 
 $("#modal-totp").on("shown.bs.modal", function () {
   $.ajax({
-    url: apiUrl + "/auth/totp",
+    url: document.body.dataset.apiurl + "/auth/totp",
   })
     .done(function (data) {
       TOTPdata = data.totp;
@@ -329,7 +329,7 @@ $("#modal-totp").on("shown.bs.modal", function () {
 var apppwhash = null;
 $("#modal-apppw").on("shown.bs.modal", function () {
   $.ajax({
-    url: apiUrl + "/auth/app",
+    url: document.body.dataset.apiurl + "/auth/app",
   })
     .done(function (data) {
       apppwhash = data.app.hash;
@@ -373,7 +373,7 @@ $("#apppw_clear").on("click", function () {
 
 function setAppPassword() {
   $.ajax({
-    url: apiUrl + "/config",
+    url: document.body.dataset.apiurl + "/config",
     type: "PATCH",
     dataType: "json",
     processData: false,
@@ -426,7 +426,7 @@ $("#totp_code").on("keyup", function () {
 
 function setTOTPSecret(secret) {
   $.ajax({
-    url: apiUrl + "/config",
+    url: document.body.dataset.apiurl + "/config",
     type: "PATCH",
     dataType: "json",
     processData: false,
@@ -478,7 +478,7 @@ $(document).ready(function () {
   processWebServerConfig();
   // Check if TOTP is enabled
   $.ajax({
-    url: apiUrl + "/auth",
+    url: document.body.dataset.apiurl + "/auth",
   }).done(function (data) {
     if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
     else $("#button-disable-totp").removeClass("hidden");
