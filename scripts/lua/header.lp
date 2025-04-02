@@ -47,12 +47,8 @@ is_authenticated = mg.request_info.is_authenticated
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
-    <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Pi-hole <?=hostname?></title>
-
     <meta name="csrf-token" content="<?=mg.request_info.csrf_token?>">
 
     <link rel="apple-touch-icon" href="<?=webhome?>img/favicons/apple-touch-icon.png" sizes="180x180">
