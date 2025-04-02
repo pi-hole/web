@@ -110,7 +110,7 @@ function doLogin(password) {
     });
 }
 
-$("#loginform").submit(function (e) {
+$("#loginform").on("submit", e => {
   // Cancel the native submit event (prevent the form from being
   // submitted) because we want to do a two-step challenge-response login
   e.preventDefault();
@@ -129,7 +129,7 @@ $("#totp").on("input", function () {
   const code = $(this).val();
   const password = $("#current-password").val();
   if (code.length === 6 && password.length > 0) {
-    $("#loginform").submit();
+    $("#loginform").trigger("submit");
   }
 });
 
