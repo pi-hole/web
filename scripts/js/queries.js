@@ -391,8 +391,10 @@ function parseFilters() {
   return Object.fromEntries(filters.map(filter => [filter, $(`#${filter}_filter`).val()]));
 }
 
-function getAPIURL(filters) {
-  let apiurl = document.body.dataset.apiurl + "/queries?";
+function getApiUrl(filters) {
+  const baseUrl = `${document.body.dataset.apiurl}/queries`;
+  const params = new URLSearchParams();
+
   for (const [key, filter] of Object.entries(filters)) {
     const isKeyInFilters =
       key in filters &&
@@ -400,20 +402,19 @@ function getAPIURL(filters) {
         (typeof filters[key] === "string" && filters[key].length > 0));
 
     if (isKeyInFilters) {
-      if (!apiurl.endsWith("?")) apiurl += "&";
-      apiurl += `${key}=${encodeURIComponent(filter)}`;
+      params.set(key, filter);
     }
   }
 
   // Omit from/until filtering if we cannot reach these times. This will speed
   // up the database lookups notably on slow devices. The API accepts timestamps
   // in seconds since epoch
-  if (from > beginningOfTime) apiurl += "&from=" + from;
-  if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
+  if (from > beginningOfTime) params.set("from", from);
+  if (until > beginningOfTime && until < endOfTime) params.set("until", until);
 
-  if ($("#disk").prop("checked")) apiurl += "&disk=true";
+  if ($("#disk").prop("checked")) params.set("disk", "true");
 
-  return encodeURI(apiurl);
+  return `${baseUrl}?${params.toString()}`;
 }
 
 let liveMode = false;
@@ -443,7 +444,7 @@ $(() => {
   }
 
   getSuggestions(GETDict);
-  const apiURL = getAPIURL(GETDict);
+  const apiURL = getApiUrl(GETDict);
 
   if ("from" in GETDict) {
     from = GETDict.from;
@@ -652,6 +653,6 @@ function refreshTable() {
   const filters = parseFilters();
   filters.from = from;
   filters.until = until;
-  const apiUrl = getAPIURL(filters);
+  const apiUrl = getApiUrl(filters);
   table.ajax.url(apiUrl).draw();
 }
