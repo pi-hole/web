@@ -66,7 +66,7 @@ end
 
 </div>
 <!-- ./wrapper -->
-<script defer src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 
 <div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-xff="<?=x_forwarded_for?>"></div>
 </body>
