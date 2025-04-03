@@ -227,6 +227,6 @@ function processDHCPConfig() {
     });
 }
 
-$(document).ready(() => {
+$(() => {
   processDHCPConfig();
 });

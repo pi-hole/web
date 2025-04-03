@@ -21,6 +21,6 @@ function getConfig() {
     });
 }
 
-$(document).ready(() => {
+$(() => {
   getConfig();
 });
