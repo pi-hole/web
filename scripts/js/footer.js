@@ -399,45 +399,28 @@ function apiFailure(data) {
   }
 }
 
-// Method to compare two versions. Returns 1 if v2 is smaller, -1 if v1 is
-// smaller, 0 if equal
-// Credits: https://www.geeksforgeeks.org/compare-two-version-numbers/
+// Method to compare two versions.
+// Returns 1 if v2 is smaller, -1 if v1 is smaller, 0 if equal.
 function versionCompare(v1, v2) {
-  // vnum stores each numeric part of version
-  let vnum1 = 0;
-  let vnum2 = 0;
+  // Check if both versions are strings
+  if (typeof v1 !== "string" || typeof v2 !== "string") {
+    return 0;
+  }
 
   // Remove possible leading "v" in v1 and v2
-  if (v1[0] === "v") {
-    v1 = v1.substring(1);
-  }
+  const v1Clean = v1.startsWith("v") ? v1.slice(1) : v1;
+  const v2Clean = v2.startsWith("v") ? v2.slice(1) : v2;
 
-  if (v2[0] === "v") {
-    v2 = v2.substring(1);
-  }
+  const v1Parts = v1Clean.split(".").map(Number);
+  const v2Parts = v2Clean.split(".").map(Number);
 
-  // loop until both string are processed
-  for (let i = 0, j = 0; i < v1.length || j < v2.length; ) {
-    // storing numeric part of version 1 in vnum1
-    while (i < v1.length && v1[i] !== ".") {
-      vnum1 = vnum1 * 10 + (v1[i] - "0");
-      i++;
-    }
+  const maxLength = Math.max(v1Parts.length, v2Parts.length);
+  for (let i = 0; i < maxLength; i++) {
+    const num1 = v1Parts[i] || 0;
+    const num2 = v2Parts[i] || 0;
 
-    // storing numeric part of version 2 in vnum2
-    while (j < v2.length && v2[j] !== ".") {
-      vnum2 = vnum2 * 10 + (v2[j] - "0");
-      j++;
-    }
-
-    if (vnum1 > vnum2) return 1;
-    if (vnum2 > vnum1) return -1;
-
-    // if equal, reset variables and go for next numeric part
-    vnum1 = 0;
-    vnum2 = 0;
-    i++;
-    j++;
+    if (num1 > num2) return 1;
+    if (num1 < num2) return -1;
   }
 
   return 0;
