@@ -12,7 +12,7 @@
 $(() => {
   // CSRF protection for AJAX requests, this has to be configured globally
   // because we are using the jQuery $.ajax() function directly in some cases
-  // Furthermore, has this to be done before any AJAX request is made so that
+  // Furthermore, this has to be done before any AJAX request is made so that
   // the CSRF token is sent along with each request to the API
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   $.ajaxSetup({
@@ -22,6 +22,9 @@ $(() => {
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
+  // Return early when text is not a string
+  if (typeof text !== "string") return text;
+
   const map = {
     "&": "&amp;",
     "<": "&lt;",
@@ -30,13 +33,12 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
 
-  // Return early when text is not a string
-  if (typeof text !== "string") return text;
-
   return text.replaceAll(/[&<>"']/g, m => map[m]);
 }
 
 function unescapeHtml(text) {
+  if (text === null) return null;
+
   const map = {
     "&amp;": "&",
     "&lt;": "<",
@@ -52,8 +54,6 @@ function unescapeHtml(text) {
     "&szlig;": "ß",
   };
 
-  if (text === null) return null;
-
   return text.replaceAll(
     /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
     m => map[m]
@@ -67,7 +67,7 @@ function padNumber(num) {
 let showAlertBox = null;
 function showAlert(type, icon, title, message, toast) {
   const options = {
-    title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+    title: `&nbsp;<strong>${escapeHtml(title)}</strong><br>`,
     message: escapeHtml(message),
     icon,
   };
@@ -104,7 +104,7 @@ function showAlert(type, icon, title, message, toast) {
         const data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
-          options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
+          options.title = `&nbsp;<strong>${escapeHtml(data.error.message)}</strong><br>`;
 
           if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
         }
@@ -115,7 +115,7 @@ function showAlert(type, icon, title, message, toast) {
       break;
     default:
       // Case not handled, do nothing
-      console.log("Unknown alert type: " + type); // eslint-disable-line no-console
+      console.log(`Unknown alert type: ${type}`); // eslint-disable-line no-console
       return;
   }
 
@@ -155,10 +155,10 @@ function datetime(date, html, humanReadable) {
 
   const format =
     html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  const timestr = moment.unix(Math.floor(date)).format(format).trim();
+  const timeStr = moment.unix(Math.floor(date)).format(format).trim();
   return humanReadable
-    ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
-    : timestr;
+    ? `<span title="${timeStr}">${moment.unix(Math.floor(date)).fromNow()}</span>`
+    : timeStr;
 }
 
 function datetimeRelative(date) {
@@ -230,21 +230,18 @@ function validateHostname(name) {
 
 // set bootstrap-select defaults
 function setBsSelectDefaults() {
-  const bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
-  bsSelectDefaults.noneSelectedText = "none selected";
-  bsSelectDefaults.selectedTextFormat = "count > 1";
-  bsSelectDefaults.actionsBox = true;
-  bsSelectDefaults.width = "fit";
-  bsSelectDefaults.container = "body";
-  bsSelectDefaults.dropdownAlignRight = "auto";
-  bsSelectDefaults.selectAllText = "All";
-  bsSelectDefaults.deselectAllText = "None";
-  bsSelectDefaults.countSelectedText = (num, total) => {
-    if (num === total) {
-      return "All selected (" + num + ")";
-    }
-
-    return num + " selected";
+  $.fn.selectpicker.Constructor.DEFAULTS = {
+    ...$.fn.selectpicker.Constructor.DEFAULTS,
+    noneSelectedText: "none selected",
+    selectedTextFormat: "count > 1",
+    actionsBox: true,
+    width: "fit",
+    container: "body",
+    dropdownAlignRight: "auto",
+    selectAllText: "All",
+    deselectAllText: "None",
+    countSelectedText: (num, total) =>
+      num === total ? `All selected (${num})` : `${num} selected`,
   };
 }
 
@@ -267,10 +264,8 @@ function stateLoadCallback(itemName) {
     data = localStorage.getItem(itemName);
   }
 
-  // Return if not available
-  if (data === null) {
-    return null;
-  }
+  // Return null if not available
+  if (data === null) return null;
 
   // Parse JSON string
   data = JSON.parse(data);
@@ -284,12 +279,17 @@ function stateLoadCallback(itemName) {
   data.start = 0;
   // Always start with empty search field
   data.search.search = "";
+
   // Apply loaded state to table
   return data;
 }
 
 function addFromQueryLog(domain, list) {
   const alertModal = $("#alertModal");
+
+  // Exit the function here if the Modal is already shown (multiple running interlock)
+  if (alertModal.css("display") !== "none") return;
+
   const alProcessing = alertModal.find(".alProcessing");
   const alSuccess = alertModal.find(".alSuccess");
   const alFailure = alertModal.find(".alFailure");
@@ -297,11 +297,6 @@ function addFromQueryLog(domain, list) {
   const alCustomErr = alertModal.find(".alFailure #alCustomErr");
   const alList = "#alList";
   const alDomain = "#alDomain";
-
-  // Exit the function here if the Modal is already shown (multiple running interlock)
-  if (alertModal.css("display") !== "none") {
-    return;
-  }
 
   const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
@@ -312,7 +307,7 @@ function addFromQueryLog(domain, list) {
   // add Domain to List after Modal has faded in
   alertModal.one("shown.bs.modal", () => {
     $.ajax({
-      url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
+      url: `${document.body.dataset.apiurl}/domains/${list}/exact`,
       method: "post",
       dataType: "json",
       processData: false,
@@ -368,7 +363,7 @@ function addFromQueryLog(domain, list) {
 
 // Helper functions to format the progress bars used on the Dashboard and Long-term Lists
 function addTD(content) {
-  return "<td>" + content + "</td> ";
+  return `<td>${content}</td> `;
 }
 
 function toPercent(number, fractionDigits = 0) {
@@ -410,8 +405,8 @@ function checkMessages() {
         const more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
         const title =
           data.count > 1
-            ? "There are " + data.count + " warnings." + more
-            : "There is one warning." + more;
+            ? `There are ${data.count} warnings.${more}`
+            : `There is one warning.${more}`;
 
         for (const element of warningCountEls) {
           element.title = title;
@@ -451,23 +446,13 @@ function doLogout(url) {
 }
 
 function renderTimestamp(data, type) {
-  // Display and search content
-  if (type === "display" || type === "filter") {
-    return datetime(data, false, false);
-  }
-
-  // Sorting content
-  return data;
+  // Display and search content, otherwise return raw data for sorting
+  return type === "display" || type === "filter" ? datetime(data, false, false) : data;
 }
 
 function renderTimespan(data, type) {
-  // Display and search content
-  if (type === "display" || type === "filter") {
-    return datetime(data, false, true);
-  }
-
-  // Sorting content
-  return data;
+  // Display and search content, otherwise return raw data for sorting
+  return type === "display" || type === "filter" ? datetime(data, false, true) : data;
 }
 
 // Show only the appropriate delete buttons in datatables
@@ -566,7 +551,7 @@ function listsAlert(type, items, data) {
 
     // Loop over data.processed.success and print "item"
     for (const item of Object.values(data.processed.success)) {
-      message += "\n- " + item.item;
+      message += `\n- ${item.item}`;
     }
   }
 
@@ -608,7 +593,7 @@ let waitMe = null;
 function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
   // Try to ping FTL to see if it finished restarting
   $.ajax({
-    url: document.body.dataset.apiurl + "/info/login",
+    url: `${document.body.dataset.apiurl}/info/login`,
     method: "GET",
     cache: false,
     dataType: "json",

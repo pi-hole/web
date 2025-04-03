@@ -114,7 +114,7 @@ function updateQueriesOverTime() {
 }
 
 function updateQueryTypesPie() {
-  $.getJSON(document.body.dataset.apiurl + "/stats/query_types", data => {
+  $.getJSON(`${document.body.dataset.apiurl}/stats/query_types`, data => {
     const v = [];
     const c = [];
     const k = [];
@@ -156,7 +156,7 @@ function updateQueryTypesPie() {
 }
 
 function updateClientsOverTime() {
-  $.getJSON(document.body.dataset.apiurl + "/history/clients", data => {
+  $.getJSON(`${document.body.dataset.apiurl}/history/clients`, data => {
     const clientsElement = document.getElementById("clients");
     // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
     if (jQuery.isEmptyObject(data.history)) {
@@ -177,13 +177,14 @@ function updateClientsOverTime() {
     clientsChart.data.datasets = [];
 
     for (let i = 0; i < numClients; i++) {
+      // If we ran out of colors, make a random one
+      const randomHexColor = "#" + (0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16);
+      const backgroundColor =
+        i < THEME_COLORS.length ? THEME_COLORS[i] : randomHexColor.substr(1, 6);
+
       clientsChart.data.datasets.push({
         data: [],
-        // If we ran out of colors, make a random one
-        backgroundColor:
-          i < THEME_COLORS.length
-            ? THEME_COLORS[i]
-            : "#" + (0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16).substr(1, 6),
+        backgroundColor,
         pointRadius: 0,
         pointHitRadius: 5,
         pointHoverRadius: 5,
@@ -230,13 +231,13 @@ function updateClientsOverTime() {
 
 const upstreams = {};
 function updateForwardDestinationsPie() {
-  $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", data => {
+  $.getJSON(`${document.body.dataset.apiurl}/stats/upstreams`, data => {
     const v = [];
     const c = [];
     const k = [];
+    const values = [];
     let i = 0;
     let sum = 0;
-    const values = [];
 
     // Compute total number of queries
     for (const item of data.upstreams) {
@@ -327,15 +328,13 @@ function updateTopClientsTable(blocked) {
 
     // Populate table with content
     for (const client of data.clients) {
-      // Sanitize client
-      let clientname = client.name;
-      if (clientname.length === 0) clientname = client.ip;
+      const clientName = client.name.length > 0 ? client.name : client.ip;
       const url =
         '<a href="queries?client_ip=' +
         encodeURIComponent(client.ip) +
         (blocked ? "&upstream=blocklist" : "") +
         '">' +
-        utils.escapeHtml(clientname) +
+        utils.escapeHtml(clientName) +
         "</a>";
       const percentage = (client.count / sum) * 100;
 
@@ -367,12 +366,12 @@ function updateTopDomainsTable(blocked) {
     ? $adFrequency.find("tbody:last")
     : $domainFrequency.find("tbody:last");
 
-  const api = blocked
+  const topDomainsApiUrl = blocked
     ? `${document.body.dataset.apiurl}/stats/top_domains?blocked=true`
     : `${document.body.dataset.apiurl}/stats/top_domains`;
   const style = blocked ? "queries-blocked" : "queries-permitted";
 
-  $.getJSON(api, data => {
+  $.getJSON(topDomainsApiUrl, data => {
     // Clear tables before filling them with data
     $tableContent.remove();
     const sum = blocked ? data.blocked_queries : data.total_queries;
@@ -512,8 +511,7 @@ function updateSummaryData(runOnce = false) {
 }
 
 function labelWithPercentage(tooltipLabel, skipZero = false) {
-  // Sum all queries for the current time by iterating over all keys in the
-  // current dataset
+  // Sum all queries for the current time by iterating over all values in the current dataset
   let sum = 0;
   for (const value of Object.values(tooltipLabel.parsed._stacks.y)) {
     if (value === undefined) continue;
@@ -525,6 +523,7 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   const percentage = sum > 0 ? (100 * data) / sum : 0;
 
   if (skipZero && data === 0) return undefined;
+
   return (
     tooltipLabel.dataset.label +
     ": " +
@@ -551,11 +550,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const zoomPlugin = {
-    /* Allow zooming only on the y axis */
+    // Allow zooming only on the y axis
     zoom: {
       wheel: {
         enabled: true,
-        modifierKey: "ctrl" /* Modifier key required for zooming via mouse wheel */,
+        modifierKey: "ctrl", // Modifier key required for zooming via mouse wheel
       },
       pinch: {
         enabled: true,
@@ -574,9 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update the y axis scale
         chart.zoomScale("y", { min: 0, max: zoomMax }, "default");
         // Update the y axis ticks and round values to natural numbers
-        chart.options.scales.y.ticks.callback = function (value) {
-          return value.toFixed(0);
-        };
+        chart.options.scales.y.ticks.callback = value => value.toFixed(0);
 
         // Update the top right info icon and reset zoom button depending on the
         // current zoom level
@@ -593,17 +590,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       },
     },
-    /* Allow panning only on the y axis */
+    // Allow panning only on the y axis
     pan: {
       enabled: true,
       mode: "y",
     },
     limits: {
       y: {
-        /* Users are not allowed to zoom out further than the initial range */
+        // Users are not allowed to zoom out further than the initial range
         min: "original",
         max: "original",
-        /* Users are not allowed to zoom in further than a range of 10 queries */
+        // Users are not allowed to zoom in further than a range of 10 queries
         minRange: 10,
       },
     },
@@ -646,7 +643,7 @@ document.addEventListener("DOMContentLoaded", () => {
               const m = Number.parseInt(time[2], 10) || 0;
               const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
               const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-              return "Queries from " + from + " to " + to;
+              return `Queries from ${from} to ${to}`;
             },
             label(tooltipLabel) {
               return labelWithPercentage(tooltipLabel);

@@ -19,7 +19,7 @@ function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
   } else if (!xhr.responseText.includes("Connection refused")) {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+    alert(`An unknown error occurred while loading the data.\n${xhr.responseText}`);
   } else {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   }
@@ -34,12 +34,11 @@ function getTimestamp() {
 }
 
 function valueToHex(c) {
-  const hex = Math.round(c).toString(16);
-  return hex.length === 1 ? "0" + hex : hex;
+  return Math.round(c).toString(16).padStart(2, "0");
 }
 
-function rgbToHex(values) {
-  return "#" + valueToHex(values[0]) + valueToHex(values[1]) + valueToHex(values[2]);
+function rgbToHex([r, g, b]) {
+  return `#${valueToHex(r)}${valueToHex(g)}${valueToHex(b)}`;
 }
 
 function mixColors(ratio, rgb1, rgb2) {
@@ -66,7 +65,7 @@ function deleteNetworkEntry() {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting network table entry...");
   $.ajax({
-    url: document.body.dataset.apiurl + "/network/devices/" + id,
+    url: `${document.body.dataset.apiurl}/network/devices/${id}`,
     method: "DELETE",
     success() {
       utils.enableAll();
@@ -84,7 +83,7 @@ function deleteNetworkEntry() {
       utils.showAlert(
         "error",
         "",
-        "Error while deleting network table entry with ID " + id,
+        `Error while deleting network table entry with ID ${id}`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
@@ -95,8 +94,8 @@ function deleteNetworkEntry() {
 $(() => {
   tableApi = $("#network-entries").DataTable({
     rowCallback(row, data) {
-      let color;
-      let iconClasses;
+      let color = "";
+      let iconClasses = "";
       const lastQuery = Number.parseInt(data.lastQuery, 10);
       const diff = getTimestamp() - lastQuery;
       const networkRecent = $(".network-recent").css("background-color");
@@ -125,7 +124,7 @@ $(() => {
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(6)", row).html('<i class="' + iconClasses + '"></i>');
+      $("td:eq(6)", row).html(`<i class="${iconClasses}"></i>`);
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
@@ -153,11 +152,7 @@ $(() => {
       });
 
       for (const { ip, name } of data.ips) {
-        let iptext = ip;
-
-        if (name !== null && name.length > 0) {
-          iptext = `${iptext} (${name})`;
-        }
+        const iptext = name !== null && name.length > 0 ? `${ip} (${name})` : ip;
 
         iptitles.push(iptext);
 
@@ -168,8 +163,7 @@ $(() => {
       }
 
       if (data.ips.length > MAXIPDISPLAY) {
-        // We hit the maximum above, add "..." to symbolize we would
-        // have more to show here
+        // We hit the maximum above, add "..." to symbolize we would have more to show here
         ips.push("...");
         // Show the IPs on the title when there are more than MAXIPDISPLAY items
         $("td:eq(0)", row).attr("title", iptitles.join("\n"));
@@ -181,7 +175,7 @@ $(() => {
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
         $("td:eq(1)", row).html(
-          utils.escapeHtml(data.hwaddr) + "<br>" + utils.escapeHtml(data.macVendor)
+          `${utils.escapeHtml(data.hwaddr)}<br>${utils.escapeHtml(data.macVendor)}`
         );
       }
 
@@ -195,11 +189,8 @@ $(() => {
       $(row).attr("data-id", data.id);
       $(row).attr("data-hwaddr", data.hwaddr);
       const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteNetworkEntry_' +
-        data.id +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
+        `<button type="button" class="btn btn-danger btn-xs" id="deleteNetworkEntry_${data.id}">` +
+        '<span class="far fa-trash-alt"></span></button>';
       $("td:eq(7)", row).html(button);
     },
     dom:
@@ -208,7 +199,7 @@ $(() => {
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     ajax: {
-      url: document.body.dataset.apiurl + "/network/devices",
+      url: `${document.body.dataset.apiurl}/network/devices`,
       type: "GET",
       dataType: "json",
       data: {
@@ -230,22 +221,14 @@ $(() => {
         data: "firstSeen",
         width: "8%",
         render(data, type) {
-          if (type === "display") {
-            return utils.datetime(data);
-          }
-
-          return data;
+          return type === "display" ? utils.datetime(data) : data;
         },
       },
       {
         data: "lastQuery",
         width: "8%",
         render(data, type) {
-          if (type === "display") {
-            return utils.datetime(data);
-          }
-
-          return data;
+          return type === "display" ? utils.datetime(data) : data;
         },
       },
       { data: "numQueries", width: "9%", render: $.fn.dataTable.render.text() },
@@ -283,6 +266,7 @@ $(() => {
       },
     ],
   });
+
   // Disable autocorrect in the search box
   const input = document.querySelector("input[type=search]");
   input.setAttribute("autocomplete", "off");

@@ -41,7 +41,7 @@ function fillDNSupstreams(value, servers) {
           let checkedStr = "";
           if (
             value.value.includes(address[index]) ||
-            value.value.includes(address[index] + "#53")
+            value.value.includes(`${address[index]}#53`)
           ) {
             checkedStr = "checked";
             customServers--;
@@ -60,7 +60,7 @@ function fillDNSupstreams(value, servers) {
     }
 
     // Add server name
-    row += "<td>" + element.name + "</td>";
+    row += `<td>${element.name}</td>`;
 
     // Close table row
     row += "</tr>";
@@ -113,7 +113,7 @@ function setInterfaceName(name) {
   // (same default value used by FTL)
   if (name === "") {
     $.ajax({
-      url: document.body.dataset.apiurl + "/network/gateway",
+      url: `${document.body.dataset.apiurl}/network/gateway`,
       async: false,
     })
       .done(data => {
@@ -133,13 +133,13 @@ function setInterfaceName(name) {
 function updateDNSserversTextfield(upstreams, customServers) {
   $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
   $("#custom-servers-title").text(
-    "(" + customServers + " custom server" + (customServers === 1 ? "" : "s") + " enabled)"
+    `(${customServers} custom server${customServers === 1 ? "" : "s"} enabled)`
   );
 }
 
 function processDNSConfig() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
+    url: `${document.body.dataset.apiurl}/config/dns?detailed=true`, // We need the detailed output to get the DNS server list
   })
     .done(data => {
       // Initialize the DNS upstreams

@@ -18,12 +18,8 @@ let apppwSet = false;
 function renderBool(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
-    let icon = "fa-xmark text-danger";
-    if (data === true) {
-      icon = "fa-check text-success";
-    }
-
-    return '<i class="fa-solid ' + icon + '"></i>';
+    const icon = data === true ? "fa-check text-success" : "fa-xmark text-danger";
+    return `<i class="fa-solid ${icon}"></i>`;
   }
 
   // Sorting content
@@ -33,7 +29,7 @@ function renderBool(data, type) {
 $(() => {
   apiSessionsTable = $("#APISessionsTable").DataTable({
     ajax: {
-      url: document.body.dataset.apiurl + "/auth/sessions",
+      url: `${document.body.dataset.apiurl}/auth/sessions`,
       type: "GET",
       dataSrc: "sessions",
     },
@@ -77,18 +73,15 @@ $(() => {
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.id);
+
+      const deleteTitle = data.current_session
+        ? "your current session\nWARNING: This will require you to re-login"
+        : "this session";
       const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteSession_' +
-        data.id +
-        '" data-del-id="' +
-        data.id +
-        '" title="Delete ' +
-        (data.current_session
-          ? "your current session\nWARNING: This will require you to re-login"
-          : "this session") +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
+        `<button type="button" class="btn btn-danger btn-xs" id="deleteSession_${data.id}" ` +
+        `data-del-id="${data.id}" title="Delete ${deleteTitle}">` +
+        `<span class="far fa-trash-alt"></span></button>`;
+
       $("td:eq(10)", row).html(button);
       if (data.current_session) {
         ownSessionID = data.id;
@@ -109,14 +102,14 @@ $(() => {
         icon = "fa-xmark text-danger";
       }
 
-      $("td:eq(3)", row).html('<i class="fa-solid ' + icon + '" title="' + title + '"></i>');
+      $("td:eq(3)", row).html(`<i class="fa-solid ${icon}" title="${title}"></i>`);
 
       // If x_forwarded_for is != null, the session is using a proxy
       // Show x-forwarded-for instead of the remote address in italics
       // and show the remote address in the title attribute
       if (data.x_forwarded_for !== null) {
-        $("td:eq(8)", row).html("<em>" + data.x_forwarded_for + "</em>");
-        $("td:eq(8)", row).attr("title", "Original remote address: " + data.remote_addr);
+        $("td:eq(8)", row).html(`<em>${data.x_forwarded_for}</em>`);
+        $("td:eq(8)", row).attr("title", `Original remote address: ${data.remote_addr}`);
       }
     },
     select: {
@@ -182,10 +175,8 @@ $(() => {
     },
     stateLoadCallback() {
       const data = utils.stateLoadCallback("api-sessions-table");
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
+      // Return null if no data is found
+      if (data === null) return null;
 
       // Apply loaded state to table
       return data;
@@ -244,7 +235,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
   // our own session is then triggered by the last successful deletion of
   // another session (ownSessionDelete == true, len == global deleted)
   $.ajax({
-    url: document.body.dataset.apiurl + "/auth/session/" + id,
+    url: `${document.body.dataset.apiurl}/auth/session/${id}`,
     method: "DELETE",
   })
     .done(() => {
@@ -269,7 +260,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
 
 function processWebServerConfig() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config/webserver?detailed=true",
+    url: `${document.body.dataset.apiurl}/config/webserver?detailed=true`,
   })
     .done(data => {
       setConfigValues("webserver", "webserver", data.config.webserver);
@@ -288,26 +279,18 @@ function processWebServerConfig() {
 
 $("#modal-totp").on("shown.bs.modal", () => {
   $.ajax({
-    url: document.body.dataset.apiurl + "/auth/totp",
+    url: `${document.body.dataset.apiurl}/auth/totp`,
   })
     .done(data => {
       TOTPdata = data.totp;
-      $("#totp_secret").text(data.totp.secret);
+
+      const { issuer, account, secret, algorithm, digits, period } = TOTPdata;
+      $("#totp_secret").text(secret);
+
       const qrlink =
-        "otpauth://totp/" +
-        data.totp.issuer +
-        ":" +
-        data.totp.account +
-        "?secret=" +
-        data.totp.secret +
-        "&issuer=" +
-        data.totp.issuer +
-        "&algorithm=" +
-        data.totp.algorithm +
-        "&digits=" +
-        data.totp.digits +
-        "&period=" +
-        data.totp.period;
+        `otpauth://totp/${issuer}:${account}?secret=${secret}&issuer=${issuer}` +
+        `&algorithm=${algorithm}&digits=${digits}&period=${period}`;
+
       /* eslint-disable-next-line no-new */
       new QRious({
         element: document.getElementById("qrcode"),
@@ -326,7 +309,7 @@ $("#modal-totp").on("shown.bs.modal", () => {
 let apppwhash = null;
 $("#modal-apppw").on("shown.bs.modal", () => {
   $.ajax({
-    url: document.body.dataset.apiurl + "/auth/app",
+    url: `${document.body.dataset.apiurl}/auth/app`,
   })
     .done(data => {
       apppwhash = data.app.hash;
@@ -370,11 +353,19 @@ $("#apppw_clear").on("click", () => {
 
 function setAppPassword() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config",
+    url: `${document.body.dataset.apiurl}/config`,
     type: "PATCH",
     dataType: "json",
     processData: false,
-    data: JSON.stringify({ config: { webserver: { api: { app_pwhash: apppwhash } } } }),
+    data: JSON.stringify({
+      config: {
+        webserver: {
+          api: {
+            app_pwhash: apppwhash,
+          },
+        },
+      },
+    }),
     contentType: "application/json; charset=utf-8",
   })
     .done(() => {
@@ -382,11 +373,7 @@ function setAppPassword() {
       const verb = apppwhash.length > 0 ? "enabled" : "disabled";
       const verb2 = apppwhash.length > 0 ? "will" : "may";
       alert(
-        "App password has been " +
-          verb +
-          ", you " +
-          verb2 +
-          " need to re-login to continue using the web interface."
+        `App password has been ${verb}, you ${verb2} need to re-login to continue using the web interface.`
       );
       location.reload();
     })
@@ -423,11 +410,19 @@ $("#totp_code").on("keyup", function () {
 
 function setTOTPSecret(secret) {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config",
+    url: `${document.body.dataset.apiurl}/config`,
     type: "PATCH",
     dataType: "json",
     processData: false,
-    data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
+    data: JSON.stringify({
+      config: {
+        webserver: {
+          api: {
+            totp_secret: secret,
+          },
+        },
+      },
+    }),
     contentType: "application/json; charset=utf-8",
   })
     .done(() => {
@@ -437,9 +432,7 @@ function setTOTPSecret(secret) {
       $("#modal-totp").modal("hide");
       const verb = secret.length > 0 ? "enabled" : "disabled";
       alert(
-        "Two-factor authentication has been " +
-          verb +
-          ", you will need to re-login to continue using the web interface."
+        `Two-factor authentication has been ${verb}, you will need to re-login to continue using the web interface.`
       );
       location.reload();
     })
@@ -475,7 +468,7 @@ $(() => {
   processWebServerConfig();
   // Check if TOTP is enabled
   $.ajax({
-    url: document.body.dataset.apiurl + "/auth",
+    url: `${document.body.dataset.apiurl}/auth`,
   }).done(data => {
     if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
     else $("#button-disable-totp").removeClass("hidden");

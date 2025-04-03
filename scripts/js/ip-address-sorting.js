@@ -46,9 +46,9 @@ $.extend($.fn.dataTableExt.oSort, {
         item = m[i];
 
         if (item.length === 1) {
-          x += "00" + item;
+          x += `00${item}`;
         } else if (item.length === 2) {
-          x += "0" + item;
+          x += `0${item}`;
         } else {
           x += item;
         }
@@ -71,21 +71,21 @@ $.extend($.fn.dataTableExt.oSort, {
           }
 
           case 1: {
-            xa += "000" + item;
+            xa += `000${item}`;
             count += 4;
 
             break;
           }
 
           case 2: {
-            xa += "00" + item;
+            xa += `00${item}`;
             count += 4;
 
             break;
           }
 
           case 3: {
-            xa += "0" + item;
+            xa += `0${item}`;
             count += 4;
 
             break;
@@ -119,9 +119,9 @@ $.extend($.fn.dataTableExt.oSort, {
       if (cidr.length === 2) {
         item = cidr[1];
         if (item.length === 1) {
-          x += "00" + item;
+          x += `00${item}`;
         } else if (item.length === 2) {
-          x += "0" + item;
+          x += `0${item}`;
         } else {
           x += item;
         }

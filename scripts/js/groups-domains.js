@@ -99,11 +99,11 @@ function hideSuggestDomains() {
   $("#suggest_domains").slideUp("fast");
 }
 
-function initTable() {
+globalThis.initTable = function () {
   table = $("#domainsTable").DataTable({
     processing: true,
     ajax: {
-      url: document.body.dataset.apiurl + "/domains",
+      url: `${document.body.dataset.apiurl}/domains`,
       dataSrc: "domains",
       type: "GET",
     },
@@ -129,7 +129,7 @@ function initTable() {
       {
         targets: 3,
         render(data) {
-          return data.kind + "_" + data.type;
+          return `${data.kind}_${data.type}`;
         },
       },
       {
@@ -147,7 +147,7 @@ function initTable() {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
-      const dataId = utils.hexEncode(data.domain) + "_" + data.type + "_" + data.kind;
+      const dataId = `${utils.hexEncode(data.domain)}_${data.type}_${data.kind}`;
       $(row).attr("data-id", dataId);
       // Tooltip for domain
       const tooltip =
@@ -194,18 +194,14 @@ function initTable() {
           data.kind +
           "'>"
       );
-      const typeEl = $("#type_" + dataId, row);
+      const typeEl = $(`#type_${dataId}`, row);
       typeEl.on("change", editDomain);
 
       // Initialize bootstrap-toggle for status field (enabled/disabled)
       $("td:eq(3)", row).html(
-        '<input type="checkbox" id="enabled_' +
-          dataId +
-          '"' +
-          (data.enabled ? " checked" : "") +
-          ">"
+        `<input type="checkbox" id="enabled_${dataId}"${data.enabled ? " checked" : ""}>`
       );
-      const statusEl = $("#enabled_" + dataId, row);
+      const statusEl = $(`#enabled_${dataId}`, row);
       statusEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -216,32 +212,28 @@ function initTable() {
       statusEl.on("change", editDomain);
 
       // Comment field
-      $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentEl = $("#comment_" + dataId, row);
+      $("td:eq(4)", row).html(`<input id="comment_${dataId}" class="form-control">`);
+      const commentEl = $(`#comment_${dataId}`, row);
       commentEl.val(data.comment);
       commentEl.on("change", editDomain);
 
       // Group assignment field (multi-select)
       $("td:eq(5)", row).empty();
       $("td:eq(5)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        `<select class="selectpicker" id="multiselect_${dataId}" multiple></select>`
       );
-      const selectEl = $("#multiselect_" + dataId, row);
+      const selectEl = $(`#multiselect_${dataId}`, row);
       // Add all known groups
       for (const group of groups) {
         const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($(`<option ${dataSub}/>`).val(group.id).text(group.name));
       }
 
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize bootstrap-select
-      const applyBtn = "#btn_apply_" + dataId;
+      const applyBtn = `#btn_apply_${dataId}`;
       selectEl
         // fix dropdown if it would stick out right of the viewport
         .on("show.bs.select", () => {
@@ -384,6 +376,7 @@ function initTable() {
       }
     },
   });
+
   // Disable autocorrect in the search box
   const input = document.querySelector("input[type=search]");
   if (input !== null) {
@@ -399,10 +392,11 @@ function initTable() {
 
   table.on("order.dt", () => {
     const order = table.order();
+    const $resetButton = $("#resetButton");
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").removeClass("hidden");
+      $resetButton.removeClass("hidden");
     } else {
-      $("#resetButton").addClass("hidden");
+      $resetButton.addClass("hidden");
     }
   });
 
@@ -410,7 +404,7 @@ function initTable() {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
-}
+};
 
 // Enable "filter by type" functionality, using checkboxes
 $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
@@ -420,13 +414,9 @@ $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
     })
     .get();
 
-  const typeStr = rowData.type + "/" + rowData.kind;
-  if (types.includes(typeStr)) {
-    return true;
-  }
-
-  return false;
+  return types.includes(`${rowData.type}/${rowData.kind}`);
 });
+
 $(".filter_types input:checkbox").on("change", () => {
   table.draw();
 });
@@ -440,16 +430,10 @@ function deleteDomain() {
 }
 
 function deleteDomains(encodedIds) {
-  const decodedIds = [];
-  for (const [i, encodedId] of encodedIds.entries()) {
-    // Decode domain, type, and kind and add to array
-    const parts = encodedId.split("_");
-    decodedIds[i] = {
-      item: parts[0],
-      type: parts[1],
-      kind: parts[2],
-    };
-  }
+  const decodedIds = encodedIds.map(encodedId => {
+    const [item, type, kind] = encodedId.split("_");
+    return { item, type, kind };
+  });
 
   delGroupItems("domain", decodedIds, table);
 }
@@ -483,9 +467,11 @@ function addDomain() {
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  let domains = domainEl.val().split(/\s+/);
-  // Remove empty elements
-  domains = domains.filter(el => el !== "");
+  const domains = domainEl
+    .val()
+    .split(/\s+/)
+    // Remove empty elements
+    .filter(el => el !== "");
   const domainStr = JSON.stringify(domains);
 
   utils.disableAll();
@@ -504,7 +490,7 @@ function addDomain() {
       if (domain.startsWith("*.")) domains[index] = domain.substr(2);
 
       // Transform domain into a wildcard regex
-      domains[index] = "(\\.|^)" + domains[index].replaceAll(".", "\\.") + "$";
+      domains[index] = `(\\.|^)${domains[index].replaceAll(".", "\\.")}$`;
     }
 
     kind = "regex";
@@ -514,7 +500,7 @@ function addDomain() {
   const type = action === "add_deny" ? "deny" : "allow";
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/domains/" + type + "/" + kind,
+    url: `${document.body.dataset.apiurl}/domains/${type}/${kind}`,
     method: "post",
     dataType: "json",
     processData: false,
@@ -552,23 +538,19 @@ function editDomain() {
   const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const domain = tr.attr("data-id");
-  const newTypestr = tr.find("#type_" + domain).val();
-  const oldTypeStr = tr.find("#old_type_" + domain).val();
-  const enabled = tr.find("#enabled_" + domain).is(":checked");
-  const comment = tr.find("#comment_" + domain).val();
+  const newTypestr = tr.find(`#type_${domain}`).val();
+  const oldTypeStr = tr.find(`#old_type_${domain}`).val();
+  const enabled = tr.find(`#enabled_${domain}`).is(":checked");
+  const comment = tr.find(`#comment_${domain}`).val();
   // Convert list of string integers to list of integers using map
-  const groups = tr
-    .find("#multiselect_" + domain)
-    .val()
-    .map(Number);
+  const groups = tr.find(`#multiselect_${domain}`).val().map(Number);
 
-  const oldType = oldTypeStr.split("/")[0];
-  const oldKind = oldTypeStr.split("/")[1];
+  const [oldType, oldKind] = oldTypeStr.split("/");
 
   let done = "edited";
   let notDone = "editing";
   switch (elem) {
-    case "enabled_" + domain:
+    case `enabled_${domain}`:
       if (!enabled) {
         done = "disabled";
         notDone = "disabling";
@@ -578,37 +560,33 @@ function editDomain() {
       }
 
       break;
-    case "name_" + domain:
+    case `name_${domain}`:
       done = "edited name of";
       notDone = "editing name of";
       break;
-    case "comment_" + domain:
+    case `comment_${domain}`:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    case "type_" + domain:
+    case `type_${domain}`:
       done = "edited type of";
       notDone = "editing type of";
       break;
-    case "multiselect_" + domain:
+    case `multiselect_${domain}`:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element (" + elem + ") or invalid data-id!");
+      alert(`bad element (${elem}) or invalid data-id!`);
       return;
   }
 
   utils.disableAll();
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
   utils.showAlert("info", "", "Editing domain...", domainDecoded);
+  const url = `${document.body.dataset.apiurl}/domains/${newTypestr}/${encodeURIComponent(domainDecoded)}`;
   $.ajax({
-    url:
-      document.body.dataset.apiurl +
-      "/domains/" +
-      newTypestr +
-      "/" +
-      encodeURIComponent(domainDecoded),
+    url,
     method: "put",
     dataType: "json",
     processData: false,
@@ -631,7 +609,7 @@ function editDomain() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " domain " + domainDecoded,
+        `Error while ${notDone} domain ${domainDecoded}`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console

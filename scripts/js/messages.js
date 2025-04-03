@@ -16,10 +16,10 @@ $(() => {
   const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  const url =
-    document.body.dataset.apiurl +
-    "/info/messages" +
-    (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
+
+  const url = `${document.body.dataset.apiurl}/info/messages${
+    ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""
+  }`;
   table = $("#messagesTable").DataTable({
     ajax: {
       url,
@@ -62,11 +62,7 @@ $(() => {
     rowCallback(row, data) {
       $(row).attr("data-id", data.id);
       const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_' +
-        data.id +
-        '" data-del-id="' +
-        data.id +
-        '">' +
+        `<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_${data.id}" data-del-id="${data.id}">` +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
       $("td:eq(4)", row).html(button);
@@ -134,9 +130,7 @@ $(() => {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("messages-table");
       // Return if not available
-      if (data === null) {
-        return null;
-      }
+      if (data === null) return null;
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
@@ -161,10 +155,10 @@ function deleteMessage() {
 function delMsg(id) {
   id = Number.parseInt(id, 10);
   utils.disableAll();
-  toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
+  toasts[id] = utils.showAlert("info", "", "Deleting message...", `ID: ${id}`, null);
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/info/messages/" + id,
+    url: `${document.body.dataset.apiurl}/info/messages/${id}`,
     method: "DELETE",
   })
     .done(response => {
@@ -174,7 +168,7 @@ function delMsg(id) {
           "success",
           "far fa-trash-alt",
           "Successfully deleted message",
-          "ID: " + id,
+          `ID: ${id}`,
           toasts[id]
         );
         table.row(id).remove();
@@ -184,7 +178,7 @@ function delMsg(id) {
         utils.showAlert(
           "error",
           "",
-          "Error while deleting message: " + id,
+          `Error while deleting message: ${id}`,
           response.message,
           toasts[id]
         );
@@ -202,7 +196,7 @@ function delMsg(id) {
       utils.showAlert(
         "error",
         "",
-        "Error while deleting message: " + id,
+        `Error while deleting message: ${id}`,
         jqXHR.responseText,
         toasts[id]
       );

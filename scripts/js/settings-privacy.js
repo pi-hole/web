@@ -11,7 +11,7 @@
 
 function getConfig() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config/?detailed=true",
+    url: `${document.body.dataset.apiurl}/config/?detailed=true`,
   })
     .done(data => {
       setConfigValues("", "", data.config);

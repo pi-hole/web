@@ -39,7 +39,7 @@ function importZIP() {
   const formData = new FormData();
   formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
-  fetch(document.body.dataset.apiurl + "/teleporter", {
+  fetch(`${document.body.dataset.apiurl}/teleporter`, {
     method: "POST",
     body: formData,
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
@@ -53,18 +53,16 @@ function importZIP() {
 
       if ("error" in data) {
         $("#modal-import-error").show();
-        $("#modal-import-error-title").text("Error: " + data.error.message);
+        $("#modal-import-error-title").text(`Error: ${data.error.message}`);
         if (data.error.hint !== null) $("#modal-import-error-message").text(data.error.hint);
       } else if ("files" in data) {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
-        let text = "<p>Processed files:</p><ul>";
-        for (const file of data.files) {
-          text += "<li>" + utils.escapeHtml(file) + "</li>";
-        }
 
-        text += "</ul>";
-        $("#modal-import-success-message").html(text);
+        const fileList = data.files.map(file => `<li>${utils.escapeHtml(file)}</li>`);
+        const html = `<p>Processed files:</p><ul>${fileList.join("")}</ul>`;
+
+        $("#modal-import-success-message").html(html);
         $("#modal-import-gravity").show();
       }
 
@@ -79,7 +77,7 @@ function importZIP() {
 // Inspired by https://stackoverflow.com/a/59576416/2087442
 $("#GETTeleporter").on("click", () => {
   $.ajax({
-    url: document.body.dataset.apiurl + "/teleporter",
+    url: `${document.body.dataset.apiurl}/teleporter`,
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
     method: "GET",
     xhrFields: {

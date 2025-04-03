@@ -22,94 +22,77 @@ Chart.defaults.set("plugins.deferred", {
 });
 
 function updateCachePie(data) {
-  const v = [];
-  const c = [];
-  const k = [];
-  let i = 0;
-
   // Compute total number of cache entries
   cacheEntries = 0;
   for (const item of Object.keys(data)) {
-    cacheEntries += data[item].valid;
-    cacheEntries += data[item].stale;
+    cacheEntries += data[item].valid + data[item].stale;
   }
 
-  // Sort data by value, put OTHER always as last
-  const sorted = Object.keys(data).sort((a, b) => {
-    if (a === "OTHER") {
-      return 1;
-    }
+  // Create sorted chart data object with OTHER always last
+  const chartData = Object.fromEntries(
+    Object.entries(data).sort(([keyA, valA], [keyB, valB]) => {
+      if (keyA === "OTHER") return 1;
+      if (keyB === "OTHER") return -1;
+      return valB.valid + valB.stale - (valA.valid + valA.stale);
+    })
+  );
 
-    if (b === "OTHER") {
-      return -1;
-    }
+  // Add empty space to chart data
+  chartData.empty = {
+    valid: cacheSize - cacheEntries,
+    stale: 0,
+  };
 
-    return data[b].valid + data[b].stale - (data[a].valid + data[a].stale);
-  });
-
-  // Rebuild data object
-  const tmp = {};
-  for (const item of sorted) {
-    tmp[item] = data[item];
-  }
-
-  data = tmp;
-
-  // Add empty space to chart
-  data.empty = {};
-  data.empty.valid = cacheSize - cacheEntries;
+  const values = [];
+  const colors = [];
+  const labels = [];
 
   // Fill chart with data
-  for (const [item, value] of Object.entries(data)) {
+  let i = 0;
+  for (const [item, value] of Object.entries(chartData)) {
     if (value.valid > 0) {
-      v.push((100 * value.valid) / cacheSize);
-      c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
-      k.push(item);
+      values.push((100 * value.valid) / cacheSize);
+      colors.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
+      labels.push(item);
     }
 
     if (value.stale > 0) {
       // There are no stale empty entries
-      v.push((100 * value.stale) / cacheSize);
-      c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
-      k.push(item + " (stale)");
+      values.push((100 * value.stale) / cacheSize);
+      colors.push(THEME_COLORS[i++ % THEME_COLORS.length]);
+      labels.push(`${item} (stale)`);
     }
   }
 
   // Build a single dataset with the data to be pushed
-  const dd = { data: v, backgroundColor: c };
-  // and push it at once
-  cachePieChart.data.datasets[0] = dd;
-  cachePieChart.data.labels = k;
+  cachePieChart.data = {
+    datasets: [
+      {
+        data: values,
+        backgroundColor: colors,
+      },
+    ],
+    labels,
+  };
 
   // Passing 'none' will prevent rotation animation for further updates
-  //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+  // https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
   cachePieChart.update("none");
 }
 
 function updateHostInfo() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/info/host",
+    url: `${document.body.dataset.apiurl}/info/host`,
   })
-    .done(data => {
-      const host = data.host;
-      const uname = host.uname;
-      if (uname.domainname !== "(none)") {
-        $("#sysinfo-hostname").text(uname.nodename + "." + uname.domainname);
-      } else {
-        $("#sysinfo-hostname").text(uname.nodename);
-      }
+    .done(({ host }) => {
+      const { uname } = host;
+      const hostname =
+        uname.domainname !== "(none)" ? `${uname.nodename}.${uname.domainname}` : uname.nodename;
+      const kernel = `${uname.sysname} ${uname.nodename} ${uname.release} ${uname.version} ${uname.machine}`;
 
-      $("#sysinfo-kernel").text(
-        uname.sysname +
-          " " +
-          uname.nodename +
-          " " +
-          uname.release +
-          " " +
-          uname.version +
-          " " +
-          uname.machine
-      );
+      $("#sysinfo-hostname").text(hostname);
+      $("#sysinfo-kernel").text(kernel);
+
       clearTimeout(hostinfoTimer);
       hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
     })
@@ -122,31 +105,31 @@ function updateHostInfo() {
 // to the corresponding element (add percentage for DNS replies)
 function setMetrics(data, prefix) {
   const cacheData = {};
+
   for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
-      // Create table row for each DNS cache entry
-      // (if table exists)
+      cacheData[val.name] = val.count;
+
+      // Create table row for each DNS cache entry (if table exists)
       if ($("#dns-cache-table").length > 0) {
         const name =
           val.name !== "OTHER"
-            ? "Valid " + (val.name !== null ? val.name : "TYPE " + val.type)
+            ? `Valid ${val.name !== null ? val.name : `TYPE ${val.type}`}`
             : "Other valid";
-        const tr = "<tr><th>" + name + " records in cache:</th><td>" + val.count + "</td></tr>";
+        const tr = `<tr><th>${name} records in cache:</th><td>${val.count}</td></tr>`;
         // Append row to DNS cache table
         $("#dns-cache-table").append(tr);
       }
-
-      cacheData[val.name] = val.count;
     } else if (typeof val === "object") {
-      setMetrics(val, prefix + key + "-");
+      setMetrics(val, `${prefix + key}-`);
     } else if (prefix === "sysinfo-dns-replies-" && data.sum !== 0) {
       // Compute and display percentage of DNS replies in addition to the absolute value
       const lval = val.toLocaleString();
       const percent = (100 * val) / data.sum;
-      $("#" + prefix + key).text(lval + " (" + percent.toFixed(1) + "%)");
+      $(`#${prefix}${key}`).text(`${lval} (${percent.toFixed(1)}%)`);
     } else {
       const lval = val.toLocaleString();
-      $("#" + prefix + key).text(lval);
+      $(`#${prefix}${key}`).text(lval);
     }
   }
 
@@ -160,10 +143,9 @@ let metricsTimer = null;
 
 function updateMetrics() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/info/metrics",
+    url: `${document.body.dataset.apiurl}/info/metrics`,
   })
-    .done(data => {
-      const metrics = data.metrics;
+    .done(({ metrics }) => {
       $("#dns-cache-table").empty();
 
       // Set global cache size
@@ -173,7 +155,7 @@ function updateMetrics() {
       setMetrics(metrics, "sysinfo-");
 
       $("#cache-utilization").text(
-        cacheEntries.toLocaleString() + " (" + ((100 * cacheEntries) / cacheSize).toFixed(1) + "%)"
+        `${cacheEntries.toLocaleString()} (${((100 * cacheEntries) / cacheSize).toFixed(1)}%)`
       );
 
       $("div[id^='sysinfo-metrics-overlay']").hide();
@@ -186,22 +168,23 @@ function updateMetrics() {
 }
 
 function showQueryLoggingButton(state) {
+  const $btn = $("#loggingButton");
   if (state) {
-    $("#loggingButton").addClass("btn-warning");
-    $("#loggingButton").removeClass("btn-success");
-    $("#loggingButton").text("Disable query logging");
-    $("#loggingButton").data("state", "enabled");
+    $btn.addClass("btn-warning");
+    $btn.removeClass("btn-success");
+    $btn.text("Disable query logging");
+    $btn.data("state", "enabled");
   } else {
-    $("#loggingButton").addClass("btn-success");
-    $("#loggingButton").removeClass("btn-warning");
-    $("#loggingButton").text("Enable query logging");
-    $("#loggingButton").data("state", "disabled");
+    $btn.addClass("btn-success");
+    $btn.removeClass("btn-warning");
+    $btn.text("Enable query logging");
+    $btn.data("state", "disabled");
   }
 }
 
 function getLoggingButton() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config/dns/queryLogging",
+    url: `${document.body.dataset.apiurl}/config/dns/queryLogging`,
   })
     .done(data => {
       showQueryLoggingButton(data.config.dns.queryLogging);
@@ -219,7 +202,7 @@ $(".confirm-restartdns").confirm({
   title: "Confirmation required",
   confirm() {
     $.ajax({
-      url: document.body.dataset.apiurl + "/action/restartdns",
+      url: `${document.body.dataset.apiurl}/action/restartdns`,
       type: "POST",
     }).fail(data => {
       apiFailure(data);
@@ -243,7 +226,7 @@ $(".confirm-flushlogs").confirm({
   title: "Confirmation required",
   confirm() {
     $.ajax({
-      url: document.body.dataset.apiurl + "/action/flush/logs",
+      url: `${document.body.dataset.apiurl}/action/flush/logs`,
       type: "POST",
     }).fail(data => {
       apiFailure(data);
@@ -267,7 +250,7 @@ $(".confirm-flusharp").confirm({
   title: "Confirmation required",
   confirm() {
     $.ajax({
-      url: document.body.dataset.apiurl + "/action/flush/arp",
+      url: `${document.body.dataset.apiurl}/action/flush/arp`,
       type: "POST",
     }).fail(data => {
       apiFailure(data);
@@ -297,7 +280,7 @@ $("#loggingButton").confirm({
     data.config.dns = {};
     data.config.dns.queryLogging = $("#loggingButton").data("state") !== "enabled";
     $.ajax({
-      url: document.body.dataset.apiurl + "/config/dns/queryLogging",
+      url: `${document.body.dataset.apiurl}/config/dns/queryLogging`,
       type: "PATCH",
       dataType: "json",
       processData: false,
@@ -369,10 +352,9 @@ $(() => {
   });
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/network/gateway",
+    url: `${document.body.dataset.apiurl}/network/gateway`,
   })
-    .done(data => {
-      const gateway = data.gateway;
+    .done(({ gateway }) => {
       // Get first object in gateway that has family == "inet"
       const inet = gateway.find(obj => obj.family === "inet");
       // Get first object in gateway that has family == "inet6"

@@ -60,11 +60,11 @@ function initDateRangePicker() {
       showDropdowns: true,
       autoUpdateInput: true,
     },
-    (startt, endt) => {
+    (startTime, endTime) => {
       // Update global variables
       // Convert milliseconds (JS) to seconds (API)
-      from = moment(startt).utc().valueOf() / 1000;
-      until = moment(endt).utc().valueOf() / 1000;
+      from = moment(startTime).utc().valueOf() / 1000;
+      until = moment(endTime).utc().valueOf() / 1000;
     }
   );
 }
@@ -73,7 +73,7 @@ function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
   } else {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+    alert(`An unknown error occurred while loading the data.\n${xhr.responseText}`);
   }
 
   $("#all-queries_processing").hide();
@@ -83,8 +83,8 @@ function handleAjaxError(xhr, textStatus) {
 
 function parseQueryStatus(data) {
   // Parse query status
-  let fieldtext;
-  let buttontext;
+  let fieldText = "";
+  let buttonHtml = "";
   let icon = null;
   let colorClass = false;
   let blocked = false;
@@ -93,76 +93,72 @@ function parseQueryStatus(data) {
     case "GRAVITY":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (gravity)";
-      buttontext =
+      fieldText = "Blocked (gravity)";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       blocked = true;
       break;
     case "FORWARDED":
       colorClass = "text-green";
       icon = "fa-solid fa-cloud-download-alt";
-      fieldtext =
+      fieldText =
         (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
         data.upstream;
-      buttontext =
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "CACHE":
       colorClass = "text-green";
       icon = "fa-solid fa-database";
-      fieldtext = "Served from cache";
-      buttontext =
+      fieldText = "Served from cache";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "REGEX":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (regex)";
-      buttontext =
+      fieldText = "Blocked (regex)";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       blocked = true;
       break;
     case "DENYLIST":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (exact)";
-      buttontext =
+      fieldText = "Blocked (exact)";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       blocked = true;
       break;
     case "EXTERNAL_BLOCKED_IP":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (external, IP)";
-      buttontext = "";
+      fieldText = "Blocked (external, IP)";
       blocked = true;
       break;
     case "EXTERNAL_BLOCKED_NULL":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (external, NULL)";
-      buttontext = "";
+      fieldText = "Blocked (external, NULL)";
       blocked = true;
       break;
     case "EXTERNAL_BLOCKED_NXRA":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (external, NXRA)";
-      buttontext = "";
+      fieldText = "Blocked (external, NXRA)";
       blocked = true;
       break;
     case "QUERY_EXTERNAL_BLOCKED_EDE15":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (external, EDE15)";
-      buttontext = "";
+      fieldText = "Blocked (external, EDE15)";
       blocked = true;
       break;
     case "GRAVITY_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (gravity, CNAME)";
-      buttontext =
+      fieldText = "Blocked (gravity, CNAME)";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
       blocked = true;
@@ -170,8 +166,8 @@ function parseQueryStatus(data) {
     case "REGEX_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (regex denied, CNAME)";
-      buttontext =
+      fieldText = "Blocked (regex denied, CNAME)";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
       blocked = true;
@@ -179,8 +175,8 @@ function parseQueryStatus(data) {
     case "DENYLIST_CNAME":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = "Blocked (exact denied, CNAME)";
-      buttontext =
+      fieldText = "Blocked (exact denied, CNAME)";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
       blocked = true;
@@ -188,49 +184,45 @@ function parseQueryStatus(data) {
     case "RETRIED":
       colorClass = "text-green";
       icon = "fa-solid fa-redo"; // fa-repeat
-      fieldtext = "Retried";
-      buttontext = "";
+      fieldText = "Retried";
       break;
     case "RETRIED_DNSSEC":
       colorClass = "text-green";
       icon = "fa-solid fa-redo"; // fa-repeat
-      fieldtext = "Retried (ignored)";
-      buttontext = "";
+      fieldText = "Retried (ignored)";
       break;
     case "IN_PROGRESS":
       colorClass = "text-green";
       icon = "fa-solid fa-hourglass-half";
-      fieldtext = "Already forwarded, awaiting reply";
-      buttontext =
+      fieldText = "Already forwarded, awaiting reply";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "CACHE_STALE":
       colorClass = "text-green";
       icon = "fa-solid fa-infinity";
-      fieldtext = "Served by cache optimizer";
-      buttontext =
+      fieldText = "Served by cache optimizer";
+      buttonHtml =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "SPECIAL_DOMAIN":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = data.status;
-      buttontext = "";
+      fieldText = data.status;
       blocked = true;
       break;
     default:
       colorClass = "text-orange";
       icon = "fa-solid fa-question";
-      fieldtext = data.status;
-      buttontext = "";
+      fieldText = data.status;
   }
 
   const matchText =
     colorClass === "text-green" ? "allowed" : colorClass === "text-red" ? "blocked" : "matched";
 
   return {
-    fieldtext,
-    buttontext,
+    fieldText,
+    buttonHtml,
     colorClass,
     icon,
     isCNAME,
@@ -239,21 +231,23 @@ function parseQueryStatus(data) {
   };
 }
 
-function formatReplyTime(replyTime, type) {
-  if (type === "display") {
-    // Units:
-    //  - seconds if replytime >= 1 second
-    //  - milliseconds if reply time >= 100 µs
-    //  - microseconds otherwise
-    return replyTime < 1e-4
-      ? (1e6 * replyTime).toFixed(1) + " µs"
-      : replyTime < 1
-        ? (1e3 * replyTime).toFixed(1) + " ms"
-        : replyTime.toFixed(1) + " s";
+function formatReplyTime(time, type) {
+  // If type is not display, return the number itself (for sorting and searching)
+  if (type !== "display") return time;
+
+  // Units:
+  //  - seconds if time >= 1 second
+  //  - milliseconds if time >= 100 µs
+  //  - microseconds otherwise
+  if (time < 1e-4) {
+    return `${(1_000_000 * time).toFixed(1)} µs`;
   }
 
-  // else: return the number itself (for sorting and searching)
-  return replyTime;
+  if (time < 1) {
+    return `${(1000 * time).toFixed(1)} ms`;
+  }
+
+  return `${time.toFixed(1)} s`;
 }
 
 // Parse DNSSEC status
@@ -261,6 +255,7 @@ function parseDNSSEC(data) {
   let icon = ""; // Icon to display
   let color = ""; // Class to apply to text
   let text = data.dnssec; // Text to display
+
   switch (text) {
     case "SECURE":
       icon = "fa-solid fa-lock";
@@ -271,9 +266,6 @@ function parseDNSSEC(data) {
       color = "text-orange";
       break;
     case "BOGUS":
-      icon = "fa-solid fa-exclamation-triangle";
-      color = "text-red";
-      break;
     case "ABANDONED":
       icon = "fa-solid fa-exclamation-triangle";
       color = "text-red";
@@ -281,28 +273,19 @@ function parseDNSSEC(data) {
     default:
       // No DNSSEC or UNKNOWN
       text = "N/A";
-      color = "";
-      icon = "";
   }
 
   return { text, icon, color };
 }
 
 function formatInfo(data) {
-  // Parse Query Status
-  const dnssec = parseDNSSEC(data);
   const queryStatus = parseQueryStatus(data);
   const divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
   let statusInfo = "";
   if (queryStatus.colorClass !== false) {
     statusInfo =
-      divStart +
-      "Query Status:&nbsp;&nbsp;" +
-      '<strong><span class="' +
-      queryStatus.colorClass +
-      '">' +
-      queryStatus.fieldtext +
-      "</span></strong></div>";
+      `${divStart}Query Status:&nbsp;&nbsp;` +
+      `<strong class="${queryStatus.colorClass}">${queryStatus.fieldText}</strong></div>`;
   }
 
   let listInfo = "";
@@ -315,89 +298,56 @@ function formatInfo(data) {
     listInfo = `${divStart}Query was ${queryStatus.matchText}${searchLink}</div>`;
   }
 
-  let cnameInfo = "";
-  if (queryStatus.isCNAME) {
-    cnameInfo =
-      divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
-  }
+  const cnameInfo = queryStatus.isCNAME
+    ? `${divStart}Query was blocked during CNAME inspection of&nbsp;&nbsp;${data.cname}</div>`
+    : "";
 
   // Show TTL if applicable
-  let ttlInfo = "";
-  if (data.ttl > 0) {
-    ttlInfo =
-      divStart +
-      "Time-to-live (TTL):&nbsp;&nbsp;" +
-      moment.duration(data.ttl, "s").humanize() +
-      " (" +
-      data.ttl +
-      "s)</div>";
-  }
+  const ttlInfo =
+    data.ttl > 0
+      ? `${divStart}Time-to-live (TTL):&nbsp;&nbsp;${moment.duration(data.ttl, "s").humanize()} (${data.ttl}s)</div>`
+      : "";
 
   // Show client information, show hostname only if available
   const ipInfo =
     data.client.name !== null && data.client.name.length > 0
-      ? utils.escapeHtml(data.client.name) + " (" + data.client.ip + ")"
+      ? `${utils.escapeHtml(data.client.name)} (${data.client.ip})`
       : data.client.ip;
-  const clientInfo = divStart + "Client:&nbsp;&nbsp;<strong>" + ipInfo + "</strong></div>";
+  const clientInfo = `${divStart}Client:&nbsp;&nbsp;<strong>${ipInfo}</strong></div>`;
 
   // Show DNSSEC status if applicable
-  let dnssecInfo = "";
-  if (dnssec.color !== "") {
-    dnssecInfo =
-      divStart +
-      'DNSSEC status:&nbsp;&nbsp;<strong><span class="' +
-      dnssec.color +
-      '">' +
-      dnssec.text +
-      "</span></strong></div>";
-  }
+  const dnssec = parseDNSSEC(data);
+  const dnssecInfo =
+    dnssec.color !== ""
+      ? `${divStart}DNSSEC status:&nbsp;&nbsp;<strong class="${dnssec.color}">${dnssec.text}</strong></div>`
+      : "";
 
   // Show long-term database information if applicable
-  let dbInfo = "";
-  if (data.dbid !== false) {
-    dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
-  }
+  const dbInfo = data.dbid !== false ? `${divStart}Database ID:&nbsp;&nbsp;${data.id}</div>` : "";
 
   // Always show reply info, add reply delay if applicable
-  let replyInfo = "";
-  replyInfo =
+  const replyInfo =
     data.reply.type !== "UNKNOWN"
-      ? divStart + "Reply:&nbsp;&nbsp;" + data.reply.type + "</div>"
-      : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
+      ? `${divStart}Reply:&nbsp;&nbsp;${data.reply.type}</div>`
+      : `${divStart}Reply:&nbsp;&nbsp;No reply received</div>`;
 
   // Show extended DNS error if applicable
-  let edeInfo = "";
-  if (data.ede !== null && data.ede.text !== null) {
-    edeInfo = divStart + "Extended DNS error:&nbsp;&nbsp;<strong";
-    if (dnssec.color !== "") {
-      edeInfo += ' class="' + dnssec.color + '"';
-    }
+  const edeInfo =
+    data.ede && data.ede.text
+      ? `${divStart}Extended DNS error:&nbsp;&nbsp;<strong${dnssec.color ? ` class="${dnssec.color}"` : ""}>${data.ede.text}</strong></div>`
+      : "";
 
-    edeInfo += ">" + data.ede.text + "</strong></div>";
-  }
+  const receiveTime = moment.unix(data.time).format("Y-MM-DD HH:mm:ss.SSS z");
 
   // Compile extra info for displaying
   return (
-    '<div class="row">' +
-    divStart +
-    "Query received on:&nbsp;&nbsp;" +
-    moment.unix(data.time).format("Y-MM-DD HH:mm:ss.SSS z") +
-    "</div>" +
-    clientInfo +
-    dnssecInfo +
-    edeInfo +
-    statusInfo +
-    cnameInfo +
-    listInfo +
-    ttlInfo +
-    replyInfo +
-    dbInfo +
-    "</div>"
+    `<div class="row">${divStart}Query received on:&nbsp;&nbsp;${receiveTime}</div>` +
+    `${clientInfo}${dnssecInfo}${edeInfo}${statusInfo}${cnameInfo}${listInfo}${ttlInfo}${replyInfo}${dbInfo}</div>`
   );
 }
 
 function addSelectSuggestion(name, dict, data) {
-  const obj = $("#" + name + "_filter");
+  const obj = $(`#${name}_filter`);
   let value = "";
   obj.empty();
 
@@ -427,7 +377,7 @@ function addSelectSuggestion(name, dict, data) {
 
 function getSuggestions(dict) {
   $.get(
-    document.body.dataset.apiurl + "/queries/suggestions",
+    `${document.body.dataset.apiurl}/queries/suggestions`,
     data => {
       for (const filter of Object.values(filters)) {
         addSelectSuggestion(filter, dict, data.suggestions[filter]);
@@ -441,15 +391,15 @@ function parseFilters() {
   return Object.fromEntries(filters.map(filter => [filter, $(`#${filter}_filter`).val()]));
 }
 
-function filterOn(param, dict) {
-  const typ = typeof dict[param];
-  return param in dict && (typ === "number" || (typ === "string" && dict[param].length > 0));
-}
-
 function getAPIURL(filters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
   for (const [key, filter] of Object.entries(filters)) {
-    if (filterOn(key, filters)) {
+    const isKeyInFilters =
+      key in filters &&
+      (typeof filters[key] === "number" ||
+        (typeof filters[key] === "string" && filters[key].length > 0));
+
+    if (isKeyInFilters) {
       if (!apiurl.endsWith("?")) apiurl += "&";
       apiurl += `${key}=${encodeURIComponent(filter)}`;
     }
@@ -536,11 +486,9 @@ $(() => {
         data: "time",
         width: "10%",
         render(data, type) {
-          if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
-          }
-
-          return data;
+          return type === "display"
+            ? moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z")
+            : data;
         },
         searchable: false,
       },
@@ -568,14 +516,9 @@ $(() => {
       const dnssec = parseDNSSEC(data);
 
       if (querystatus.icon !== false) {
+        const classes = `${querystatus.icon} ${querystatus.colorClass}`;
         $("td:eq(1)", row).html(
-          "<i class='fa fa-fw " +
-            querystatus.icon +
-            " " +
-            querystatus.colorClass +
-            "' title='" +
-            utils.escapeHtml(querystatus.fieldtext) +
-            "'></i>"
+          `<i class="fa fa-fw ${classes}" title="${utils.escapeHtml(querystatus.fieldText)}"></i>`
         );
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
@@ -588,15 +531,7 @@ $(() => {
       let domain = data.domain === 0 ? "." : data.domain;
 
       // Prefix colored DNSSEC icon to domain text
-      let dnssecIcon = "";
-      dnssecIcon =
-        '<i class="mr-2 fa fa-fw ' +
-        dnssec.icon +
-        " " +
-        dnssec.color +
-        '" title="DNSSEC: ' +
-        dnssec.text +
-        '"></i>';
+      const dnssecIcon = `<i class="mr-2 fa fa-fw ${dnssec.icon} ${dnssec.color}" title="DNSSEC: ${dnssec.text}"></i>`;
 
       // Escape HTML in domain
       domain = dnssecIcon + utils.escapeHtml(domain);
@@ -604,7 +539,7 @@ $(() => {
       if (querystatus.isCNAME) {
         // Add domain in CNAME chain causing the query to have been blocked
         data.cname = utils.escapeHtml(data.cname);
-        $("td:eq(3)", row).html(domain + "\n(blocked " + data.cname + ")");
+        $("td:eq(3)", row).html(`${domain}\n(blocked ${data.cname})`);
       } else {
         $("td:eq(3)", row).html(domain);
       }
@@ -621,8 +556,8 @@ $(() => {
         $("td:eq(5)", row).html('<i class="fa fa-times"></i>');
       }
 
-      if (querystatus.buttontext !== false) {
-        $("td:eq(6)", row).html(querystatus.buttontext);
+      if (querystatus.buttonHtml !== false) {
+        $("td:eq(6)", row).html(querystatus.buttonHtml);
       }
     },
     initComplete() {
@@ -667,7 +602,7 @@ $(() => {
     }
     // else: no (colorful) button, so nothing to do
 
-    // Prevent tr click even tto be triggered for row from opening/closing
+    // Prevent tr click even to be triggered for row from opening/closing
     event.stopPropagation();
   });
 
@@ -707,7 +642,7 @@ $(() => {
 });
 
 function refreshTable() {
-  // Set cursor to NULL so we pick up newer queries
+  // Set cursor to null so we pick up newer queries
   cursor = null;
 
   // Clear table

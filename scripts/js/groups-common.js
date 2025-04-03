@@ -12,20 +12,14 @@
 let groups = [];
 
 function populateGroupSelect(selectEl) {
-  if (selectEl.length === 0) {
-    // No select element found, return
-    return;
-  }
+  // No select element found, return early
+  if (selectEl.length === 0) return;
 
   // Add all known groups
   for (const group of groups) {
     const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
-    selectEl.append(
-      $("<option " + dataSub + "/>")
-        .val(group.id)
-        .text(group.name)
-    );
+    selectEl.append($(`<option ${dataSub}/>`).val(group.id).text(group.name));
   }
 
   // Initialize selectpicker
@@ -35,10 +29,9 @@ function populateGroupSelect(selectEl) {
   selectEl.selectpicker("refresh");
 }
 
-// eslint-disable-next-line no-unused-vars
-function getGroups(groupSelector) {
+globalThis.getGroups = function () {
   $.ajax({
-    url: document.body.dataset.apiurl + "/groups",
+    url: `${document.body.dataset.apiurl}/groups`,
     type: "GET",
     dataType: "json",
     success(data) {
@@ -58,10 +51,9 @@ function getGroups(groupSelector) {
       apiFailure(data);
     },
   });
-}
+};
 
-// eslint-disable-next-line no-unused-vars
-function processGroupResult(data, type, done, notDone) {
+globalThis.processGroupResult = function (data, type, done, notDone) {
   // Loop over data.processed.success and show toasts
   for (const item of data.processed.success) {
     utils.showAlert("success", "fas fa-pencil-alt", `Successfully ${done} ${type}`, item);
@@ -72,35 +64,32 @@ function processGroupResult(data, type, done, notDone) {
     console.log(error); // eslint-disable-line no-console
     utils.showAlert("error", "", `Error while ${notDone} ${type} ${error.item}`, error.error);
   }
-}
+};
 
-// eslint-disable-next-line no-unused-vars
-function delGroupItems(type, ids, table, listType = undefined) {
+globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  const url = document.body.dataset.apiurl + "/" + type + "s:batchDelete";
+  const url = `${document.body.dataset.apiurl}/${type}s:batchDelete`;
 
-  // use utils.hexDecode() to decode all clients
-  let idstring = "";
-  for (const id of ids) {
-    id.item = utils.hexDecode(id.item);
-    idstring += id.item + ", ";
-  }
-
-  // Remove last comma and space from idstring
-  idstring = idstring.substring(0, idstring.length - 2);
+  // Decode all items and create a comma-separated string
+  const idString = ids
+    .map(id => {
+      id.item = utils.hexDecode(id.item);
+      return id.item;
+    })
+    .join(", ");
 
   // Append "s" to type if more than one item is deleted
   type += ids.length > 1 ? "s" : "";
 
   // Prepend listType to type if it is not undefined
   if (listType !== undefined) {
-    type = listType + " " + type;
+    type = `${listType} ${type}`;
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting " + ids.length + " " + type + "...", idstring);
+  utils.showAlert("info", "", `Deleting ${ids.length} ${type}...`, idString);
 
   $.ajax({
     url,
@@ -110,7 +99,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
   })
     .done(() => {
       utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted " + type, idstring);
+      utils.showAlert("success", "far fa-trash-alt", `Successfully deleted ${type}`, idString);
       table.ajax.reload(null, false);
 
       // Clear selection after deletion
@@ -123,7 +112,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
     .fail((data, exception) => {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting " + type, data.responseText);
+      utils.showAlert("error", "", `Error while deleting ${type}`, data.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
-}
+};

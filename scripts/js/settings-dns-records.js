@@ -66,7 +66,7 @@ function populateDataTable(endpoint) {
 
   const setByEnv = false;
   $.ajax({
-    url: document.body.dataset.apiurl + "/config/dns/" + endpoint + "?detailed=true",
+    url: `${document.body.dataset.apiurl}/config/dns/${endpoint}?detailed=true`,
   }).done(data => {
     // Set the title icons if needed
     setConfigValues("dns", "dns", data.config.dns);
@@ -79,7 +79,7 @@ function populateDataTable(endpoint) {
 
   $(`#${endpoint}-Table`).DataTable({
     ajax: {
-      url: document.body.dataset.apiurl + "/config/dns/" + endpoint,
+      url: `${document.body.dataset.apiurl}/config/dns/${endpoint}`,
       type: "GET",
       dataSrc: `config.dns.${endpoint}`,
     },
@@ -153,7 +153,7 @@ function deleteRecord() {
 function delHosts(elem) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting DNS record...", elem);
-  const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
+  const url = `${document.body.dataset.apiurl}/config/dns/hosts/${encodeURIComponent(elem)}`;
 
   $.ajax({
     url,
@@ -170,7 +170,7 @@ function delHosts(elem) {
       utils.showAlert(
         "error",
         "",
-        "Error while deleting DNS record: <code>" + elem + "</code>",
+        `Error while deleting DNS record: <code>${elem}</code>`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
@@ -180,7 +180,7 @@ function delHosts(elem) {
 function delCNAME(elem) {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting local CNAME record...", elem);
-  const url = document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
+  const url = `${document.body.dataset.apiurl}/config/dns/cnameRecords/${encodeURIComponent(elem)}`;
 
   $.ajax({
     url,
@@ -202,7 +202,7 @@ function delCNAME(elem) {
       utils.showAlert(
         "error",
         "",
-        "Error while deleting CNAME record: <code>" + elem + "</code>",
+        `Error while deleting CNAME record: <code>${elem}</code>`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console
@@ -215,8 +215,8 @@ $(() => {
 
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
-    const elem = $("#Hip").val() + " " + $("#Hdomain").val();
-    const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
+    const elem = `${$("#Hip").val()} ${$("#Hdomain").val()}`;
+    const url = `${document.body.dataset.apiurl}/config/dns/hosts/${encodeURIComponent(elem)}`;
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
       url,
@@ -239,13 +239,12 @@ $(() => {
 
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
-    let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
+    let elem = `${$("#Cdomain").val()},${$("#Ctarget").val()}`;
     const ttlVal = Number.parseInt($("#Cttl").val(), 10);
     // TODO Fix eslint
     // eslint-disable-next-line unicorn/prefer-number-properties
-    if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
-    const url =
-      document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
+    if (isFinite(ttlVal) && ttlVal >= 0) elem += `,${ttlVal}`;
+    const url = `${document.body.dataset.apiurl}/config/dns/cnameRecords/${encodeURIComponent(elem)}`;
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
       url,

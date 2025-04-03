@@ -29,14 +29,13 @@ $(() => {
 });
 
 // Globally available function to set config values
-// eslint-disable-next-line no-unused-vars
-function setConfigValues(topic, key, value) {
+globalThis.setConfigValues = function (topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
     for (const [subkey, subvalue] of Object.entries(value)) {
       // If the key is empty, we are at the top level
-      const newKey = key === "" ? subkey : key + "." + subkey;
-      setConfigValues(topic, newKey, subvalue);
+      const newKey = key === "" ? subkey : `${key}.${subkey}`;
+      globalThis.setConfigValues(topic, newKey, subvalue);
     }
 
     return;
@@ -76,52 +75,50 @@ function setConfigValues(topic, key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       // Remove all options from select
-      $("#" + escapedKey + " option").remove();
+      $(`#${escapedKey} option`).remove();
       // Add allowed select items (if available)
       for (const allowedValue of value.allowed) {
-        $("#" + escapedKey + "-" + allowedValue.item).prop("disabled", value.flags.env_var);
+        $(`#${escapedKey}-${allowedValue.item}`).prop("disabled", value.flags.env_var);
         const newopt = $("<option></option>")
           .attr("value", allowedValue.item)
           .text(allowedValue.description);
-        $("#" + escapedKey).append(newopt);
+        $(`#${escapedKey}`).append(newopt);
       }
 
       // Select the current value
-      $("#" + escapedKey)
-        .val(value.value)
-        .trigger("click");
+      $(`#${escapedKey}`).val(value.value).trigger("click");
 
       // Also select matching radio button (if any)
-      $("#" + escapedKey + "-" + value.value).prop("checked", true);
+      $(`#${escapedKey}-${value.value}`).prop("checked", true);
 
       break;
     }
 
     case "boolean": {
       // Select checkboxes (if available)
-      $("#" + escapedKey).prop("checked", value.value);
+      $(`#${escapedKey}`).prop("checked", value.value);
 
       break;
     }
 
     case "string array": {
       // Set input field values from array (if available)
-      $("#" + escapedKey).val(value.value.join("\n"));
+      $(`#${escapedKey}`).val(value.value.join("\n"));
       break;
     }
 
     default: {
       // Set input field values (if available)
       // Set text if this is a <span> or <code> element
-      if ($("#" + escapedKey).is("span") || $("#" + escapedKey).is("code")) {
-        $("#" + escapedKey).text(value.value);
+      if ($(`#${escapedKey}`).is("span") || $(`#${escapedKey}`).is("code")) {
+        $(`#${escapedKey}`).text(value.value);
       } else {
         // Set value if this is an <input> element
-        $("#" + escapedKey).val(value.value);
+        $(`#${escapedKey}`).val(value.value);
       }
     }
   }
-}
+};
 
 function saveSettings() {
   utils.disableAll();
@@ -174,7 +171,7 @@ function saveSettings() {
 
   // Apply changes
   $.ajax({
-    url: document.body.dataset.apiurl + "/config",
+    url: `${document.body.dataset.apiurl}/config`,
     method: "PATCH",
     dataType: "json",
     processData: false,

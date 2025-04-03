@@ -88,7 +88,7 @@ function format(data) {
 // Define the status icon element
 function setStatusIcon(data) {
   const statusCode = Number.parseInt(data.status, 10);
-  const statusTitle = setStatusText(data) + "\nClick for details about this list";
+  const statusTitle = `${setStatusText(data)}\nClick for details about this list`;
   let statusIcon;
 
   switch (statusCode) {
@@ -109,7 +109,7 @@ function setStatusIcon(data) {
       break;
   }
 
-  return "<i class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></i>";
+  return `<i class='fa fa-fw ${statusIcon}' title='${statusTitle}'></i>`;
 }
 
 // Define human-friendly status string
@@ -144,8 +144,7 @@ function setStatusText(data, showdetails = false) {
 
       default:
         statusText = "Unknown";
-        statusDetails =
-          ' (<span class="list-status-0">' + Number.parseInt(data.status, 10) + "</span>)";
+        statusDetails = ` (<span class="list-status-0">${Number.parseInt(data.status, 10)}</span>)`;
         break;
     }
   }
@@ -170,11 +169,11 @@ function setTypeIcon(type) {
   return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
 }
 
-function initTable() {
+globalThis.initTable = function () {
   table = $("#listsTable").DataTable({
     processing: true,
     ajax: {
-      url: document.body.dataset.apiurl + "/lists",
+      url: `${document.body.dataset.apiurl}/lists`,
       dataSrc: "lists",
       type: "GET",
     },
@@ -213,7 +212,7 @@ function initTable() {
       $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
-      const dataId = utils.hexEncode(data.address + "_" + data.type);
+      const dataId = utils.hexEncode(`${data.address}_${data.type}`);
       $(row).attr("data-id", dataId);
       $(row).attr("data-address", utils.hexEncode(data.address));
       $(row).attr("data-type", data.type);
@@ -225,21 +224,17 @@ function initTable() {
         statusCode = Number.parseInt(data.status, 10);
       }
 
-      $("td:eq(1)", row).addClass("list-status-" + statusCode);
+      $("td:eq(1)", row).addClass(`list-status-${statusCode}`);
       $("td:eq(1)", row).html(setStatusIcon(data));
 
-      $("td:eq(2)", row).addClass("list-type-" + statusCode);
+      $("td:eq(2)", row).addClass(`list-type-${statusCode}`);
       $("td:eq(2)", row).html(setTypeIcon(data.type));
 
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
         $("td:eq(3)", row).html(
-          '<code id="address_' +
-            dataId +
-            '" class="breakall">' +
-            utils.escapeHtml(data.address) +
-            "</code>"
+          `<code id="address_${dataId}" class="breakall">${utils.escapeHtml(data.address)}</code>`
         );
       } else {
         $("td:eq(3)", row).html(
@@ -254,13 +249,9 @@ function initTable() {
       }
 
       $("td:eq(4)", row).html(
-        '<input type="checkbox" id="enabled_' +
-          dataId +
-          '"' +
-          (data.enabled ? " checked" : "") +
-          ">"
+        `<input type="checkbox" id="enabled_${dataId}"${data.enabled ? " checked" : ""}>`
       );
-      const statusEl = $("#enabled_" + dataId, row);
+      const statusEl = $(`#enabled_${dataId}`, row);
       statusEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -270,28 +261,24 @@ function initTable() {
       });
       statusEl.on("change", editList);
 
-      $("td:eq(5)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentEl = $("#comment_" + dataId, row);
+      $("td:eq(5)", row).html(`<input id="comment_${dataId}" class="form-control">`);
+      const commentEl = $(`#comment_${dataId}`, row);
       commentEl.val(data.comment);
       commentEl.on("change", editList);
 
       $("td:eq(6)", row).empty();
       $("td:eq(6)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        `<select class="selectpicker" id="multiselect_${dataId}" multiple></select>`
       );
-      const selectEl = $("#multiselect_" + dataId, row);
+      const selectEl = $(`#multiselect_${dataId}`, row);
       // Add all known groups
       for (const group of groups) {
         const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($(`<option ${dataSub}/>`).val(group.id).text(group.name));
       }
 
-      const applyBtn = "#btn_apply_" + dataId;
+      const applyBtn = `#btn_apply_${dataId}`;
 
       // Select assigned groups
       selectEl.val(data.groups);
@@ -444,10 +431,11 @@ function initTable() {
 
   table.on("order.dt", () => {
     const order = table.order();
+    const $resetButton = $("#resetButton");
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").removeClass("hidden");
+      $resetButton.removeClass("hidden");
     } else {
-      $("#resetButton").addClass("hidden");
+      $resetButton.addClass("hidden");
     }
   });
 
@@ -480,7 +468,7 @@ function initTable() {
     input.setAttribute("autocapitalize", "off");
     input.setAttribute("spellcheck", false);
   }
-}
+};
 
 // Remove 'bnt-group' class from container, to avoid grouping
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
@@ -500,25 +488,25 @@ function addList(event) {
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  let addresses = $("#new_address")
+  const addresses = $("#new_address")
     .val()
-    .split(/[\s,]+/);
-  // Remove empty elements
-  addresses = addresses.filter(el => el !== "");
+    .split(/[\s,]+/)
+    // Remove empty elements
+    .filter(el => el !== "");
   const addressestr = JSON.stringify(addresses);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding subscribed " + type + "list(s)...", addressestr);
+  utils.showAlert("info", "", `Adding subscribed ${type}list(s)...`, addressestr);
 
   if (addresses.length === 0) {
     // enable the ui elements again
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify " + type + "list address");
+    utils.showAlert("warning", "", "Warning", `Please specify ${type}list address`);
     return;
   }
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/lists",
+    url: `${document.body.dataset.apiurl}/lists`,
     method: "post",
     dataType: "json",
     processData: false,
@@ -526,7 +514,7 @@ function addList(event) {
     data: JSON.stringify({ address: addresses, comment, type, groups: group }),
     success(data) {
       utils.enableAll();
-      utils.listsAlert(type + "list", addresses, data);
+      utils.listsAlert(`${type}list`, addresses, data);
       $("#new_address").val("");
       $("#new_comment").val("");
       table.ajax.reload(null, false);
@@ -538,7 +526,7 @@ function addList(event) {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new " + type + "list", data.responseText);
+      utils.showAlert("error", "", `Error while adding new ${type}list`, data.responseText);
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -550,18 +538,15 @@ function editList() {
   const type = tr.attr("data-type");
   const dataId = tr.attr("data-id");
   const address = utils.hexDecode(tr.attr("data-address"));
-  const enabled = tr.find("#enabled_" + dataId).is(":checked");
-  const comment = tr.find("#comment_" + dataId).val();
+  const enabled = tr.find(`#enabled_${dataId}`).is(":checked");
+  const comment = tr.find(`#comment_${dataId}`).val();
   // Convert list of string integers to list of integers using map(Number)
-  const groups = tr
-    .find("#multiselect_" + dataId)
-    .val()
-    .map(Number);
+  const groups = tr.find(`#multiselect_${dataId}`).val().map(Number);
 
   let done = "edited";
   let notDone = "editing";
   switch (elem) {
-    case "enabled_" + dataId:
+    case `enabled_${dataId}`:
       if (!enabled) {
         done = "disabled";
         notDone = "disabling";
@@ -571,23 +556,23 @@ function editList() {
       }
 
       break;
-    case "comment_" + dataId:
+    case `comment_${dataId}`:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
-    case "multiselect_" + dataId:
+    case `multiselect_${dataId}`:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element (" + elem + ") or invalid data-id!");
+      alert(`bad element (${elem}) or invalid data-id!`);
       return;
   }
 
   utils.disableAll();
   utils.showAlert("info", "", "Editing address...", address);
   $.ajax({
-    url: document.body.dataset.apiurl + "/lists/" + encodeURIComponent(address) + "?type=" + type,
+    url: `${document.body.dataset.apiurl}/lists/${encodeURIComponent(address)}?type=${type}`,
     method: "put",
     dataType: "json",
     processData: false,
@@ -600,7 +585,7 @@ function editList() {
     }),
     success(data) {
       utils.enableAll();
-      processGroupResult(data, type + "list", done, notDone);
+      processGroupResult(data, `${type}list`, done, notDone);
       table.ajax.reload(null, false);
     },
     error(data, exception) {
@@ -609,7 +594,7 @@ function editList() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + type + "list " + address,
+        `Error while ${notDone}${type}list ${address}`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console

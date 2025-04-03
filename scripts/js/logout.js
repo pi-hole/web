@@ -11,9 +11,11 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-button");
-  const logoutUrl = document.body.dataset.webhome + "login";
+  if (!logoutButton) return;
 
-  logoutButton?.addEventListener("click", event => {
+  const logoutUrl = `${document.body.dataset.webhome}login`;
+
+  logoutButton.addEventListener("click", event => {
     event.preventDefault();
     utils.doLogout(logoutUrl);
   });

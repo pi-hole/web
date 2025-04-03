@@ -14,7 +14,7 @@ let table;
 
 function reloadClientSuggestions() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/clients/_suggestions",
+    url: `${document.body.dataset.apiurl}/clients/_suggestions`,
     type: "GET",
     dataType: "json",
     success(data) {
@@ -30,15 +30,11 @@ function reloadClientSuggestions() {
 
       // Add data obtained from API
       for (const client of data.clients) {
-        let mockDevice = false;
-        let text = client.hwaddr.toUpperCase();
-        let key = text;
-        if (key.startsWith("IP-")) {
-          // Mock MAC address for address-only devices
-          mockDevice = true;
-          key = key.substring(3);
-          text = key;
-        }
+        const hwaddr = client.hwaddr.toUpperCase();
+        const mockDevice = hwaddr.startsWith("IP-");
+        // Mock MAC address for address-only devices
+        const key = mockDevice ? hwaddr.substring(3) : hwaddr;
+        let text = key;
 
         // Append additional infos if available
         let extraInfo = "";
@@ -92,11 +88,11 @@ $(() => {
   });
 });
 
-function initTable() {
+globalThis.initTable = function () {
   table = $("#clientsTable").DataTable({
     processing: true,
     ajax: {
-      url: document.body.dataset.apiurl + "/clients",
+      url: `${document.body.dataset.apiurl}/clients`,
       dataSrc: "clients",
       type: "GET",
     },
@@ -160,28 +156,24 @@ function initTable() {
           "</code>";
       $("td:eq(1)", row).html(ipName);
 
-      $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentEl = $("#comment_" + dataId, row);
+      $("td:eq(2)", row).html(`<input id="comment_${dataId}" class="form-control">`);
+      const commentEl = $(`#comment_${dataId}`, row);
       commentEl.val(data.comment);
       commentEl.on("change", editClient);
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        `<select class="selectpicker" id="multiselect_${dataId}" multiple></select>`
       );
-      const selectEl = $("#multiselect_" + dataId, row);
+      const selectEl = $(`#multiselect_${dataId}`, row);
       // Add all known groups
       for (const group of groups) {
         const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($(`<option ${dataSub}/>`).val(group.id).text(group.name));
       }
 
-      const applyBtn = "#btn_apply_" + dataId;
+      const applyBtn = `#btn_apply_${dataId}`;
 
       // Select assigned groups
       selectEl.val(data.groups);
@@ -325,10 +317,11 @@ function initTable() {
 
   table.on("order.dt", () => {
     const order = table.order();
+    const $resetButton = $("#resetButton");
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").removeClass("hidden");
+      $resetButton.removeClass("hidden");
     } else {
-      $("#resetButton").addClass("hidden");
+      $resetButton.addClass("hidden");
     }
   });
 
@@ -336,7 +329,7 @@ function initTable() {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
-}
+};
 
 // Remove 'bnt-group' class from container, to avoid grouping
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
@@ -392,7 +385,7 @@ function addClient() {
   }
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/clients",
+    url: `${document.body.dataset.apiurl}/clients`,
     method: "post",
     dataType: "json",
     processData: false,
@@ -423,25 +416,22 @@ function editClient() {
   const tr = $(this).closest("tr");
   const client = tr.attr("data-id");
   // Convert list of string integers to list of integers using map(Number)
-  const groups = tr
-    .find("#multiselect_" + client)
-    .val()
-    .map(Number);
-  const comment = tr.find("#comment_" + client).val();
+  const groups = tr.find(`#multiselect_${client}`).val().map(Number);
+  const comment = tr.find(`#comment_${client}`).val();
 
   let done = "edited";
   let notDone = "editing";
   switch (elem) {
-    case "multiselect_" + client:
+    case `multiselect_${client}`:
       done = "edited groups of";
       notDone = "editing groups of";
       break;
-    case "comment_" + client:
+    case `comment_${client}`:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
     default:
-      alert("bad element (" + elem + ") or invalid data-id!");
+      alert(`bad element (${elem}) or invalid data-id!`);
       return;
   }
 
@@ -449,7 +439,7 @@ function editClient() {
   const clientDecoded = utils.hexDecode(client);
   utils.showAlert("info", "", "Editing client...", clientDecoded);
   $.ajax({
-    url: document.body.dataset.apiurl + "/clients/" + encodeURIComponent(clientDecoded),
+    url: `${document.body.dataset.apiurl}/clients/${encodeURIComponent(clientDecoded)}`,
     method: "put",
     dataType: "json",
     processData: false,
@@ -469,7 +459,7 @@ function editClient() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " client " + clientDecoded,
+        `Error while ${notDone} client ${clientDecoded}`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console

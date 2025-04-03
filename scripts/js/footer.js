@@ -123,15 +123,10 @@ function checkBlocking() {
 function piholeChange(action, duration) {
   let btnStatus = null;
 
-  switch (action) {
-    case "enable":
-      btnStatus = $("#flip-status-enable");
-      break;
-    case "disable":
-      btnStatus = $("#flip-status-disable");
-      break;
-    default: // Do nothing
-      break;
+  if (action === "enable") {
+    btnStatus = $("#flip-status-enable");
+  } else if (action === "disable") {
+    btnStatus = $("#flip-status-disable");
   }
 
   btnStatus.innerHTML = "<i class='fa fa-spinner fa-spin'> </i>";
@@ -158,9 +153,7 @@ function piholeChange(action, duration) {
 }
 
 function testCookies() {
-  if (navigator.cookieEnabled) {
-    return true;
-  }
+  if (navigator.cookieEnabled) return true;
 
   // set and read cookie
   document.cookie = "cookietest=1";
@@ -229,11 +222,7 @@ function updateQueryFrequency(intl, frequency) {
 
   const queryFreqElem = document.getElementById("query_frequency");
 
-  queryFreqElem.innerHTML =
-    '<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;' +
-    freqFormatted +
-    "&thinsp;" +
-    unit;
+  queryFreqElem.innerHTML = `<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;${freqFormatted}&thinsp;${unit}`;
   queryFreqElem.title = title;
 }
 
@@ -254,30 +243,24 @@ function updateFtlInfo() {
       const numAllowedEl = document.getElementById("num_allowed");
       numAllowedEl.textContent = intl.format(database.domains.allowed + database.regex.allowed);
       numAllowedEl.title =
-        "Allowed: " +
-        intl.format(database.domains.allowed) +
-        " exact domains and " +
-        intl.format(database.regex.allowed) +
-        " regex filters are enabled";
+        `Allowed: ${intl.format(database.domains.allowed)} exact domains and ` +
+        `${intl.format(database.regex.allowed)} regex filters are enabled`;
 
       const numDeniedEl = document.getElementById("num_denied");
       numDeniedEl.textContent = intl.format(database.domains.denied + database.regex.denied);
       numDeniedEl.title =
-        "Denied: " +
-        intl.format(database.domains.denied) +
-        " exact domains and " +
-        intl.format(database.regex.denied) +
-        " regex filters are enabled";
+        `Denied: ${intl.format(database.domains.denied)} exact domains and ` +
+        `${intl.format(database.regex.denied)} regex filters are enabled`;
       updateQueryFrequency(intl, ftl.query_frequency);
 
       const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
       if (sysInfoCpuFtl !== null) {
-        sysInfoCpuFtl.textContent = "(" + ftl["%cpu"].toFixed(1) + "% used by FTL)";
+        sysInfoCpuFtl.textContent = `(${ftl["%cpu"].toFixed(1)}% used by FTL)`;
       }
 
       const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
       if (sysInfoRamFtl !== null) {
-        sysInfoRamFtl.textContent = "(" + ftl["%mem"].toFixed(1) + "% used by FTL)";
+        sysInfoRamFtl.textContent = `(${ftl["%mem"].toFixed(1)}% used by FTL)`;
       }
 
       const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
@@ -287,10 +270,10 @@ function updateFtlInfo() {
 
       const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
       if (sysInfoUptimeFtl !== null) {
-        const startdate = moment()
+        const startDate = moment()
           .subtract(ftl.uptime, "milliseconds")
           .format("dddd, MMMM Do YYYY, HH:mm:ss");
-        sysInfoUptimeFtl.textContent = startdate;
+        sysInfoUptimeFtl.textContent = startDate;
       }
 
       const destructiveActions = document.querySelectorAll(".destructive_action");
@@ -333,7 +316,7 @@ function updateSystemInfo() {
 
       const swap =
         system.memory.swap.total > 0
-          ? ((1e2 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
+          ? ((100 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
           : "N/A";
       let color = percentRAM > 75 ? "text-red" : "text-green-light";
 
@@ -609,9 +592,9 @@ function updateVersionInfo() {
 $(() => {
   if (!globalThis._isLoginPage) updateInfo();
 
-  const enaT = document.getElementById("enableTimer");
-  if (enaT) {
-    const target = new Date(Number.parseInt(enaT.textContent, 10));
+  const enableTimer = document.getElementById("enableTimer");
+  if (enableTimer) {
+    const target = new Date(Number.parseInt(enableTimer.textContent, 10));
     const seconds = Math.round((target.getTime() - Date.now()) / 1000);
     if (seconds > 0) {
       setTimeout(countDown, 100);
@@ -730,37 +713,37 @@ function applyExpertSettings() {
 function addAdvancedInfo() {
   const advancedInfoSource = document.getElementById("advanced-info-data");
   const advancedInfoTarget = document.getElementById("advanced-info");
-
   if (!advancedInfoSource || !advancedInfoTarget) return;
+
   const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.dataset.clientIp;
   const XForwardedFor = globalThis.atob(advancedInfoSource.dataset.xff || "") || null;
   const starttime = Number.parseFloat(advancedInfoSource.dataset.starttime);
   const endtime = Number.parseFloat(advancedInfoSource.dataset.endtime);
-  const totaltime = 1e3 * (endtime - starttime);
+  const totaltime = 1000 * (endtime - starttime);
 
   // Show advanced info
   // Add TLS and client IP info
+  const classes = isTLS ? "fa-lock text-green" : "fa-lock-open";
+  const title = `Your connection is ${isTLS ? "" : "NOT "}end-to-end encrypted (TLS/SSL)`;
   advancedInfoTarget.innerHTML =
-    'Client: <i class="fa-solid fa-fw fa-lock' +
-    (isTLS ? " text-green" : "-open") +
-    '" title="Your connection is ' +
-    (isTLS ? "" : "NOT ") +
-    'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>';
+    `Client: <i class="fa-solid fa-fw ${classes}" title="${title}"></i>` +
+    '&nbsp;<span id="client-id"></span><br>';
 
   // Add client IP info
   const clientIdEl = document.getElementById("client-id");
   clientIdEl.textContent = XForwardedFor ?? clientIP;
+
+  // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
+  // the real client IP as tooltip
   if (XForwardedFor) {
-    // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
-    // the real client IP as tooltip
     clientIdEl.style.fontStyle = "italic";
-    clientIdEl.title = "Original remote address: " + clientIP;
+    clientIdEl.title = `Original remote address: ${clientIP}`;
   }
 
   // Add render time info
-  advancedInfoTarget.innerHTML +=
-    "Render time: " + (totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3)) + " ms";
+  const renderTime = totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3);
+  advancedInfoTarget.innerHTML += `Render time: ${renderTime} ms`;
 }
 
 $(() => {
@@ -773,6 +756,6 @@ $(() => {
 if ($.fn.dataTable) {
   $.fn.dataTable.ext.errMode = function (settings, helpPage, message) {
     // eslint-disable-next-line no-console
-    console.log("DataTables warning: " + message);
+    console.log(`DataTables warning: ${message}`);
   };
 }

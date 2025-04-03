@@ -15,7 +15,7 @@ function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
   } else {
-    alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
+    alert(`An unknown error occurred while loading the data.\n${xhr.responseText}`);
   }
 
   table.clear();
@@ -28,7 +28,7 @@ $(() => {
   table = $("#groupsTable").DataTable({
     processing: true,
     ajax: {
-      url: document.body.dataset.apiurl + "/groups",
+      url: `${document.body.dataset.apiurl}/groups`,
       error: handleAjaxError,
       dataSrc: "groups",
       type: "GET",
@@ -74,20 +74,16 @@ $(() => {
         "\nDatabase ID: " +
         data.id;
       $("td:eq(1)", row).html(
-        '<input id="name_' + dataId + '" title="' + tooltip + '" class="form-control">'
+        `<input id="name_${dataId}" title="${tooltip}" class="form-control">`
       );
-      const nameEl = $("#name_" + dataId, row);
+      const nameEl = $(`#name_${dataId}`, row);
       nameEl.val(data.name);
       nameEl.on("change", editGroup);
 
       $("td:eq(2)", row).html(
-        '<input type="checkbox" id="enabled_' +
-          dataId +
-          '"' +
-          (data.enabled ? " checked" : "") +
-          ">"
+        `<input type="checkbox" id="enabled_${dataId}"${data.enabled ? " checked" : ""}>`
       );
-      const enabledEl = $("#enabled_" + dataId, row);
+      const enabledEl = $(`#enabled_${dataId}`, row);
       enabledEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -97,9 +93,9 @@ $(() => {
       });
       enabledEl.on("change", editGroup);
 
-      $("td:eq(3)", row).html('<input id="comment_' + dataId + '" class="form-control">');
+      $("td:eq(3)", row).html(`<input id="comment_${dataId}" class="form-control">`);
       const comment = data.comment !== null ? data.comment : "";
-      const commentEl = $("#comment_" + dataId, row);
+      const commentEl = $(`#comment_${dataId}`, row);
       commentEl.val(comment);
       commentEl.on("change", editGroup);
 
@@ -214,10 +210,11 @@ $(() => {
 
   table.on("order.dt", () => {
     const order = table.order();
+    const $resetButton = $("#resetButton");
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").removeClass("hidden");
+      $resetButton.removeClass("hidden");
     } else {
-      $("#resetButton").addClass("hidden");
+      $resetButton.addClass("hidden");
     }
   });
 
@@ -242,13 +239,13 @@ function addGroup() {
   // Check if the user wants to add multiple groups (space or newline separated)
   // If so, split the input and store it in an array, however, do not split
   // group names enclosed in quotes
-  let names = utils
+  const names = utils
     .escapeHtml($("#new_name"))
     .val()
     .match(/(?:[^\s"]+|"[^"]*")+/g)
-    .map(name => name.replaceAll(/(^"|"$)/g, ""));
-  // Remove empty elements
-  names = names.filter(el => el !== "");
+    .map(name => name.replaceAll(/(^"|"$)/g, ""))
+    // Remove empty elements
+    .filter(el => el !== "");
   const groupStr = JSON.stringify(names);
 
   utils.disableAll();
@@ -262,7 +259,7 @@ function addGroup() {
   }
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/groups",
+    url: `${document.body.dataset.apiurl}/groups`,
     method: "post",
     dataType: "json",
     processData: false,
@@ -297,14 +294,14 @@ function editGroup() {
   const tr = $(this).closest("tr");
   const id = tr.attr("data-id");
   const oldName = utils.hexDecode(id);
-  const name = tr.find("#name_" + id).val();
-  const enabled = tr.find("#enabled_" + id).is(":checked");
-  const comment = tr.find("#comment_" + id).val();
+  const name = tr.find(`#name_${id}`).val();
+  const enabled = tr.find(`#enabled_${id}`).is(":checked");
+  const comment = tr.find(`#comment_${id}`).val();
 
   let done = "edited";
   let notDone = "editing";
   switch (elem) {
-    case "enabled_" + id:
+    case `enabled_${id}`:
       if (!enabled) {
         done = "disabled";
         notDone = "disabling";
@@ -314,23 +311,23 @@ function editGroup() {
       }
 
       break;
-    case "name_" + id:
+    case `name_${id}`:
       done = "edited name of";
       notDone = "editing name of";
       break;
-    case "comment_" + id:
+    case `comment_${id}`:
       done = "edited comment of";
       notDone = "editing comment of";
       break;
     default:
-      alert("bad element ( " + elem + " ) or invalid data-id!");
+      alert(`bad element (${elem}) or invalid data-id!`);
       return;
   }
 
   utils.disableAll();
   utils.showAlert("info", "", "Editing group...", oldName);
   $.ajax({
-    url: document.body.dataset.apiurl + "/groups/" + oldName,
+    url: `${document.body.dataset.apiurl}/groups/${oldName}`,
     method: "put",
     dataType: "json",
     processData: false,
@@ -351,7 +348,7 @@ function editGroup() {
       utils.showAlert(
         "error",
         "",
-        "Error while " + notDone + " group with name " + oldName,
+        `Error while ${notDone} group with name ${oldName}`,
         data.responseText
       );
       console.log(exception); // eslint-disable-line no-console

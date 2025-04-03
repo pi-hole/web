@@ -92,7 +92,7 @@ function doLogin(password) {
   NProgress.start();
   utils.disableAll();
   $.ajax({
-    url: document.body.dataset.apiurl + "/auth",
+    url: `${document.body.dataset.apiurl}/auth`,
     method: "POST",
     dataType: "json",
     processData: false,
@@ -158,7 +158,7 @@ function showDNSfailure() {
 $(() => {
   // Check if we need to login at all
   $.ajax({
-    url: document.body.dataset.apiurl + "/auth",
+    url: `${document.body.dataset.apiurl}/auth`,
   })
     .done(data => {
       // If we are already logged in, redirect to dashboard
@@ -177,14 +177,14 @@ $(() => {
 
   // Get information about HTTPS port and DNS status
   $.ajax({
-    url: document.body.dataset.apiurl + "/info/login",
+    url: `${document.body.dataset.apiurl}/info/login`,
   }).done(data => {
     if (data.dns === false) showDNSfailure();
 
     // Generate HTTPS redirection link (only used if not already HTTPS)
     if (location.protocol !== "https:" && data.https_port !== 0) {
-      let url = "https://" + location.hostname;
-      if (data.https_port !== 443) url += ":" + data.https_port;
+      let url = `https://${location.hostname}`;
+      if (data.https_port !== 443) url += `:${data.https_port}`;
       url += location.pathname + location.search + location.hash;
 
       $("#https-link").attr("href", url);
