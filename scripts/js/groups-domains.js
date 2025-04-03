@@ -63,23 +63,34 @@ function showSuggestDomains(value) {
   var newDomainEl = $("#new_domain");
   var suggestDomainEl = $("#suggest_domains");
 
-  var parts = new URL(value).hostname.split(".");
-  var table = $("<table>");
+  try {
+    var parts = new URL(value).hostname.split(".");
+    var table = $("<table>");
 
-  for (var i = 0; i < parts.length - 1; ++i) {
-    var hostname = parts.slice(i).join(".");
+    for (var i = 0; i < parts.length - 1; ++i) {
+      var hostname = parts.slice(i).join(".");
 
-    table.append(
-      $("<tr>")
-        .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
-        .append($("<td>").append(createButton(hostname)))
-    );
+      table.append(
+        $("<tr>")
+          .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
+          .append($("<td>").append(createButton(hostname)))
+      );
+    }
+
+    suggestDomainEl.slideUp("fast", function () {
+      suggestDomainEl.html(table);
+      suggestDomainEl.slideDown("fast");
+    });
+  } catch (error) {
+    const { message } = error;
+    const isValidUrlError =
+      error instanceof TypeError &&
+      (message.includes("Invalid URL") || message.includes("is not a valid URL"));
+
+    if (!isValidUrlError) {
+      throw error;
+    }
   }
-
-  suggestDomainEl.slideUp("fast", function () {
-    suggestDomainEl.html(table);
-    suggestDomainEl.slideDown("fast");
-  });
 }
 
 function hideSuggestDomains() {
