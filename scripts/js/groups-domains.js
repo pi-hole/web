@@ -503,12 +503,12 @@ function addDomain() {
 
   // Check if the wildcard checkbox was marked and transform the domains into regex
   if (kind === "exact" && wildcardChecked) {
-    for (let i = 0; i < domains.length; i++) {
+    for (const [index, domain] of domains.entries()) {
       // Strip leading "*." if specified by user in wildcard mode
-      if (domains[i].startsWith("*.")) domains[i] = domains[i].substr(2);
+      if (domain.startsWith("*.")) domains[index] = domain.substr(2);
 
       // Transform domain into a wildcard regex
-      domains[i] = "(\\.|^)" + domains[i].replaceAll(".", "\\.") + "$";
+      domains[index] = "(\\.|^)" + domains[index].replaceAll(".", "\\.") + "$";
     }
 
     kind = "regex";

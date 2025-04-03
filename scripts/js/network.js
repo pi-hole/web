@@ -96,7 +96,6 @@ $(() => {
   tableApi = $("#network-entries").DataTable({
     rowCallback(row, data) {
       let color;
-      let index;
       let iconClasses;
       const lastQuery = Number.parseInt(data.lastQuery, 10);
       const diff = getTimestamp() - lastQuery;
@@ -153,19 +152,18 @@ $(() => {
         return a.ip.localeCompare(b.ip);
       });
 
-      for (index = 0; index < data.ips.length; index++) {
-        const ip = data.ips[index];
-        let iptext = ip.ip;
+      for (const { ip, name } of data.ips) {
+        let iptext = ip;
 
-        if (ip.name !== null && ip.name.length > 0) {
-          iptext = iptext + " (" + ip.name + ")";
+        if (name !== null && name.length > 0) {
+          iptext = `${iptext} (${name})`;
         }
 
         iptitles.push(iptext);
 
         // Only add IPs to the table if we have not reached the maximum
-        if (index < MAXIPDISPLAY) {
-          ips.push('<a href="queries?client_ip=' + ip.ip + '">' + iptext + "</a>");
+        if (ips.length < MAXIPDISPLAY) {
+          ips.push(`<a href="queries?client_ip=${ip}">${iptext}</a>`);
         }
       }
 

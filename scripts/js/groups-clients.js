@@ -29,8 +29,7 @@ function reloadClientSuggestions() {
       sel.append($("<option />"));
 
       // Add data obtained from API
-      for (let i = 0; i < data.clients.length; i++) {
-        const client = data.clients[i];
+      for (const client of data.clients) {
         let mockDevice = false;
         let text = client.hwaddr.toUpperCase();
         let key = text;
@@ -370,15 +369,11 @@ function addClient() {
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
   // - host name (arbitrary form, we're only checking against some reserved characters)
-  for (let i = 0; i < ips.length; i++) {
-    if (
-      utils.validateIPv4CIDR(ips[i]) ||
-      utils.validateIPv6CIDR(ips[i]) ||
-      utils.validateMAC(ips[i])
-    ) {
+  for (const [index, ip] of ips.entries()) {
+    if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
       // Convert input to upper case (important for MAC addresses)
-      ips[i] = ips[i].toUpperCase();
-    } else if (!utils.validateHostname(ips[i])) {
+      ips[index] = ip.toUpperCase();
+    } else if (!utils.validateHostname(ip)) {
       utils.showAlert(
         "warning",
         "",

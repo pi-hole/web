@@ -76,16 +76,16 @@ function parseLines(ta, str) {
   // Splitting the text on "\r"
   const lines = str.split(/(?=\r)/g);
 
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i][0] === "\r") {
+  for (let line of lines) {
+    if (line[0] === "\r") {
       // This line starts with the "OVER" sequence. Replace them with "\n" before print
-      lines[i] = lines[i].replaceAll("\r[K", "\n").replaceAll("\r", "\n");
+      line = line.replaceAll("\r[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
       ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
     }
 
     // Append the new text to the end of the output
-    ta.append(lines[i]);
+    ta.append(line);
   }
 }
