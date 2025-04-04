@@ -26,7 +26,7 @@ function renderBool(data, type) {
   return data;
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   apiSessionsTable = $("#APISessionsTable").DataTable({
     ajax: {
       url: `${document.body.dataset.apiurl}/auth/sessions`,
@@ -464,7 +464,7 @@ $("#button-disable-totp").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   processWebServerConfig();
   // Check if TOTP is enabled
   $.ajax({

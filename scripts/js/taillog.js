@@ -273,7 +273,7 @@ document.getElementById("output").addEventListener(
   { passive: true }
 );
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   getData();
 
   const liveFeed = document.getElementById("live-feed");

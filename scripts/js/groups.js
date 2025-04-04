@@ -22,7 +22,7 @@ function handleAjaxError(xhr, textStatus) {
   table.draw();
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({

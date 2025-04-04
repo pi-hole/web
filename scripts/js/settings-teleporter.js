@@ -98,7 +98,7 @@ $("#GETTeleporter").on("click", () => {
   });
 });
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   // Show warning if not accessed over HTTPS
   if (location.protocol !== "https:") {
     document.getElementById("encryption-warning").classList.remove("d-none");

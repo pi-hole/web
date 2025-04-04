@@ -21,6 +21,6 @@ function getConfig() {
     });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   getConfig();
 });

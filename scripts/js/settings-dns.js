@@ -152,6 +152,6 @@ function processDNSConfig() {
     });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   processDNSConfig();
 });

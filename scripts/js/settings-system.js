@@ -305,7 +305,7 @@ $("#loggingButton").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   updateHostInfo();
   updateMetrics();
   getLoggingButton();

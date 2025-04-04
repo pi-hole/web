@@ -70,7 +70,7 @@ function reloadClientSuggestions() {
   });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   $("#btnAdd").on("click", addClient);
   $("#select").select2({
     tags: true,

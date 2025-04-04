@@ -13,7 +13,7 @@ let table = null;
 const toasts = {};
 
 // DHCP leases tooltips
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
@@ -22,7 +22,7 @@ function renderHostnameCLID(data, type) {
   return type === "display" || type === "filter" ? (data === "*" ? "<em>---</em>" : data) : data;
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   table = $("#DHCPLeasesTable").DataTable({
     ajax: {
       url: `${document.body.dataset.apiurl}/dhcp/leases`,
@@ -215,6 +215,6 @@ function processDHCPConfig() {
     });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   processDHCPConfig();
 });

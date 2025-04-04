@@ -13,7 +13,7 @@
 let table;
 let GETDict = {};
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   GETDict = utils.parseQueryString();
 
   $("#btnAddAllow").on("click", { type: "allow" }, addList);

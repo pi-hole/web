@@ -9,7 +9,7 @@
 
 "use strict";
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   // CSRF protection for AJAX requests, this has to be configured globally
   // because we are using the jQuery $.ajax() function directly in some cases
   // Furthermore, this has to be done before any AJAX request is made so that

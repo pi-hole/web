@@ -91,7 +91,7 @@ function deleteNetworkEntry() {
   });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   tableApi = $("#network-entries").DataTable({
     rowCallback(row, data) {
       let color = "";

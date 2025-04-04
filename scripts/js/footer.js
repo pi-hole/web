@@ -589,7 +589,7 @@ function updateVersionInfo() {
   });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   if (!globalThis._isLoginPage) updateInfo();
 
   const enableTimer = document.getElementById("enableTimer");
@@ -746,7 +746,7 @@ function addAdvancedInfo() {
   advancedInfoTarget.innerHTML += `Render time: ${renderTime} ms`;
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   initSettingsLevel();
   addAdvancedInfo();
 });

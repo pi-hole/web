@@ -12,7 +12,7 @@
 let table;
 const toasts = {};
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;

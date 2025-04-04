@@ -397,7 +397,7 @@ function applyOnlyChanged() {
   }
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   createDynamicConfigTabs();
   initOnlyChanged();
 });

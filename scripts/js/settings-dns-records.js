@@ -209,7 +209,7 @@ function delCNAME(elem) {
     });
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   populateDataTable("hosts");
   populateDataTable("cnameRecords");
 

@@ -13,7 +13,7 @@
 let table;
 let GETDict = {};
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   GETDict = utils.parseQueryString();
 
   // Tabs: Domain/Regex handling

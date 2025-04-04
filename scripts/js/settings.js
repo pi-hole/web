@@ -9,7 +9,7 @@
 
 "use strict";
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   // Handle hiding of alerts
   const dataHideElements = document.querySelectorAll("[data-hide]");
   for (const element of dataHideElements) {

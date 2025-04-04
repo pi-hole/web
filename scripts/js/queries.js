@@ -430,7 +430,7 @@ function liveUpdate() {
   }
 }
 
-$(() => {
+document.addEventListener("DOMContentLoaded", () => {
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 
