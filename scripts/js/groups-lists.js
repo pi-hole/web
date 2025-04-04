@@ -552,7 +552,7 @@ function editList() {
   const dataId = tr.attr("data-id");
   const address = utils.hexDecode(tr.attr("data-address"));
   const enabled = tr.find("#enabled_" + dataId).is(":checked");
-  const comment = utils.escapeHtml(tr.find("#comment_" + dataId).val());
+  const comment = tr.find("#comment_" + dataId).val();
   // Convert list of string integers to list of integers using map(Number)
   const groups = tr
     .find("#multiselect_" + dataId)
