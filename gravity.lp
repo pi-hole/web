@@ -15,17 +15,17 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 
 <!-- Alerts -->
-<div id="alInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
+<div id="alertInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Updating... this may take a while. <strong>Please do not navigate away from or close this page.</strong>
 </div>
-<div id="alSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
+<div id="alertSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
     <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     Success!
 </div>
 
 <button type="button" id="gravityBtn" class="btn btn-lg btn-primary btn-block">Update</button>
-<pre id="output" style="width: 100%; height: 100%;" hidden></pre>
+<pre id="output" class="d-none"></pre>
 
 <script src="<?=pihole.fileversion('scripts/js/gravity.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>

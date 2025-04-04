@@ -5,76 +5,88 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
+/* global apiFailure:false */
+
 "use strict";
 
 function eventsource() {
-  const alInfo = $("#alInfo");
-  const alSuccess = $("#alSuccess");
-  const ta = $("#output");
+  const $alertInfo = $("#alertInfo");
+  const $alertSuccess = $("#alertSuccess");
+  const outputElement = document.getElementById("output");
+  const gravityBtn = document.getElementById("gravityBtn");
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  const url = `${document.body.dataset.apiurl}/action/gravity`;
 
-  ta.html("");
-  ta.show();
-  alInfo.show();
-  alSuccess.hide();
+  if (outputElement.innerHTML.length > 0) {
+    outputElement.innerHTML = "";
+  }
 
-  fetch(document.body.dataset.apiurl + "/action/gravity", {
+  if (!outputElement.classList.contains("d-none")) {
+    outputElement.classList.add("d-none");
+  }
+
+  $alertSuccess.hide();
+  $alertInfo.show();
+
+  fetch(url, {
     method: "POST",
-    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+    headers: { "X-CSRF-TOKEN": csrfToken },
   })
-    // Retrieve its body as ReadableStream
+    .then(response => (response.ok ? response : apiFailure(response)))
+    // Retrieve the response as ReadableStream
     .then(response => {
-      const reader = response.body.getReader();
-      return new ReadableStream({
-        start(controller) {
-          return pump();
-          function pump() {
-            return reader.read().then(({ done, value }) => {
-              // When no more data needs to be consumed, close the stream
-              if (done) {
-                controller.close();
-                alInfo.hide();
-                $("#gravityBtn").prop("disabled", false);
-                return;
-              }
-
-              // Enqueue the next data chunk into our target stream
-              controller.enqueue(value);
-              const string = new TextDecoder().decode(value);
-              parseLines(ta, string);
-
-              if (string.includes("Done.")) {
-                alSuccess.show();
-              }
-
-              return pump();
-            });
-          }
-        },
+      return handleResponseStream({
+        response,
+        outputElement,
+        alertInfo: $alertInfo,
+        gravityBtn,
+        alertSuccess: $alertSuccess,
       });
     })
     .catch(error => console.error(error)); // eslint-disable-line no-console
 }
 
-$("#gravityBtn").on("click", () => {
-  $("#gravityBtn").prop("disabled", true);
-  eventsource();
-});
+function handleResponseStream({ response, outputElement, alertInfo, gravityBtn, alertSuccess }) {
+  outputElement.classList.remove("d-none");
 
-// Handle hiding of alerts
-$(() => {
-  $("[data-hide]").on("click", function () {
-    $(this)
-      .closest("." + $(this).attr("data-hide"))
-      .hide();
+  const reader = response.body.getReader();
+
+  function pump(controller) {
+    return reader.read().then(({ done, value }) => {
+      // When no more data needs to be consumed, close the stream
+      if (done) {
+        controller.close();
+        alertInfo.hide();
+        gravityBtn.removeAttribute("disabled");
+        return;
+      }
+
+      // Enqueue the next data chunk into our target stream
+      controller.enqueue(value);
+      const text = new TextDecoder().decode(value);
+      parseLines(outputElement, text);
+
+      if (text.includes("Done.")) {
+        alertSuccess.show();
+      }
+
+      return pump(controller);
+    });
+  }
+
+  return new ReadableStream({
+    start(controller) {
+      return pump(controller);
+    },
   });
-});
+}
 
-function parseLines(ta, str) {
-  // str can contain multiple lines.
+function parseLines(outputElement, text) {
+  // text can contain multiple lines.
   // We want to split the text before an "OVER" escape sequence to allow overwriting previous line when needed
 
   // Splitting the text on "\r"
-  const lines = str.split(/(?=\r)/g);
+  const lines = text.split(/(?=\r)/g);
 
   for (let line of lines) {
     if (line[0] === "\r") {
@@ -82,7 +94,8 @@ function parseLines(ta, str) {
       line = line.replaceAll("\r[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
-      ta.html(ta.html().substring(0, ta.html().lastIndexOf("\n")));
+      const lastLineIndex = outputElement.innerHTML.lastIndexOf("\n");
+      outputElement.innerHTML = outputElement.innerHTML.substring(0, lastLineIndex);
     }
 
     // Track the number of opening spans
@@ -125,6 +138,25 @@ function parseLines(ta, str) {
     });
 
     // Append the new text to the end of the output
-    ta.append(line);
+    outputElement.append(line);
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const gravityBtn = document.getElementById("gravityBtn");
+
+  gravityBtn.addEventListener("click", () => {
+    gravityBtn.disabled = true;
+    eventsource();
+  });
+
+  // Handle hiding of alerts
+  const dataHideElements = document.querySelectorAll("[data-hide]");
+  for (const element of dataHideElements) {
+    element.addEventListener("click", () => {
+      const hideClass = element.dataset.hide;
+      const closestElement = element.closest(`.${hideClass}`);
+      if (closestElement) $(closestElement).hide();
+    });
+  }
+});
