@@ -344,7 +344,7 @@ td.lookatme {
 }
 
 .user-panel > .image > img {
-  max-width: 52px;
+  max-width: 60px;
   min-width: 30px;
 }
 
@@ -354,6 +354,7 @@ td.lookatme {
   line-height: 1.05;
   flex: 1 1 auto;
   left: auto;
+  width: 138px;
 }
 
 .user-panel > .info > p {
