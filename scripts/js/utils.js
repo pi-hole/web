@@ -513,26 +513,19 @@ function parseQueryString() {
   return Object.fromEntries(params.entries());
 }
 
-// https://stackoverflow.com/q/21647928
-function hexEncode(string) {
-  let result = "";
-  for (let i = 0; i < string.length; i++) {
-    const hex = string.codePointAt(i).toString(16);
-    result += ("000" + hex).slice(-4);
-  }
+function hexEncode(text) {
+  if (typeof text !== "string" || text.length === 0) return "";
 
-  return result;
+  return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
 }
 
-// https://stackoverflow.com/q/21647928
-function hexDecode(string) {
-  const hexes = string.match(/.{1,4}/g) || [];
-  let back = "";
-  for (const hex of hexes) {
-    back += String.fromCodePoint(Number.parseInt(hex, 16));
-  }
+function hexDecode(text) {
+  if (typeof text !== "string" || text.length === 0) return "";
 
-  return back;
+  const hexes = text.match(/.{1,4}/g);
+  if (!hexes || hexes.length === 0) return "";
+
+  return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
 
 function listsAlert(type, items, data) {
