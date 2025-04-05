@@ -105,10 +105,11 @@ $(() => {
         className: "btn-sm datatable-bt deleteSelected",
         action() {
           // For each ".selected" row ...
-          $("tr.selected").each(function () {
+          const selectedRows = document.querySelectorAll("tr.selected");
+          for (const row of selectedRows) {
             // ... delete the row identified by "data-id".
-            delMsg($(this).attr("data-id"));
-          });
+            delMsg(row.dataset.id);
+          }
         },
       },
     ],

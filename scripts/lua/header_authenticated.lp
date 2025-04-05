@@ -52,7 +52,7 @@ mg.include('header.lp','r')
             <!-- Sidebar toggle button-->
             <button class="sidebar-toggle-svg" data-toggle="push-menu" aria-label="Toggle Navigation">
                 <i aria-hidden="true" class="fa fa-angle-double-left"></i>
-                <span class="warning-count hidden" id="top-warning-count"></span>
+                <span class="warning-count d-none" id="top-warning-count"></span>
             </button>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">

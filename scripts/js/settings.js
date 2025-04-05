@@ -11,14 +11,19 @@
 
 $(() => {
   // Handle hiding of alerts
-  $("[data-hide]").on("click", function () {
-    $(this)
-      .closest("." + $(this).attr("data-hide"))
-      .hide();
-  });
+  const dataHideElements = document.querySelectorAll("[data-hide]");
+  for (const element of dataHideElements) {
+    element.addEventListener("click", () => {
+      const hideClass = element.dataset.hide;
+      const closestElement = element.closest(`.${hideClass}`);
+      if (closestElement) $(closestElement).hide();
+    });
+  }
 
   // Handle saving of settings
-  $(".save-button").on("click", () => {
+  const saveButton = document.querySelector(".save-button");
+  if (!saveButton) return;
+  saveButton.addEventListener("click", () => {
     saveSettings();
   });
 });
@@ -119,33 +124,35 @@ function setConfigValues(topic, key, value) {
 }
 
 function saveSettings() {
-  const settings = {};
   utils.disableAll();
-  $("[data-key]").each(function () {
-    const key = $(this).data("key");
-    let value = $(this).val();
+
+  const settings = {};
+  const keyElements = document.querySelectorAll("[data-key]");
+
+  for (const element of keyElements) {
+    const { key } = element.dataset;
+    let { value } = element;
 
     // If this is a checkbox, use the checked state
-    if ($(this).is(":checkbox")) {
-      value = $(this).is(":checked");
+    if (element.matches('input[type="checkbox"]')) {
+      value = element.checked;
     }
 
     // If this is a radio button, skip all but the checked one
-    if ($(this).is(":radio") && !$(this).is(":checked")) return;
+    if (element.matches('input[type="radio"]') && !element.checked) continue;
 
     // If this is a string array, split the value into an array
-    if ($(this).is("textarea")) {
-      value = $(this).val();
-      value = value === "" ? [] : value.split("\n");
+    if (element.matches("textarea")) {
+      value = element.value === "" ? [] : element.value.split("\n");
     }
 
     // If this is an integer number, parse it accordingly
-    if ($(this).data("type") === "integer") {
+    if (element.dataset.type === "integer") {
       value = Number.parseInt(value, 10);
     }
 
     // If this is a floating point value, parse it accordingly
-    if ($(this).data("type") === "float") {
+    if (element.dataset.type === "float") {
       value = Number.parseFloat(value);
     }
 
@@ -163,7 +170,7 @@ function saveSettings() {
 
     // Merge deep object into settings
     $.extend(true, settings, obj);
-  });
+  }
 
   // Apply changes
   $.ajax({

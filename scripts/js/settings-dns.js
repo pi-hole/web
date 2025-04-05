@@ -73,18 +73,19 @@ function fillDNSupstreams(value, servers) {
   $("input[id^='DNSupstreams-']").on("change", () => {
     const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
     let customServers = 0;
-    $("#DNSupstreamsTable input").each(function () {
-      const title = $(this).closest("td").attr("title");
-      if (this.checked && !upstreams.includes(title)) {
+    for (const input of $("#DNSupstreamsTable input")) {
+      const title = $(input).closest("td").attr("title");
+      if (input.checked && !upstreams.includes(title)) {
         // Add server to array
         upstreams.push(title);
-      } else if (!this.checked && upstreams.includes(title)) {
+      } else if (!input.checked && upstreams.includes(title)) {
         // Remove server from array
         removeFromArray(upstreams, title);
       }
 
       if (upstreams.includes(title)) customServers--;
-    });
+    }
+
     // The variable will contain a negative value, we need to add the length to
     // get the correct number of custom servers
     customServers += upstreams.length;

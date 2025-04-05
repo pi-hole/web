@@ -270,12 +270,11 @@ function initTable() {
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
         action() {
-          // For each ".selected" row ...
-          const ids = [];
-          $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push({ item: $(this).attr("data-id") });
-          });
+          // Create an array of objects for each ".selected" row's data-id
+          const ids = [...document.querySelectorAll("tr.selected")].map(row => ({
+            item: row.dataset.id,
+          }));
+
           // Delete all selected rows at once
           delGroupItems("client", ids, table);
         },

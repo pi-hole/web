@@ -37,69 +37,67 @@ function secondsTimeSpanToHMS(seconds) {
 }
 
 function piholeChanged(blocking, timer = null) {
-  const status = $("#status");
-  const ena = $("#pihole-enable");
-  const dis = $("#pihole-disable");
-  const enaT = $("#enableTimer");
+  const status = document.getElementById("status");
+  const enableElement = document.getElementById("pihole-enable");
+  const disableElement = document.getElementById("pihole-disable");
+  const enableTimer = document.getElementById("enableTimer");
 
   if (timer !== null && Number.parseFloat(timer) > 0) {
-    enaT.text(Date.now() + Number.parseFloat(timer) * 1000);
+    enableTimer.textContent = Date.now() + Number.parseFloat(timer) * 1000;
     setTimeout(countDown, 100);
   }
 
   switch (blocking) {
     case "enabled": {
-      status.html("<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;&nbsp;Active");
-      ena.hide();
-      dis.show();
-      dis.removeClass("active");
+      status.innerHTML = "<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;&nbsp;Active";
+      enableElement.classList.add("d-none");
+      disableElement.classList.remove("d-none", "active");
 
       break;
     }
 
     case "disabled": {
-      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Blocking disabled");
-      ena.show();
-      dis.hide();
+      status.innerHTML = "<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Blocking disabled";
+      enableElement.classList.remove("d-none");
+      disableElement.classList.add("d-none");
 
       break;
     }
 
     case "failure": {
-      status.html(
-        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;&nbsp;<span class='text-red'>DNS server failure</span>"
-      );
-      ena.hide();
-      dis.hide();
+      status.innerHTML =
+        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;&nbsp;<span class='text-red'>DNS server failure</span>";
+      enableElement.classList.add("d-none");
+      disableElement.classList.add("d-none");
 
       break;
     }
 
     default: {
-      status.html("<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Status unknown");
-      ena.hide();
-      dis.hide();
+      status.innerHTML = "<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Status unknown";
+      enableElement.classList.add("d-none");
+      disableElement.classList.add("d-none");
     }
   }
 }
 
 function countDown() {
-  const ena = $("#enableLabel");
-  const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.text(), 10));
+  const enableLabel = document.getElementById("enableLabel");
+  const enableTimer = document.getElementById("enableTimer");
+  const target = new Date(Number.parseInt(enableTimer.textContent, 10));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
-  //Stop and remove timer when user enabled early
-  if ($("#pihole-enable").is(":hidden")) {
-    ena.text("Enable Blocking");
+  // Stop and remove timer when user enabled early
+  if (!utils.isVisible(document.getElementById("pihole-enable"))) {
+    enableLabel.textContent = "Enable Blocking";
     return;
   }
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
-    ena.text("Enable Blocking (" + secondsTimeSpanToHMS(seconds) + ")");
+    enableLabel.textContent = `Enable Blocking (${secondsTimeSpanToHMS(seconds)})`;
   } else {
-    ena.text("Enable Blocking");
+    enableLabel.textContent = "Enable Blocking";
     piholeChanged("enabled", null);
     if (localStorage) {
       localStorage.removeItem("countDownTarget");
@@ -136,7 +134,7 @@ function piholeChange(action, duration) {
       break;
   }
 
-  btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
+  btnStatus.innerHTML = "<i class='fa fa-spinner fa-spin'> </i>";
   $.ajax({
     url: document.body.dataset.apiurl + "/dns/blocking",
     method: "POST",
@@ -149,8 +147,8 @@ function piholeChange(action, duration) {
     }),
   })
     .done(data => {
-      if (data.blocking === action + "d") {
-        btnStatus.html("");
+      if (data.blocking === `${action}d`) {
+        btnStatus.innerHTML = "";
         piholeChanged(data.blocking, data.timer);
       }
     })
@@ -175,16 +173,28 @@ function testCookies() {
 }
 
 function applyCheckboxRadioStyle() {
-  // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
-  // as well as every element with an id that starts with "status_"
-  const sel = $("input[type='radio'],input[type='checkbox']")
-    .not("#selSec")
-    .not("#selMin")
-    .not("#expert-settings")
-    .not("#only-changed")
-    .not("[id^=status_]");
-  sel.parent().removeClass();
-  sel.parent().addClass("icheck-primary");
+  // Get all radio/checkboxes for theming...
+  const inputs = document.querySelectorAll("input[type='radio'], input[type='checkbox']");
+
+  for (const input of inputs) {
+    // ...except for the two radio buttons on the custom disable timer,
+    // as well as every element with an id that starts with "status_"
+    if (
+      input.id === "selSec" ||
+      input.id === "selMin" ||
+      input.id === "expert-settings" ||
+      input.id === "only-changed" ||
+      input.id.startsWith("status_")
+    ) {
+      continue;
+    }
+
+    // Get parent and update classes
+    const parent = input.parentElement;
+    if (parent) {
+      parent.className = "icheck-primary";
+    }
+  }
 }
 
 let systemTimer;
@@ -217,14 +227,14 @@ function updateQueryFrequency(intl, frequency) {
     maximumFractionDigits: fractionDigits,
   }).format(freq);
 
-  $("#query_frequency")
-    .html(
-      '<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;' +
-        freqFormatted +
-        "&thinsp;" +
-        unit
-    )
-    .attr("title", title);
+  const queryFreqElem = document.getElementById("query_frequency");
+
+  queryFreqElem.innerHTML =
+    '<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;' +
+    freqFormatted +
+    "&thinsp;" +
+    unit;
+  queryFreqElem.title = title;
 }
 
 let ftlinfoTimer = null;
@@ -236,44 +246,60 @@ function updateFtlInfo() {
       const ftl = data.ftl;
       const database = ftl.database;
       const intl = new Intl.NumberFormat();
-      $("#num_groups").text(intl.format(database.groups));
-      $("#num_clients").text(intl.format(database.clients));
-      $("#num_lists").text(intl.format(database.lists));
-      $("#num_gravity").text(intl.format(database.gravity));
-      $("#num_allowed")
-        .text(intl.format(database.domains.allowed + database.regex.allowed))
-        .attr(
-          "title",
-          "Allowed: " +
-            intl.format(database.domains.allowed) +
-            " exact domains and " +
-            intl.format(database.regex.allowed) +
-            " regex filters are enabled"
-        );
-      $("#num_denied")
-        .text(intl.format(database.domains.denied + database.regex.denied))
-        .attr(
-          "title",
-          "Denied: " +
-            intl.format(database.domains.denied) +
-            " exact domains and " +
-            intl.format(database.regex.denied) +
-            " regex filters are enabled"
-        );
-      updateQueryFrequency(intl, ftl.query_frequency);
-      $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
-      $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
-      $("#sysinfo-pid-ftl").text(ftl.pid);
-      const startdate = moment()
-        .subtract(ftl.uptime, "milliseconds")
-        .format("dddd, MMMM Do YYYY, HH:mm:ss");
-      $("#sysinfo-uptime-ftl").text(startdate);
+      document.getElementById("num_groups").textContent = intl.format(database.groups);
+      document.getElementById("num_clients").textContent = intl.format(database.clients);
+      document.getElementById("num_lists").textContent = intl.format(database.lists);
+      document.getElementById("num_gravity").textContent = intl.format(database.gravity);
 
-      $(".destructive_action").prop("disabled", !ftl.allow_destructive);
-      $(".destructive_action").prop(
-        "title",
-        ftl.allow_destructive ? "" : "Destructive actions are disabled by a config setting"
-      );
+      const numAllowedEl = document.getElementById("num_allowed");
+      numAllowedEl.textContent = intl.format(database.domains.allowed + database.regex.allowed);
+      numAllowedEl.title =
+        "Allowed: " +
+        intl.format(database.domains.allowed) +
+        " exact domains and " +
+        intl.format(database.regex.allowed) +
+        " regex filters are enabled";
+
+      const numDeniedEl = document.getElementById("num_denied");
+      numDeniedEl.textContent = intl.format(database.domains.denied + database.regex.denied);
+      numDeniedEl.title =
+        "Denied: " +
+        intl.format(database.domains.denied) +
+        " exact domains and " +
+        intl.format(database.regex.denied) +
+        " regex filters are enabled";
+      updateQueryFrequency(intl, ftl.query_frequency);
+
+      const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
+      if (sysInfoCpuFtl !== null) {
+        sysInfoCpuFtl.textContent = "(" + ftl["%cpu"].toFixed(1) + "% used by FTL)";
+      }
+
+      const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
+      if (sysInfoRamFtl !== null) {
+        sysInfoRamFtl.textContent = "(" + ftl["%mem"].toFixed(1) + "% used by FTL)";
+      }
+
+      const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
+      if (sysInfoPidFtl !== null) {
+        sysInfoPidFtl.textContent = ftl.pid;
+      }
+
+      const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
+      if (sysInfoUptimeFtl !== null) {
+        const startdate = moment()
+          .subtract(ftl.uptime, "milliseconds")
+          .format("dddd, MMMM Do YYYY, HH:mm:ss");
+        sysInfoUptimeFtl.textContent = startdate;
+      }
+
+      const destructiveActions = document.querySelectorAll(".destructive_action");
+      for (const element of destructiveActions) {
+        element.disabled = !ftl.allow_destructive;
+        element.title = ftl.allow_destructive
+          ? ""
+          : "Destructive actions are disabled by a config setting";
+      }
 
       clearTimeout(ftlinfoTimer);
       ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
@@ -309,80 +335,98 @@ function updateSystemInfo() {
         system.memory.swap.total > 0
           ? ((1e2 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
           : "N/A";
-      let color;
-      color = percentRAM > 75 ? "text-red" : "text-green-light";
-      $("#memory").html(
+      let color = percentRAM > 75 ? "text-red" : "text-green-light";
+
+      const memoryEl = document.getElementById("memory");
+      const sysInfoRam = document.getElementById("sysinfo-memory-ram");
+      const sysInfoSwapEl = document.getElementById("sysinfo-memory-swap");
+      const cpuEl = document.getElementById("cpu");
+      const sysInfoCpu = document.getElementById("sysinfo-cpu");
+      const statusEl = document.getElementById("status");
+      const sysInfoUptime = document.getElementById("sysinfo-uptime");
+      const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
+
+      memoryEl.innerHTML =
         '<i class="fa fa-fw fa-memory ' +
-          color +
-          '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
-          percentRAM.toFixed(1) +
-          "&thinsp;%"
-      );
-      $("#memory").prop(
-        "title",
-        "Total memory: " + totalRAM.toFixed(1) + " " + totalRAMUnit + ", Swap usage: " + swap
-      );
-      $("#sysinfo-memory-ram").text(
-        percentRAM.toFixed(1) + "% of " + totalRAM.toFixed(1) + " " + totalRAMUnit + " is used"
-      );
-      if (system.memory.swap.total > 0) {
-        $("#sysinfo-memory-swap").text(
-          percentSwap.toFixed(1) + "% of " + totalSwap.toFixed(1) + " " + totalSwapUnit + " is used"
-        );
-      } else {
-        $("#sysinfo-memory-swap").text("No swap space available");
+        color +
+        '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
+        percentRAM.toFixed(1) +
+        "&thinsp;%";
+      memoryEl.title =
+        "Total memory: " + totalRAM.toFixed(1) + " " + totalRAMUnit + ", Swap usage: " + swap;
+
+      if (sysInfoRam !== null) {
+        sysInfoRam.textContent =
+          percentRAM.toFixed(1) + "% of " + totalRAM.toFixed(1) + " " + totalRAMUnit + " is used";
+      }
+
+      if (sysInfoSwapEl !== null) {
+        if (system.memory.swap.total > 0) {
+          sysInfoSwapEl.textContent =
+            percentSwap.toFixed(1) +
+            "% of " +
+            totalSwap.toFixed(1) +
+            " " +
+            totalSwapUnit +
+            " is used";
+        } else {
+          sysInfoSwapEl.textContent = "No swap space available";
+        }
       }
 
       color = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
-      $("#cpu").html(
+
+      cpuEl.innerHTML =
         '<i class="fa fa-fw fa-microchip ' +
-          color +
-          '"></i>&nbsp;&nbsp;Load:&nbsp;' +
-          system.cpu.load.raw[0].toFixed(2) +
-          "&nbsp;/&nbsp;" +
-          system.cpu.load.raw[1].toFixed(2) +
-          "&nbsp;/&nbsp;" +
-          system.cpu.load.raw[2].toFixed(2)
-      );
-      $("#cpu").prop(
-        "title",
+        color +
+        '"></i>&nbsp;&nbsp;Load:&nbsp;' +
+        system.cpu.load.raw[0].toFixed(2) +
+        "&nbsp;/&nbsp;" +
+        system.cpu.load.raw[1].toFixed(2) +
+        "&nbsp;/&nbsp;" +
+        system.cpu.load.raw[2].toFixed(2);
+      cpuEl.title =
         "Load averages for the past 1, 5, and 15 minutes\non a system with " +
-          system.cpu.nprocs +
-          " core" +
-          (system.cpu.nprocs > 1 ? "s" : "") +
-          " running " +
-          system.procs +
-          " processes " +
-          (system.cpu.load.raw[0] > system.cpu.nprocs
-            ? " (load is higher than the number of cores)"
-            : "")
-      );
-      $("#sysinfo-cpu").text(
-        system.cpu["%cpu"].toFixed(1) +
+        system.cpu.nprocs +
+        " core" +
+        (system.cpu.nprocs > 1 ? "s" : "") +
+        " running " +
+        system.procs +
+        " processes " +
+        (system.cpu.load.raw[0] > system.cpu.nprocs
+          ? " (load is higher than the number of cores)"
+          : "");
+
+      if (sysInfoCpu !== null) {
+        sysInfoCpu.textContent =
+          system.cpu["%cpu"].toFixed(1) +
           "% on " +
           system.cpu.nprocs +
           " core" +
           (system.cpu.nprocs > 1 ? "s" : "") +
           " running " +
           system.procs +
-          " processes"
-      );
+          " processes";
+      }
 
       const startdate = moment()
         .subtract(system.uptime, "seconds")
         .format("dddd, MMMM Do YYYY, HH:mm:ss");
-      $("#status").prop(
-        "title",
+
+      statusEl.title =
         "System uptime: " +
-          moment.duration(1000 * system.uptime).humanize() +
-          " (running since " +
-          startdate +
-          ")"
-      );
-      $("#sysinfo-uptime").text(
-        moment.duration(1000 * system.uptime).humanize() + " (running since " + startdate + ")"
-      );
-      $("#sysinfo-system-overlay").hide();
+        moment.duration(1000 * system.uptime).humanize() +
+        " (running since " +
+        startdate +
+        ")";
+
+      if (sysInfoUptime !== null) {
+        sysInfoUptime.textContent =
+          moment.duration(1000 * system.uptime).humanize() + " (running since " + startdate + ")";
+        if (sysInfoSystemOverlay !== null) {
+          sysInfoSystemOverlay.style.display = "none";
+        }
+      }
 
       clearTimeout(systemTimer);
       systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
@@ -451,8 +495,10 @@ function updateVersionInfo() {
     let updateAvailable = false;
     let dockerUpdate = false;
     let isDocker = false;
-    $("#versions").empty();
-    $("#update-hint").empty();
+    const versionsEl = document.getElementById("versions");
+    const updateHintEl = document.getElementById("update-hint");
+    versionsEl.innerHTML = "";
+    updateHintEl.innerHTML = "";
 
     const versions = [
       {
@@ -549,31 +595,28 @@ function updateVersionInfo() {
 
         // Display update information of individual components only if we are not running in a Docker container
         if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-          $("#versions").append(
+          versionsEl.innerHTML +=
             "<li><strong>" +
-              v.name +
-              "</strong> " +
-              localVersion +
-              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
-              v.url +
-              '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
-          );
+            v.name +
+            "</strong> " +
+            localVersion +
+            '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
+            v.url +
+            '" rel="noopener noreferrer" target="_blank">Update available!</a></li>';
           // if at least one component can be updated, display the update-hint footer
           updateAvailable = true;
         } else {
-          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+          versionsEl.innerHTML += "<li><strong>" + v.name + "</strong> " + localVersion + "</li>";
         }
       }
     }
 
     if (dockerUpdate)
-      $("#update-hint").html(
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
-      );
+      updateHintEl.innerHTML =
+        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.';
     else if (updateAvailable)
-      $("#update-hint").html(
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
-      );
+      updateHintEl.innerHTML =
+        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
 
     clearTimeout(versionTimer);
     versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
@@ -582,15 +625,19 @@ function updateVersionInfo() {
 
 $(() => {
   if (!globalThis._isLoginPage) updateInfo();
-  const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.text(), 10));
-  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
-  if (seconds > 0) {
-    setTimeout(countDown, 100);
+
+  const enaT = document.getElementById("enableTimer");
+  if (enaT) {
+    const target = new Date(Number.parseInt(enaT.textContent, 10));
+    const seconds = Math.round((target.getTime() - Date.now()) / 1000);
+    if (seconds > 0) {
+      setTimeout(countDown, 100);
+    }
   }
 
-  if (!testCookies() && $("#cookieInfo").length > 0) {
-    $("#cookieInfo").show();
+  const cookieInfoElement = document.getElementById("cookieInfo");
+  if (!testCookies() && cookieInfoElement) {
+    cookieInfoElement.classList.remove("d-none");
   }
 
   // Apply icheckbox/iradio style
@@ -605,31 +652,32 @@ $(() => {
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", e => {
+document.getElementById("pihole-enable").addEventListener("click", e => {
   e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-indefinitely").on("click", e => {
+document.getElementById("pihole-disable-indefinitely").addEventListener("click", e => {
   e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", e => {
+document.getElementById("pihole-disable-10s").addEventListener("click", e => {
   e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", e => {
+document.getElementById("pihole-disable-30s").addEventListener("click", e => {
   e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", e => {
+document.getElementById("pihole-disable-5m").addEventListener("click", e => {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", e => {
+document.getElementById("pihole-disable-custom").addEventListener("click", e => {
   e.preventDefault();
-  let custVal = $("#customTimeout").val();
-  custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
+  const btnMins = document.getElementById("btnMins");
+  let custVal = document.getElementById("customTimeout").value;
+  custVal = btnMins.classList.contains("active") ? custVal * 60 : custVal;
   piholeChange("disable", custVal);
 });
 
@@ -686,47 +734,50 @@ function applyExpertSettings() {
     //    settings page as well, even when the button has "only modified"
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
-    if (document.querySelector(".settings-selector") && $(".box:visible").length === 0) {
+    const settingsSelector = document.querySelector(".settings-selector");
+    const boxes = document.querySelectorAll(".box");
+    const visibleBoxes = [...boxes].filter(box => utils.isVisible(box));
+
+    if (settingsSelector && visibleBoxes.length === 0) {
       globalThis.location.href = `${document.body.dataset.webhome}settings/system`;
     }
   }
 }
 
 function addAdvancedInfo() {
-  const advancedInfoSource = $("#advanced-info-data");
-  const advancedInfoTarget = $("#advanced-info");
+  const advancedInfoSource = document.getElementById("advanced-info-data");
+  const advancedInfoTarget = document.getElementById("advanced-info");
+
+  if (!advancedInfoSource || !advancedInfoTarget) return;
   const isTLS = location.protocol === "https:";
-  const clientIP = advancedInfoSource.data("client-ip");
-  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") || "") || null;
-  const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
-  const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
+  const clientIP = advancedInfoSource.dataset.clientIp;
+  const XForwardedFor = globalThis.atob(advancedInfoSource.dataset.xff || "") || null;
+  const starttime = Number.parseFloat(advancedInfoSource.dataset.starttime);
+  const endtime = Number.parseFloat(advancedInfoSource.dataset.endtime);
   const totaltime = 1e3 * (endtime - starttime);
 
   // Show advanced info
-  advancedInfoTarget.empty();
-
   // Add TLS and client IP info
-  advancedInfoTarget.append(
+  advancedInfoTarget.innerHTML =
     'Client: <i class="fa-solid fa-fw fa-lock' +
-      (isTLS ? " text-green" : "-open") +
-      '" title="Your connection is ' +
-      (isTLS ? "" : "NOT ") +
-      'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>'
-  );
+    (isTLS ? " text-green" : "-open") +
+    '" title="Your connection is ' +
+    (isTLS ? "" : "NOT ") +
+    'end-to-end encrypted (TLS/SSL)"></i>&nbsp;<span id="client-id"></span><br>';
 
   // Add client IP info
-  $("#client-id").text(XForwardedFor ?? clientIP);
+  const clientIdEl = document.getElementById("client-id");
+  clientIdEl.textContent = XForwardedFor ?? clientIP;
   if (XForwardedFor) {
     // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
     // the real client IP as tooltip
-    $("#client-id").css("font-style", "italic");
-    $("#client-id").prop("title", "Original remote address: " + clientIP);
+    clientIdEl.style.fontStyle = "italic";
+    clientIdEl.title = "Original remote address: " + clientIP;
   }
 
   // Add render time info
-  advancedInfoTarget.append(
-    "Render time: " + (totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3)) + " ms"
-  );
+  advancedInfoTarget.innerHTML +=
+    "Render time: " + (totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3)) + " ms";
 }
 
 $(() => {

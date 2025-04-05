@@ -14,8 +14,9 @@ $(() => {
   // because we are using the jQuery $.ajax() function directly in some cases
   // Furthermore, has this to be done before any AJAX request is made so that
   // the CSRF token is sent along with each request to the API
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   $.ajaxSetup({
-    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
+    headers: { "X-CSRF-TOKEN": csrfToken },
   });
 });
 
@@ -165,22 +166,23 @@ function datetimeRelative(date) {
 }
 
 function disableAll() {
-  $("input").prop("disabled", true);
-  $("select").prop("disabled", true);
-  $("button").prop("disabled", true);
-  $("textarea").prop("disabled", true);
+  for (const element of document.querySelectorAll("input, select, button, textarea")) {
+    element.disabled = true;
+  }
 }
 
 function enableAll() {
-  $("input").prop("disabled", false);
-  $("select").prop("disabled", false);
-  $("button").prop("disabled", false);
-  $("textarea").prop("disabled", false);
+  for (const element of document.querySelectorAll("input, select, button, textarea")) {
+    element.removeAttribute("disabled");
+  }
 
   // Enable custom input field only if applicable
-  const ip = $("#select") ? $("#select").val() : null;
-  if (ip !== null && ip !== "custom") {
-    $("#ip-custom").prop("disabled", true);
+  const ipCustomElem = document.getElementById("ip-custom");
+  const selectElem = document.getElementById("select");
+  const ip = selectElem ? selectElem.value : null;
+
+  if (ip !== null && ip !== "custom" && ipCustomElem !== null) {
+    ipCustomElem.disabled = true;
   }
 }
 
@@ -237,7 +239,7 @@ function setBsSelectDefaults() {
   bsSelectDefaults.dropdownAlignRight = "auto";
   bsSelectDefaults.selectAllText = "All";
   bsSelectDefaults.deselectAllText = "None";
-  bsSelectDefaults.countSelectedText = function (num, total) {
+  bsSelectDefaults.countSelectedText = (num, total) => {
     if (num === total) {
       return "All selected (" + num + ")";
     }
@@ -386,18 +388,24 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
-  $.ajax({
-    url:
-      document.body.dataset.apiurl +
-      "/info/messages/count" +
-      (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
-    method: "GET",
-    dataType: "json",
-  })
-    .done(data => {
+
+  fetch(
+    `${document.body.dataset.apiurl}/info/messages/count${ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "X-CSRF-TOKEN": csrfToken,
+      },
+    }
+  )
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(data => {
+      const warningCountEls = document.querySelectorAll(".warning-count");
       if (data.count > 0) {
         const more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
         const title =
@@ -405,26 +413,41 @@ function checkMessages() {
             ? "There are " + data.count + " warnings." + more
             : "There is one warning." + more;
 
-        $(".warning-count").prop("title", title);
-        $(".warning-count").text(data.count);
-        $(".warning-count").removeClass("hidden");
+        for (const element of warningCountEls) {
+          element.title = title;
+          element.textContent = data.count;
+          element.classList.remove("d-none");
+        }
       } else {
-        $(".warning-count").addClass("hidden");
+        for (const element of warningCountEls) {
+          element.classList.add("d-none");
+        }
       }
     })
-    .fail(data => {
-      $(".warning-count").addClass("hidden");
-      apiFailure(data);
+    .catch(error => {
+      const warningCountEls = document.querySelectorAll(".warning-count");
+      for (const element of warningCountEls) {
+        element.classList.add("d-none");
+      }
+
+      apiFailure(error);
     });
 }
 
 function doLogout(url) {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/auth",
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  fetch(`${document.body.dataset.apiurl}/auth`, {
     method: "DELETE",
-  }).always(() => {
-    globalThis.location = url;
-  });
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
+  })
+    .catch(() => {
+      // Ignore errors
+    })
+    .finally(() => {
+      globalThis.location = url;
+    });
 }
 
 function renderTimestamp(data, type) {
@@ -647,6 +670,12 @@ function setInter(func, interval) {
   globalThis.setTimeout(setInter, interval, func, interval);
 }
 
+function isVisible(element) {
+  return Boolean(
+    element.offsetWidth || element.offsetHeight || element.getClientRects().length > 0
+  );
+}
+
 /**
  * Toggle or set the collapse state of a box element
  * @param {HTMLElement} box - The box element
@@ -706,5 +735,6 @@ globalThis.utils = (function () {
     setTimer,
     setInter,
     toggleBoxCollapse,
+    isVisible,
   };
 })();

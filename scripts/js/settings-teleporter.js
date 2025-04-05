@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false */
+/* global utils:false, apiFailure:false */
 
 "use strict";
 
@@ -44,7 +44,7 @@ function importZIP() {
     body: formData,
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
   })
-    .then(response => response.json())
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
     .then(data => {
       $("#import-spinner").hide();
       $("#modal-import-success").hide();
@@ -103,6 +103,6 @@ $("#GETTeleporter").on("click", () => {
 $(() => {
   // Show warning if not accessed over HTTPS
   if (location.protocol !== "https:") {
-    $("#encryption-warning").show();
+    document.getElementById("encryption-warning").classList.remove("d-none");
   }
 });

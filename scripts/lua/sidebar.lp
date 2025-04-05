@@ -88,7 +88,10 @@
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="menu-dns treeview">
                     <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
+                        <i class="fa fa-fw menu-icon fa-stop"></i>
+                        <span>Disable Blocking&nbsp;&nbsp;&nbsp;
+                            <span id="flip-status-disable"></span>
+                        </span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -122,7 +125,7 @@
                     </ul>
                     <!-- <a href="<?=webhome?>#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="menu-dns treeview" style="display: none;">
+                <li id="pihole-enable" class="menu-dns treeview d-none">
                     <a href="<?=webhome?>#">
                         <i class="fa fa-fw menu-icon fa-play"></i>
                         <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
@@ -186,7 +189,7 @@
                 <li class="menu-system treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
                     <a href="<?=webhome?>#">
                         <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
-                        <span class="warning-count hidden"></span>
+                        <span class="warning-count d-none"></span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -196,7 +199,7 @@
                         <li<? if scriptname == 'messages' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>messages">
                                 <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
-                                <span class="pull-right-container warning-count hidden"></span>
+                                <span class="pull-right-container warning-count d-none"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->

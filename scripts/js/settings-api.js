@@ -152,12 +152,11 @@ $(() => {
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
         action() {
-          // For each ".selected" row ...
-          const ids = [];
-          $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push(Number.parseInt($(this).attr("data-id"), 10));
-          });
+          // Create an array of IDs for each ".selected" row's data-id
+          const ids = [...document.querySelectorAll("tr.selected")].map(row =>
+            Number.parseInt(row.dataset.id, 10)
+          );
+
           // Delete all selected rows at once
           deleteMultipleSessions(ids);
         },

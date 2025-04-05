@@ -395,12 +395,12 @@ function initTable() {
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
         action() {
-          // For each ".selected" row ...
-          const ids = [];
-          $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push({ item: $(this).attr("data-address"), type: $(this).attr("data-type") });
-          });
+          // Create an array of item & type for each ".selected" row
+          const ids = [...document.querySelectorAll("tr.selected")].map(row => ({
+            item: row.dataset.address,
+            type: row.dataset.type,
+          }));
+
           // Delete all selected rows at once
           delGroupItems("list", ids, table, "multiple ");
         },

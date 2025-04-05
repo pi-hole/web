@@ -152,10 +152,12 @@ $(() => {
         action() {
           // For each ".selected" row ...
           const ids = [];
-          $("tr.selected").each(function () {
+          const selectedRows = document.querySelectorAll("tr.selected");
+          for (const row of selectedRows) {
             // ... add the row identified by "data-id".
-            ids.push({ item: $(this).attr("data-id") });
-          });
+            ids.push({ item: row.dataset.id });
+          }
+
           // Delete all selected rows at once
           delGroupItems("group", ids, table);
         },

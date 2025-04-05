@@ -21,7 +21,10 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
             <div class="box-body">
                 <p><strong>Warning:</strong><br>This archive contains sensitive information about your Pi-hole installation, e.g. your 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
-                <p class='text-danger' id="encryption-warning" style="display: none;"><strong>Warning:</strong><br>You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p>
+                <p class="text-danger d-none" id="encryption-warning">
+                    <strong>Warning:</strong><br>
+                    You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.
+                </p>
                 <div class="pull-right">
                     <a class="btn btn-app btn-success" id="GETTeleporter" target="_blank">
                         <i class="fa fa-save fa-xl"></i><br>Export
@@ -89,7 +92,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div id="modal-import-gravity" style="display:none">
                     <div class="alert alert-info alert-dismissible">
                         <h4><i class="icon fa fa-fw fa-info-circle"></i> Please run gravity</h4>
-                        <p>Use <a href='<?=webhome?>gravity'>Tools &rarr; Update Gravity</a> or run <code>pihole -g</code> to update your lists.</p>
+                        <p>Use <a href="<?=webhome?>gravity">Tools &rarr; Update Gravity</a> or run <code>pihole -g</code> to update your lists.</p>
                     </div>
                 </div>
                 <div id="modal-import-info-message"></div>

@@ -335,12 +335,9 @@ function initTable() {
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
         action() {
-          // For each ".selected" row ...
-          const ids = [];
-          $("tr.selected").each(function () {
-            // ... add the row identified by "data-id".
-            ids.push($(this).attr("data-id"));
-          });
+          // Create an array of objects for each ".selected" row's data-id
+          const ids = [...document.querySelectorAll("tr.selected")].map(row => row.dataset.id);
+
           // Delete all selected rows at once
           deleteDomains(ids);
         },
