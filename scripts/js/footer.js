@@ -642,34 +642,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Handle Enable/Disable
-document.getElementById("pihole-enable").addEventListener("click", e => {
-  e.preventDefault();
+// Handle Enable/Disable buttons
+function setupEnableDisableButtons(buttonId, action, duration, preCallback = null) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+
+  button.addEventListener("click", event => {
+    event.preventDefault();
+
+    if (preCallback) {
+      preCallback();
+    }
+
+    // Check if duration is a function and call it if it is
+    const actualDuration = typeof duration === "function" ? duration() : duration;
+
+    piholeChange(action, actualDuration);
+  });
+}
+
+setupEnableDisableButtons("pihole-enable", "enable", "", () => {
   localStorage.removeItem("countDownTarget");
-  piholeChange("enable", "");
 });
-document.getElementById("pihole-disable-indefinitely").addEventListener("click", e => {
-  e.preventDefault();
-  piholeChange("disable", "0");
-});
-document.getElementById("pihole-disable-10s").addEventListener("click", e => {
-  e.preventDefault();
-  piholeChange("disable", "10");
-});
-document.getElementById("pihole-disable-30s").addEventListener("click", e => {
-  e.preventDefault();
-  piholeChange("disable", "30");
-});
-document.getElementById("pihole-disable-5m").addEventListener("click", e => {
-  e.preventDefault();
-  piholeChange("disable", "300");
-});
-document.getElementById("pihole-disable-custom").addEventListener("click", e => {
-  e.preventDefault();
+
+setupEnableDisableButtons("pihole-disable-indefinitely", "disable", "0");
+setupEnableDisableButtons("pihole-disable-10s", "disable", "10");
+setupEnableDisableButtons("pihole-disable-30s", "disable", "30");
+setupEnableDisableButtons("pihole-disable-5m", "disable", "300");
+
+setupEnableDisableButtons("pihole-disable-custom", "disable", () => {
   const btnMins = document.getElementById("btnMins");
-  let custVal = document.getElementById("customTimeout").value;
-  custVal = btnMins.classList.contains("active") ? custVal * 60 : custVal;
-  piholeChange("disable", custVal);
+  const custVal = document.getElementById("customTimeout").value;
+  return btnMins.classList.contains("active") ? custVal * 60 : custVal;
 });
 
 function initSettingsLevel() {
