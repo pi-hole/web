@@ -7,30 +7,32 @@
 
 /* global utils:false, moment:false */
 
-var _isLoginPage = false;
+"use strict";
+
+globalThis._isLoginPage = false;
 
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
   summary: 1000, // 1 sec (dashboard)
   query_log: 2000, // 2 sec (Query Log)
-  blocking: 10000, // 10 sec (all pages, sidebar)
-  metrics: 10000, // 10 sec (settings page)
-  system: 20000, // 20 sec (all pages, sidebar)
-  query_types: 60000, // 1 min (dashboard)
-  upstreams: 60000, // 1 min (dashboard)
-  top_lists: 60000, // 1 min (dashboard)
-  messages: 60000, // 1 min (all pages)
-  version: 120000, // 2 min (all pages, footer)
-  ftl: 120000, // 2 min (all pages, sidebar)
-  hosts: 120000, // 2 min (settings page)
-  history: 600000, // 10 min (dashboard)
-  clients: 600000, // 10 min (dashboard)
+  blocking: 10_000, // 10 sec (all pages, sidebar)
+  metrics: 10_000, // 10 sec (settings page)
+  system: 20_000, // 20 sec (all pages, sidebar)
+  query_types: 60_000, // 1 min (dashboard)
+  upstreams: 60_000, // 1 min (dashboard)
+  top_lists: 60_000, // 1 min (dashboard)
+  messages: 60_000, // 1 min (all pages)
+  version: 120_000, // 2 min (all pages, footer)
+  ftl: 120_000, // 2 min (all pages, sidebar)
+  hosts: 120_000, // 2 min (settings page)
+  history: 600_000, // 10 min (dashboard)
+  clients: 600_000, // 10 min (dashboard)
 };
 
 function secondsTimeSpanToHMS(s) {
-  var h = Math.floor(s / 3600); //Get whole hours
+  const h = Math.floor(s / 3600); //Get whole hours
   s -= h * 3600;
-  var m = Math.floor(s / 60); //Get remaining minutes
+  const m = Math.floor(s / 60); //Get remaining minutes
   s -= m * 60;
   return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); //zero padding on minutes and seconds
 }
@@ -41,8 +43,8 @@ function piholeChanged(blocking, timer = null) {
   const dis = $("#pihole-disable");
   const enaT = $("#enableTimer");
 
-  if (timer !== null && parseFloat(timer) > 0) {
-    enaT.html(Date.now() + parseFloat(timer) * 1000);
+  if (timer !== null && Number.parseFloat(timer) > 0) {
+    enaT.html(Date.now() + Number.parseFloat(timer) * 1000);
     setTimeout(countDown, 100);
   }
 
@@ -83,10 +85,10 @@ function piholeChanged(blocking, timer = null) {
 }
 
 function countDown() {
-  var ena = $("#enableLabel");
-  var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.text(), 10));
-  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
+  const ena = $("#enableLabel");
+  const enaT = $("#enableTimer");
+  const target = new Date(Number.parseInt(enaT.text(), 10));
+  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   //Stop and remove timer when user enabled early
   if ($("#pihole-enable").is(":hidden")) {
@@ -117,11 +119,11 @@ function checkBlocking() {
     url: document.body.dataset.apiurl + "/dns/blocking",
     method: "GET",
   })
-    .done(function (data) {
+    .done(data => {
       piholeChanged(data.blocking, data.timer);
       utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
       utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
     });
@@ -150,16 +152,16 @@ function piholeChange(action, duration) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       blocking: action === "enable",
-      timer: parseInt(duration, 10) > 0 ? parseInt(duration, 10) : null,
+      timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
     }),
   })
-    .done(function (data) {
+    .done(data => {
       if (data.blocking === action + "d") {
         btnStatus.html("");
         piholeChanged(data.blocking, data.timer);
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -171,7 +173,7 @@ function testCookies() {
 
   // set and read cookie
   document.cookie = "cookietest=1";
-  var ret = document.cookie.indexOf("cookietest=") !== -1;
+  const ret = document.cookie.includes("cookietest=");
 
   // delete cookie
   document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
@@ -179,11 +181,11 @@ function testCookies() {
   return ret;
 }
 
-var iCheckStyle = "primary";
+const iCheckStyle = "primary";
 function applyCheckboxRadioStyle() {
   // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
   // as well as every element with an id that starts with "status_"
-  var sel = $("input[type='radio'],input[type='checkbox']")
+  const sel = $("input[type='radio'],input[type='checkbox']")
     .not("#selSec")
     .not("#selMin")
     .not("#expert-settings")
@@ -195,18 +197,18 @@ function applyCheckboxRadioStyle() {
 
 function initCheckboxRadioStyle() {
   function getCheckboxURL(style) {
-    var extra = style.startsWith("material-") ? "material" : "bootstrap";
+    const extra = style.startsWith("material-") ? "material" : "bootstrap";
     const webhome = document.body.dataset.webhome;
     return webhome + "vendor/icheck/icheck-" + extra + ".min.css";
   }
 
   // Read from local storage, initialize if needed
-  var chkboxStyle = localStorage ? localStorage.getItem("theme_icheck") : null;
+  let chkboxStyle = localStorage ? localStorage.getItem("theme_icheck") : null;
   if (chkboxStyle === null) {
     chkboxStyle = "primary";
   }
 
-  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet">');
+  const boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet">');
   // Only add the stylesheet if it's not already present
   if ($("link[href='" + boxsheet.attr("href") + "']").length === 0) boxsheet.appendTo("head");
 
@@ -214,18 +216,20 @@ function initCheckboxRadioStyle() {
   applyCheckboxRadioStyle();
 
   // Add handler when on settings page
-  var iCheckStyle = $("#iCheckStyle");
+  // TODO FIX ME no var
+  var iCheckStyle = $("#iCheckStyle"); // eslint-disable-line no-var
   if (iCheckStyle !== null) {
     iCheckStyle.val(chkboxStyle);
     iCheckStyle.on("change", function () {
-      var themename = $(this).val();
+      const themename = $(this).val();
       localStorage.setItem("theme_icheck", themename);
       applyCheckboxRadioStyle();
     });
   }
 }
 
-var systemTimer, versionTimer;
+let systemTimer;
+let versionTimer;
 function updateInfo() {
   updateSystemInfo();
   updateVersionInfo();
@@ -234,7 +238,7 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(intl, frequency) {
-  let freq = parseFloat(frequency) * 60;
+  let freq = Number.parseFloat(frequency) * 60;
   let unit = "q/min";
   let title = "Queries per minute";
   if (freq > 100) {
@@ -264,15 +268,15 @@ function updateQueryFrequency(intl, frequency) {
     .attr("title", title);
 }
 
-var ftlinfoTimer = null;
+let ftlinfoTimer = null;
 function updateFtlInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/ftl",
   })
-    .done(function (data) {
-      var ftl = data.ftl;
-      var database = ftl.database;
-      var intl = new Intl.NumberFormat();
+    .done(data => {
+      const ftl = data.ftl;
+      const database = ftl.database;
+      const intl = new Intl.NumberFormat();
       $("#num_groups").text(intl.format(database.groups));
       $("#num_clients").text(intl.format(database.clients));
       $("#num_lists").text(intl.format(database.lists));
@@ -301,7 +305,7 @@ function updateFtlInfo() {
       $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-pid-ftl").text(ftl.pid);
-      var startdate = moment()
+      const startdate = moment()
         .subtract(ftl.uptime, "milliseconds")
         .format("dddd, MMMM Do YYYY, HH:mm:ss");
       $("#sysinfo-uptime-ftl").text(startdate);
@@ -317,7 +321,7 @@ function updateFtlInfo() {
       clearTimeout(ftlinfoTimer);
       ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -326,10 +330,10 @@ function updateSystemInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/system",
   })
-    .done(function (data) {
-      var system = data.system;
-      var percentRAM = system.memory.ram["%used"];
-      var percentSwap = system.memory.swap["%used"];
+    .done(data => {
+      const system = data.system;
+      const percentRAM = system.memory.ram["%used"];
+      const percentSwap = system.memory.swap["%used"];
       let totalRAM = system.memory.ram.total / 1024;
       let totalRAMUnit = "MB";
       if (totalRAM > 1024) {
@@ -344,11 +348,11 @@ function updateSystemInfo() {
         totalSwapUnit = "GB";
       }
 
-      var swap =
+      const swap =
         system.memory.swap.total > 0
           ? ((1e2 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
           : "N/A";
-      var color;
+      let color;
       color = percentRAM > 75 ? "text-red" : "text-green-light";
       $("#memory").html(
         '<i class="fa fa-fw fa-memory ' +
@@ -407,7 +411,7 @@ function updateSystemInfo() {
           " processes"
       );
 
-      var startdate = moment()
+      const startdate = moment()
         .subtract(system.uptime, "seconds")
         .format("dddd, MMMM Do YYYY, HH:mm:ss");
       $("#status").prop(
@@ -426,7 +430,7 @@ function updateSystemInfo() {
       clearTimeout(systemTimer);
       systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -443,8 +447,8 @@ function apiFailure(data) {
 // Credits: https://www.geeksforgeeks.org/compare-two-version-numbers/
 function versionCompare(v1, v2) {
   // vnum stores each numeric part of version
-  var vnum1 = 0,
-    vnum2 = 0;
+  let vnum1 = 0;
+  let vnum2 = 0;
 
   // Remove possible leading "v" in v1 and v2
   if (v1[0] === "v") {
@@ -456,7 +460,7 @@ function versionCompare(v1, v2) {
   }
 
   // loop until both string are processed
-  for (var i = 0, j = 0; i < v1.length || j < v2.length; ) {
+  for (let i = 0, j = 0; i < v1.length || j < v2.length; ) {
     // storing numeric part of version 1 in vnum1
     while (i < v1.length && v1[i] !== ".") {
       vnum1 = vnum1 * 10 + (v1[i] - "0");
@@ -485,14 +489,14 @@ function versionCompare(v1, v2) {
 function updateVersionInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/version",
-  }).done(function (data) {
-    var version = data.version;
-    var updateAvailable = false;
-    var dockerUpdate = false;
-    var isDocker = false;
+  }).done(data => {
+    const version = data.version;
+    let updateAvailable = false;
+    let dockerUpdate = false;
+    let isDocker = false;
     $("#versions").empty();
 
-    var versions = [
+    const versions = [
       {
         name: "Docker Tag",
         local: version.docker.local,
@@ -535,11 +539,11 @@ function updateVersionInfo() {
       isDocker = true;
     }
 
-    versions.forEach(function (v) {
+    for (const v of versions) {
       if (v.local !== null) {
         // reset update status for each component
-        var updateComponentAvailable = false;
-        var localVersion = v.local;
+        let updateComponentAvailable = false;
+        let localVersion = v.local;
         if (v.branch !== null && v.hash !== null) {
           if (v.branch === "master") {
             localVersion = v.local.split("-")[0];
@@ -602,7 +606,7 @@ function updateVersionInfo() {
           $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
         }
       }
-    });
+    }
 
     if (dockerUpdate)
       $("#update-hint").html(
@@ -618,11 +622,11 @@ function updateVersionInfo() {
   });
 }
 
-$(function () {
-  if (!_isLoginPage) updateInfo();
-  var enaT = $("#enableTimer");
-  var target = new Date(parseInt(enaT.html(), 10));
-  var seconds = Math.round((target.getTime() - Date.now()) / 1000);
+$(() => {
+  if (!globalThis._isLoginPage) updateInfo();
+  const enaT = $("#enableTimer");
+  const target = new Date(Number.parseInt(enaT.html(), 10));
+  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
   }
@@ -634,7 +638,7 @@ $(function () {
   // Apply per-browser styling settings
   initCheckboxRadioStyle();
 
-  if (!_isLoginPage) {
+  if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
@@ -643,30 +647,30 @@ $(function () {
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", function (e) {
+$("#pihole-enable").on("click", e => {
   e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-indefinitely").on("click", function (e) {
+$("#pihole-disable-indefinitely").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", function (e) {
+$("#pihole-disable-10s").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", function (e) {
+$("#pihole-disable-30s").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", function (e) {
+$("#pihole-disable-5m").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", function (e) {
+$("#pihole-disable-custom").on("click", e => {
   e.preventDefault();
-  var custVal = $("#customTimeout").val();
+  let custVal = $("#customTimeout").val();
   custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
   piholeChange("disable", custVal);
 });
@@ -739,9 +743,9 @@ function addAdvancedInfo() {
   const advancedInfoTarget = $("#advanced-info");
   const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
-  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") ?? "");
-  const starttime = parseFloat(advancedInfoSource.data("starttime"));
-  const endtime = parseFloat(advancedInfoSource.data("endtime"));
+  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") || "") || null;
+  const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
+  const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
 
   // Show advanced info
@@ -757,7 +761,7 @@ function addAdvancedInfo() {
   );
 
   // Add client IP info
-  $("#client-id").text(XForwardedFor ? XForwardedFor : clientIP);
+  $("#client-id").text(XForwardedFor ?? clientIP);
   if (XForwardedFor) {
     // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
     // the real client IP as tooltip
@@ -774,7 +778,7 @@ function addAdvancedInfo() {
   advancedInfoTarget.show();
 }
 
-$(function () {
+$(() => {
   initSettingsLevel();
   addAdvancedInfo();
 });

@@ -7,7 +7,9 @@
 
 /* global apiFailure:false, utils:false, initTable:false, updateFtlInfo:false */
 
-var groups = [];
+"use strict";
+
+let groups = [];
 
 function populateGroupSelect(selectEl) {
   if (selectEl.length === 0) {
@@ -16,16 +18,13 @@ function populateGroupSelect(selectEl) {
   }
 
   // Add all known groups
-  for (var i = 0; i < groups.length; i++) {
-    var dataSub = "";
-    if (!groups[i].enabled) {
-      dataSub = 'data-subtext="(disabled)"';
-    }
+  for (const group of groups) {
+    const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
 
     selectEl.append(
       $("<option " + dataSub + "/>")
-        .val(groups[i].id)
-        .text(groups[i].name)
+        .val(group.id)
+        .text(group.name)
     );
   }
 
@@ -42,20 +41,20 @@ function getGroups(groupSelector) {
     url: document.body.dataset.apiurl + "/groups",
     type: "GET",
     dataType: "json",
-    success: function (data) {
+    success(data) {
       groups = data.groups;
 
       // Get all all <select> elements with the class "selectpicker"
-      var groupSelector = $(".selectpicker");
+      const groupSelector = $(".selectpicker");
       // Populate the groupSelector with the groups
-      for (var i = 0; i < groupSelector.length; i++) {
-        populateGroupSelect($(groupSelector[i]));
+      for (const element of groupSelector) {
+        populateGroupSelect($(element));
       }
 
       // Actually load table contents
       initTable();
     },
-    error: function (data) {
+    error(data) {
       apiFailure(data);
     },
   });
@@ -64,14 +63,15 @@ function getGroups(groupSelector) {
 // eslint-disable-next-line no-unused-vars
 function processGroupResult(data, type, done, notDone) {
   // Loop over data.processed.success and show toasts
-  data.processed.success.forEach(function (item) {
+  for (const item of data.processed.success) {
     utils.showAlert("success", "fas fa-pencil-alt", `Successfully ${done} ${type}`, item);
-  });
+  }
+
   // Loop over errors and display them
-  data.processed.errors.forEach(function (error) {
+  for (const error of data.processed.errors) {
     console.log(error); // eslint-disable-line no-console
     utils.showAlert("error", "", `Error while ${notDone} ${type} ${error.item}`, error.error);
-  });
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -83,9 +83,9 @@ function delGroupItems(type, ids, table, listType = undefined) {
 
   // use utils.hexDecode() to decode all clients
   let idstring = "";
-  for (var i = 0; i < ids.length; i++) {
-    ids[i].item = utils.hexDecode(ids[i].item);
-    idstring += ids[i].item + ", ";
+  for (const id of ids) {
+    id.item = utils.hexDecode(id.item);
+    idstring += id.item + ", ";
   }
 
   // Remove last comma and space from idstring
@@ -103,12 +103,12 @@ function delGroupItems(type, ids, table, listType = undefined) {
   utils.showAlert("info", "", "Deleting " + ids.length + " " + type + "...", idstring);
 
   $.ajax({
-    url: url,
+    url,
     data: JSON.stringify(ids),
     contentType: "application/json",
     method: "POST",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       utils.showAlert("success", "far fa-trash-alt", "Successfully deleted " + type, idstring);
       table.ajax.reload(null, false);
@@ -120,7 +120,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
       // Update number of <type> items in the sidebar
       updateFtlInfo();
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while deleting " + type, data.responseText);

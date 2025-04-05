@@ -7,10 +7,12 @@
 
 /* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
-var hostinfoTimer = null;
-var cachePieChart = null;
-var cacheSize = 0,
-  cacheEntries = 0;
+"use strict";
+
+let hostinfoTimer = null;
+let cachePieChart = null;
+let cacheSize = 0;
+let cacheEntries = 0;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -20,34 +22,37 @@ Chart.defaults.set("plugins.deferred", {
 });
 
 function updateCachePie(data) {
-  var v = [],
-    c = [],
-    k = [],
-    i = 0;
+  const v = [];
+  const c = [];
+  const k = [];
+  let i = 0;
 
   // Compute total number of cache entries
   cacheEntries = 0;
-  Object.keys(data).forEach(function (item) {
+  for (const item of Object.keys(data)) {
     cacheEntries += data[item].valid;
     cacheEntries += data[item].stale;
-  });
+  }
 
   // Sort data by value, put OTHER always as last
-  var sorted = Object.keys(data).sort(function (a, b) {
+  const sorted = Object.keys(data).sort((a, b) => {
     if (a === "OTHER") {
       return 1;
-    } else if (b === "OTHER") {
-      return -1;
-    } else {
-      return data[b].valid + data[b].stale - (data[a].valid + data[a].stale);
     }
+
+    if (b === "OTHER") {
+      return -1;
+    }
+
+    return data[b].valid + data[b].stale - (data[a].valid + data[a].stale);
   });
 
   // Rebuild data object
-  var tmp = {};
-  sorted.forEach(function (item) {
+  const tmp = {};
+  for (const item of sorted) {
     tmp[item] = data[item];
-  });
+  }
+
   data = tmp;
 
   // Add empty space to chart
@@ -55,7 +60,7 @@ function updateCachePie(data) {
   data.empty.valid = cacheSize - cacheEntries;
 
   // Fill chart with data
-  Object.keys(data).forEach(function (item) {
+  for (const item of Object.keys(data)) {
     if (data[item].valid > 0) {
       v.push((100 * data[item].valid) / cacheSize);
       c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
@@ -68,10 +73,10 @@ function updateCachePie(data) {
       c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
       k.push(item + " (stale)");
     }
-  });
+  }
 
   // Build a single dataset with the data to be pushed
-  var dd = { data: v, backgroundColor: c };
+  const dd = { data: v, backgroundColor: c };
   // and push it at once
   cachePieChart.data.datasets[0] = dd;
   cachePieChart.data.labels = k;
@@ -85,9 +90,9 @@ function updateHostInfo() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/host",
   })
-    .done(function (data) {
-      var host = data.host;
-      var uname = host.uname;
+    .done(data => {
+      const host = data.host;
+      const uname = host.uname;
       if (uname.domainname !== "(none)") {
         $("#sysinfo-hostname").text(uname.nodename + "." + uname.domainname);
       } else {
@@ -108,7 +113,7 @@ function updateHostInfo() {
       clearTimeout(hostinfoTimer);
       hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -116,7 +121,7 @@ function updateHostInfo() {
 // Walk nested objects, create a dash-separated global key and assign the value
 // to the corresponding element (add percentage for DNS replies)
 function setMetrics(data, prefix) {
-  var cacheData = {};
+  const cacheData = {};
   for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
       // Create table row for each DNS cache entry
@@ -151,14 +156,14 @@ function setMetrics(data, prefix) {
   }
 }
 
-var metricsTimer = null;
+let metricsTimer = null;
 
 function updateMetrics() {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/metrics",
   })
-    .done(function (data) {
-      var metrics = data.metrics;
+    .done(data => {
+      const metrics = data.metrics;
       $("#dns-cache-table").empty();
 
       // Set global cache size
@@ -175,7 +180,7 @@ function updateMetrics() {
       clearTimeout(metricsTimer);
       metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -198,10 +203,10 @@ function getLoggingButton() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dns/queryLogging",
   })
-    .done(function (data) {
+    .done(data => {
       showQueryLoggingButton(data.config.dns.queryLogging);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -212,15 +217,15 @@ $(".confirm-restartdns").confirm({
     "This will clear the DNS cache and may temporarily interrupt your internet connection.<br>" +
     "Furthermore, you will be logged out of the web interface as consequence of this action.",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     $.ajax({
       url: document.body.dataset.apiurl + "/action/restartdns",
       type: "POST",
-    }).fail(function (data) {
+    }).fail(data => {
       apiFailure(data);
     });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, restart DNS server",
@@ -236,15 +241,15 @@ $(".confirm-flushlogs").confirm({
     "Are you sure you want to flush your logs?<br><br>" +
     "<strong>This will clear all logs and cannot be undone.</strong>",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     $.ajax({
       url: document.body.dataset.apiurl + "/action/flush/logs",
       type: "POST",
-    }).fail(function (data) {
+    }).fail(data => {
       apiFailure(data);
     });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, flush logs",
@@ -260,15 +265,15 @@ $(".confirm-flusharp").confirm({
     "Are you sure you want to flush your network table?<br><br>" +
     "<strong>This will clear all entries and cannot be undone.</strong>",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     $.ajax({
       url: document.body.dataset.apiurl + "/action/flush/arp",
       type: "POST",
-    }).fail(function (data) {
+    }).fail(data => {
       apiFailure(data);
     });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, flush my network table",
@@ -286,7 +291,7 @@ $("#loggingButton").confirm({
     "As consequence of this action, your DNS cache will be cleared and you may temporarily loose your internet connection.<br>" +
     "Furthermore, you will be logged out of the web interface.",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     const data = {};
     data.config = {};
     data.config.dns = {};
@@ -299,14 +304,14 @@ $("#loggingButton").confirm({
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(data),
     })
-      .done(function (data) {
+      .done(data => {
         showQueryLoggingButton(data.config.dns.queryLogging);
       })
-      .fail(function (data) {
+      .fail(data => {
         apiFailure(data);
       });
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, change query logging",
@@ -317,12 +322,12 @@ $("#loggingButton").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(function () {
+$(() => {
   updateHostInfo();
   updateMetrics();
   getLoggingButton();
 
-  var ctx = document.getElementById("cachePieChart").getContext("2d");
+  const ctx = document.getElementById("cachePieChart").getContext("2d");
   cachePieChart = new Chart(ctx, {
     type: "doughnut",
     data: {
@@ -350,7 +355,7 @@ $(function () {
           enabled: false,
           external: customTooltips,
           callbacks: {
-            title: function () {
+            title() {
               return "Cache content";
             },
             label: doughnutTooltip,
@@ -366,7 +371,7 @@ $(function () {
   $.ajax({
     url: document.body.dataset.apiurl + "/network/gateway",
   })
-    .done(function (data) {
+    .done(data => {
       const gateway = data.gateway;
       // Get first object in gateway that has family == "inet"
       const inet = gateway.find(obj => obj.family === "inet");
@@ -378,7 +383,7 @@ $(function () {
       $("#sysinfo-gw-v6-addr").text(inet6 ? inet6.local.join("\n") : "N/A");
       $("#sysinfo-gw-v6-iface").text(inet6 ? inet6.interface : "N/A");
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 });

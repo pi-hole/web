@@ -1,5 +1,5 @@
 {
-  "name": "Pi-hole web interface",
+  "name": "pi-hole-web-interface",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -76,6 +76,9 @@
     "trailingComma": "es5"
   },
   "xo": {
+    "parserOptions": {
+      "sourceType": "script"
+    },
     "envs": [
       "browser",
       "jquery"
@@ -83,10 +86,6 @@
     "extends": [
       "plugin:compat/recommended"
     ],
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "script"
-    },
     "prettier": true,
     "space": 2,
     "ignores": [
@@ -108,37 +107,17 @@
       ],
       "no-alert": "off",
       "no-console": "error",
-      "no-else-return": "off",
-      "no-negated-condition": "off",
-      "no-var": "off",
-      "object-shorthand": "off",
-      "one-var": "off",
-      "prefer-arrow-callback": "off",
+      "prefer-arrow-callback": "error",
       "spaced-comment": "off",
-      "unicorn/explicit-length-check": [
-        "error",
-        {
-          "non-zero": "greater-than"
-        }
-      ],
-      "unicorn/filename-case": "off",
+      "strict": "error",
       "unicorn/no-anonymous-default-export": "off",
-      "unicorn/no-array-for-each": "off",
-      "unicorn/no-for-loop": "off",
       "unicorn/no-document-cookie": "off",
-      "unicorn/numeric-separators-style": "off",
-      "unicorn/prefer-includes": "off",
+      "unicorn/no-negated-condition": "off",
       "unicorn/prefer-module": "off",
-      "unicorn/prefer-node-append": "off",
-      "unicorn/prefer-number-properties": "off",
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/prefer-logical-operator-over-ternary": "off",
-      "unicorn/switch-case-braces": "off",
-      "unicorn/no-negated-condition": "off",
-      "logical-assignment-operators": "off",
-      "prefer-object-has-own": "off"
+      "unicorn/switch-case-braces": "off"
     }
   }
 }

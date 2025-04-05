@@ -7,18 +7,20 @@
 
 /* global setConfigValues: false, apiFailure: false */
 
+"use strict";
+
 function getConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       setConfigValues("", "", data.config);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   getConfig();
 });
