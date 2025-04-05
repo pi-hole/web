@@ -179,7 +179,6 @@ function testCookies() {
   return ret;
 }
 
-var iCheckStyle = "primary";
 function applyCheckboxRadioStyle() {
   // Get all radio/checkboxes for theming, with the exception of the two radio buttons on the custom disable timer,
   // as well as every element with an id that starts with "status_"
@@ -190,39 +189,7 @@ function applyCheckboxRadioStyle() {
     .not("#only-changed")
     .not("[id^=status_]");
   sel.parent().removeClass();
-  sel.parent().addClass("icheck-" + iCheckStyle);
-}
-
-function initCheckboxRadioStyle() {
-  function getCheckboxURL(style) {
-    var extra = style.startsWith("material-") ? "material" : "bootstrap";
-    const webhome = document.body.dataset.webhome;
-    return webhome + "vendor/icheck/icheck-" + extra + ".min.css";
-  }
-
-  // Read from local storage, initialize if needed
-  var chkboxStyle = localStorage ? localStorage.getItem("theme_icheck") : null;
-  if (chkboxStyle === null) {
-    chkboxStyle = "primary";
-  }
-
-  var boxsheet = $('<link href="' + getCheckboxURL(chkboxStyle) + '" rel="stylesheet">');
-  // Only add the stylesheet if it's not already present
-  if ($("link[href='" + boxsheet.attr("href") + "']").length === 0) boxsheet.appendTo("head");
-
-  iCheckStyle = chkboxStyle;
-  applyCheckboxRadioStyle();
-
-  // Add handler when on settings page
-  var iCheckStyle = $("#iCheckStyle");
-  if (iCheckStyle !== null) {
-    iCheckStyle.val(chkboxStyle);
-    iCheckStyle.on("change", function () {
-      var themename = $(this).val();
-      localStorage.setItem("theme_icheck", themename);
-      applyCheckboxRadioStyle();
-    });
-  }
+  sel.parent().addClass("icheck-primary");
 }
 
 var systemTimer, versionTimer;
@@ -631,8 +598,8 @@ $(function () {
     $("#cookieInfo").show();
   }
 
-  // Apply per-browser styling settings
-  initCheckboxRadioStyle();
+  // Apply icheckbox/iradio style
+  applyCheckboxRadioStyle();
 
   if (!_isLoginPage) {
     // Run check immediately after page loading ...
