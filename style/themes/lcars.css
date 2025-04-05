@@ -1889,15 +1889,6 @@ table.dataTable tbody > tr > .selected td {
   padding: 3px 10px;
 }
 
-/*** icheckbox ***/
-.icheckbox_minimal-blue {
-  margin-right: 10px;
-}
-
-.iradio_minimal-blue {
-  margin-right: 8px;
-}
-
 .progress {
   background: #222;
 }
