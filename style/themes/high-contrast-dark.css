@@ -779,17 +779,6 @@ input[type="password"]::-webkit-caps-lock-indicator {
   background-image: linear-gradient(to right, var(--network-recent) 0%, var(--network-old) 100%);
 }
 
-.icheckbox_polaris,
-.icheckbox_futurico,
-.icheckbox_minimal-blue {
-  margin-right: 10px;
-}
-.iradio_polaris,
-.iradio_futurico,
-.iradio_minimal-blue {
-  margin-right: 8px;
-}
-
 /* Overlay box with spinners as shown during data collection for graphs */
 .box .overlay,
 .overlay-wrapper .overlay {
