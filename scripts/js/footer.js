@@ -106,16 +106,21 @@ function countDown() {
 }
 
 function checkBlocking() {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/dns/blocking",
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+  fetch(`${document.body.dataset.apiurl}/dns/blocking`, {
     method: "GET",
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
   })
-    .done(data => {
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(data => {
       piholeChanged(data.blocking, data.timer);
       utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
-    .fail(data => {
-      apiFailure(data);
+    .catch(error => {
+      apiFailure(error);
       utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
     });
 }
@@ -130,25 +135,29 @@ function piholeChange(action, duration) {
   }
 
   btnStatus.innerHTML = "<i class='fa fa-spinner fa-spin'> </i>";
-  $.ajax({
-    url: document.body.dataset.apiurl + "/dns/blocking",
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+  fetch(`${document.body.dataset.apiurl}/dns/blocking`, {
     method: "POST",
-    dataType: "json",
-    processData: false,
-    contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "X-CSRF-TOKEN": csrfToken,
+    },
+    body: JSON.stringify({
       blocking: action === "enable",
       timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
     }),
   })
-    .done(data => {
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(data => {
       if (data.blocking === `${action}d`) {
         btnStatus.innerHTML = "";
         piholeChanged(data.blocking, data.timer);
       }
     })
-    .fail(data => {
-      apiFailure(data);
+    .catch(error => {
+      apiFailure(error);
     });
 }
 
@@ -228,12 +237,17 @@ function updateQueryFrequency(intl, frequency) {
 
 let ftlinfoTimer = null;
 function updateFtlInfo() {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/info/ftl",
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+  fetch(`${document.body.dataset.apiurl}/info/ftl`, {
+    method: "GET",
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
   })
-    .done(data => {
-      const ftl = data.ftl;
-      const database = ftl.database;
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(({ ftl }) => {
+      const { database } = ftl;
       const intl = new Intl.NumberFormat();
       document.getElementById("num_groups").textContent = intl.format(database.groups);
       document.getElementById("num_clients").textContent = intl.format(database.clients);
@@ -287,17 +301,22 @@ function updateFtlInfo() {
       clearTimeout(ftlinfoTimer);
       ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
     })
-    .fail(data => {
-      apiFailure(data);
+    .catch(error => {
+      apiFailure(error);
     });
 }
 
 function updateSystemInfo() {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/info/system",
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+  fetch(`${document.body.dataset.apiurl}/info/system`, {
+    method: "GET",
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
   })
-    .done(data => {
-      const system = data.system;
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(({ system }) => {
       const percentRAM = system.memory.ram["%used"];
       const percentSwap = system.memory.swap["%used"];
       let totalRAM = system.memory.ram.total / 1024;
@@ -414,8 +433,8 @@ function updateSystemInfo() {
       clearTimeout(systemTimer);
       systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
     })
-    .fail(data => {
-      apiFailure(data);
+    .catch(error => {
+      apiFailure(error);
     });
 }
 
@@ -454,139 +473,145 @@ function versionCompare(v1, v2) {
 }
 
 function updateVersionInfo() {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/info/version",
-  }).done(data => {
-    const version = data.version;
-    let updateAvailable = false;
-    let dockerUpdate = false;
-    let isDocker = false;
-    const versionsEl = document.getElementById("versions");
-    const updateHintEl = document.getElementById("update-hint");
-    versionsEl.innerHTML = "";
-    updateHintEl.innerHTML = "";
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-    const versions = [
-      {
-        name: "Docker Tag",
-        local: version.docker.local,
-        remote: version.docker.remote,
-        branch: null,
-        hash: null,
-        url: "https://github.com/pi-hole/docker-pi-hole/releases",
-      },
-      {
-        name: "Core",
-        local: version.core.local.version || "N/A",
-        remote: version.core.remote.version,
-        branch: version.core.local.branch,
-        hash: version.core.local.hash,
-        hash_remote: version.core.remote.hash,
-        url: "https://github.com/pi-hole/pi-hole/releases",
-      },
-      {
-        name: "FTL",
-        local: version.ftl.local.version || "N/A",
-        remote: version.ftl.remote.version,
-        branch: version.ftl.local.branch,
-        hash: version.ftl.local.hash,
-        hash_remote: version.ftl.remote.hash,
-        url: "https://github.com/pi-hole/FTL/releases",
-      },
-      {
-        name: "Web interface",
-        local: version.web.local.version || "N/A",
-        remote: version.web.remote.version,
-        branch: version.web.local.branch,
-        hash: version.web.local.hash,
-        hash_remote: version.web.remote.hash,
-        url: "https://github.com/pi-hole/web/releases",
-      },
-    ];
+  fetch(`${document.body.dataset.apiurl}/info/version`, {
+    method: "GET",
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
+  })
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(({ version }) => {
+      let updateAvailable = false;
+      let dockerUpdate = false;
+      let isDocker = false;
+      const versionsEl = document.getElementById("versions");
+      const updateHintEl = document.getElementById("update-hint");
+      versionsEl.innerHTML = "";
+      updateHintEl.innerHTML = "";
 
-    // Check if we are running in a Docker container
-    if (version.docker.local !== null) {
-      isDocker = true;
-    }
+      const versions = [
+        {
+          name: "Docker Tag",
+          local: version.docker.local,
+          remote: version.docker.remote,
+          branch: null,
+          hash: null,
+          url: "https://github.com/pi-hole/docker-pi-hole/releases",
+        },
+        {
+          name: "Core",
+          local: version.core.local.version || "N/A",
+          remote: version.core.remote.version,
+          branch: version.core.local.branch,
+          hash: version.core.local.hash,
+          hash_remote: version.core.remote.hash,
+          url: "https://github.com/pi-hole/pi-hole/releases",
+        },
+        {
+          name: "FTL",
+          local: version.ftl.local.version || "N/A",
+          remote: version.ftl.remote.version,
+          branch: version.ftl.local.branch,
+          hash: version.ftl.local.hash,
+          hash_remote: version.ftl.remote.hash,
+          url: "https://github.com/pi-hole/FTL/releases",
+        },
+        {
+          name: "Web interface",
+          local: version.web.local.version || "N/A",
+          remote: version.web.remote.version,
+          branch: version.web.local.branch,
+          hash: version.web.local.hash,
+          hash_remote: version.web.remote.hash,
+          url: "https://github.com/pi-hole/web/releases",
+        },
+      ];
 
-    for (const v of versions) {
-      if (v.local !== null) {
-        // reset update status for each component
-        let updateComponentAvailable = false;
-        let localVersion = v.local;
-        if (v.branch !== null && v.hash !== null) {
-          if (v.branch === "master") {
-            localVersion = v.local.split("-")[0];
-            localVersion =
-              '<a href="' +
-              v.url +
-              "/" +
-              localVersion +
-              '" rel="noopener noreferrer" target="_blank">' +
-              localVersion +
-              "</a>";
+      // Check if we are running in a Docker container
+      if (version.docker.local !== null) {
+        isDocker = true;
+      }
+
+      for (const v of versions) {
+        if (v.local !== null) {
+          // reset update status for each component
+          let updateComponentAvailable = false;
+          let localVersion = v.local;
+          if (v.branch !== null && v.hash !== null) {
+            if (v.branch === "master") {
+              localVersion = v.local.split("-")[0];
+              localVersion =
+                '<a href="' +
+                v.url +
+                "/" +
+                localVersion +
+                '" rel="noopener noreferrer" target="_blank">' +
+                localVersion +
+                "</a>";
+              if (versionCompare(v.local, v.remote) === -1) {
+                // Update available
+                updateComponentAvailable = true;
+              }
+            } else {
+              // non-master branch
+              localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
+              if (v.hash_remote && v.hash !== v.hash_remote) {
+                // hash differ > Update available
+                updateComponentAvailable = true;
+                // link to the commit history instead of release page
+                v.url = v.url.replace("releases", "commits/" + v.branch);
+              }
+            }
+          }
+
+          if (v.name === "Docker Tag") {
             if (versionCompare(v.local, v.remote) === -1) {
-              // Update available
+              // Display update information for the docker tag
               updateComponentAvailable = true;
-            }
-          } else {
-            // non-master branch
-            localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-            if (v.hash_remote && v.hash !== v.hash_remote) {
-              // hash differ > Update available
-              updateComponentAvailable = true;
-              // link to the commit history instead of release page
-              v.url = v.url.replace("releases", "commits/" + v.branch);
+              dockerUpdate = true;
+            } else {
+              // Display the link for the current tag
+              localVersion =
+                '<a href="' +
+                v.url +
+                "/" +
+                localVersion +
+                '" rel="noopener noreferrer" target="_blank">' +
+                localVersion +
+                "</a>";
             }
           }
-        }
 
-        if (v.name === "Docker Tag") {
-          if (versionCompare(v.local, v.remote) === -1) {
-            // Display update information for the docker tag
-            updateComponentAvailable = true;
-            dockerUpdate = true;
-          } else {
-            // Display the link for the current tag
-            localVersion =
-              '<a href="' +
+          // Display update information of individual components only if we are not running in a Docker container
+          if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
+            versionsEl.innerHTML +=
+              "<li><strong>" +
+              v.name +
+              "</strong> " +
+              localVersion +
+              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
               v.url +
-              "/" +
-              localVersion +
-              '" rel="noopener noreferrer" target="_blank">' +
-              localVersion +
-              "</a>";
+              '" rel="noopener noreferrer" target="_blank">Update available!</a></li>';
+            // if at least one component can be updated, display the update-hint footer
+            updateAvailable = true;
+          } else {
+            versionsEl.innerHTML += "<li><strong>" + v.name + "</strong> " + localVersion + "</li>";
           }
-        }
-
-        // Display update information of individual components only if we are not running in a Docker container
-        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-          versionsEl.innerHTML +=
-            "<li><strong>" +
-            v.name +
-            "</strong> " +
-            localVersion +
-            '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
-            v.url +
-            '" rel="noopener noreferrer" target="_blank">Update available!</a></li>';
-          // if at least one component can be updated, display the update-hint footer
-          updateAvailable = true;
-        } else {
-          versionsEl.innerHTML += "<li><strong>" + v.name + "</strong> " + localVersion + "</li>";
         }
       }
-    }
 
-    if (dockerUpdate)
-      updateHintEl.innerHTML =
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.';
-    else if (updateAvailable)
-      updateHintEl.innerHTML =
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
+      if (dockerUpdate)
+        updateHintEl.innerHTML =
+          'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.';
+      else if (updateAvailable)
+        updateHintEl.innerHTML =
+          'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
 
-    clearTimeout(versionTimer);
-    versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
-  });
+      clearTimeout(versionTimer);
+      versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
