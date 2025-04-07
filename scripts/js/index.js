@@ -14,6 +14,7 @@ let timeLineChart;
 let clientsChart;
 let queryTypePieChart;
 let forwardDestinationPieChart;
+let privacyLevel = 0;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -21,6 +22,21 @@ Chart.defaults.set("plugins.deferred", {
   yOffset: "20%",
   delay: 300,
 });
+
+// Set the privacy level
+function initPrivacyLevel() {
+  return $.ajax({
+    url: document.body.dataset.apiurl + "/info/ftl",
+  })
+    .done(data => {
+      privacyLevel = data.ftl.privacy_level;
+    })
+    .fail(data => {
+      apiFailure(data);
+      // Set privacy level to 0 by default if the request fails
+      privacyLevel = 0;
+    });
+}
 
 // Functions to update data in page
 
@@ -304,10 +320,17 @@ function updateTopClientsTable(blocked) {
     let percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Remove table if there are no results (e.g. new
-    // installation or privacy mode enabled)
+    // When there is no data...
+    // a) remove table if there are no results (privacy mode enabled) or
+    // b) add note if there are no results (e.g. new installation)
     if (jQuery.isEmptyObject(data.clients)) {
-      table.remove();
+      if (privacyLevel > 1) {
+        table.remove();
+      } else {
+        clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+        overlay.hide();
+      }
+
       return;
     }
 
@@ -345,7 +368,7 @@ function updateTopClientsTable(blocked) {
 function updateTopDomainsTable(blocked) {
   let api;
   let style;
-  let table
+  let table;
   let tablecontent;
   let overlay;
   let domaintable;
@@ -374,10 +397,17 @@ function updateTopDomainsTable(blocked) {
     let urlText;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Remove table if there are no results (e.g. new
-    // installation or privacy mode enabled)
+    // When there is no data...
+    // a) remove table if there are no results (privacy mode enabled) or
+    // b) add note if there are no results (e.g. new installation)
     if (jQuery.isEmptyObject(data.domains)) {
-      table.remove();
+      if (privacyLevel > 0) {
+        table.remove();
+      } else {
+        domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+        overlay.hide();
+      }
+
       return;
     }
 
@@ -801,7 +831,11 @@ $(() => {
     updateClientsOverTime();
   }
 
-  updateTopLists();
+  // Initialize privacy level before loading any data that depends on it
+  initPrivacyLevel().then(() => {
+    // After privacy level is initialized, load the top lists
+    updateTopLists();
+  });
 
   $("#queryOverTimeChart").on("click", evt => {
     const activePoints = timeLineChart.getElementsAtEventForMode(
