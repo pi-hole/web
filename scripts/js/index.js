@@ -16,6 +16,9 @@ let queryTypePieChart;
 let forwardDestinationPieChart;
 let privacyLevel = 0;
 
+let failures = 0;
+const upstreams = {};
+
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
 Chart.defaults.set("plugins.deferred", {
@@ -38,42 +41,120 @@ function initPrivacyLevel() {
     });
 }
 
-// Functions to update data in page
+// Define a reusable function for updating charts
+function updateChartData(config) {
+  const {
+    chart,
+    apiEndpoint,
+    processor,
+    container,
+    refreshInterval,
+    errorCallback = () => {},
+  } = config;
 
-let failures = 0;
-function updateQueriesOverTime() {
-  const queriesOverTime = document.getElementById("queries-over-time");
-  const queriesOverlay = queriesOverTime.querySelector(".overlay");
-
-  $.getJSON(`${document.body.dataset.apiurl}/history`, data => {
+  $.getJSON(`${document.body.dataset.apiurl}${apiEndpoint}`, data => {
     // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
-    if (jQuery.isEmptyObject(data.history)) {
-      queriesOverTime.remove();
+    if (
+      jQuery.isEmptyObject(
+        data.history || data.types || data.upstreams || data.domains || data.clients
+      )
+    ) {
+      const box = document.querySelector(container).closest(".box[id]");
+      if (box) box.remove();
       return;
     }
 
-    // Remove possibly already existing data
-    timeLineChart.data.labels = [];
-    timeLineChart.data.datasets = [];
+    processor(chart, data);
+    document.querySelector(`${container} .overlay`).classList.add("d-none");
+    // Passing 'none' will prevent rotation animation for further updates
+    // https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+    chart.update(
+      chart.config.type === "pie" || chart.config.type === "doughnut" ? "none" : undefined
+    );
+  })
+    .done(() => {
+      failures = 0;
+      utils.setTimer(() => updateChartData(config), refreshInterval);
+    })
+    .fail(error => {
+      failures++;
+      if (failures < 5) {
+        // Try again only if this has not failed more than five times in a row
+        utils.setTimer(() => updateChartData(config), 0.1 * refreshInterval);
+      }
 
-    const labels = [
-      "Other DNS Queries",
-      "Blocked DNS Queries",
-      "Cached DNS Queries",
-      "Forwarded DNS Queries",
+      errorCallback(error);
+      apiFailure(error);
+    });
+}
+
+// Define data processors
+const processors = {
+  queriesOverTime(chart, data) {
+    // Remove possibly already existing data
+    chart.data.labels = [];
+    chart.data.datasets = [];
+
+    const series = [
+      {
+        label: "Other DNS Queries",
+        color: utils.getStylePropertyFromClass("queries-other", "background-color"),
+      },
+      {
+        label: "Blocked DNS Queries",
+        color: utils.getStylePropertyFromClass("queries-blocked", "background-color"),
+      },
+      {
+        label: "Cached DNS Queries",
+        color: utils.getStylePropertyFromClass("queries-cached", "background-color"),
+      },
+      {
+        label: "Forwarded DNS Queries",
+        color: utils.getStylePropertyFromClass("queries-permitted", "background-color"),
+      },
     ];
-    const cachedColor = utils.getStylePropertyFromClass("queries-cached", "background-color");
-    const blockedColor = utils.getStylePropertyFromClass("queries-blocked", "background-color");
-    const permittedColor = utils.getStylePropertyFromClass("queries-permitted", "background-color");
-    const otherColor = utils.getStylePropertyFromClass("queries-other", "background-color");
-    const colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
-    for (const [i, label] of labels.entries()) {
-      timeLineChart.data.datasets.push({
+    for (const { color, label } of series) {
+      chart.data.datasets.push({
         data: [],
-        // If we ran out of colors, make a random one
-        backgroundColor: colors[i],
+        backgroundColor: color,
+        pointRadius: 0,
+        pointHitRadius: 5,
+        pointHoverRadius: 5,
+        cubicInterpolationMode: "monotone",
+        label,
+      });
+    }
+
+    // Add data for each dataset that is available
+    for (const { timestamp, total, blocked, cached, forwarded } of data.history) {
+      chart.data.labels.push(new Date(1000 * Number.parseInt(timestamp, 10)));
+      chart.data.datasets[0].data.push(total - (blocked + cached + forwarded));
+      chart.data.datasets[1].data.push(blocked);
+      chart.data.datasets[2].data.push(cached);
+      chart.data.datasets[3].data.push(forwarded);
+    }
+  },
+
+  clientsOverTime(chart, data) {
+    const clients = {};
+    const labels = Object.entries(data.clients).map(([ip, client], index) => {
+      clients[ip] = index;
+      return client.name || ip;
+    });
+
+    chart.data.labels = [];
+    chart.data.datasets = [];
+
+    for (const [i, label] of labels.entries()) {
+      // If we ran out of colors, make a random one
+      const randomHexColor = `#${(0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16).substr(1, 6)}`;
+      const backgroundColor = i < THEME_COLORS.length ? THEME_COLORS[i] : randomHexColor;
+
+      chart.data.datasets.push({
+        data: [],
+        backgroundColor,
         pointRadius: 0,
         pointHitRadius: 5,
         pointHoverRadius: 5,
@@ -84,41 +165,20 @@ function updateQueriesOverTime() {
 
     // Add data for each dataset that is available
     for (const item of data.history) {
-      const timestamp = new Date(1000 * Number.parseInt(item.timestamp, 10));
-
-      timeLineChart.data.labels.push(timestamp);
-      const other = item.total - (item.blocked + item.cached + item.forwarded);
-      timeLineChart.data.datasets[0].data.push(other);
-      timeLineChart.data.datasets[1].data.push(item.blocked);
-      timeLineChart.data.datasets[2].data.push(item.cached);
-      timeLineChart.data.datasets[3].data.push(item.forwarded);
-    }
-
-    queriesOverlay.classList.add("d-none");
-    timeLineChart.update();
-  })
-    .done(() => {
-      failures = 0;
-      utils.setTimer(updateQueriesOverTime, REFRESH_INTERVAL.history);
-    })
-    .fail(() => {
-      failures++;
-      if (failures < 5) {
-        // Try again only if this has not failed more than five times in a row
-        utils.setTimer(updateQueriesOverTime, 0.1 * REFRESH_INTERVAL.history);
+      for (const [client, index] of Object.entries(clients)) {
+        const clientData = item.data[client];
+        // If there is no data for this client in this timeslot, we push 0, otherwise the data
+        chart.data.datasets[index].data.push(clientData === undefined ? 0 : clientData);
       }
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
-}
 
-function updateQueryTypesPie() {
-  $.getJSON(`${document.body.dataset.apiurl}/stats/query_types`, data => {
-    const v = [];
-    const c = [];
-    const k = [];
-    let i = 0;
+      chart.data.labels.push(new Date(1000 * Number.parseInt(item.timestamp, 10)));
+    }
+  },
+
+  queryTypes(chart, data) {
+    const values = [];
+    const colors = [];
+    const labels = [];
     let sum = 0;
 
     // Compute total number of queries
@@ -127,117 +187,29 @@ function updateQueryTypesPie() {
     }
 
     // Fill chart with data (only include query types which appeared recently)
-    for (const [item, value] of Object.entries(data.types)) {
+    for (const [i, [item, value]] of Object.entries(data.types).entries()) {
       if (value > 0) {
-        v.push((100 * value) / sum);
-        c.push(THEME_COLORS[i % THEME_COLORS.length]);
-        k.push(item);
+        values.push((100 * value) / sum);
+        colors.push(THEME_COLORS[i % THEME_COLORS.length]);
+        labels.push(item);
       }
-
-      i++;
     }
 
     // Build a single dataset with the data to be pushed
-    const dd = { data: v, backgroundColor: c };
-    // and push it at once
-    queryTypePieChart.data.datasets[0] = dd;
-    queryTypePieChart.data.labels = k;
-    document.querySelector("#query-types-pie .overlay").classList.add("d-none");
-    // Passing 'none' will prevent rotation animation for further updates
-    //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
-    queryTypePieChart.update("none");
-  })
-    .done(() => {
-      utils.setTimer(updateQueryTypesPie, REFRESH_INTERVAL.query_types);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
-}
+    chart.data.datasets[0] = { data: values, backgroundColor: colors };
+    chart.data.labels = labels;
+  },
 
-function updateClientsOverTime() {
-  $.getJSON(`${document.body.dataset.apiurl}/history/clients`, data => {
-    const clientsElement = document.getElementById("clients");
-    // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
-    if (jQuery.isEmptyObject(data.history)) {
-      clientsElement.remove();
-      return;
-    }
-
-    let numClients = 0;
-    const labels = [];
-    const clients = {};
-    for (const [ip, clientData] of Object.entries(data.clients)) {
-      clients[ip] = numClients++;
-      labels.push(clientData.name !== null ? clientData.name : ip);
-    }
-
-    // Remove possibly already existing data
-    clientsChart.data.labels = [];
-    clientsChart.data.datasets = [];
-
-    for (let i = 0; i < numClients; i++) {
-      // If we ran out of colors, make a random one
-      const randomHexColor = "#" + (0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16);
-      const backgroundColor =
-        i < THEME_COLORS.length ? THEME_COLORS[i] : randomHexColor.substr(1, 6);
-
-      clientsChart.data.datasets.push({
-        data: [],
-        backgroundColor,
-        pointRadius: 0,
-        pointHitRadius: 5,
-        pointHoverRadius: 5,
-        label: labels[i],
-        cubicInterpolationMode: "monotone",
-      });
-    }
-
-    // Add data for each dataset that is available
-    // We need to iterate over all time slots and fill in the data for each client
-    for (const item of Object.values(data.history)) {
-      for (const [client, index] of Object.entries(clients)) {
-        const clientData = item.data[client];
-        // If there is no data for this client in this timeslot, we push 0, otherwise the data
-        clientsChart.data.datasets[index].data.push(clientData === undefined ? 0 : clientData);
-      }
-    }
-
-    // Extract data timestamps
-    for (const item of data.history) {
-      const d = new Date(1000 * Number.parseInt(item.timestamp, 10));
-      clientsChart.data.labels.push(d);
-    }
-
-    clientsElement.querySelector(".overlay").classList.add("d-none");
-    clientsChart.update();
-  })
-    .done(() => {
-      // Reload graph after 10 minutes
-      failures = 0;
-      utils.setTimer(updateClientsOverTime, REFRESH_INTERVAL.clients);
-    })
-    .fail(() => {
-      failures++;
-      if (failures < 5) {
-        // Try again only if this has not failed more than five times in a row
-        utils.setTimer(updateClientsOverTime, 0.1 * REFRESH_INTERVAL.clients);
-      }
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
-}
-
-const upstreams = {};
-function updateForwardDestinationsPie() {
-  $.getJSON(`${document.body.dataset.apiurl}/stats/upstreams`, data => {
-    const v = [];
-    const c = [];
-    const k = [];
+  forwardDestinations(chart, data) {
     const values = [];
-    let i = 0;
+    const colors = [];
+    const labels = [];
     let sum = 0;
+
+    // Clear the upstreams object
+    for (const key of Object.keys(upstreams)) {
+      delete upstreams[key];
+    }
 
     // Compute total number of queries
     for (const item of data.upstreams) {
@@ -245,133 +217,99 @@ function updateForwardDestinationsPie() {
     }
 
     // Collect values and colors
-    for (const item of data.upstreams) {
-      let label = item.name !== null && item.name.length > 0 ? item.name : item.ip;
-      if (item.port > 0) {
-        label += "#" + item.port;
-      }
+    for (const [i, item] of data.upstreams.entries()) {
+      const portSuffix = item.port > 0 ? `#${item.port}` : "";
+      const label = (item.name || item.ip) + portSuffix;
 
       // Store upstreams for generating links to the Query Log
-      upstreams[label] = item.ip;
-      if (item.port > 0) {
-        upstreams[label] += "#" + item.port;
-      }
+      upstreams[label] = item.ip + portSuffix;
 
-      const percent = (100 * item.count) / sum;
-      values.push([label, percent, THEME_COLORS[i++ % THEME_COLORS.length]]);
+      values.push((100 * item.count) / sum);
+      colors.push(THEME_COLORS[i % THEME_COLORS.length]);
+      labels.push(label);
     }
 
-    // Split data into individual arrays for the graphs
-    for (const value of values) {
-      k.push(value[0]);
-      v.push(value[1]);
-      c.push(value[2]);
-    }
+    // Update chart data
+    chart.data.datasets[0] = { data: values, backgroundColor: colors };
+    chart.data.labels = labels;
+  },
+};
 
-    // Build a single dataset with the data to be pushed
-    const dd = { data: v, backgroundColor: c };
-    // and push it at once
-    forwardDestinationPieChart.data.labels = k;
-    forwardDestinationPieChart.data.datasets[0] = dd;
-    // and push it at once
-    document.querySelector("#forward-destinations-pie .overlay").classList.add("d-none");
-
-    // Passing 'none' will prevent rotation animation for further updates
-    //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
-    queryTypePieChart.update("none");
-    forwardDestinationPieChart.update("none");
-  })
-    .done(() => {
-      utils.setTimer(updateForwardDestinationsPie, REFRESH_INTERVAL.upstreams);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+function updateQueriesOverTime() {
+  updateChartData({
+    chart: timeLineChart,
+    apiEndpoint: "/history",
+    processor: processors.queriesOverTime,
+    container: "#queries-over-time",
+    refreshInterval: REFRESH_INTERVAL.history,
+  });
 }
 
-function updateTopClientsTable(blocked) {
-  const $clientFrequencyBlocked = $("#client-frequency-blocked");
-  const $clientFrequency = $("#client-frequency");
-  const $tableContent = blocked
-    ? $clientFrequencyBlocked.find("td").parent()
-    : $clientFrequency.find("td").parent();
-  const $overlay = blocked
-    ? $clientFrequencyBlocked.find(".overlay")
-    : $clientFrequency.find(".overlay");
-  const $clientTable = blocked
-    ? $clientFrequencyBlocked.find("tbody:last")
-    : $clientFrequency.find("tbody:last");
+function updateClientsOverTime() {
+  updateChartData({
+    chart: clientsChart,
+    apiEndpoint: "/history/clients",
+    processor: processors.clientsOverTime,
+    container: "#clients",
+    refreshInterval: REFRESH_INTERVAL.clients,
+  });
+}
 
-  const api = blocked
-    ? `${document.body.dataset.apiurl}/stats/top_clients?blocked=true`
-    : `${document.body.dataset.apiurl}/stats/top_clients`;
-  const style = blocked ? "queries-blocked" : "queries-permitted";
+function updateQueryTypesPie() {
+  updateChartData({
+    chart: queryTypePieChart,
+    apiEndpoint: "/stats/query_types",
+    processor: processors.queryTypes,
+    container: "#query-types-pie",
+    refreshInterval: REFRESH_INTERVAL.query_types,
+  });
+}
 
-  $.getJSON(api, data => {
-    // Clear tables before filling them with data
-    $tableContent.remove();
-    const sum = blocked ? data.blocked_queries : data.total_queries;
-
-    // When there is no data...
-    // a) remove table if there are no results (privacy mode enabled) or
-    // b) add note if there are no results (e.g. new installation)
-    if (jQuery.isEmptyObject(data.clients)) {
-      if (privacyLevel > 1) {
-        $clientTable.remove();
-      } else {
-        $clientTable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
-        $overlay.hide();
-      }
-
-      return;
-    }
-
-    // Populate table with content
-    for (const client of data.clients) {
-      const clientName = client.name.length > 0 ? client.name : client.ip;
-      const url =
-        '<a href="queries?client_ip=' +
-        encodeURIComponent(client.ip) +
-        (blocked ? "&upstream=blocklist" : "") +
-        '">' +
-        utils.escapeHtml(clientName) +
-        "</a>";
-      const percentage = (client.count / sum) * 100;
-
-      // Add row to table
-      $clientTable.append(
-        "<tr> " +
-          utils.addTD(url) +
-          utils.addTD(client.count) +
-          utils.addTD(utils.colorBar(percentage, sum, style)) +
-          "</tr> "
-      );
-    }
-
-    // Hide overlay
-    $overlay.hide();
-  }).fail(data => {
-    apiFailure(data);
+function updateForwardDestinationsPie() {
+  updateChartData({
+    chart: forwardDestinationPieChart,
+    apiEndpoint: "/stats/upstreams",
+    processor: processors.forwardDestinations,
+    container: "#forward-destinations-pie",
+    refreshInterval: REFRESH_INTERVAL.upstreams,
   });
 }
 
 function updateTopDomainsTable(blocked) {
-  const $adFrequency = $("#ad-frequency");
-  const $domainFrequency = $("#domain-frequency");
-  const $tableContent = blocked
-    ? $adFrequency.find("td").parent()
-    : $domainFrequency.find("td").parent();
-  const $overlay = blocked ? $adFrequency.find(".overlay") : $domainFrequency.find(".overlay");
-  const $domainTable = blocked
-    ? $adFrequency.find("tbody:last")
-    : $domainFrequency.find("tbody:last");
+  updateTopTable({
+    blocked,
+    type: "domains",
+    tableElement: blocked ? "#ad-frequency" : "#domain-frequency",
+    apiPath: "/stats/top_domains",
+  });
+}
 
-  const topDomainsApiUrl = blocked
-    ? `${document.body.dataset.apiurl}/stats/top_domains?blocked=true`
-    : `${document.body.dataset.apiurl}/stats/top_domains`;
+function updateTopClientsTable(blocked) {
+  updateTopTable({
+    blocked,
+    type: "clients",
+    tableElement: blocked ? "#client-frequency-blocked" : "#client-frequency",
+    apiPath: "/stats/top_clients",
+  });
+}
+
+// Generic function to update top tables (domains and clients)
+function updateTopTable(config) {
+  const {
+    blocked,
+    type, // "domains" or "clients"
+    tableElement,
+    apiPath,
+  } = config;
+
+  const $table = $(tableElement);
+  const $tableContent = $table.find("td").parent();
+  const $overlay = $table.find(".overlay");
+  const $tbody = $table.find("tbody:last");
+
   const style = blocked ? "queries-blocked" : "queries-permitted";
 
-  $.getJSON(topDomainsApiUrl, data => {
+  $.getJSON(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`, data => {
     // Clear tables before filling them with data
     $tableContent.remove();
     const sum = blocked ? data.blocked_queries : data.total_queries;
@@ -379,11 +317,11 @@ function updateTopDomainsTable(blocked) {
     // When there is no data...
     // a) remove table if there are no results (privacy mode enabled) or
     // b) add note if there are no results (e.g. new installation)
-    if (jQuery.isEmptyObject(data.domains)) {
+    if (jQuery.isEmptyObject(data[type])) {
       if (privacyLevel > 0) {
-        $domainTable.remove();
+        $table.remove();
       } else {
-        $domainTable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+        $tbody.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
         $overlay.hide();
       }
 
@@ -391,29 +329,34 @@ function updateTopDomainsTable(blocked) {
     }
 
     // Populate table with content
-    for (const item of data.domains) {
-      // Sanitize domain
-      const domain = encodeURIComponent(item.domain);
-      // Substitute "." for empty domain lookups
-      const urlText = domain === "" ? "." : domain;
-      const url =
-        '<a href="queries?domain=' +
-        domain +
-        (blocked ? "&upstream=blocklist" : "&upstream=permitted") +
-        '">' +
-        urlText +
-        "</a>";
-      const percentage = (item.count / sum) * 100;
+    for (const item of data[type]) {
+      const count = item.count;
+      let url;
+      let itemName;
 
-      $domainTable.append(
-        "<tr> " +
-          utils.addTD(url) +
-          utils.addTD(item.count) +
-          utils.addTD(utils.colorBar(percentage, sum, style)) +
-          "</tr> "
+      if (type === "domains") {
+        // Encode domain
+        const domain = encodeURIComponent(item.domain);
+        // Substitute "." for empty domain lookups
+        itemName = domain === "" ? "." : domain;
+        url = `queries?domain=${domain}${blocked ? "&upstream=blocklist" : "&upstream=permitted"}`;
+      } else {
+        // Encode ip
+        const ip = encodeURIComponent(item.ip);
+        itemName = item.name || item.ip;
+        url = `queries?client_ip=${ip}${blocked ? "&upstream=blocklist" : ""}`;
+      }
+
+      const percentage = (count / sum) * 100;
+      const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
+
+      // Add row to table
+      $tbody.append(
+        `<tr> ${utils.addTD(urlHtml)}${utils.addTD(count)}${utils.addTD(utils.colorBar(percentage, sum, style))}</tr> `
       );
     }
 
+    // Hide overlay
     $overlay.hide();
   }).fail(data => {
     apiFailure(data);
@@ -488,10 +431,10 @@ function updateSummaryData(runOnce = false) {
         gravitySizeContainer.title = updatetxt;
       }
 
+      // Update the charts if the number of queries has increased significantly
+      // Do not run this on the first update as reloading the same data after
+      // creating the charts happens asynchronously and can cause a race condition
       if (2 * previousCount < newCount && newCount > 100 && !firstSummaryUpdate) {
-        // Update the charts if the number of queries has increased significantly
-        // Do not run this on the first update as reloading the same data after
-        // creating the charts happens asynchronously and can cause a race condition
         updateQueriesOverTime();
         updateClientsOverTime();
         updateQueryTypesPie();
@@ -522,49 +465,107 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
   const percentage = sum > 0 ? (100 * data) / sum : 0;
 
-  if (skipZero && data === 0) return undefined;
+  if (skipZero && data === 0) return;
 
-  return (
-    tooltipLabel.dataset.label +
-    ": " +
-    tooltipLabel.parsed.y +
-    " (" +
-    utils.toPercent(percentage, 1) +
-    ")"
-  );
+  return `${tooltipLabel.dataset.label}: ${tooltipLabel.parsed.y} (${utils.toPercent(percentage, 1)})`;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Pull in data via AJAX
-  updateSummaryData();
+// Add chart click handler function
+function addChartClickHandler(chartElement, chartInstance) {
+  chartElement.addEventListener("click", event => {
+    const activePoints = chartInstance.getElementsAtEventForMode(
+      event,
+      "nearest",
+      { intersect: true },
+      false
+    );
 
-  // On click of the "Reset zoom" buttons, the closest chart to the button is reset
-  $(".zoom-reset").on("click", function () {
-    if ($(this).data("sel") === "reset-clients") clientsChart.resetZoom();
-    else timeLineChart.resetZoom();
+    if (activePoints.length === 0) return false;
 
-    // Show the closest info icon to the current chart
-    $(this).parent().find(".zoom-info").show();
-    // Hide the reset zoom button
-    $(this).hide();
+    const clickedElementindex = activePoints[0].index;
+    const label = chartInstance.data.labels[clickedElementindex];
+    const from = label / 1000 - 300;
+    const until = label / 1000 + 300;
+    globalThis.location.href = `queries?from=${from}&until=${until}`;
+
+    return false;
   });
+}
+
+// Factory function to create pie/doughnut charts with common configuration
+function createPieChart(elementId, options = {}) {
+  const element = document.getElementById(elementId);
+  if (!element) return null;
+
+  const boxEl = document.querySelector(".box");
+
+  return new Chart(element.getContext("2d"), {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          parsing: false,
+        },
+      ],
+    },
+    plugins: [htmlLegendPlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      elements: {
+        arc: {
+          borderColor: getComputedStyle(boxEl).backgroundColor,
+        },
+      },
+      plugins: {
+        htmlLegend: {
+          containerID: options.legendContainerId || "",
+        },
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          enabled: false,
+          external: customTooltips,
+          callbacks: {
+            title() {
+              return options.tooltipTitle || "";
+            },
+            label: doughnutTooltip,
+          },
+        },
+      },
+      animation: {
+        duration: 750,
+      },
+      ...options.chartOptions,
+    },
+  });
+}
+
+// Factory function to create timeline charts with common configuration
+function createTimelineChart(elementId, options = {}) {
+  const element = document.getElementById(elementId);
+  if (!element) return null;
+
+  const gridColor = utils.getStylePropertyFromClass("graphs-grid", "background-color");
+  const ticksColor = utils.getStylePropertyFromClass("graphs-ticks", "color");
 
   const zoomPlugin = {
-    // Allow zooming only on the y axis
     zoom: {
       wheel: {
         enabled: true,
-        modifierKey: "ctrl", // Modifier key required for zooming via mouse wheel
+        modifierKey: "ctrl",
       },
       pinch: {
         enabled: true,
       },
       mode: "y",
       onZoom({ chart, trigger }) {
-        if (trigger === "api") {
-          // Ignore onZoom triggered by the chart.zoomScale api call below
-          return;
-        }
+        // Ignore onZoom triggered by the chart.zoomScale api call below
+        if (trigger === "api") return;
 
         // The first time the chart is zoomed, save the maximum initial scale bound
         chart.absMax ||= chart.getInitialScaleBounds().y.max;
@@ -575,18 +576,20 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update the y axis ticks and round values to natural numbers
         chart.options.scales.y.ticks.callback = value => value.toFixed(0);
 
+        const parent = $(chart.canvas).parent().parent().parent();
+
         // Update the top right info icon and reset zoom button depending on the
         // current zoom level
         if (chart.getZoomLevel() === 1) {
           // Show the closest info icon to the current chart
-          $(chart.canvas).parent().parent().parent().find(".zoom-info").show();
+          parent.find(".zoom-info").show();
           // Hide the reset zoom button
-          $(chart.canvas).parent().parent().parent().find(".zoom-reset").hide();
+          parent.find(".zoom-reset").hide();
         } else {
           // Hide the closest info icon to the current chart
-          $(chart.canvas).parent().parent().parent().find(".zoom-info").hide();
+          parent.find(".zoom-info").hide();
           // Show the reset zoom button
-          $(chart.canvas).parent().parent().parent().find(".zoom-reset").show();
+          parent.find(".zoom-reset").show();
         }
       },
     },
@@ -606,16 +609,16 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
-  const gridColor = utils.getStylePropertyFromClass("graphs-grid", "background-color");
-  const ticksColor = utils.getStylePropertyFromClass("graphs-ticks", "color");
-
-  const queryOverTimeChartEl = document.getElementById("queryOverTimeChart");
-
-  timeLineChart = new Chart(queryOverTimeChartEl.getContext("2d"), {
+  return new Chart(element.getContext("2d"), {
     type: "bar",
     data: {
       labels: [],
-      datasets: [{ data: [], parsing: false }],
+      datasets: [
+        {
+          data: [],
+          parsing: false,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -629,11 +632,12 @@ document.addEventListener("DOMContentLoaded", () => {
           display: false,
         },
         tooltip: {
-          enabled: true,
+          enabled: !options.useCustomTooltips,
+          external: options.useCustomTooltips ? customTooltips : null,
           intersect: false,
-          yAlign: "bottom",
+          yAlign: options.useCustomTooltips ? "top" : "bottom",
           itemSort(a, b) {
-            return b.datasetIndex - a.datasetIndex;
+            return options.useCustomTooltips ? b.raw - a.raw : b.datasetIndex - a.datasetIndex;
           },
           callbacks: {
             title(tooltipTitle) {
@@ -641,12 +645,12 @@ document.addEventListener("DOMContentLoaded", () => {
               const time = label.match(/(\d?\d):?(\d?\d?)/);
               const h = Number.parseInt(time[1], 10);
               const m = Number.parseInt(time[2], 10) || 0;
-              const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-              const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-              return `Queries from ${from} to ${to}`;
+              const from = `${utils.padNumber(h)}:${utils.padNumber(m - 5)}:00`;
+              const to = `${utils.padNumber(h)}:${utils.padNumber(m + 4)}:59`;
+              return `${options.tooltipTitlePrefix || "Queries"} from ${from} to ${to}`;
             },
             label(tooltipLabel) {
-              return labelWithPercentage(tooltipLabel);
+              return labelWithPercentage(tooltipLabel, options.skipZeroValues);
             },
           },
         },
@@ -703,113 +707,45 @@ document.addEventListener("DOMContentLoaded", () => {
           hitRadius: 5,
         },
       },
+      ...options.chartOptions,
     },
   });
+}
 
+document.addEventListener("DOMContentLoaded", () => {
   // Pull in data via AJAX
-  updateQueriesOverTime();
+  updateSummaryData();
+
+  // On click of the "Reset zoom" buttons, the closest chart to the button is reset
+  $(".zoom-reset").on("click", function () {
+    if ($(this).data("sel") === "reset-clients") clientsChart.resetZoom();
+    else timeLineChart.resetZoom();
+
+    // Show the closest info icon to the current chart
+    $(this).parent().find(".zoom-info").show();
+    // Hide the reset zoom button
+    $(this).hide();
+  });
+
+  const queryOverTimeChartEl = document.getElementById("queryOverTimeChart");
+
+  timeLineChart = createTimelineChart("queryOverTimeChart", {
+    tooltipTitlePrefix: "Queries",
+    useCustomTooltips: false,
+    skipZeroValues: false,
+  });
+
+  if (timeLineChart) {
+    updateQueriesOverTime();
+  }
 
   // Create / load "Top Clients over Time" only if authorized
   const clientsChartEl = document.getElementById("clientsChart");
   if (clientsChartEl) {
-    clientsChart = new Chart(clientsChartEl.getContext("2d"), {
-      type: "bar",
-      data: {
-        labels: [],
-        datasets: [{ data: [], parsing: false }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-          mode: "nearest",
-          axis: "x",
-        },
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            // Disable the on-canvas tooltip
-            enabled: false,
-            intersect: false,
-            external: customTooltips,
-            yAlign: "top",
-            itemSort(a, b) {
-              return b.raw - a.raw;
-            },
-            callbacks: {
-              title(tooltipTitle) {
-                const label = tooltipTitle[0].label;
-                const time = label.match(/(\d?\d):?(\d?\d?)/);
-                const h = Number.parseInt(time[1], 10);
-                const m = Number.parseInt(time[2], 10) || 0;
-                const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
-                const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
-                return "Client activity from " + from + " to " + to;
-              },
-              label(tooltipLabel) {
-                return labelWithPercentage(tooltipLabel, true);
-              },
-            },
-          },
-          zoom: zoomPlugin,
-        },
-        scales: {
-          x: {
-            type: "time",
-            stacked: true,
-            offset: false,
-            time: {
-              unit: "hour",
-              displayFormats: {
-                hour: "HH:mm",
-              },
-              tooltipFormat: "HH:mm",
-            },
-            grid: {
-              color: gridColor,
-              offset: false,
-            },
-            border: {
-              display: false,
-            },
-            ticks: {
-              color: ticksColor,
-            },
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: ticksColor,
-              precision: 0,
-            },
-            stacked: true,
-            grid: {
-              color: gridColor,
-            },
-            border: {
-              display: false,
-            },
-            min: 0,
-          },
-        },
-        elements: {
-          line: {
-            borderWidth: 0,
-            spanGaps: false,
-            fill: true,
-            point: {
-              radius: 0,
-              hoverRadius: 5,
-              hitRadius: 5,
-            },
-          },
-        },
-        hover: {
-          animationDuration: 0,
-        },
-      },
+    clientsChart = createTimelineChart("clientsChart", {
+      tooltipTitlePrefix: "Client activity",
+      useCustomTooltips: true,
+      skipZeroValues: true,
     });
 
     // Pull in data via AJAX
@@ -822,153 +758,30 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTopLists();
   });
 
-  // Add chart click handler function
-  function addChartClickHandler(chartElement, chartInstance) {
-    chartElement.addEventListener("click", event => {
-      const activePoints = chartInstance.getElementsAtEventForMode(
-        event,
-        "nearest",
-        { intersect: true },
-        false
-      );
-
-      if (activePoints.length === 0) return false;
-
-      // Get the internal index
-      const clickedElementindex = activePoints[0].index;
-      // Get specific label by index
-      const label = chartInstance.data.labels[clickedElementindex];
-
-      // Get value by index
-      const from = label / 1000 - 300;
-      const until = label / 1000 + 300;
-      globalThis.location.href = `queries?from=${from}&until=${until}`;
-
-      return false;
-    });
+  if (queryOverTimeChartEl && timeLineChart) {
+    addChartClickHandler(queryOverTimeChartEl, timeLineChart);
   }
 
-  queryOverTimeChartEl.addEventListener("click", event => {
-    const activePoints = timeLineChart.getElementsAtEventForMode(
-      event,
-      "nearest",
-      { intersect: true },
-      false
-    );
-
-    if (activePoints.length === 0) return false;
-
-    // Get the internal index
-    const clickedElementindex = activePoints[0].index;
-    // Get specific label by index
-    const label = timeLineChart.data.labels[clickedElementindex];
-
-    // Get value by index
-    const from = label / 1000 - 300;
-    const until = label / 1000 + 300;
-    globalThis.location.href = `queries?from=${from}&until=${until}`;
-
-    return false;
-  });
-
-  // Add click handler to queryOverTimeChart
-  addChartClickHandler(queryOverTimeChartEl, timeLineChart);
-
-  // Add click handler to clientsChart if it exists
-  if (clientsChartEl) {
+  if (clientsChartEl && clientsChart) {
     addChartClickHandler(clientsChartEl, clientsChart);
   }
 
-  const boxEl = document.querySelector(".box");
-  const queryTypePieChartEl = document.getElementById("queryTypePieChart");
+  queryTypePieChart = createPieChart("queryTypePieChart", {
+    legendContainerId: "query-types-legend",
+    tooltipTitle: "Query type",
+  });
 
-  if (queryTypePieChartEl) {
-    queryTypePieChart = new Chart(queryTypePieChartEl.getContext("2d"), {
-      type: "doughnut",
-      data: {
-        labels: [],
-        datasets: [{ data: [], parsing: false }],
-      },
-      plugins: [htmlLegendPlugin],
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        elements: {
-          arc: {
-            borderColor: getComputedStyle(boxEl).backgroundColor,
-          },
-        },
-        plugins: {
-          htmlLegend: {
-            containerID: "query-types-legend",
-          },
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            // Disable the on-canvas tooltip
-            enabled: false,
-            external: customTooltips,
-            callbacks: {
-              title() {
-                return "Query type";
-              },
-              label: doughnutTooltip,
-            },
-          },
-        },
-        animation: {
-          duration: 750,
-        },
-      },
-    });
-
+  if (queryTypePieChart) {
     // Pull in data via AJAX
     updateQueryTypesPie();
   }
 
-  const forwardDestinationPieChartEl = document.getElementById("forwardDestinationPieChart");
-  if (forwardDestinationPieChartEl) {
-    forwardDestinationPieChart = new Chart(forwardDestinationPieChartEl.getContext("2d"), {
-      type: "doughnut",
-      data: {
-        labels: [],
-        datasets: [{ data: [], parsing: false }],
-      },
-      plugins: [htmlLegendPlugin],
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        elements: {
-          arc: {
-            borderColor: getComputedStyle(boxEl).backgroundColor,
-          },
-        },
-        plugins: {
-          htmlLegend: {
-            containerID: "forward-destinations-legend",
-          },
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            // Disable the on-canvas tooltip
-            enabled: false,
-            external: customTooltips,
-            callbacks: {
-              title() {
-                return "Upstream server";
-              },
-              label: doughnutTooltip,
-            },
-          },
-        },
-        animation: {
-          duration: 750,
-        },
-      },
-    });
+  forwardDestinationPieChart = createPieChart("forwardDestinationPieChart", {
+    legendContainerId: "forward-destinations-legend",
+    tooltipTitle: "Upstream server",
+  });
 
+  if (forwardDestinationPieChart) {
     // Pull in data via AJAX
     updateForwardDestinationsPie();
   }
