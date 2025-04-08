@@ -9,7 +9,7 @@
 
 mg.include('scripts/lua/header.lp','r')
 ?>
-<body class="hold-transition layout-boxed login-page">
+<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(mg.request_info.request_uri)?>">
     <div class="box login-box">
         <section style="padding: 15px;">
                 <h2 class="error-headline text-yellow">404</h2>
