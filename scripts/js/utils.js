@@ -60,10 +60,6 @@ function unescapeHtml(text) {
   );
 }
 
-function padNumber(num) {
-  return ("00" + num).substr(-2, 2);
-}
-
 let showAlertBox = null;
 function showAlert(type, icon, title, message, toast) {
   const options = {
@@ -699,7 +695,6 @@ globalThis.utils = (function () {
   return {
     escapeHtml,
     unescapeHtml,
-    padNumber,
     showAlert,
     datetime,
     datetimeRelative,

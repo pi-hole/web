@@ -643,10 +643,21 @@ function createTimelineChart(elementId, options = {}) {
             title(tooltipTitle) {
               const label = tooltipTitle[0].label;
               const time = label.match(/(\d?\d):?(\d?\d?)/);
-              const h = Number.parseInt(time[1], 10);
-              const m = Number.parseInt(time[2], 10) || 0;
-              const from = `${utils.padNumber(h)}:${utils.padNumber(m - 5)}:00`;
-              const to = `${utils.padNumber(h)}:${utils.padNumber(m + 4)}:59`;
+              // Extract hour and minute from the time regex match
+              const hour = Number.parseInt(time[1], 10);
+              const minute = Number.parseInt(time[2], 10) || 0;
+
+              // Calculate time range (5 minutes before and 4 minutes after)
+              const minuteFrom = Math.max(0, minute - 5);
+              const minuteTo = Math.min(59, minute + 4);
+
+              // Format with padded zeros
+              const paddedHour = hour.toString().padStart(2, "0");
+              const paddedMinuteFrom = minuteFrom.toString().padStart(2, "0");
+              const paddedMinuteTo = minuteTo.toString().padStart(2, "0");
+
+              const from = `${paddedHour}:${paddedMinuteFrom}:00`;
+              const to = `${paddedHour}:${paddedMinuteTo}:59`;
               return `${options.tooltipTitlePrefix || "Queries"} from ${from} to ${to}`;
             },
             label(tooltipLabel) {
