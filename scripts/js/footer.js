@@ -535,70 +535,52 @@ function updateVersionInfo() {
       }
 
       for (const v of versions) {
-        if (v.local !== null) {
-          // reset update status for each component
-          let updateComponentAvailable = false;
-          let localVersion = v.local;
-          if (v.branch !== null && v.hash !== null) {
-            if (v.branch === "master") {
-              localVersion = v.local.split("-")[0];
-              localVersion =
-                '<a href="' +
-                v.url +
-                "/" +
-                localVersion +
-                '" rel="noopener noreferrer" target="_blank">' +
-                localVersion +
-                "</a>";
-              if (versionCompare(v.local, v.remote) === -1) {
-                // Update available
-                updateComponentAvailable = true;
-              }
-            } else {
-              // non-master branch
-              localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-              if (v.hash_remote && v.hash !== v.hash_remote) {
-                // hash differ > Update available
-                updateComponentAvailable = true;
-                // link to the commit history instead of release page
-                v.url = v.url.replace("releases", "commits/" + v.branch);
-              }
-            }
-          }
+        if (v.local === null) continue;
 
-          if (v.name === "Docker Tag") {
+        // reset update status for each component
+        let updateComponentAvailable = false;
+        let localVersion = v.local;
+        if (v.branch !== null && v.hash !== null) {
+          if (v.branch === "master") {
+            localVersion = v.local.split("-")[0];
+            localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
             if (versionCompare(v.local, v.remote) === -1) {
-              // Display update information for the docker tag
+              // Update available
               updateComponentAvailable = true;
-              dockerUpdate = true;
-            } else {
-              // Display the link for the current tag
-              localVersion =
-                '<a href="' +
-                v.url +
-                "/" +
-                localVersion +
-                '" rel="noopener noreferrer" target="_blank">' +
-                localVersion +
-                "</a>";
+            }
+          } else {
+            // non-master branch
+            localVersion = `vDev (${v.branch}, ${v.hash})`;
+            if (v.hash_remote && v.hash !== v.hash_remote) {
+              // hash differ > Update available
+              updateComponentAvailable = true;
+              // link to the commit history instead of release page
+              v.url = v.url.replace("releases", `commits/${v.branch}`);
             }
           }
+        }
 
-          // Display update information of individual components only if we are not running in a Docker container
-          if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-            versionsEl.innerHTML +=
-              "<li><strong>" +
-              v.name +
-              "</strong> " +
-              localVersion +
-              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
-              v.url +
-              '" rel="noopener noreferrer" target="_blank">Update available!</a></li>';
-            // if at least one component can be updated, display the update-hint footer
-            updateAvailable = true;
+        if (v.name === "Docker Tag") {
+          if (versionCompare(v.local, v.remote) === -1) {
+            // Display update information for the docker tag
+            updateComponentAvailable = true;
+            dockerUpdate = true;
           } else {
-            versionsEl.innerHTML += "<li><strong>" + v.name + "</strong> " + localVersion + "</li>";
+            // Display the link for the current tag
+            localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
           }
+        }
+
+        // Display update information of individual components only if we are not running in a Docker container
+        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
+          versionsEl.innerHTML +=
+            `<li><strong>${v.name}</strong> ${localVersion}&nbsp;&middot; ` +
+            `<a class="lookatme" data-lookatme-text="Update available!" href="${v.url}" ` +
+            `rel="noopener noreferrer" target="_blank">Update available!</a></li>`;
+          // if at least one component can be updated, display the update-hint footer
+          updateAvailable = true;
+        } else {
+          versionsEl.innerHTML += `<li><strong>${v.name}</strong> ${localVersion}</li>`;
         }
       }
 
