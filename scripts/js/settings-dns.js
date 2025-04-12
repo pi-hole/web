@@ -9,58 +9,43 @@
 
 "use strict";
 
-// Remove an element from an array (inline)
-function removeFromArray(arr, what) {
-  let found = arr.indexOf(what);
-
-  while (found !== -1) {
-    arr.splice(found, 1);
-    found = arr.indexOf(what);
-  }
-}
-
 function fillDNSupstreams(value, servers) {
-  let disabledStr = "";
-  if (value.flags.env_var === true) {
-    $("#DNSupstreamsTextfield").prop("disabled", true);
-    disabledStr = 'disabled="Disabled"';
-  }
+  const isDisabled = value.flags.env_var === true;
+  const disabledAttribute = isDisabled ? " disabled" : "";
+  $("#DNSupstreamsTextfield").prop("disabled", isDisabled);
 
-  let i = 0;
+  let checkboxIndex = 0;
   let customServers = value.value.length;
-  for (const element of servers) {
-    let row = "<tr>";
-    // Build checkboxes for IPv4 and IPv6
-    const addresses = [element.v4, element.v6];
-    // Loop over address types (IPv4, IPv6)
-    for (let v = 0; v < 2; v++) {
-      const address = addresses[v];
-      // Loop over available addresses (up to 2)
-      for (let index = 0; index < 2; index++) {
-        if (address.length > index) {
-          let checkedStr = "";
-          if (
-            value.value.includes(address[index]) ||
-            value.value.includes(`${address[index]}#53`)
-          ) {
-            checkedStr = "checked";
-            customServers--;
-          }
 
-          row += `<td title="${address[index]}">
-                    <div>
-                      <input type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
-                      <label for="DNSupstreams-${i++}"></label>
-                    </div>
-                  </td>`;
-        } else {
+  for (const server of servers) {
+    let row = "<tr>";
+    // Build checkboxes for IPv4 and IPv6 and loop over both
+    for (const addressType of [server.v4, server.v6]) {
+      // Loop over available addresses (up to 2)
+      for (let i = 0; i < 2; i++) {
+        if (i >= addressType.length) {
           row += "<td></td>";
+          continue;
         }
+
+        const address = addressType[i];
+        const isChecked = value.value.includes(address) || value.value.includes(`${address}#53`);
+
+        if (isChecked) customServers--;
+
+        row += `<td title="${address}">
+                  <div>
+                    <input type="checkbox" id="DNSupstreams-${checkboxIndex}"${disabledAttribute}${isChecked ? " checked" : ""}>
+                    <label for="DNSupstreams-${checkboxIndex}"></label>
+                  </div>
+                </td>`;
+
+        checkboxIndex++;
       }
     }
 
     // Add server name
-    row += `<td>${element.name}</td>`;
+    row += `<td>${server.name}</td>`;
 
     // Close table row
     row += "</tr>";
@@ -71,25 +56,26 @@ function fillDNSupstreams(value, servers) {
 
   // Add event listener to checkboxes
   $("input[id^='DNSupstreams-']").on("change", () => {
-    const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
-    let customServers = 0;
+    let upstreams = $("#DNSupstreamsTextfield").val().split("\n");
+    let customServerCount = 0;
+
     for (const input of $("#DNSupstreamsTable input")) {
-      const title = $(input).closest("td").attr("title");
-      if (input.checked && !upstreams.includes(title)) {
-        // Add server to array
-        upstreams.push(title);
-      } else if (!input.checked && upstreams.includes(title)) {
-        // Remove server from array
-        removeFromArray(upstreams, title);
+      const address = $(input).closest("td").attr("title");
+      const isChecked = input.checked;
+
+      if (isChecked && !upstreams.includes(address)) {
+        upstreams = [...upstreams, address];
+      } else if (!isChecked && upstreams.includes(address)) {
+        upstreams = upstreams.filter(item => item !== address);
       }
 
-      if (upstreams.includes(title)) customServers--;
+      if (upstreams.includes(address)) customServerCount--;
     }
 
     // The variable will contain a negative value, we need to add the length to
     // get the correct number of custom servers
-    customServers += upstreams.length;
-    updateDNSserversTextfield(upstreams, customServers);
+    customServerCount += upstreams.length;
+    updateDNSserversTextfield(upstreams, customServerCount);
   });
 
   // Initialize textfield
