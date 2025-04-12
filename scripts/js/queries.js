@@ -82,153 +82,167 @@ function handleAjaxError(xhr, textStatus) {
 }
 
 function parseQueryStatus(data) {
-  // Parse query status
-  let fieldText = "";
-  let buttonHtml = "";
-  let icon = null;
-  let colorClass = false;
-  let blocked = false;
-  let isCNAME = false;
-  switch (data.status) {
-    case "GRAVITY":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (gravity)";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
-      blocked = true;
-      break;
-    case "FORWARDED":
-      colorClass = "text-green";
-      icon = "fa-solid fa-cloud-download-alt";
-      fieldText =
+  // Status configuration object
+  const statusConfig = {
+    GRAVITY: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (gravity)",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>',
+      blocked: true,
+    },
+    FORWARDED: {
+      colorClass: "text-green",
+      icon: "fa-solid fa-cloud-download-alt",
+      fieldText: data =>
         (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
-        data.upstream;
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
-      break;
-    case "CACHE":
-      colorClass = "text-green";
-      icon = "fa-solid fa-database";
-      fieldText = "Served from cache";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
-      break;
-    case "REGEX":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (regex)";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
-      blocked = true;
-      break;
-    case "DENYLIST":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (exact)";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
-      blocked = true;
-      break;
-    case "EXTERNAL_BLOCKED_IP":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (external, IP)";
-      blocked = true;
-      break;
-    case "EXTERNAL_BLOCKED_NULL":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (external, NULL)";
-      blocked = true;
-      break;
-    case "EXTERNAL_BLOCKED_NXRA":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (external, NXRA)";
-      blocked = true;
-      break;
-    case "QUERY_EXTERNAL_BLOCKED_EDE15":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (external, EDE15)";
-      blocked = true;
-      break;
-    case "GRAVITY_CNAME":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (gravity, CNAME)";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
-      isCNAME = true;
-      blocked = true;
-      break;
-    case "REGEX_CNAME":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (regex denied, CNAME)";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
-      isCNAME = true;
-      blocked = true;
-      break;
-    case "DENYLIST_CNAME":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = "Blocked (exact denied, CNAME)";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
-      isCNAME = true;
-      blocked = true;
-      break;
-    case "RETRIED":
-      colorClass = "text-green";
-      icon = "fa-solid fa-redo"; // fa-repeat
-      fieldText = "Retried";
-      break;
-    case "RETRIED_DNSSEC":
-      colorClass = "text-green";
-      icon = "fa-solid fa-redo"; // fa-repeat
-      fieldText = "Retried (ignored)";
-      break;
-    case "IN_PROGRESS":
-      colorClass = "text-green";
-      icon = "fa-solid fa-hourglass-half";
-      fieldText = "Already forwarded, awaiting reply";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
-      break;
-    case "CACHE_STALE":
-      colorClass = "text-green";
-      icon = "fa-solid fa-infinity";
-      fieldText = "Served by cache optimizer";
-      buttonHtml =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
-      break;
-    case "SPECIAL_DOMAIN":
-      colorClass = "text-red";
-      icon = "fa-solid fa-ban";
-      fieldText = data.status;
-      blocked = true;
-      break;
-    default:
-      colorClass = "text-orange";
-      icon = "fa-solid fa-question";
-      fieldText = data.status;
+        data.upstream,
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>',
+    },
+    CACHE: {
+      colorClass: "text-green",
+      icon: "fa-solid fa-database",
+      fieldText: "Served from cache",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>',
+    },
+    REGEX: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (regex)",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>',
+      blocked: true,
+    },
+    DENYLIST: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (exact)",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>',
+      blocked: true,
+    },
+    EXTERNAL_BLOCKED_IP: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (external, IP)",
+      blocked: true,
+    },
+    EXTERNAL_BLOCKED_NULL: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (external, NULL)",
+      blocked: true,
+    },
+    EXTERNAL_BLOCKED_NXRA: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (external, NXRA)",
+      blocked: true,
+    },
+    QUERY_EXTERNAL_BLOCKED_EDE15: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (external, EDE15)",
+      blocked: true,
+    },
+    GRAVITY_CNAME: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (gravity, CNAME)",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>',
+      isCNAME: true,
+      blocked: true,
+    },
+    REGEX_CNAME: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (regex denied, CNAME)",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>',
+      isCNAME: true,
+      blocked: true,
+    },
+    DENYLIST_CNAME: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: "Blocked (exact denied, CNAME)",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>',
+      isCNAME: true,
+      blocked: true,
+    },
+    RETRIED: {
+      colorClass: "text-green",
+      icon: "fa-solid fa-redo",
+      fieldText: "Retried",
+    },
+    RETRIED_DNSSEC: {
+      colorClass: "text-green",
+      icon: "fa-solid fa-redo",
+      fieldText: "Retried (ignored)",
+    },
+    IN_PROGRESS: {
+      colorClass: "text-green",
+      icon: "fa-solid fa-hourglass-half",
+      fieldText: "Already forwarded, awaiting reply",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>',
+    },
+    CACHE_STALE: {
+      colorClass: "text-green",
+      icon: "fa-solid fa-infinity",
+      fieldText: "Served by cache optimizer",
+      buttonHtml:
+        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>',
+    },
+    SPECIAL_DOMAIN: {
+      colorClass: "text-red",
+      icon: "fa-solid fa-ban",
+      fieldText: data => data.status,
+      blocked: true,
+    },
+  };
+
+  // Default values for unknown status
+  const defaults = {
+    colorClass: "text-orange",
+    icon: "fa-solid fa-question",
+    fieldText: data.status,
+    buttonHtml: "",
+    blocked: false,
+    isCNAME: false,
+  };
+
+  // Get configuration for this status or use defaults
+  const config = statusConfig[data.status] || defaults;
+
+  // Handle dynamic fieldText if it's a function
+  const fieldText =
+    typeof config.fieldText === "function" ? config.fieldText(data) : config.fieldText;
+
+  const result = {
+    fieldText,
+    buttonHtml: config.buttonHtml || "",
+    colorClass: config.colorClass,
+    icon: config.icon,
+    isCNAME: config.isCNAME || false,
+    blocked: config.blocked || false,
+  };
+
+  // Determine match text based on color class
+  if (result.colorClass === "text-green") {
+    result.matchText = "allowed";
+  } else if (result.colorClass === "text-red") {
+    result.matchText = "blocked";
+  } else {
+    result.matchText = "matched";
   }
 
-  const matchText =
-    colorClass === "text-green" ? "allowed" : colorClass === "text-red" ? "blocked" : "matched";
-
-  return {
-    fieldText,
-    buttonHtml,
-    colorClass,
-    icon,
-    isCNAME,
-    matchText,
-    blocked,
-  };
+  return result;
 }
 
 function formatReplyTime(time, type) {
