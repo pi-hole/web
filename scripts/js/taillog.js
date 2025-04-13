@@ -82,16 +82,30 @@ function getData() {
     return;
   }
 
-  const GETDict = utils.parseQueryString();
-  if (!("file" in GETDict)) {
-    globalThis.location.href += "?file=dnsmasq";
+  const queryParams = utils.parseQueryString();
+  const outputElement = document.getElementById("output");
+  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
+
+  // Check if file parameter exists
+  if (!queryParams.file) {
+    // Add default file parameter and redirect
+    const url = new URL(globalThis.location.href);
+    url.searchParams.set("file", "dnsmasq");
+    globalThis.location.href = url.toString();
+    return;
+  }
+
+  // Validate that file parameter is one of the allowed values
+  if (!allowedFileParams.includes(queryParams.file)) {
+    const errorMessage = `Invalid file parameter: ${queryParams.file}. Allowed values are: ${allowedFileParams.join(", ")}`;
+    outputElement.innerHTML = `<div><em class="text-danger">*** Error: ${errorMessage} ***</em></div>`;
     return;
   }
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-  const outputElement = document.getElementById("output");
+  const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}?nextID=${nextID}`;
 
-  fetch(`${document.body.dataset.apiurl}/logs/${GETDict.file}?nextID=${nextID}`, {
+  fetch(url, {
     method: "GET",
     headers: {
       "X-CSRF-TOKEN": csrfToken,
@@ -157,9 +171,9 @@ function getData() {
         line.message = utils.escapeHtml(line.message);
 
         // Format line if applicable
-        if (GETDict.file === "dnsmasq") {
+        if (queryParams.file === "dnsmasq") {
           line.message = formatDnsmasq(line.message);
-        } else if (GETDict.file === "ftl") {
+        } else if (queryParams.file === "ftl") {
           line.message = formatFTL(line.message, line.prio);
         }
 
