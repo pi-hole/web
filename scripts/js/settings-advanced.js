@@ -10,75 +10,90 @@
 "use strict";
 
 function addAllowedValues(allowed) {
-  if (typeof allowed === "object") {
-    return (
-      "<p>Available options:</p><ul><li>" +
-      allowed
-        .map(option => "<code>" + option.item + "</code>: " + utils.escapeHtml(option.description))
-        .join("</li><li>") +
-      "</li></ul>"
-    );
-  }
+  if (!allowed) return "";
 
   if (typeof allowed === "string") {
     return `<p class="small">Allowed value: ${utils.escapeHtml(allowed)}</p>`;
   }
+
+  if (typeof allowed === "object") {
+    const optionItems = allowed
+      .map(option => `<code>${option.item}</code>: ${utils.escapeHtml(option.description)}`)
+      .join("</li><li>");
+
+    return `<p>Available options:</p><ul><li>${optionItems}</li></ul>`;
+  }
 }
 
 function boxIcons(value) {
-  return (
-    '<span class="box-icons">' +
-    (value.modified
-      ? '<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
-      : "") +
-    (value.flags.restart_dnsmasq
-      ? '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
-      : "") +
-    (value.flags.env_var
-      ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
-      : "") +
-    "</span>"
-  );
+  let icons = '<span class="box-icons">';
+
+  if (value.modified) {
+    icons += '<i class="far fa-edit text-light-blue" title="Modified from default"></i>';
+  }
+
+  if (value.flags.restart_dnsmasq) {
+    icons +=
+      '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>';
+  }
+
+  if (value.flags.env_var) {
+    icons +=
+      '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>';
+  }
+
+  icons += "</span>";
+  return icons;
+}
+
+function getDefaultValueHint(value) {
+  if (!value.modified || value.default === null) {
+    return "";
+  }
+
+  let defVal = utils.escapeHtml(JSON.stringify(value.default));
+  const defValMap = {
+    true: "enabled",
+    false: "disabled",
+    '""': "empty",
+    "[]": "empty",
+  };
+
+  defVal = defValMap[defVal] || defVal;
+  return `<p>Default Value: ${defVal}</p>`;
+}
+
+function createInputField({
+  key,
+  value,
+  type,
+  extraAttributes = "",
+  defaultValueHint = "",
+  options = {},
+}) {
+  const { smallLabel = "", min = "", max = "", step = "" } = options;
+
+  const minAttr = min !== "" ? ` min="${min}"` : "";
+  const maxAttr = max !== "" ? ` max="${max}"` : "";
+  const stepAttr = step !== "" ? ` step="${step}"` : "";
+  const smallLabelHtml = smallLabel ? ` <small>(${smallLabel})</small>` : "";
+
+  return `
+    <label class="col-sm-2 control-label">Value${smallLabelHtml}</label>
+    <div class="col-sm-10">
+      <input type="${type}" class="form-control" value="${value.value}"${stepAttr}${minAttr}${maxAttr} data-key="${key}"${extraAttributes}>
+      ${defaultValueHint}
+      ${addAllowedValues(value.allowed) || ""}
+    </div>
+    `;
 }
 
 function valueDetails(key, value) {
-  // Define default hint text
-  let defaultValueHint = "";
-  if (value.modified) {
-    defaultValueHint = "";
-    if (value.default !== null) {
-      let defVal = utils.escapeHtml(JSON.stringify(value.default));
-      switch (defVal) {
-        case "true": {
-          defVal = "enabled";
-
-          break;
-        }
-
-        case "false": {
-          defVal = "disabled";
-
-          break;
-        }
-
-        case '""':
-        case "[]": {
-          defVal = "empty";
-
-          break;
-        }
-        // No default
-      }
-
-      defaultValueHint = "<p>Default Value: " + defVal + "</p>";
-    }
-  }
+  // Get default value hint
+  const defaultValueHint = getDefaultValueHint(value);
 
   // Define extraAttributes, if needed
-  let extraAttributes = "";
-  if (value.flags.env_var) {
-    extraAttributes = " disabled";
-  }
+  const extraAttributes = value.flags.env_var ? " disabled" : "";
 
   // Format the output depending on the value type
   let content = "";
@@ -86,127 +101,93 @@ function valueDetails(key, value) {
     case "IPv4 address":
     case "IPv6 address":
     case "string": {
-      content +=
-        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
-        '<div class="col-sm-10">' +
-        '<input type="text" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        addAllowedValues(value.allowed) +
-        "</div>";
-
+      content = createInputField({
+        key,
+        value,
+        type: "text",
+        extraAttributes,
+        defaultValueHint,
+        options: { smallLabel: "string" },
+      });
       break;
     }
 
     case "boolean": {
-      content +=
-        '<div class="col-sm-12">' +
-        '<div><input type="checkbox" ' +
-        (value.value ? " checked" : "") +
-        ' id="' +
-        key +
-        '-checkbox" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        '><label for="' +
-        key +
-        '-checkbox">Enabled ' +
-        defaultValueHint +
-        "</label></div>" +
-        " </div>";
-
+      content = `<div class="col-sm-12">
+                    <div>
+                      <input type="checkbox"${value.value ? " checked" : ""} id="${key}-checkbox" data-key="${key}"${extraAttributes}>
+                      <label for="${key}-checkbox">Enabled ${defaultValueHint}</label>
+                    </div>
+                </div>`;
       break;
     }
 
     case "double": {
-      content +=
-        '<label class="col-sm-2 control-label">Value</label>' +
-        '<div class="col-sm-10">' +
-        '<input type="number" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '" data-type="float"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        "</div>";
-
+      content = createInputField({
+        key,
+        value,
+        type: "number",
+        extraAttributes: `${extraAttributes} data-type="float"`,
+        defaultValueHint,
+      });
       break;
     }
 
     case "integer": {
-      content +=
-        '<label class="col-sm-2 control-label">Value <small>(integer)</small></label>' +
-        '<div class="col-sm-10">' +
-        '<input type="number" step="1" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '" data-type="integer"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        "</div>";
-
+      content = createInputField({
+        key,
+        value,
+        type: "number",
+        extraAttributes: `${extraAttributes} data-type="integer"`,
+        defaultValueHint,
+        options: {
+          smallLabel: "integer",
+          step: "1",
+        },
+      });
       break;
     }
 
     case "unsigned integer": {
-      content +=
-        '<label class="col-sm-4 control-label">Value <small>(unsigned integer)</small></label>' +
-        '<div class="col-sm-8">' +
-        '<input type="number" step="1" min="0" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '" data-type="integer"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        "</div>";
-
+      content = createInputField({
+        key,
+        value,
+        type: "number",
+        extraAttributes: `${extraAttributes} data-type="integer"`,
+        defaultValueHint,
+        options: {
+          smallLabel: "unsigned integer",
+          min: "0",
+          step: "1",
+        },
+      });
       break;
     }
 
     case "unsigned integer (16 bit)": {
-      content +=
-        '<label class="col-sm-4 control-label">Value <small>(unsigned 16bit integer)</small></label>' +
-        '<div class="col-sm-8">' +
-        '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '" data-type="integer"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        "</div>";
-
+      content = createInputField({
+        key,
+        value,
+        type: "number",
+        extraAttributes: `${extraAttributes} data-type="integer"`,
+        defaultValueHint,
+        options: {
+          smallLabel: "unsigned 16bit integer",
+          min: "0",
+          max: "65535",
+          step: "1",
+        },
+      });
       break;
     }
 
     case "string array": {
-      content +=
-        '<label class="col-sm-12 control-label">Values <small>(one item per line)</small></label>' +
-        '<div class="col-sm-12">' +
-        '<textarea class="form-control field-sizing-content" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        ">" +
-        value.value.join("\n") +
-        "</textarea> " +
-        defaultValueHint +
-        addAllowedValues(value.allowed) +
-        "</div>";
-
+      content = `<label class="col-sm-12 control-label">Values <small>(one item per line)</small></label>
+                <div class="col-sm-12">
+                  <textarea class="form-control field-sizing-content" data-key="${key}"${extraAttributes}>${value.value.join("\n")}</textarea>
+                  ${defaultValueHint}
+                  ${addAllowedValues(value.allowed) || ""}
+                </div>`;
       break;
     }
 
@@ -214,91 +195,66 @@ function valueDetails(key, value) {
     case "enum (string)": {
       content += '<div class="col-sm-12">';
       for (const [i, option] of value.allowed.entries()) {
-        content +=
-          "<div>" +
-          // Radio button
-          '<input type="radio" class="form-control" ' +
-          `value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}` +
-          (option.item === value.value ? " checked" : "") +
-          ">" +
-          // Label
-          `<label for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
-          (option.item === value.default ? " <em>(default)</em>" : "") +
-          "</strong></label>" +
-          // Paragraph with description
-          `<p class="help-block">${option.description}</p>` +
-          "</div>";
+        content += `<div>
+                      <input type="radio" class="form-control" value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}${option.item === value.value ? " checked" : ""}>
+                      <label for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}${option.item === value.default ? " <em>(default)</em>" : ""}</strong></label>
+                      <p class="help-block">${option.description}</p>
+                  </div>`;
       }
 
       content += "</div>";
-
       break;
     }
 
     case "password (write-only string)": {
-      content +=
-        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
-        '<div class="col-sm-10">' +
-        '<input type="password" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        addAllowedValues(value.allowed) +
-        "</div>";
-
+      content = createInputField({
+        key,
+        value,
+        type: "password",
+        extraAttributes,
+        defaultValueHint,
+        options: { smallLabel: "string" },
+      });
       break;
     }
 
     default: {
-      content += "TYPE " + value.type + " NOT DEFINED";
+      content += `TYPE ${value.type} NOT DEFINED`;
     }
   }
 
-  return '<div class="row">' + content + "</div>";
+  return `<div class="row">${content}</div>`;
 }
 
 function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
     for (const [subkey, subvalue] of Object.entries(value)) {
-      generateRow(topic, key + "." + subkey, subvalue);
+      generateRow(topic, `${key}.${subkey}`, subvalue);
     }
 
     return;
   }
 
   // else: we have a setting we can display
+  const boxDescription = utils.escapeHtml(value.description).replaceAll("\n", "<br>");
   const box =
-    '<div class="box settings-box">' +
-    '<div class="box-header with-border">' +
-    '<h3 class="box-title" data-key="' +
-    key +
-    '" data-modified="' +
-    (value.modified ? "true" : "false") +
-    '">' +
-    key +
-    boxIcons(value) +
-    "</h3>" +
-    "</div>" +
-    '<div class="box-body">' +
-    utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
-    "</div>" +
-    '<div class="box-footer">' +
-    valueDetails(key, value) +
-    "</div></div> ";
+    `<div class="box settings-box">` +
+    `  <div class="box-header with-border">` +
+    `    <h3 class="box-title" data-key="${key}" data-modified="${value.modified ? "true" : "false"}">${key}${boxIcons(value)}</h3>` +
+    `  </div>` +
+    `  <div class="box-body">${boxDescription}</div>` +
+    `  <div class="box-footer">${valueDetails(key, value)}</div>` +
+    "</div> ";
 
-  const topKey = key.split(".")[0];
-  const elem = $("#advanced-content-" + topKey + "-flex");
-  elem.append(box);
+  const [topKey] = key.split(".");
+  const elem = document.querySelector(`#advanced-content-${topKey}-flex`);
+  elem.insertAdjacentHTML("beforeend", box);
 }
 
 function createDynamicConfigTabs() {
   $.ajax({
-    url: document.body.dataset.apiurl + "/config?detailed=true",
+    url: `${document.body.dataset.apiurl}/config?detailed=true`,
   })
     .done(data => {
       // Create the tabs for the advanced dynamic config topics
