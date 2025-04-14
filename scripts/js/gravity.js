@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false */
+/* global apiFailure:false, utils:false */
 
 "use strict";
 
@@ -91,7 +91,8 @@ function parseLines(outputElement, text) {
   for (let line of lines) {
     if (line[0] === "\r") {
       // This line starts with the "OVER" sequence. Replace them with "\n" before print
-      line = line.replaceAll("\r[K", "\n").replaceAll("\r", "\n");
+      // we also escape HTML to prevent XSS attacks
+      line = utils.escapeHtml(line.replaceAll("\r[K", "\n").replaceAll("\r", "\n"));
 
       // Last line from the textarea will be overwritten, so we remove it
       const lastLineIndex = outputElement.innerHTML.lastIndexOf("\n");
