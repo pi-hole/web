@@ -25,6 +25,10 @@ end
 
 -- Function returning GET parameter value (or nil if not set)
 function GET(name)
+    if not mg.request_info.query_string then
+        return nil
+    end
+
     return mg.request_info.query_string:match(name.."=([^&]*)")
     -- mg.get_var(mg.request_info.query_string, "REQUEST_URI")
 end
