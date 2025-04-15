@@ -11,10 +11,10 @@
 "use strict";
 
 let table;
-let GETDict = {};
+let queryParams = {};
 
 document.addEventListener("DOMContentLoaded", () => {
-  GETDict = utils.parseQueryString();
+  queryParams = utils.parseQueryString();
 
   // Tabs: Domain/Regex handling
   // sync description fields, reset inactive inputs on tab change
@@ -279,7 +279,7 @@ globalThis.initTable = function () {
         );
 
       // Highlight row (if url parameter "domainid=" is used)
-      if ("domainid" in GETDict && data.id === Number.parseInt(GETDict.domainid, 10)) {
+      if ("domainid" in queryParams && data.id === Number.parseInt(queryParams.domainid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -364,15 +364,15 @@ globalThis.initTable = function () {
       return data;
     },
     initComplete() {
-      if ("domainid" in GETDict) {
-        const pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(Number.parseInt(GETDict.domainid, 10));
-        if (pos !== -1) {
-          const page = Math.floor(pos / table.page.info().length);
-          table.page(page).draw(false);
-        }
+      if (!("domainid" in queryParams)) return;
+
+      const pos = table
+        .column(0, { order: "current" })
+        .data()
+        .indexOf(Number.parseInt(queryParams.domainid, 10));
+      if (pos !== -1) {
+        const page = Math.floor(pos / table.page.info().length);
+        table.page(page).draw(false);
       }
     },
   });

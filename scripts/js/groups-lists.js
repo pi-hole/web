@@ -11,10 +11,10 @@
 "use strict";
 
 let table;
-let GETDict = {};
+let queryParams = {};
 
 document.addEventListener("DOMContentLoaded", () => {
-  GETDict = utils.parseQueryString();
+  queryParams = utils.parseQueryString();
 
   $("#btnAddAllow").on("click", { type: "allow" }, addList);
   $("#btnAddBlock").on("click", { type: "block" }, addList);
@@ -325,7 +325,7 @@ globalThis.initTable = function () {
         );
 
       // Highlight row (if url parameter "listid=" is used)
-      if ("listid" in GETDict && data.id === Number.parseInt(GETDict.listid, 10)) {
+      if ("listid" in queryParams && data.id === Number.parseInt(queryParams.listid, 10)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -412,15 +412,15 @@ globalThis.initTable = function () {
       return data;
     },
     initComplete() {
-      if ("listid" in GETDict) {
-        const pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(Number.parseInt(GETDict.listid, 10));
-        if (pos !== -1) {
-          const page = Math.floor(pos / table.page.info().length);
-          table.page(page).draw(false);
-        }
+      if (!("listid" in queryParams)) return;
+
+      const pos = table
+        .column(0, { order: "current" })
+        .data()
+        .indexOf(Number.parseInt(queryParams.listid, 10));
+      if (pos !== -1) {
+        const page = Math.floor(pos / table.page.info().length);
+        table.page(page).draw(false);
       }
     },
   });

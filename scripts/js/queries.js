@@ -445,9 +445,6 @@ function liveUpdate() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Do we want to filter queries?
-  const GETDict = utils.parseQueryString();
-
   for (const [sel, element] of Object.entries(filters)) {
     $(`#${element}_filter`).select2({
       width: "100%",
@@ -457,15 +454,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  getSuggestions(GETDict);
-  const apiURL = getApiUrl(GETDict);
+  // Do we want to filter queries?
+  const queryParams = utils.parseQueryString();
 
-  if ("from" in GETDict) {
-    from = GETDict.from;
+  getSuggestions(queryParams);
+  const apiURL = getApiUrl(queryParams);
+
+  if ("from" in queryParams) {
+    from = queryParams.from;
   }
 
-  if ("until" in GETDict) {
-    until = GETDict.until;
+  if ("until" in queryParams) {
+    until = queryParams.until;
   }
 
   initDateRangePicker();
