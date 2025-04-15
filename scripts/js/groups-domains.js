@@ -279,7 +279,10 @@ globalThis.initTable = function () {
         );
 
       // Highlight row (if url parameter "domainid=" is used)
-      if ("domainid" in queryParams && data.id === Number.parseInt(queryParams.domainid, 10)) {
+      if (
+        Object.hasOwn(queryParams, "domainid") &&
+        data.id === Number.parseInt(queryParams.domainid, 10)
+      ) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -364,7 +367,7 @@ globalThis.initTable = function () {
       return data;
     },
     initComplete() {
-      if (!("domainid" in queryParams)) return;
+      if (!Object.hasOwn(queryParams, "domainid")) return;
 
       const pos = table
         .column(0, { order: "current" })

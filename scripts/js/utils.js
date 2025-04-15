@@ -316,7 +316,7 @@ function addFromQueryLog(domain, list) {
       }),
       success(response) {
         alProcessing.hide();
-        if ("domains" in response && response.domains.length > 0) {
+        if (Object.hasOwn(response, "domains") && response.domains.length > 0) {
           // Success
           alSuccess.children(alDomain).text(domain);
           alSuccess.children(alList).text(listtype);

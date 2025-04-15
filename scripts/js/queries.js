@@ -460,11 +460,11 @@ document.addEventListener("DOMContentLoaded", () => {
   getSuggestions(queryParams);
   const apiURL = getApiUrl(queryParams);
 
-  if ("from" in queryParams) {
+  if (Object.hasOwn(queryParams, "from")) {
     from = queryParams.from;
   }
 
-  if ("until" in queryParams) {
+  if (Object.hasOwn(queryParams, "until")) {
     until = queryParams.until;
   }
 

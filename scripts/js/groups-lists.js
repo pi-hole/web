@@ -325,7 +325,10 @@ globalThis.initTable = function () {
         );
 
       // Highlight row (if url parameter "listid=" is used)
-      if ("listid" in queryParams && data.id === Number.parseInt(queryParams.listid, 10)) {
+      if (
+        Object.hasOwn(queryParams, "listid") &&
+        data.id === Number.parseInt(queryParams.listid, 10)
+      ) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -412,7 +415,7 @@ globalThis.initTable = function () {
       return data;
     },
     initComplete() {
-      if (!("listid" in queryParams)) return;
+      if (!Object.hasOwn(queryParams, "listid")) return;
 
       const pos = table
         .column(0, { order: "current" })

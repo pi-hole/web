@@ -87,7 +87,7 @@ function getData() {
   const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
 
   // Check if file parameter exists
-  if (!queryParams.file) {
+  if (!Object.hasOwn(queryParams, "file")) {
     // Add default file parameter and redirect
     const url = new URL(globalThis.location.href);
     url.searchParams.set("file", "dnsmasq");

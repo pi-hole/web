@@ -228,7 +228,7 @@ function valueDetails(key, value) {
 
 function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
-  if (!("description" in value)) {
+  if (!Object.hasOwn(value, "description")) {
     for (const [subkey, subvalue] of Object.entries(value)) {
       generateRow(topic, `${key}.${subkey}`, subvalue);
     }

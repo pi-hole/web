@@ -51,11 +51,11 @@ function importZIP() {
       $("#modal-import-error").hide();
       $("#modal-import-info").hide();
 
-      if ("error" in data) {
+      if (Object.hasOwn(data, "error")) {
         $("#modal-import-error").show();
         $("#modal-import-error-title").text(`Error: ${data.error.message}`);
         if (data.error.hint !== null) $("#modal-import-error-message").text(data.error.hint);
-      } else if ("files" in data) {
+      } else if (Object.hasOwn(data, "files")) {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
 

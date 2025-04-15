@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Globally available function to set config values
 globalThis.setConfigValues = function (topic, key, value) {
   // If the value is an object, we need to recurse
-  if (!("description" in value)) {
+  if (!Object.hasOwn(value, "description")) {
     for (const [subkey, subvalue] of Object.entries(value)) {
       // If the key is empty, we are at the top level
       const newKey = key === "" ? subkey : `${key}.${subkey}`;
