@@ -81,7 +81,7 @@ globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
     .join(", ");
 
   // Append "s" to type if more than one item is deleted
-  type += ids.length > 1 ? "s" : "";
+  type = utils.pluralize(ids.length, type);
 
   // Prepend listType to type if it is not undefined
   if (listType !== undefined) {

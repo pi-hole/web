@@ -74,7 +74,7 @@ function doSearch() {
 
 function generateDomainResults(domains, searchQuery, totalDomains, matchType) {
   let resultHtml =
-    `Found ${totalDomains} domain${totalDomains !== 1 ? "s" : ""} <em>${matchType}</em> matching ` +
+    `Found ${totalDomains} ${utils.pluralize(totalDomains, "domain")} <em>${matchType}</em> matching ` +
     `'<strong class="text-blue">${utils.escapeHtml(searchQuery)}</strong>'${totalDomains > 0 ? ":" : "."}<br><br>`;
 
   for (const domain of domains) {
@@ -83,7 +83,7 @@ function generateDomainResults(domains, searchQuery, totalDomains, matchType) {
     const modifiedDate = utils.renderTimestamp(domain.date_modified, "display");
     const domainStatus = domain.enabled ? "enabled" : "disabled";
     const totalGroups = domain.groups.length;
-    const groupLabel = totalGroups === 1 ? "group" : "groups";
+    const groupLabel = utils.pluralize(totalGroups, "group");
     const commentHtml =
       domain.comment && domain.comment.length > 0
         ? `<br>  comment: ${utils.escapeHtml(domain.comment)}`
@@ -114,7 +114,7 @@ function groupGravityResults(gravityResults) {
 
 function generateListResults(groupedResults, searchQuery, totalLists, matchType) {
   let resultHtml =
-    `Found ${totalLists} list${totalLists !== 1 ? "s" : ""} <em>${matchType}</em> matching ` +
+    `Found ${totalLists} ${utils.pluralize(totalLists, "list")} <em>${matchType}</em> matching ` +
     `'<strong class="text-blue">${utils.escapeHtml(searchQuery)}</strong>'${totalLists > 0 ? ":" : "."}<br><br>`;
 
   for (const group of Object.values(groupedResults)) {
@@ -125,7 +125,7 @@ function generateListResults(groupedResults, searchQuery, totalLists, matchType)
     const updatedDate = utils.renderTimestamp(list.date_updated, "display");
     const listStatus = list.enabled ? "enabled" : "disabled";
     const totalGroups = list.groups.length;
-    const groupLabel = totalGroups === 1 ? "group" : "groups";
+    const groupLabel = utils.pluralize(totalGroups, "group");
     const commentHtml =
       list.comment && list.comment.length > 0
         ? `<br>  comment: ${utils.escapeHtml(list.comment)}`

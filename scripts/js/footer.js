@@ -335,9 +335,9 @@ function updateSystemInfo() {
 
       const swap =
         system.memory.swap.total > 0
-          ? ((100 * system.memory.swap.used) / system.memory.swap.total).toFixed(1) + " %"
+          ? `${((100 * system.memory.swap.used) / system.memory.swap.total).toFixed(1)} %`
           : "N/A";
-      let color = percentRAM > 75 ? "text-red" : "text-green-light";
+      const ramColor = percentRAM > 75 ? "text-red" : "text-green-light";
 
       const memoryEl = document.getElementById("memory");
       const sysInfoRam = document.getElementById("sysinfo-memory-ram");
@@ -348,83 +348,54 @@ function updateSystemInfo() {
       const sysInfoUptime = document.getElementById("sysinfo-uptime");
       const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
 
-      memoryEl.innerHTML =
-        '<i class="fa fa-fw fa-memory ' +
-        color +
-        '"></i>&nbsp;&nbsp;Memory usage:&nbsp;' +
-        percentRAM.toFixed(1) +
-        "&thinsp;%";
-      memoryEl.title =
-        "Total memory: " + totalRAM.toFixed(1) + " " + totalRAMUnit + ", Swap usage: " + swap;
+      memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor}"></i>&nbsp;&nbsp;Memory usage:&nbsp;${percentRAM.toFixed(1)}&thinsp;%`;
+      memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swap}`;
 
       if (sysInfoRam !== null) {
-        sysInfoRam.textContent =
-          percentRAM.toFixed(1) + "% of " + totalRAM.toFixed(1) + " " + totalRAMUnit + " is used";
+        sysInfoRam.textContent = `${percentRAM.toFixed(1)}% of ${totalRAM.toFixed(1)} ${totalRAMUnit} is used`;
       }
 
       if (sysInfoSwapEl !== null) {
-        if (system.memory.swap.total > 0) {
-          sysInfoSwapEl.textContent =
-            percentSwap.toFixed(1) +
-            "% of " +
-            totalSwap.toFixed(1) +
-            " " +
-            totalSwapUnit +
-            " is used";
-        } else {
-          sysInfoSwapEl.textContent = "No swap space available";
-        }
+        sysInfoSwapEl.textContent =
+          system.memory.swap.total > 0
+            ? `${percentSwap.toFixed(1)}% of ${totalSwap.toFixed(1)} ${totalSwapUnit} is used`
+            : "No swap space available";
       }
 
-      color = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
+      const loadColor =
+        system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
+      const loadWarning =
+        system.cpu.load.raw[0] > system.cpu.nprocs
+          ? " (load is higher than the number of cores)"
+          : "";
 
       cpuEl.innerHTML =
-        '<i class="fa fa-fw fa-microchip ' +
-        color +
-        '"></i>&nbsp;&nbsp;Load:&nbsp;' +
-        system.cpu.load.raw[0].toFixed(2) +
-        "&nbsp;/&nbsp;" +
-        system.cpu.load.raw[1].toFixed(2) +
-        "&nbsp;/&nbsp;" +
+        `<i class="fa fa-fw fa-microchip ${loadColor}"></i>&nbsp;&nbsp;Load:&nbsp;` +
+        `${system.cpu.load.raw[0].toFixed(2)}&nbsp;/&nbsp;` +
+        `${system.cpu.load.raw[1].toFixed(2)}&nbsp;/&nbsp;` +
         system.cpu.load.raw[2].toFixed(2);
       cpuEl.title =
         "Load averages for the past 1, 5, and 15 minutes\non a system with " +
-        system.cpu.nprocs +
-        " core" +
-        (system.cpu.nprocs > 1 ? "s" : "") +
-        " running " +
-        system.procs +
-        " processes " +
-        (system.cpu.load.raw[0] > system.cpu.nprocs
-          ? " (load is higher than the number of cores)"
-          : "");
+        `${system.cpu.nprocs} ${utils.pluralize(system.cpu.nprocs, "core")} running ` +
+        `${system.procs} ${utils.pluralize(system.procs, "process", "processes")} ` +
+        loadWarning;
 
       if (sysInfoCpu !== null) {
         sysInfoCpu.textContent =
-          system.cpu["%cpu"].toFixed(1) +
-          "% on " +
-          system.cpu.nprocs +
-          " core" +
-          (system.cpu.nprocs > 1 ? "s" : "") +
-          " running " +
-          system.procs +
-          " processes";
+          `${system.cpu["%cpu"].toFixed(1)}% on ${system.cpu.nprocs} ` +
+          `${utils.pluralize(system.cpu.nprocs, "core")} running ${system.procs} ` +
+          utils.pluralize(system.procs, "process", "processes");
       }
 
-      const startdate = moment()
+      const startDate = moment()
         .subtract(system.uptime, "seconds")
         .format("dddd, MMMM Do YYYY, HH:mm:ss");
 
-      statusEl.title =
-        "System uptime: " +
-        moment.duration(1000 * system.uptime).humanize() +
-        " (running since " +
-        startdate +
-        ")";
+      const humanUptime = moment.duration(1000 * system.uptime).humanize();
+      statusEl.title = `System uptime: ${humanUptime} (running since ${startDate})`;
 
       if (sysInfoUptime !== null) {
-        sysInfoUptime.textContent =
-          moment.duration(1000 * system.uptime).humanize() + " (running since " + startdate + ")";
+        sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
         if (sysInfoSystemOverlay !== null) {
           sysInfoSystemOverlay.style.display = "none";
         }

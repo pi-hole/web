@@ -119,7 +119,7 @@ function setInterfaceName(name) {
 function updateDNSserversTextfield(upstreams, customServers) {
   $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
   $("#custom-servers-title").text(
-    `(${customServers} custom server${customServers === 1 ? "" : "s"} enabled)`
+    `(${customServers} custom ${utils.pluralize(customServers, "server")} enabled)`
   );
 }
 

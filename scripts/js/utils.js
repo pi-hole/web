@@ -530,7 +530,7 @@ function listsAlert(type, items, data) {
     showAlert(
       "success",
       "fas fa-plus",
-      "Successfully added " + type + (items.length !== 1 ? "s" : ""),
+      `Successfully added ${pluralize(items.length, type)}`,
       items.join(", ")
     );
     return;
@@ -542,8 +542,7 @@ function listsAlert(type, items, data) {
 
   // Show a list of successful items if there are any
   if (successLength > 0) {
-    message +=
-      "Successfully added " + successLength + " " + type + (successLength !== 1 ? "s" : "") + ":";
+    message += `Successfully added ${successLength} ${pluralize(successLength, type)}:`;
 
     // Loop over data.processed.success and print "item"
     for (const item of Object.values(data.processed.success)) {
@@ -558,8 +557,7 @@ function listsAlert(type, items, data) {
 
   // Show a list of failed items if there are any
   if (errorsLength > 0) {
-    message +=
-      "Failed to add " + errorsLength + " " + type + (errorsLength !== 1 ? "s" : "") + ":\n";
+    message += `Failed to add ${errorsLength} ${pluralize(errorsLength, type)}:\n`;
 
     // Loop over data.processed.errors and print "item: error"
     for (const errorItem of Object.values(data.processed.errors)) {
@@ -575,11 +573,11 @@ function listsAlert(type, items, data) {
 
   // Show the warning message
   const total = successLength + errorsLength;
-  const processed = "(" + total + " " + type + (total !== 1 ? "s" : "") + " processed)";
+  const processed = `(${total} ${pluralize(total, type)} processed)`;
   showAlert(
     "warning",
     "fas fa-exclamation-triangle",
-    "Some " + type + (items.length !== 1 ? "s" : "") + " could not be added " + processed,
+    `Some ${pluralize(items.length, type)} could not be added ${processed}`,
     message
   );
 }
@@ -667,6 +665,11 @@ function isVisible(element) {
   );
 }
 
+// Simple pluralize function that returns a singular or plural form based on count
+function pluralize(count, singular, plural) {
+  return count === 1 ? singular : plural || `${singular}s`;
+}
+
 /**
  * Toggle or set the collapse state of a box element
  * @param {HTMLElement} box - The box element
@@ -726,5 +729,6 @@ globalThis.utils = (function () {
     setInter,
     toggleBoxCollapse,
     isVisible,
+    pluralize,
   };
 })();

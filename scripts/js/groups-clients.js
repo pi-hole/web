@@ -36,19 +36,18 @@ function reloadClientSuggestions() {
         const key = mockDevice ? hwaddr.substring(3) : hwaddr;
         let text = key;
 
-        // Append additional infos if available
+        // Append additional info if available
         let extraInfo = "";
         if (client.names !== null && client.names.length > 0) {
           // Count number of "," in client.names to determine number of hostnames
           const numHostnames = client.names.split(",").length;
-          const pluralHostnames = numHostnames > 1 ? "s" : "";
-          extraInfo =
-            numHostnames + " hostname" + pluralHostnames + ": " + utils.escapeHtml(client.names);
+          const pluralHostnames = utils.pluralize(numHostnames, "hostname");
+          extraInfo = `${numHostnames} ${pluralHostnames}: ${utils.escapeHtml(client.names)}`;
         }
 
         if (client.macVendor !== null && client.macVendor.length > 0) {
           if (extraInfo.length > 0) extraInfo += "; ";
-          extraInfo += "vendor: " + utils.escapeHtml(client.macVendor);
+          extraInfo += `vendor: ${utils.escapeHtml(client.macVendor)}`;
         }
 
         // Do not add addresses for mock devices as their address is already
@@ -57,12 +56,11 @@ function reloadClientSuggestions() {
           if (extraInfo.length > 0) extraInfo += "; ";
           // Count number of "," in client.addresses to determine number of addresses
           const numAddresses = client.addresses.split(",").length;
-          const pluralAddresses = numAddresses > 1 ? "es" : "";
-          extraInfo +=
-            numAddresses + " address" + pluralAddresses + ": " + utils.escapeHtml(client.addresses);
+          const pluralAddresses = utils.pluralize(numAddresses, "address", "addresses");
+          extraInfo += `${numAddresses} ${pluralAddresses}: ${utils.escapeHtml(client.addresses)}`;
         }
 
-        if (extraInfo.length > 0) text += " (" + extraInfo + ")";
+        if (extraInfo.length > 0) text += ` (${extraInfo})`;
 
         sel.append($("<option />").val(key).text(text));
       }

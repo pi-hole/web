@@ -180,8 +180,8 @@ function addAddressDetails(obj, iface, intl) {
   if (iface.addresses === undefined) return;
 
   const count = iface.addresses.length;
-  const label = count === 1 ? " address" : " addresses";
-  const text = `${count + label} connected to interface`;
+  const label = utils.pluralize(count, "address", "addresses");
+  const text = `${count} ${label} connected to interface`;
 
   const addresses = {
     text,
