@@ -101,7 +101,7 @@ function showAlert(type, icon, title, message, toast) {
     };
   switch (type) {
     case "info":
-      options.icon = icon !== null && icon.len > 0 ? icon : "fas fa-clock";
+      options.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
 
       break;
     case "success":
