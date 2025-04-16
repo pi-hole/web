@@ -1609,3 +1609,13 @@ textarea.field-sizing-content {
   opacity: 0;
   transition: opacity 200ms ease-in-out;
 }
+
+/* Used in query log page */
+td.dnssec {
+  padding-inline-start: 2.25em !important;
+  text-indent: -1.25em;
+}
+td.dnssec i {
+  text-indent: 0;
+  margin-left: -0.5rem;
+}
