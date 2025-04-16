@@ -52,31 +52,38 @@ function updateChartData(config) {
     errorCallback = () => {},
   } = config;
 
-  $.getJSON(`${document.body.dataset.apiurl}${apiEndpoint}`, data => {
-    // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
-    if (
-      jQuery.isEmptyObject(
-        data.history || data.types || data.upstreams || data.domains || data.clients
-      )
-    ) {
-      const box = document.querySelector(container).closest(".box[id]");
-      if (box) box.remove();
-      return;
-    }
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-    processor(chart, data);
-    document.querySelector(`${container} .overlay`).classList.add("d-none");
-    // Passing 'none' will prevent rotation animation for further updates
-    // https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
-    chart.update(
-      chart.config.type === "pie" || chart.config.type === "doughnut" ? "none" : undefined
-    );
+  fetch(`${document.body.dataset.apiurl}${apiEndpoint}`, {
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
   })
-    .done(() => {
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(data => {
+      // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
+      if (
+        jQuery.isEmptyObject(
+          data.history || data.types || data.upstreams || data.domains || data.clients
+        )
+      ) {
+        const box = document.querySelector(container).closest(".box[id]");
+        if (box) box.remove();
+        return;
+      }
+
+      processor(chart, data);
+      document.querySelector(`${container} .overlay`).classList.add("d-none");
+      // Passing 'none' will prevent rotation animation for further updates
+      // https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
+      chart.update(
+        chart.config.type === "pie" || chart.config.type === "doughnut" ? "none" : undefined
+      );
+
       failures = 0;
       utils.setTimer(() => updateChartData(config), refreshInterval);
     })
-    .fail(error => {
+    .catch(error => {
       failures++;
       if (failures < 5) {
         // Try again only if this has not failed more than five times in a row
@@ -302,6 +309,7 @@ function updateTopTable(config) {
     apiPath,
   } = config;
 
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const $table = $(tableElement);
   const $tableContent = $table.find("td").parent();
   const $overlay = $table.find(".overlay");
@@ -309,58 +317,65 @@ function updateTopTable(config) {
 
   const style = blocked ? "queries-blocked" : "queries-permitted";
 
-  $.getJSON(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`, data => {
-    // Clear tables before filling them with data
-    $tableContent.remove();
-    const sum = blocked ? data.blocked_queries : data.total_queries;
+  fetch(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`, {
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
+  })
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(data => {
+      // Clear tables before filling them with data
+      $tableContent.remove();
+      const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // When there is no data...
-    // a) remove table if there are no results (privacy mode enabled) or
-    // b) add note if there are no results (e.g. new installation)
-    if (jQuery.isEmptyObject(data[type])) {
-      if (privacyLevel > 0) {
-        $table.remove();
-      } else {
-        $tbody.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
-        $overlay.hide();
+      // When there is no data...
+      // a) remove table if there are no results (privacy mode enabled) or
+      // b) add note if there are no results (e.g. new installation)
+      if (jQuery.isEmptyObject(data[type])) {
+        if (privacyLevel > 0) {
+          $table.remove();
+        } else {
+          $tbody.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+          $overlay.hide();
+        }
+
+        return;
       }
 
-      return;
-    }
+      // Populate table with content
+      for (const item of data[type]) {
+        const count = item.count;
+        let url;
+        let itemName;
 
-    // Populate table with content
-    for (const item of data[type]) {
-      const count = item.count;
-      let url;
-      let itemName;
+        if (type === "domains") {
+          // Encode domain
+          const domain = encodeURIComponent(item.domain);
+          // Substitute "." for empty domain lookups
+          itemName = domain === "" ? "." : domain;
+          url = `queries?domain=${domain}${blocked ? "&upstream=blocklist" : "&upstream=permitted"}`;
+        } else {
+          // Encode ip
+          const ip = encodeURIComponent(item.ip);
+          itemName = item.name || item.ip;
+          url = `queries?client_ip=${ip}${blocked ? "&upstream=blocklist" : ""}`;
+        }
 
-      if (type === "domains") {
-        // Encode domain
-        const domain = encodeURIComponent(item.domain);
-        // Substitute "." for empty domain lookups
-        itemName = domain === "" ? "." : domain;
-        url = `queries?domain=${domain}${blocked ? "&upstream=blocklist" : "&upstream=permitted"}`;
-      } else {
-        // Encode ip
-        const ip = encodeURIComponent(item.ip);
-        itemName = item.name || item.ip;
-        url = `queries?client_ip=${ip}${blocked ? "&upstream=blocklist" : ""}`;
+        const percentage = (count / sum) * 100;
+        const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
+
+        // Add row to table
+        $tbody.append(
+          `<tr> ${utils.addTD(urlHtml)}${utils.addTD(count)}${utils.addTD(utils.colorBar(percentage, sum, style))}</tr> `
+        );
       }
 
-      const percentage = (count / sum) * 100;
-      const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
-
-      // Add row to table
-      $tbody.append(
-        `<tr> ${utils.addTD(urlHtml)}${utils.addTD(count)}${utils.addTD(utils.colorBar(percentage, sum, style))}</tr> `
-      );
-    }
-
-    // Hide overlay
-    $overlay.hide();
-  }).fail(data => {
-    apiFailure(data);
-  });
+      // Hide overlay
+      $overlay.hide();
+    })
+    .catch(error => {
+      apiFailure(error);
+    });
 }
 
 function updateTopLists() {
@@ -388,7 +403,7 @@ function updateSummaryData(runOnce = false) {
   fetch(`${document.body.dataset.apiurl}/stats/summary`, {
     headers: { "X-CSRF-TOKEN": csrfToken },
   })
-    .then(response => response.json())
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
     .then(data => {
       const intl = new Intl.NumberFormat();
       const newCount = Number.parseInt(data.queries.total, 10);
