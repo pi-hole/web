@@ -5480,9 +5480,6 @@ link-muted {
 .chartjs-tooltip.left.center .arrow {
   border-right-color: rgba(140, 130, 115, 0.8);
 }
-.strike {
-  text-decoration-color: currentcolor !important;
-}
 .text-underline {
   text-decoration-color: currentcolor;
 }
