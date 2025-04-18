@@ -1583,3 +1583,13 @@ textarea.field-sizing-content {
   line-height: 0.5em;
   font-size: 1.7em;
 }
+
+/* Used in query log page */
+td.dnssec {
+  padding-inline-start: 2.25em !important;
+  text-indent: -1.25em
+}
+td.dnssec i {
+  text-indent: 0;
+  margin-left: -0.5rem;
+}
