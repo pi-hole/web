@@ -26,6 +26,17 @@ var filters = [
   "reply",
   "dnssec",
 ];
+var doDnssec = false;
+
+// Check if pihole is validiting DNSSEC
+function getDnssecConfig() {
+  $.getJSON(
+    document.body.dataset.apiurl + "/config/dns/dnssec",
+    function (data) {
+        doDnssec = data.config.dns.dnssec;
+    }
+  );
+}
 
 function initDateRangePicker() {
   $("#querytime").daterangepicker(
@@ -498,6 +509,10 @@ function liveUpdate() {
 }
 
 $(function () {
+
+  // Do we want to show DNSSEC icons?
+  getDnssecConfig();
+
   // Do we want to filter queries?
   var GETDict = utils.parseQueryString();
 
@@ -588,7 +603,6 @@ $(function () {
     },
     rowCallback: function (row, data) {
       var querystatus = parseQueryStatus(data);
-      const dnssec = parseDNSSEC(data);
 
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
@@ -612,7 +626,8 @@ $(function () {
 
       // Prefix colored DNSSEC icon to domain text
       var dnssecIcon = "";
-      if (dnssec.color !== "") {
+      if (doDnssec !== false) {
+        const dnssec = parseDNSSEC(data);
         dnssecIcon =
           '<i class="mr-2 fa fa-fw ' +
           dnssec.icon +
