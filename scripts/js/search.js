@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false */
+/* global utils:false */
 
 "use strict";
 
@@ -32,8 +32,6 @@ function doSearch() {
   const partialMatchCheckbox = document.getElementById("partialMatch");
   const isPartialMatch = partialMatchCheckbox.checked;
   const maxResults = utils.escapeHtml(maxResultsInputField.value);
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-  const url = `${document.body.dataset.apiurl}/search/${encodeURIComponent(searchQuery)}?partial=${isPartialMatch}&N=${maxResults}`;
   const outputElement = document.getElementById("output");
 
   if (outputElement.innerHTML.length > 0) {
@@ -44,32 +42,23 @@ function doSearch() {
     outputElement.classList.add("d-none");
   }
 
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
-    .then(({ search }) => {
-      const domains = search.domains;
-      const totalDomains = domains.length;
-      const matchType = isPartialMatch ? "partially" : "exactly";
+  const url = `${document.body.dataset.apiurl}/search/${encodeURIComponent(searchQuery)}?partial=${isPartialMatch}&N=${maxResults}`;
+  utils.fetchFactory(url).then(({ search }) => {
+    const domains = search.domains;
+    const totalDomains = domains.length;
+    const matchType = isPartialMatch ? "partially" : "exactly";
 
-      const groupedGravityResults = groupGravityResults(search.gravity);
-      const totalLists = Object.keys(groupedGravityResults).length;
+    const groupedGravityResults = groupGravityResults(search.gravity);
+    const totalLists = Object.keys(groupedGravityResults).length;
 
-      let resultHtml = generateDomainResults(domains, searchQuery, totalDomains, matchType);
-      resultHtml += generateListResults(groupedGravityResults, searchQuery, totalLists, matchType);
-      resultHtml += generateSummary(search);
-      resultHtml += generateNoteMessage(search, maxResults);
+    let resultHtml = generateDomainResults(domains, searchQuery, totalDomains, matchType);
+    resultHtml += generateListResults(groupedGravityResults, searchQuery, totalLists, matchType);
+    resultHtml += generateSummary(search);
+    resultHtml += generateNoteMessage(search, maxResults);
 
-      outputElement.innerHTML = resultHtml;
-      outputElement.classList.remove("d-none");
-    })
-    .catch(error => {
-      apiFailure(error);
-    });
+    outputElement.innerHTML = resultHtml;
+    outputElement.classList.remove("d-none");
+  });
 }
 
 function generateDomainResults(domains, searchQuery, totalDomains, matchType) {

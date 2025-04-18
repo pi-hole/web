@@ -20,6 +20,38 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+/**
+ * A wrapper around the fetch API with CSRF token handling
+ * @param {string} url - The URL to fetch from
+ * @param {Object} options - The fetch options
+ * @param {string} [options.method='GET'] - The HTTP method to use
+ * @param {Object} [options.headers={}] - Additional headers to send
+ * @param {any} [options.body=null] - The request body
+ * @param {boolean} [options.handleFailure=true] - Whether to automatically handle failures with apiFailure
+ * @param {boolean} [options.json=true] - Whether to parse the response as JSON
+ * @param {Object} [options...rest] - Any other fetch options to pass through
+ * @returns {Promise<Object|Response>} - JSON response or Response object based on json parameter
+ */
+async function fetchFactory(
+  url,
+  { method = "GET", headers = {}, body = null, handleFailure = true, json = true, ...rest } = {}
+) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+  const response = await fetch(url, {
+    method,
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+      ...headers,
+    },
+    body,
+    ...rest,
+  });
+
+  if (response.ok) return json === true ? response.json() : response;
+  if (handleFailure === true) return apiFailure(response);
+}
+
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
   // Return early when text is not a string
@@ -379,22 +411,18 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
 
-  fetch(
+  fetchFactory(
     `${document.body.dataset.apiurl}/info/messages/count${ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""}`,
     {
-      method: "GET",
       headers: {
         Accept: "application/json",
-        "X-CSRF-TOKEN": csrfToken,
       },
     }
   )
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
     .then(data => {
       const warningCountEls = document.querySelectorAll(".warning-count");
       if (data.count > 0) {
@@ -426,19 +454,12 @@ function checkMessages() {
 }
 
 function doLogout(url) {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-  fetch(`${document.body.dataset.apiurl}/auth`, {
+  fetchFactory(`${document.body.dataset.apiurl}/auth`, {
     method: "DELETE",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .catch(() => {
-      // Ignore errors
-    })
-    .finally(() => {
-      globalThis.location = url;
-    });
+    json: false,
+  }).finally(() => {
+    globalThis.location = url;
+  });
 }
 
 function renderTimestamp(data, type) {
@@ -730,5 +751,6 @@ globalThis.utils = (function () {
     toggleBoxCollapse,
     isVisible,
     pluralize,
+    fetchFactory,
   };
 })();

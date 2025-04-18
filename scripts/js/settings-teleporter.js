@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false */
+/* global utils:false */
 
 "use strict";
 
@@ -39,12 +39,12 @@ function importZIP() {
   const formData = new FormData();
   formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
-  fetch(`${document.body.dataset.apiurl}/teleporter`, {
-    method: "POST",
-    body: formData,
-    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/teleporter`, {
+      method: "POST",
+      body: formData,
+    })
     .then(data => {
       $("#import-spinner").hide();
       $("#modal-import-success").hide();

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
+/* global moment: false, utils: false, REFRESH_INTERVAL: false */
 
 "use strict";
 
@@ -102,16 +102,10 @@ function getData() {
     return;
   }
 
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}?nextID=${nextID}`;
 
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+  utils
+    .fetchFactory(url)
     .then(data => {
       // Set filename
       document.getElementById("filename").textContent = data.file;
@@ -228,8 +222,7 @@ function getData() {
 
       utils.setTimer(getData, REFRESH_INTERVAL.logs);
     })
-    .catch(error => {
-      apiFailure(error);
+    .catch(() => {
       utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }

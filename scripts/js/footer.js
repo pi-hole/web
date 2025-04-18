@@ -106,21 +106,13 @@ function countDown() {
 }
 
 function checkBlocking() {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
-  fetch(`${document.body.dataset.apiurl}/dns/blocking`, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/dns/blocking`)
     .then(data => {
       piholeChanged(data.blocking, data.timer);
       utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
     })
-    .catch(error => {
-      apiFailure(error);
+    .catch(() => {
       utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
     });
 }
@@ -136,28 +128,22 @@ function piholeChange(action, duration) {
 
   btnStatus.innerHTML = "<i class='fa fa-spinner fa-spin'> </i>";
 
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
-  fetch(`${document.body.dataset.apiurl}/dns/blocking`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "X-CSRF-TOKEN": csrfToken,
-    },
-    body: JSON.stringify({
-      blocking: action === "enable",
-      timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
-    }),
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/dns/blocking`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        blocking: action === "enable",
+        timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
+      }),
+    })
     .then(data => {
       if (data.blocking === `${action}d`) {
         btnStatus.innerHTML = "";
         piholeChanged(data.blocking, data.timer);
       }
-    })
-    .catch(error => {
-      apiFailure(error);
     });
 }
 
@@ -237,184 +223,159 @@ function updateQueryFrequency(intl, frequency) {
 
 let ftlinfoTimer = null;
 function updateFtlInfo() {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  utils.fetchFactory(`${document.body.dataset.apiurl}/info/ftl`).then(({ ftl }) => {
+    const { database } = ftl;
+    const intl = new Intl.NumberFormat();
+    document.getElementById("num_groups").textContent = intl.format(database.groups);
+    document.getElementById("num_clients").textContent = intl.format(database.clients);
+    document.getElementById("num_lists").textContent = intl.format(database.lists);
+    document.getElementById("num_gravity").textContent = intl.format(database.gravity);
 
-  fetch(`${document.body.dataset.apiurl}/info/ftl`, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
-    .then(({ ftl }) => {
-      const { database } = ftl;
-      const intl = new Intl.NumberFormat();
-      document.getElementById("num_groups").textContent = intl.format(database.groups);
-      document.getElementById("num_clients").textContent = intl.format(database.clients);
-      document.getElementById("num_lists").textContent = intl.format(database.lists);
-      document.getElementById("num_gravity").textContent = intl.format(database.gravity);
+    const numAllowedEl = document.getElementById("num_allowed");
+    numAllowedEl.textContent = intl.format(database.domains.allowed + database.regex.allowed);
+    numAllowedEl.title =
+      `Allowed: ${intl.format(database.domains.allowed)} exact domains and ` +
+      `${intl.format(database.regex.allowed)} regex filters are enabled`;
 
-      const numAllowedEl = document.getElementById("num_allowed");
-      numAllowedEl.textContent = intl.format(database.domains.allowed + database.regex.allowed);
-      numAllowedEl.title =
-        `Allowed: ${intl.format(database.domains.allowed)} exact domains and ` +
-        `${intl.format(database.regex.allowed)} regex filters are enabled`;
+    const numDeniedEl = document.getElementById("num_denied");
+    numDeniedEl.textContent = intl.format(database.domains.denied + database.regex.denied);
+    numDeniedEl.title =
+      `Denied: ${intl.format(database.domains.denied)} exact domains and ` +
+      `${intl.format(database.regex.denied)} regex filters are enabled`;
+    updateQueryFrequency(intl, ftl.query_frequency);
 
-      const numDeniedEl = document.getElementById("num_denied");
-      numDeniedEl.textContent = intl.format(database.domains.denied + database.regex.denied);
-      numDeniedEl.title =
-        `Denied: ${intl.format(database.domains.denied)} exact domains and ` +
-        `${intl.format(database.regex.denied)} regex filters are enabled`;
-      updateQueryFrequency(intl, ftl.query_frequency);
+    const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
+    if (sysInfoCpuFtl !== null) {
+      sysInfoCpuFtl.textContent = `(${ftl["%cpu"].toFixed(1)}% used by FTL)`;
+    }
 
-      const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
-      if (sysInfoCpuFtl !== null) {
-        sysInfoCpuFtl.textContent = `(${ftl["%cpu"].toFixed(1)}% used by FTL)`;
-      }
+    const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
+    if (sysInfoRamFtl !== null) {
+      sysInfoRamFtl.textContent = `(${ftl["%mem"].toFixed(1)}% used by FTL)`;
+    }
 
-      const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
-      if (sysInfoRamFtl !== null) {
-        sysInfoRamFtl.textContent = `(${ftl["%mem"].toFixed(1)}% used by FTL)`;
-      }
+    const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
+    if (sysInfoPidFtl !== null) {
+      sysInfoPidFtl.textContent = ftl.pid;
+    }
 
-      const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
-      if (sysInfoPidFtl !== null) {
-        sysInfoPidFtl.textContent = ftl.pid;
-      }
+    const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
+    if (sysInfoUptimeFtl !== null) {
+      const startDate = moment()
+        .subtract(ftl.uptime, "milliseconds")
+        .format("dddd, MMMM Do YYYY, HH:mm:ss");
+      sysInfoUptimeFtl.textContent = startDate;
+    }
 
-      const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
-      if (sysInfoUptimeFtl !== null) {
-        const startDate = moment()
-          .subtract(ftl.uptime, "milliseconds")
-          .format("dddd, MMMM Do YYYY, HH:mm:ss");
-        sysInfoUptimeFtl.textContent = startDate;
-      }
+    const destructiveActions = document.querySelectorAll(".destructive_action");
+    for (const element of destructiveActions) {
+      element.disabled = !ftl.allow_destructive;
+      element.title = ftl.allow_destructive
+        ? ""
+        : "Destructive actions are disabled by a config setting";
+    }
 
-      const destructiveActions = document.querySelectorAll(".destructive_action");
-      for (const element of destructiveActions) {
-        element.disabled = !ftl.allow_destructive;
-        element.title = ftl.allow_destructive
-          ? ""
-          : "Destructive actions are disabled by a config setting";
-      }
-
-      clearTimeout(ftlinfoTimer);
-      ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
-    })
-    .catch(error => {
-      apiFailure(error);
-    });
+    clearTimeout(ftlinfoTimer);
+    ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
+  });
 }
 
 function updateSystemInfo() {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  utils.fetchFactory(`${document.body.dataset.apiurl}/info/system`).then(({ system }) => {
+    const percentRAM = system.memory.ram["%used"];
+    const percentSwap = system.memory.swap["%used"];
+    let totalRAM = system.memory.ram.total / 1024;
+    let totalRAMUnit = "MB";
+    if (totalRAM > 1024) {
+      totalRAM /= 1024;
+      totalRAMUnit = "GB";
+    }
 
-  fetch(`${document.body.dataset.apiurl}/info/system`, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
-    .then(({ system }) => {
-      const percentRAM = system.memory.ram["%used"];
-      const percentSwap = system.memory.swap["%used"];
-      let totalRAM = system.memory.ram.total / 1024;
-      let totalRAMUnit = "MB";
-      if (totalRAM > 1024) {
-        totalRAM /= 1024;
-        totalRAMUnit = "GB";
-      }
+    let totalSwap = system.memory.swap.total / 1024;
+    let totalSwapUnit = "MB";
+    if (totalSwap > 1024) {
+      totalSwap /= 1024;
+      totalSwapUnit = "GB";
+    }
 
-      let totalSwap = system.memory.swap.total / 1024;
-      let totalSwapUnit = "MB";
-      if (totalSwap > 1024) {
-        totalSwap /= 1024;
-        totalSwapUnit = "GB";
-      }
+    const swap =
+      system.memory.swap.total > 0
+        ? `${((100 * system.memory.swap.used) / system.memory.swap.total).toFixed(1)} %`
+        : "N/A";
+    const ramColor = percentRAM > 75 ? "text-red" : "text-green-light";
 
-      const swap =
+    const memoryEl = document.getElementById("memory");
+    const sysInfoRam = document.getElementById("sysinfo-memory-ram");
+    const sysInfoSwapEl = document.getElementById("sysinfo-memory-swap");
+    const cpuEl = document.getElementById("cpu");
+    const sysInfoCpu = document.getElementById("sysinfo-cpu");
+    const statusEl = document.getElementById("status");
+    const sysInfoUptime = document.getElementById("sysinfo-uptime");
+    const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
+
+    memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor}"></i>&nbsp;&nbsp;Memory usage:&nbsp;${percentRAM.toFixed(1)}&thinsp;%`;
+    memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swap}`;
+
+    if (sysInfoRam !== null) {
+      sysInfoRam.textContent = `${percentRAM.toFixed(1)}% of ${totalRAM.toFixed(1)} ${totalRAMUnit} is used`;
+    }
+
+    if (sysInfoSwapEl !== null) {
+      sysInfoSwapEl.textContent =
         system.memory.swap.total > 0
-          ? `${((100 * system.memory.swap.used) / system.memory.swap.total).toFixed(1)} %`
-          : "N/A";
-      const ramColor = percentRAM > 75 ? "text-red" : "text-green-light";
+          ? `${percentSwap.toFixed(1)}% of ${totalSwap.toFixed(1)} ${totalSwapUnit} is used`
+          : "No swap space available";
+    }
 
-      const memoryEl = document.getElementById("memory");
-      const sysInfoRam = document.getElementById("sysinfo-memory-ram");
-      const sysInfoSwapEl = document.getElementById("sysinfo-memory-swap");
-      const cpuEl = document.getElementById("cpu");
-      const sysInfoCpu = document.getElementById("sysinfo-cpu");
-      const statusEl = document.getElementById("status");
-      const sysInfoUptime = document.getElementById("sysinfo-uptime");
-      const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
+    const loadColor = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
+    const loadWarning =
+      system.cpu.load.raw[0] > system.cpu.nprocs
+        ? " (load is higher than the number of cores)"
+        : "";
 
-      memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor}"></i>&nbsp;&nbsp;Memory usage:&nbsp;${percentRAM.toFixed(1)}&thinsp;%`;
-      memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swap}`;
+    cpuEl.innerHTML =
+      `<i class="fa fa-fw fa-microchip ${loadColor}"></i>&nbsp;&nbsp;Load:&nbsp;` +
+      `${system.cpu.load.raw[0].toFixed(2)}&nbsp;/&nbsp;` +
+      `${system.cpu.load.raw[1].toFixed(2)}&nbsp;/&nbsp;` +
+      system.cpu.load.raw[2].toFixed(2);
+    cpuEl.title =
+      "Load averages for the past 1, 5, and 15 minutes\non a system with " +
+      `${system.cpu.nprocs} ${utils.pluralize(system.cpu.nprocs, "core")} running ` +
+      `${system.procs} ${utils.pluralize(system.procs, "process", "processes")} ` +
+      loadWarning;
 
-      if (sysInfoRam !== null) {
-        sysInfoRam.textContent = `${percentRAM.toFixed(1)}% of ${totalRAM.toFixed(1)} ${totalRAMUnit} is used`;
+    if (sysInfoCpu !== null) {
+      sysInfoCpu.textContent =
+        `${system.cpu["%cpu"].toFixed(1)}% on ${system.cpu.nprocs} ` +
+        `${utils.pluralize(system.cpu.nprocs, "core")} running ${system.procs} ` +
+        utils.pluralize(system.procs, "process", "processes");
+    }
+
+    const startDate = moment()
+      .subtract(system.uptime, "seconds")
+      .format("dddd, MMMM Do YYYY, HH:mm:ss");
+
+    const humanUptime = moment.duration(1000 * system.uptime).humanize();
+    statusEl.title = `System uptime: ${humanUptime} (running since ${startDate})`;
+
+    if (sysInfoUptime !== null) {
+      sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
+      if (sysInfoSystemOverlay !== null) {
+        sysInfoSystemOverlay.style.display = "none";
       }
+    }
 
-      if (sysInfoSwapEl !== null) {
-        sysInfoSwapEl.textContent =
-          system.memory.swap.total > 0
-            ? `${percentSwap.toFixed(1)}% of ${totalSwap.toFixed(1)} ${totalSwapUnit} is used`
-            : "No swap space available";
-      }
-
-      const loadColor =
-        system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
-      const loadWarning =
-        system.cpu.load.raw[0] > system.cpu.nprocs
-          ? " (load is higher than the number of cores)"
-          : "";
-
-      cpuEl.innerHTML =
-        `<i class="fa fa-fw fa-microchip ${loadColor}"></i>&nbsp;&nbsp;Load:&nbsp;` +
-        `${system.cpu.load.raw[0].toFixed(2)}&nbsp;/&nbsp;` +
-        `${system.cpu.load.raw[1].toFixed(2)}&nbsp;/&nbsp;` +
-        system.cpu.load.raw[2].toFixed(2);
-      cpuEl.title =
-        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
-        `${system.cpu.nprocs} ${utils.pluralize(system.cpu.nprocs, "core")} running ` +
-        `${system.procs} ${utils.pluralize(system.procs, "process", "processes")} ` +
-        loadWarning;
-
-      if (sysInfoCpu !== null) {
-        sysInfoCpu.textContent =
-          `${system.cpu["%cpu"].toFixed(1)}% on ${system.cpu.nprocs} ` +
-          `${utils.pluralize(system.cpu.nprocs, "core")} running ${system.procs} ` +
-          utils.pluralize(system.procs, "process", "processes");
-      }
-
-      const startDate = moment()
-        .subtract(system.uptime, "seconds")
-        .format("dddd, MMMM Do YYYY, HH:mm:ss");
-
-      const humanUptime = moment.duration(1000 * system.uptime).humanize();
-      statusEl.title = `System uptime: ${humanUptime} (running since ${startDate})`;
-
-      if (sysInfoUptime !== null) {
-        sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
-        if (sysInfoSystemOverlay !== null) {
-          sysInfoSystemOverlay.style.display = "none";
-        }
-      }
-
-      clearTimeout(systemTimer);
-      systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
-    })
-    .catch(error => {
-      apiFailure(error);
-    });
+    clearTimeout(systemTimer);
+    systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
+  });
 }
 
-function apiFailure(data) {
+globalThis.apiFailure = function (data) {
   if (data.status === 401) {
     // Unauthorized, reload page
     globalThis.location.reload();
   }
-}
+};
 
 // Method to compare two versions.
 // Returns 1 if v2 is smaller, -1 if v1 is smaller, 0 if equal.
@@ -444,127 +405,118 @@ function versionCompare(v1, v2) {
 }
 
 function updateVersionInfo() {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  utils.fetchFactory(`${document.body.dataset.apiurl}/info/version`).then(({ version }) => {
+    let updateAvailable = false;
+    let dockerUpdate = false;
+    let isDocker = false;
+    const versionsEl = document.getElementById("versions");
+    const updateHintEl = document.getElementById("update-hint");
+    versionsEl.innerHTML = "";
+    updateHintEl.innerHTML = "";
 
-  fetch(`${document.body.dataset.apiurl}/info/version`, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
-    .then(({ version }) => {
-      let updateAvailable = false;
-      let dockerUpdate = false;
-      let isDocker = false;
-      const versionsEl = document.getElementById("versions");
-      const updateHintEl = document.getElementById("update-hint");
-      versionsEl.innerHTML = "";
-      updateHintEl.innerHTML = "";
+    const versions = [
+      {
+        name: "Docker Tag",
+        local: version.docker.local,
+        remote: version.docker.remote,
+        branch: null,
+        hash: null,
+        url: "https://github.com/pi-hole/docker-pi-hole/releases",
+      },
+      {
+        name: "Core",
+        local: version.core.local.version || "N/A",
+        remote: version.core.remote.version,
+        branch: version.core.local.branch,
+        hash: version.core.local.hash,
+        hash_remote: version.core.remote.hash,
+        url: "https://github.com/pi-hole/pi-hole/releases",
+      },
+      {
+        name: "FTL",
+        local: version.ftl.local.version || "N/A",
+        remote: version.ftl.remote.version,
+        branch: version.ftl.local.branch,
+        hash: version.ftl.local.hash,
+        hash_remote: version.ftl.remote.hash,
+        url: "https://github.com/pi-hole/FTL/releases",
+      },
+      {
+        name: "Web interface",
+        local: version.web.local.version || "N/A",
+        remote: version.web.remote.version,
+        branch: version.web.local.branch,
+        hash: version.web.local.hash,
+        hash_remote: version.web.remote.hash,
+        url: "https://github.com/pi-hole/web/releases",
+      },
+    ];
 
-      const versions = [
-        {
-          name: "Docker Tag",
-          local: version.docker.local,
-          remote: version.docker.remote,
-          branch: null,
-          hash: null,
-          url: "https://github.com/pi-hole/docker-pi-hole/releases",
-        },
-        {
-          name: "Core",
-          local: version.core.local.version || "N/A",
-          remote: version.core.remote.version,
-          branch: version.core.local.branch,
-          hash: version.core.local.hash,
-          hash_remote: version.core.remote.hash,
-          url: "https://github.com/pi-hole/pi-hole/releases",
-        },
-        {
-          name: "FTL",
-          local: version.ftl.local.version || "N/A",
-          remote: version.ftl.remote.version,
-          branch: version.ftl.local.branch,
-          hash: version.ftl.local.hash,
-          hash_remote: version.ftl.remote.hash,
-          url: "https://github.com/pi-hole/FTL/releases",
-        },
-        {
-          name: "Web interface",
-          local: version.web.local.version || "N/A",
-          remote: version.web.remote.version,
-          branch: version.web.local.branch,
-          hash: version.web.local.hash,
-          hash_remote: version.web.remote.hash,
-          url: "https://github.com/pi-hole/web/releases",
-        },
-      ];
+    // Check if we are running in a Docker container
+    if (version.docker.local !== null) {
+      isDocker = true;
+    }
 
-      // Check if we are running in a Docker container
-      if (version.docker.local !== null) {
-        isDocker = true;
-      }
+    for (const v of versions) {
+      if (v.local === null) continue;
 
-      for (const v of versions) {
-        if (v.local === null) continue;
-
-        // reset update status for each component
-        let updateComponentAvailable = false;
-        let localVersion = v.local;
-        if (v.branch !== null && v.hash !== null) {
-          if (v.branch === "master") {
-            localVersion = v.local.split("-")[0];
-            localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
-            if (versionCompare(v.local, v.remote) === -1) {
-              // Update available
-              updateComponentAvailable = true;
-            }
-          } else {
-            // non-master branch
-            localVersion = `vDev (${v.branch}, ${v.hash})`;
-            if (v.hash_remote && v.hash !== v.hash_remote) {
-              // hash differ > Update available
-              updateComponentAvailable = true;
-              // link to the commit history instead of release page
-              v.url = v.url.replace("releases", `commits/${v.branch}`);
-            }
-          }
-        }
-
-        if (v.name === "Docker Tag") {
+      // reset update status for each component
+      let updateComponentAvailable = false;
+      let localVersion = v.local;
+      if (v.branch !== null && v.hash !== null) {
+        if (v.branch === "master") {
+          localVersion = v.local.split("-")[0];
+          localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
           if (versionCompare(v.local, v.remote) === -1) {
-            // Display update information for the docker tag
+            // Update available
             updateComponentAvailable = true;
-            dockerUpdate = true;
-          } else {
-            // Display the link for the current tag
-            localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
           }
-        }
-
-        // Display update information of individual components only if we are not running in a Docker container
-        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-          versionsEl.innerHTML +=
-            `<li><strong>${v.name}</strong> ${localVersion}&nbsp;&middot; ` +
-            `<a class="lookatme" data-lookatme-text="Update available!" href="${v.url}" ` +
-            `rel="noopener noreferrer" target="_blank">Update available!</a></li>`;
-          // if at least one component can be updated, display the update-hint footer
-          updateAvailable = true;
         } else {
-          versionsEl.innerHTML += `<li><strong>${v.name}</strong> ${localVersion}</li>`;
+          // non-master branch
+          localVersion = `vDev (${v.branch}, ${v.hash})`;
+          if (v.hash_remote && v.hash !== v.hash_remote) {
+            // hash differ > Update available
+            updateComponentAvailable = true;
+            // link to the commit history instead of release page
+            v.url = v.url.replace("releases", `commits/${v.branch}`);
+          }
         }
       }
 
-      if (dockerUpdate)
-        updateHintEl.innerHTML =
-          'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.';
-      else if (updateAvailable)
-        updateHintEl.innerHTML =
-          'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
+      if (v.name === "Docker Tag") {
+        if (versionCompare(v.local, v.remote) === -1) {
+          // Display update information for the docker tag
+          updateComponentAvailable = true;
+          dockerUpdate = true;
+        } else {
+          // Display the link for the current tag
+          localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
+        }
+      }
 
-      clearTimeout(versionTimer);
-      versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
-    });
+      // Display update information of individual components only if we are not running in a Docker container
+      if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
+        versionsEl.innerHTML +=
+          `<li><strong>${v.name}</strong> ${localVersion}&nbsp;&middot; ` +
+          `<a class="lookatme" data-lookatme-text="Update available!" href="${v.url}" ` +
+          `rel="noopener noreferrer" target="_blank">Update available!</a></li>`;
+        // if at least one component can be updated, display the update-hint footer
+        updateAvailable = true;
+      } else {
+        versionsEl.innerHTML += `<li><strong>${v.name}</strong> ${localVersion}</li>`;
+      }
+    }
+
+    if (dockerUpdate)
+      updateHintEl.innerHTML =
+        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.';
+    else if (updateAvailable)
+      updateHintEl.innerHTML =
+        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
+
+    clearTimeout(versionTimer);
+    versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

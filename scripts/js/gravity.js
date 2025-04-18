@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false */
+/* global utils:false */
 
 "use strict";
 
@@ -14,7 +14,6 @@ function eventsource() {
   const $alertSuccess = $("#alertSuccess");
   const outputElement = document.getElementById("output");
   const gravityBtn = document.getElementById("gravityBtn");
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const url = `${document.body.dataset.apiurl}/action/gravity`;
 
   if (outputElement.innerHTML.length > 0) {
@@ -28,11 +27,11 @@ function eventsource() {
   $alertSuccess.hide();
   $alertInfo.show();
 
-  fetch(url, {
-    method: "POST",
-    headers: { "X-CSRF-TOKEN": csrfToken },
-  })
-    .then(response => (response.ok ? response : apiFailure(response)))
+  utils
+    .fetchFactory(url, {
+      method: "POST",
+      json: false,
+    })
     // Retrieve the response as ReadableStream
     .then(response => {
       return handleResponseStream({

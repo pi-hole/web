@@ -5,7 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, Chart:false, apiFailure:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false */
+/*
+  global utils:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,
+  doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false
+*/
 
 "use strict";
 
@@ -28,14 +31,13 @@ Chart.defaults.set("plugins.deferred", {
 
 // Set the privacy level
 function initPrivacyLevel() {
-  return $.ajax({
-    url: document.body.dataset.apiurl + "/info/ftl",
-  })
-    .done(data => {
+  return utils
+    .fetchFactory(`${document.body.dataset.apiurl}/info/ftl`)
+    .then(data => {
       privacyLevel = data.ftl.privacy_level;
+      return data;
     })
-    .fail(data => {
-      apiFailure(data);
+    .catch(() => {
       // Set privacy level to 0 by default if the request fails
       privacyLevel = 0;
     });
@@ -52,14 +54,8 @@ function updateChartData(config) {
     errorCallback = () => {},
   } = config;
 
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
-  fetch(`${document.body.dataset.apiurl}${apiEndpoint}`, {
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}${apiEndpoint}`)
     .then(data => {
       // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
       if (
@@ -91,7 +87,6 @@ function updateChartData(config) {
       }
 
       errorCallback(error);
-      apiFailure(error);
     });
 }
 
@@ -309,7 +304,6 @@ function updateTopTable(config) {
     apiPath,
   } = config;
 
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const $table = $(tableElement);
   const $tableContent = $table.find("td").parent();
   const $overlay = $table.find(".overlay");
@@ -317,12 +311,8 @@ function updateTopTable(config) {
 
   const style = blocked ? "queries-blocked" : "queries-permitted";
 
-  fetch(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`, {
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`)
     .then(data => {
       // Clear tables before filling them with data
       $tableContent.remove();
@@ -372,9 +362,6 @@ function updateTopTable(config) {
 
       // Hide overlay
       $overlay.hide();
-    })
-    .catch(error => {
-      apiFailure(error);
     });
 }
 
@@ -397,13 +384,10 @@ function updateTopLists() {
 
 let previousCount = 0;
 let firstSummaryUpdate = true;
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 function updateSummaryData(runOnce = false) {
-  fetch(`${document.body.dataset.apiurl}/stats/summary`, {
-    headers: { "X-CSRF-TOKEN": csrfToken },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/stats/summary`)
     .then(data => {
       const intl = new Intl.NumberFormat();
       const newCount = Number.parseInt(data.queries.total, 10);
@@ -462,9 +446,8 @@ function updateSummaryData(runOnce = false) {
 
       if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
     })
-    .catch(error => {
+    .catch(() => {
       utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
-      apiFailure(error);
     });
 }
 

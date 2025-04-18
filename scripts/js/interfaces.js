@@ -5,31 +5,23 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false */
+/* global utils:false */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const url = `${document.body.dataset.apiurl}/network/gateway?detailed=true`;
 
-  fetch(url, {
-    method: "GET",
-    headers: {
-      "X-CSRF-TOKEN": csrfToken,
-    },
-  })
-    .then(response => (response.ok ? response.json() : apiFailure(response)))
-    .then(data => {
-      const intl = new Intl.NumberFormat();
-      const gateways = extractGateways(data.gateway);
-      const { interfaces, masterInterfaces } = processInterfaces(data.interfaces, gateways, intl);
-      const masterInterfacesSorted = sortInterfaces(interfaces, masterInterfaces);
-      const json = masterInterfacesSorted.map(iface => interfaces[iface]);
+  utils.fetchFactory(url).then(data => {
+    const intl = new Intl.NumberFormat();
+    const gateways = extractGateways(data.gateway);
+    const { interfaces, masterInterfaces } = processInterfaces(data.interfaces, gateways, intl);
+    const masterInterfacesSorted = sortInterfaces(interfaces, masterInterfaces);
+    const json = masterInterfacesSorted.map(iface => interfaces[iface]);
 
-      renderTreeView(json);
-      expandGatewayInterfaces(gateways);
-    });
+    renderTreeView(json);
+    expandGatewayInterfaces(gateways);
+  });
 });
 
 function extractGateways(gateway) {
