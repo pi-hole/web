@@ -22,7 +22,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered" id="DNSupstreamsTable">
                             <thead>
                                 <tr>
                                     <th colspan="2">IPv4</th>
@@ -30,8 +30,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th>Name</th>
                                 </tr>
                             </thead>
-                            <tbody id="DNSupstreamsTable">
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                         <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                     </div>
