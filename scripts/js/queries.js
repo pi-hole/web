@@ -626,7 +626,7 @@ $(function () {
 
       // Prefix colored DNSSEC icon to domain text
       var dnssecIcon = "";
-      if (doDnssec !== false) {
+      if (doDnssec === true) {
         const dnssec = parseDNSSEC(data);
         dnssecIcon =
           '<i class="mr-2 fa fa-fw ' +
