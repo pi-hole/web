@@ -1587,7 +1587,7 @@ textarea.field-sizing-content {
 /* Used in query log page */
 td.dnssec {
   padding-inline-start: 2.25em !important;
-  text-indent: -1.25em
+  text-indent: -1.25em;
 }
 td.dnssec i {
   text-indent: 0;
