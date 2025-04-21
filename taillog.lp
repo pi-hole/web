@@ -33,6 +33,6 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script defer src="<?=pihole.fileversion('scripts/js/taillog.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/taillog.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>
