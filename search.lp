@@ -47,5 +47,5 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script src="<?=pihole.fileversion('scripts/js/search.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/search.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>

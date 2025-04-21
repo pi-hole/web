@@ -115,10 +115,10 @@ is_authenticated = mg.request_info.is_authenticated
     <noscript><link rel="stylesheet" href="<?=pihole.fileversion('vendor/js-warn/js-warn.css')?>"></noscript>
 
     <!-- scripts -->
-    <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
