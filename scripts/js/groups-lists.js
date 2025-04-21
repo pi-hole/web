@@ -464,13 +464,7 @@ globalThis.initTable = function () {
   });
 
   // Disable autocorrect in the search box
-  const input = document.querySelector("input[type=search]");
-  if (input !== null) {
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocorrect", "off");
-    input.setAttribute("autocapitalize", "off");
-    input.setAttribute("spellcheck", false);
-  }
+  utils.disableSearchAutocorrect();
 };
 
 // Remove 'bnt-group' class from container, to avoid grouping

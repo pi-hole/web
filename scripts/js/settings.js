@@ -11,18 +11,12 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // Handle hiding of alerts
-  const dataHideElements = document.querySelectorAll("[data-hide]");
-  for (const element of dataHideElements) {
-    element.addEventListener("click", () => {
-      const hideClass = element.dataset.hide;
-      const closestElement = element.closest(`.${hideClass}`);
-      if (closestElement) $(closestElement).hide();
-    });
-  }
+  utils.hideAlerts();
 
   // Handle saving of settings
   const saveButton = document.querySelector(".save-button");
   if (!saveButton) return;
+
   saveButton.addEventListener("click", () => {
     saveSettings();
   });

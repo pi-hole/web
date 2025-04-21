@@ -691,6 +691,29 @@ function pluralize(count, singular, plural) {
   return count === 1 ? singular : plural || `${singular}s`;
 }
 
+function disableSearchAutocorrect(input = document.querySelector("input[type=search]")) {
+  if (!input) return;
+
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
+}
+
+function hideAlerts(selector = "[data-hide]") {
+  const dataHideElements = document.querySelectorAll(selector);
+  if (dataHideElements.length === 0) return;
+
+  // Hide all elements with the data-hide attribute
+  for (const element of dataHideElements) {
+    element.addEventListener("click", () => {
+      const hideClass = element.dataset.hide;
+      const closestElement = element.closest(`.${hideClass}`);
+      if (closestElement) $(closestElement).hide();
+    });
+  }
+}
+
 /**
  * Toggle or set the collapse state of a box element
  * @param {HTMLElement} box - The box element
@@ -752,5 +775,7 @@ globalThis.utils = (function () {
     isVisible,
     pluralize,
     fetchFactory,
+    disableSearchAutocorrect,
+    hideAlerts,
   };
 })();

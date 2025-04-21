@@ -190,13 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Disable autocorrect in the search box
-  const input = document.querySelector("input[type=search]");
-  if (input !== null) {
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocorrect", "off");
-    input.setAttribute("autocapitalize", "off");
-    input.setAttribute("spellcheck", false);
-  }
+  utils.disableSearchAutocorrect();
 
   table.on("init select deselect", () => {
     // if the Default group is selected, undo the selection of it

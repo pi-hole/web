@@ -150,12 +150,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Handle hiding of alerts
-  const dataHideElements = document.querySelectorAll("[data-hide]");
-  for (const element of dataHideElements) {
-    element.addEventListener("click", () => {
-      const hideClass = element.dataset.hide;
-      const closestElement = element.closest(`.${hideClass}`);
-      if (closestElement) $(closestElement).hide();
-    });
-  }
+  utils.hideAlerts();
 });
