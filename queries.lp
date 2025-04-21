@@ -55,7 +55,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </button>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
+            <div class="box-body" style="display: none;">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <div class="input-group">
