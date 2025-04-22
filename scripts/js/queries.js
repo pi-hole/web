@@ -26,14 +26,14 @@ var filters = [
   "reply",
   "dnssec",
 ];
-var doDnssec = false;
+var doDNSSEC = false;
 
 // Check if pihole is validiting DNSSEC
 function getDnssecConfig() {
   $.getJSON(
     document.body.dataset.apiurl + "/config/dns/dnssec",
     function (data) {
-        doDnssec = data.config.dns.dnssec;
+        doDNSSEC = data.config.dns.dnssec;
     }
   );
 }
@@ -626,7 +626,7 @@ $(function () {
 
       // Prefix colored DNSSEC icon to domain text
       var dnssecIcon = "";
-      if (doDnssec === true) {
+      if (doDNSSEC === true) {
         const dnssec = parseDNSSEC(data);
         dnssecIcon =
           '<i class="mr-2 fa fa-fw ' +
