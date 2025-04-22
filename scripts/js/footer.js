@@ -49,7 +49,7 @@ function piholeChanged(blocking, timer = null) {
 
   switch (blocking) {
     case "enabled": {
-      status.innerHTML = "<i class='fa fa-circle fa-fw text-green-light'></i>&nbsp;&nbsp;Active";
+      status.innerHTML = "<i class='fa fa-circle fa-fw text-green-light mr-2'></i>Active";
       enableElement.classList.add("d-none");
       disableElement.classList.remove("d-none", "active");
 
@@ -57,7 +57,7 @@ function piholeChanged(blocking, timer = null) {
     }
 
     case "disabled": {
-      status.innerHTML = "<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Blocking disabled";
+      status.innerHTML = "<i class='fa fa-circle fa-fw text-red mr-2'></i>Blocking disabled";
       enableElement.classList.remove("d-none");
       disableElement.classList.add("d-none");
 
@@ -66,7 +66,7 @@ function piholeChanged(blocking, timer = null) {
 
     case "failure": {
       status.innerHTML =
-        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red'></i>&nbsp;&nbsp;<span class='text-red'>DNS server failure</span>";
+        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red mr-2'></i><span class='text-red'>DNS server failure<span>";
       enableElement.classList.add("d-none");
       disableElement.classList.add("d-none");
 
@@ -74,7 +74,7 @@ function piholeChanged(blocking, timer = null) {
     }
 
     default: {
-      status.innerHTML = "<i class='fa fa-circle fa-fw text-red'></i>&nbsp;&nbsp;Status unknown";
+      status.innerHTML = "<i class='fa fa-circle fa-fw text-red mr-2'></i>Status unknown";
       enableElement.classList.add("d-none");
       disableElement.classList.add("d-none");
     }
@@ -217,7 +217,7 @@ function updateQueryFrequency(intl, frequency) {
 
   const queryFreqElem = document.getElementById("query_frequency");
 
-  queryFreqElem.innerHTML = `<i class="fa fa-fw fa-gauge-high text-green-light"></i>&nbsp;&nbsp;${freqFormatted}&thinsp;${unit}`;
+  queryFreqElem.innerHTML = `<i class="fa fa-fw fa-gauge-high text-green-light mr-2"></i>${freqFormatted}&thinsp;${unit}`;
   queryFreqElem.title = title;
 }
 
@@ -313,7 +313,7 @@ function updateSystemInfo() {
     const sysInfoUptime = document.getElementById("sysinfo-uptime");
     const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
 
-    memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor}"></i>&nbsp;&nbsp;Memory usage:&nbsp;${percentRAM.toFixed(1)}&thinsp;%`;
+    memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>Memory usage:&nbsp;${percentRAM.toFixed(1)}&thinsp;%`;
     memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swap}`;
 
     if (sysInfoRam !== null) {
@@ -334,7 +334,7 @@ function updateSystemInfo() {
         : "";
 
     cpuEl.innerHTML =
-      `<i class="fa fa-fw fa-microchip ${loadColor}"></i>&nbsp;&nbsp;Load:&nbsp;` +
+      `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load:&nbsp;` +
       `${system.cpu.load.raw[0].toFixed(2)}&nbsp;/&nbsp;` +
       `${system.cpu.load.raw[1].toFixed(2)}&nbsp;/&nbsp;` +
       system.cpu.load.raw[2].toFixed(2);

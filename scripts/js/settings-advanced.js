@@ -26,20 +26,20 @@ function addAllowedValues(allowed) {
 }
 
 function boxIcons(value) {
-  let icons = '<span class="box-icons">';
+  let icons = '<span class="box-icons mx-2">';
 
   if (value.modified) {
-    icons += '<i class="far fa-edit text-light-blue" title="Modified from default"></i>';
+    icons += '<i class="far fa-edit text-light-blue ml-2" title="Modified from default"></i>';
   }
 
   if (value.flags.restart_dnsmasq) {
     icons +=
-      '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>';
+      '<i class="fas fa-redo text-orange ml-2" title="Setting requires FTL restart on change"></i>';
   }
 
   if (value.flags.env_var) {
     icons +=
-      '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>';
+      '<i class="fas fa-lock text-orange ml-2" title="Settings overwritten by an environmental variable are read-only"></i>';
   }
 
   icons += "</span>";

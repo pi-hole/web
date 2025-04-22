@@ -95,7 +95,7 @@ function unescapeHtml(text) {
 let showAlertBox = null;
 function showAlert(type, icon, title, message, toast) {
   const options = {
-    title: `&nbsp;<strong>${escapeHtml(title)}</strong><br>`,
+    title: `<strong class="ml-1">${escapeHtml(title)}</strong><br>`,
     message: escapeHtml(message),
     icon,
   };

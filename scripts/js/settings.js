@@ -44,13 +44,13 @@ globalThis.setConfigValues = function (topic, key, value) {
     envTitle.find(".expert-warning").length === 0
   ) {
     envTitle.append(
-      `<span class="expert-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>`
+      `<span class="expert-warning ml-2"><i class="fas fa-wrench" title="Expert level setting"></i></span>`
     );
   }
 
   if (value.flags.restart_dnsmasq && envTitle.find(".restart-warning").length === 0) {
     envTitle.append(
-      `<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>`
+      `<span class="restart-warning ml-2"><i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>`
     );
   }
 
@@ -58,7 +58,7 @@ globalThis.setConfigValues = function (topic, key, value) {
     // If this setting has been set by environment variable, display a padlock in the section title
     if (envTitle.find(".env-warning").length === 0) {
       envTitle.append(
-        `<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
+        `<span class="env-warning ml-2"><i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
       );
     }
 

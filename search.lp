@@ -35,7 +35,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <br class="hidden-md hidden-lg">
                     <div class="col-md-8">
                         <div id="domain-limitbox-block" class="form-inline">
-                            <label for="number">Maximum number of results to be returned:&nbsp;</label>
+                            <label for="number" class="mr-2">Maximum number of results to be returned:</label>
                             <input class="form-control input-sm" type="number" min="0" value="20" id="number">
                         </div>
                     </div>
