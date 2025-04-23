@@ -32,8 +32,8 @@ var doDNSSEC = false;
 function getDnssecConfig() {
   $.getJSON(
     document.body.dataset.apiurl + "/config/dns/dnssec",
-    function (data) {
-        doDNSSEC = data.config.dns.dnssec;
+    function(data) {
+      doDNSSEC = data.config.dns.dnssec;
     }
   );
 }
@@ -509,7 +509,6 @@ function liveUpdate() {
 }
 
 $(function () {
-
   // Do we want to show DNSSEC icons?
   getDnssecConfig();
 
@@ -521,7 +520,7 @@ $(function () {
       var element = filters[sel];
       $("#" + element + "_filter").select2({
         width: "100%",
-        tags: sel < 3, // Only the first three are allowed to freely specify input
+        tags: sel < 4, // Only the first four (client(IP/name), domain, upstream) are allowed to freely specify input
         placeholder: "Select...",
         allowClear: true,
       });
