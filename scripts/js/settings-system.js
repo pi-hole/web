@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
+/* global apiFailure:false, Chart:false, THEME_COLORS:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
 "use strict";
 
@@ -310,45 +310,9 @@ document.addEventListener("DOMContentLoaded", () => {
   updateMetrics();
   getLoggingButton();
 
-  const ctx = document.getElementById("cachePieChart").getContext("2d");
-  cachePieChart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: [],
-      datasets: [{ data: [], parsing: false }],
-    },
-    plugins: [htmlLegendPlugin],
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      elements: {
-        arc: {
-          borderColor: $(".box").css("background-color"),
-        },
-      },
-      plugins: {
-        htmlLegend: {
-          containerID: "cache-legend",
-        },
-        legend: {
-          display: false,
-        },
-        tooltip: {
-          // Disable the on-canvas tooltip
-          enabled: false,
-          external: customTooltips,
-          callbacks: {
-            title() {
-              return "Cache content";
-            },
-            label: doughnutTooltip,
-          },
-        },
-      },
-      animation: {
-        duration: 750,
-      },
-    },
+  cachePieChart = utils.createPieChart("cachePieChart", {
+    legendContainerId: "cache-legend",
+    tooltipTitle: "Cache content",
   });
 
   $.ajax({

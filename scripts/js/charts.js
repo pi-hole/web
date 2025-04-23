@@ -84,27 +84,27 @@ globalThis.htmlLegendPlugin = {
         chart.update();
       });
 
-      const link = document.createElement("a");
+      const skipLink = chart.canvas.id === "cachePieChart";
+      const contentElement = skipLink ? document.createElement("p") : document.createElement("a");
       const isQueryTypeChart = chart.canvas.id === "queryTypePieChart";
       const isForwardDestinationChart = chart.canvas.id === "forwardDestinationPieChart";
 
-      if (isQueryTypeChart || isForwardDestinationChart) {
+      if (!skipLink && (isQueryTypeChart || isForwardDestinationChart)) {
         // Text (link to query log page)
-        link.title = `List ${item.text} queries`;
+        contentElement.title = `List ${item.text} queries`;
 
         if (isQueryTypeChart) {
-          link.href = `queries?type=${item.text}`;
+          contentElement.href = `${document.body.dataset.webhome}queries?type=${encodeURIComponent(item.text)}`;
         } else if (isForwardDestinationChart) {
-          // Encode the forward destination as it may contain an "#" character
-          link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
+          contentElement.href = `${document.body.dataset.webhome}queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
         }
       }
 
-      link.style.textDecoration = item.hidden ? "line-through" : "";
-      link.className = "legend-label-text";
-      link.textContent = item.text;
+      contentElement.style.textDecoration = item.hidden ? "line-through" : "";
+      contentElement.className = "legend-label-text";
+      contentElement.textContent = item.text;
 
-      li.append(boxSpan, link);
+      li.append(boxSpan, contentElement);
       ul.append(li);
     }
   },

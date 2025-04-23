@@ -6,8 +6,8 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /*
-  global utils:false, Chart:false, THEME_COLORS:false, customTooltips:false, htmlLegendPlugin:false,
-  doughnutTooltip:false, ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false
+  global utils:false, Chart:false, THEME_COLORS:false, customTooltips:false,
+  ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false
 */
 
 "use strict";
@@ -490,59 +490,6 @@ function addChartClickHandler(chartElement, chartInstance) {
   });
 }
 
-// Factory function to create pie/doughnut charts with common configuration
-function createPieChart(elementId, options = {}) {
-  const element = document.getElementById(elementId);
-  if (!element) return null;
-
-  const boxEl = document.querySelector(".box");
-
-  return new Chart(element.getContext("2d"), {
-    type: "doughnut",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          parsing: false,
-        },
-      ],
-    },
-    plugins: [htmlLegendPlugin],
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      elements: {
-        arc: {
-          borderColor: getComputedStyle(boxEl).backgroundColor,
-        },
-      },
-      plugins: {
-        htmlLegend: {
-          containerID: options.legendContainerId || "",
-        },
-        legend: {
-          display: false,
-        },
-        tooltip: {
-          enabled: false,
-          external: customTooltips,
-          callbacks: {
-            title() {
-              return options.tooltipTitle || "";
-            },
-            label: doughnutTooltip,
-          },
-        },
-      },
-      animation: {
-        duration: 750,
-      },
-      ...options.chartOptions,
-    },
-  });
-}
-
 // Factory function to create timeline charts with common configuration
 function createTimelineChart(elementId, options = {}) {
   const element = document.getElementById(elementId);
@@ -775,7 +722,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addChartClickHandler(clientsChartEl, clientsChart);
   }
 
-  queryTypePieChart = createPieChart("queryTypePieChart", {
+  queryTypePieChart = utils.createPieChart("queryTypePieChart", {
     legendContainerId: "query-types-legend",
     tooltipTitle: "Query type",
   });
@@ -785,7 +732,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateQueryTypesPie();
   }
 
-  forwardDestinationPieChart = createPieChart("forwardDestinationPieChart", {
+  forwardDestinationPieChart = utils.createPieChart("forwardDestinationPieChart", {
     legendContainerId: "forward-destinations-legend",
     tooltipTitle: "Upstream server",
   });

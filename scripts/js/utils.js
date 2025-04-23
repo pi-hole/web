@@ -5,7 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
+/*
+  global moment:false, Chart:false, htmlLegendPlugin:false, customTooltips:false,
+  doughnutTooltip:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false
+*/
 
 "use strict";
 
@@ -738,6 +741,62 @@ function toggleBoxCollapse(box, expand = true) {
   }
 }
 
+/**
+ * Factory function to create pie/doughnut charts with common configuration
+ * @param {string} elementId - The DOM element id for the chart canvas
+ * @param {Object} options - Chart options (legendContainerId, tooltipTitle, chartOptions)
+ * @returns {Chart|null}
+ */
+function createPieChart(elementId, options = {}) {
+  const element = document.getElementById(elementId);
+  if (!element) return null;
+
+  return new Chart(element.getContext("2d"), {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          parsing: false,
+        },
+      ],
+    },
+    plugins: [htmlLegendPlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      elements: {
+        arc: {
+          borderColor: getStylePropertyFromClass("box", "background-color"),
+        },
+      },
+      plugins: {
+        htmlLegend: {
+          containerID: options.legendContainerId || "",
+        },
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          enabled: false,
+          external: customTooltips,
+          callbacks: {
+            title() {
+              return options.tooltipTitle || "";
+            },
+            label: doughnutTooltip,
+          },
+        },
+      },
+      animation: {
+        duration: 750,
+      },
+      ...options.chartOptions,
+    },
+  });
+}
+
 globalThis.utils = (function () {
   return {
     escapeHtml,
@@ -777,5 +836,6 @@ globalThis.utils = (function () {
     fetchFactory,
     disableSearchAutocorrect,
     hideAlerts,
+    createPieChart,
   };
 })();
