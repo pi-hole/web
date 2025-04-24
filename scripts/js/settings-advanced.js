@@ -283,9 +283,17 @@ function createDynamicConfigTabs() {
 
       $("#advanced-overlay").hide();
 
-      // Select the first tab and show the content
-      $("#advanced-settings-menu ul li:first-child").addClass("active");
-      $("#advanced-settings-tabs > div:first-child").addClass("active in");
+      // Select the first tab and show the content, or activate tab from URL hash if it exists
+      const hash = globalThis.location.hash;
+      if (hash && $(hash).length > 0 && $(hash).is(".tab-pane")) {
+        $("#advanced-settings-menu ul li").removeClass("active");
+        $("#advanced-settings-tabs > div").removeClass("active in");
+        $(`a[href='${hash}']`).parent().addClass("active");
+        $(hash).addClass("active in");
+      } else {
+        $("#advanced-settings-menu ul li:first-child").addClass("active");
+        $("#advanced-settings-tabs > div:first-child").addClass("active in");
+      }
 
       applyCheckboxRadioStyle();
       applyOnlyChanged();
@@ -324,14 +332,17 @@ function initOnlyChanged() {
 }
 
 function applyOnlyChanged() {
+  // Store current hash/active tab before making changes
+  const currentHash = globalThis.location.hash;
+  const hasValidHash = currentHash && $(currentHash).length > 0 && $(currentHash).is(".tab-pane");
+
   if (localStorage.getItem("only-changed") === "true") {
     // Show only modified settings (hide tabs menu and empty tabs).
 
     // Hide the tabs menu
     $("#advanced-settings-menu").hide();
 
-    // Show all tabs, except the ones containing "data-modified='true'" attribute
-    // to prevent empty tabs (using the same classes used by Boostrap3)
+    // Show all tabs that have modified settings
     $("#advanced-settings-tabs > .tab-pane").addClass("in active");
     $("#advanced-settings-tabs > .tab-pane:not(:has(h3[data-modified='true']))").removeClass(
       "in active"
@@ -340,13 +351,20 @@ function applyOnlyChanged() {
     // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
     $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
   } else {
-    // Show the tabs menu and activate only the first button (deactivate other buttons)
+    // Show the tabs menu
     $("#advanced-settings-menu").show();
-    $("#advanced-settings-menu ul li").removeClass("active");
-    $("#advanced-settings-menu ul li:first-child").addClass("active");
 
-    // Hide all tabs, except the first one (removing the classes used by Boostrap3)
-    $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("in active");
+    // Reset all tab states
+    $("#advanced-settings-menu ul li").removeClass("active");
+    $("#advanced-settings-tabs > .tab-pane").removeClass("in active");
+
+    // If we have a valid hash in the URL, activate that tab
+    if (hasValidHash) {
+      $(`a[href='${currentHash}']`).tab("show");
+    } else {
+      // No valid hash, activate the first tab
+      $("#advanced-settings-menu ul li:first-child a").tab("show");
+    }
 
     // Show all boxes with data-key attribute
     $(".box-title[data-key]").closest(".box").show();
@@ -356,4 +374,16 @@ function applyOnlyChanged() {
 document.addEventListener("DOMContentLoaded", () => {
   createDynamicConfigTabs();
   initOnlyChanged();
+
+  document.addEventListener("click", event => {
+    const target = event.target.closest(
+      "#advanced-settings-menu a[data-toggle='pill'], #advanced-settings-menu a[data-toggle='tab']"
+    );
+    if (!target) return;
+
+    const href = target.getAttribute("href");
+    if (href && href.startsWith("#")) {
+      history.replaceState(null, null, href);
+    }
+  });
 });
