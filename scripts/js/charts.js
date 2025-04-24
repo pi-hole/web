@@ -7,8 +7,10 @@
 
 /* global upstreams:false */
 
+"use strict";
+
 // eslint-disable-next-line no-unused-vars
-var THEME_COLORS = [
+const THEME_COLORS = [
   "#f56954",
   "#3c8dbc",
   "#00a65a",
@@ -57,7 +59,7 @@ const htmlLegendPlugin = {
       ul.firstChild.remove();
     }
 
-    items.forEach(item => {
+    for (const item of items) {
       const li = document.createElement("li");
       li.style.alignItems = "center";
       li.style.cursor = "pointer";
@@ -114,14 +116,14 @@ const htmlLegendPlugin = {
 
       li.append(boxSpan, textLink);
       ul.append(li);
-    });
+    }
   },
 };
 
 // eslint-disable-next-line no-unused-vars
-var customTooltips = function (context) {
-  var tooltip = context.tooltip;
-  var tooltipEl = document.getElementById(this.chart.canvas.id + "-customTooltip");
+const customTooltips = function (context) {
+  const tooltip = context.tooltip;
+  let tooltipEl = document.getElementById(this.chart.canvas.id + "-customTooltip");
   if (!tooltipEl) {
     // Create Tooltip Element once per chart
     tooltipEl = document.createElement("div");
@@ -130,7 +132,7 @@ var customTooltips = function (context) {
     tooltipEl.innerHTML = "<div class='arrow'></div> <table></table>";
     // avoid browser's font-zoom since we know that <body>'s
     // font-size was set to 14px by bootstrap's css
-    var fontZoom = parseFloat($("body").css("font-size")) / 14;
+    const fontZoom = Number.parseFloat($("body").css("font-size")) / 14;
     // set styles and font
     tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
     tooltipEl.style.borderRadius = tooltip.options.cornerRadius + "px";
@@ -155,56 +157,58 @@ var customTooltips = function (context) {
 
   // Set Text
   if (tooltip.body) {
-    var titleLines = tooltip.title || [];
-    var bodyLines = tooltip.body.map(function (bodyItem) {
-      return bodyItem.lines;
-    });
-    var innerHtml = "<thead>";
+    const titleLines = tooltip.title || [];
+    const bodyLines = tooltip.body.map(bodyItem => bodyItem.lines);
+    let innerHtml = "<thead>";
 
-    titleLines.forEach(function (title) {
+    for (const title of titleLines) {
       innerHtml += "<tr><th>" + title + "</th></tr>";
-    });
-    innerHtml += "</thead><tbody>";
-    var printed = 0;
+    }
 
-    var devicePixel = (1 / window.devicePixelRatio).toFixed(1);
-    bodyLines.forEach(function (body, i) {
-      var labelColors = tooltip.labelColors[i];
-      var style = "background-color: " + labelColors.backgroundColor;
+    innerHtml += "</thead><tbody>";
+    let printed = 0;
+
+    const devicePixel = (1 / window.devicePixelRatio).toFixed(1);
+    for (const [i, body] of bodyLines.entries()) {
+      const labelColors = tooltip.labelColors[i];
+      let style = "background-color: " + labelColors.backgroundColor;
       style += "; outline: 1px solid " + labelColors.backgroundColor;
       style += "; border: " + devicePixel + "px solid #fff";
-      var span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
+      const span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
 
-      var num = body[0].split(": ");
+      const num = body[0].split(": ");
       // do not display entries with value of 0 (in bar chart),
       // but pass through entries with "0.0% (in pie charts)
       if (num[1] !== "0") {
         innerHtml += "<tr><td>" + span + body + "</td></tr>";
         printed++;
       }
-    });
+    }
+
     if (printed < 1) {
       innerHtml += "<tr><td>No activity recorded</td></tr>";
     }
 
     innerHtml += "</tbody>";
 
-    var tableRoot = tooltipEl.querySelector("table");
+    const tableRoot = tooltipEl.querySelector("table");
     tableRoot.innerHTML = innerHtml;
   }
 
-  var canvasPos = this.chart.canvas.getBoundingClientRect();
-  var boxPos = tooltipEl.ancestor.getBoundingClientRect();
-  var offsetX = canvasPos.left - boxPos.left;
-  var offsetY = canvasPos.top - boxPos.top;
-  var tooltipWidth = tooltipEl.offsetWidth;
-  var tooltipHeight = tooltipEl.offsetHeight;
-  var caretX = tooltip.caretX;
-  var caretY = tooltip.caretY;
-  var caretPadding = tooltip.options.caretPadding;
-  var tooltipX, tooltipY, arrowX;
-  var arrowMinIndent = 2 * tooltip.options.cornerRadius;
-  var arrowSize = 5;
+  const canvasPos = this.chart.canvas.getBoundingClientRect();
+  const boxPos = tooltipEl.ancestor.getBoundingClientRect();
+  const offsetX = canvasPos.left - boxPos.left;
+  const offsetY = canvasPos.top - boxPos.top;
+  const tooltipWidth = tooltipEl.offsetWidth;
+  const tooltipHeight = tooltipEl.offsetHeight;
+  const caretX = tooltip.caretX;
+  const caretY = tooltip.caretY;
+  const caretPadding = tooltip.options.caretPadding;
+  let tooltipX;
+  let tooltipY;
+  let arrowX;
+  const arrowMinIndent = 2 * tooltip.options.cornerRadius;
+  const arrowSize = 5;
 
   // Compute X position
   if ($(document).width() > 2 * tooltip.width || tooltip.xAlign !== "center") {
@@ -212,10 +216,10 @@ var customTooltips = function (context) {
     tooltipX = offsetX + caretX;
     if (tooltip.yAlign === "top" || tooltip.yAlign === "bottom") {
       switch (tooltip.xAlign) {
-        case "center":
+        case "center": {
           // set a minimal X position to 5px to prevent
           // the tooltip to stick out left of the viewport
-          var minX = 5;
+          const minX = 5;
           if (2 * tooltipX < tooltipWidth + minX) {
             arrowX = tooltipX - minX;
             tooltipX = minX;
@@ -224,6 +228,8 @@ var customTooltips = function (context) {
           }
 
           break;
+        }
+
         case "left":
           tooltipX -= arrowMinIndent;
           arrowX = arrowMinIndent;
@@ -295,7 +301,7 @@ var customTooltips = function (context) {
   } else {
     // Calculate percentage X value depending on the tooltip's
     // width to avoid hanging arrow out on tooltip width changes
-    var arrowXpercent = ((100 / tooltipWidth) * arrowX).toFixed(1);
+    const arrowXpercent = ((100 / tooltipWidth) * arrowX).toFixed(1);
     tooltipEl.querySelector(".arrow").style.left = arrowXpercent + "%";
   }
 
@@ -304,12 +310,12 @@ var customTooltips = function (context) {
 
 // eslint-disable-next-line no-unused-vars
 function doughnutTooltip(tooltipLabel) {
-  var percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(1);
+  let percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(1);
   // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
   // to compensate rounding errors we round to one decimal
 
-  var label = " " + tooltipLabel.label;
-  var itemPercentage;
+  const label = " " + tooltipLabel.label;
+  let itemPercentage;
 
   // if we only show < 1% percent of all, show each item with two decimals
   if (percentageTotalShown < 1) {
@@ -326,19 +332,19 @@ function doughnutTooltip(tooltipLabel) {
   if (percentageTotalShown > 99.9) {
     // All items shown
     return label + ": " + itemPercentage + "%";
-  } else {
-    // set percentageTotalShown again without rounding to account
-    // for cases where the total shown percentage would be <0.1% of all
-    percentageTotalShown = tooltipLabel.chart._metasets[0].total;
-    return (
-      label +
-      ":<br>&bull; " +
-      itemPercentage +
-      "% of all data<br>&bull; " +
-      ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
-      "% of shown items"
-    );
   }
+
+  // set percentageTotalShown again without rounding to account
+  // for cases where the total shown percentage would be <0.1% of all
+  percentageTotalShown = tooltipLabel.chart._metasets[0].total;
+  return (
+    label +
+    ":<br>&bull; " +
+    itemPercentage +
+    "% of all data<br>&bull; " +
+    ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
+    "% of shown items"
+  );
 }
 
 // chartjs plugin used by the custom doughnut legend

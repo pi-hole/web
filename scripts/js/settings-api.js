@@ -7,16 +7,18 @@
 
 /* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
 
-var apiSessionsTable = null;
-var ownSessionID = null;
-var deleted = 0;
-var TOTPdata = null;
-var apppwSet = false;
+"use strict";
+
+let apiSessionsTable = null;
+let ownSessionID = null;
+let deleted = 0;
+let TOTPdata = null;
+let apppwSet = false;
 
 function renderBool(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
-    var icon = "fa-xmark text-danger";
+    let icon = "fa-xmark text-danger";
     if (data === true) {
       icon = "fa-check text-success";
     }
@@ -28,7 +30,7 @@ function renderBool(data, type) {
   return data;
 }
 
-$(function () {
+$(() => {
   apiSessionsTable = $("#APISessionsTable").DataTable({
     ajax: {
       url: document.body.dataset.apiurl + "/auth/sessions",
@@ -54,7 +56,7 @@ $(function () {
         targets: 0,
         orderable: false,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -63,19 +65,19 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteSession_"]').on("click", deleteThisSession);
 
       // Hide buttons if all messages were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data.id);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteSession_' +
         data.id +
         '" data-del-id="' +
@@ -127,7 +129,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           apiSessionsTable.rows({ page: "current" }).select();
         },
       },
@@ -135,7 +137,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           apiSessionsTable.rows({ page: "current" }).select();
         },
       },
@@ -149,12 +151,12 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
-          var ids = [];
+          const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(parseInt($(this).attr("data-id"), 10));
+            ids.push(Number.parseInt($(this).attr("data-id"), 10));
           });
           // Delete all selected rows at once
           deleteMultipleSessions(ids);
@@ -176,11 +178,11 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("api-sessions-table", data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("api-sessions-table");
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("api-sessions-table");
       // Return if not available
       if (data === null) {
         return null;
@@ -190,7 +192,7 @@ $(function () {
       return data;
     },
   });
-  apiSessionsTable.on("init select deselect", function () {
+  apiSessionsTable.on("init select deselect", () => {
     utils.changeTableButtonStates(apiSessionsTable);
   });
 });
@@ -198,7 +200,7 @@ $(function () {
 function deleteThisSession() {
   // This function is called when a red trash button is clicked
   // We get the ID of the current item from the data-del-id attribute
-  const thisID = parseInt($(this).attr("data-del-id"), 10);
+  const thisID = Number.parseInt($(this).attr("data-del-id"), 10);
   deleted = 0;
   deleteOneSession(thisID, 1, false);
 }
@@ -212,13 +214,13 @@ function deleteMultipleSessions(ids) {
 
   // Exploit prevention: Return early for non-numeric IDs
   for (const id of ids) {
-    if (Object.hasOwnProperty.call(ids, id) && isNaN(ids[id])) return;
+    // TODO Fix eslint
+    // eslint-disable-next-line unicorn/prefer-number-properties
+    if (Object.hasOwn(ids, id) && isNaN(ids[id])) return;
   }
 
   // Convert all ids to integers
-  ids = ids.map(function (value) {
-    return parseInt(value, 10);
-  });
+  ids = ids.map(value => Number.parseInt(value, 10));
 
   // Check if own session is selected and remove it when deleting multiple
   // We need this only when multiple sessions are removed to ensure we do not
@@ -228,9 +230,7 @@ function deleteMultipleSessions(ids) {
   if (ids.includes(ownSessionID) && ids.length > 1) {
     ownSessionDelete = true;
     // Strip own session ID from array
-    ids = ids.filter(function (value) {
-      return value !== ownSessionID;
-    });
+    ids = ids.filter(value => value !== ownSessionID);
   }
 
   // Loop through IDs and delete them
@@ -250,7 +250,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
     url: document.body.dataset.apiurl + "/auth/session/" + id,
     method: "DELETE",
   })
-    .done(function () {
+    .done(() => {
       // Do not reload page when deleting multiple sessions
       if (++deleted < len) return;
 
@@ -265,7 +265,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
         location.reload();
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -274,7 +274,7 @@ function processWebServerConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/webserver?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       setConfigValues("webserver", "webserver", data.config.webserver);
       if (data.config.webserver.api.app_pwhash.value.length > 0) {
         apppwSet = true;
@@ -284,19 +284,19 @@ function processWebServerConfig() {
         $("#apppw_submit").addClass("btn-warning");
       } else $("#apppw_clear").hide();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$("#modal-totp").on("shown.bs.modal", function () {
+$("#modal-totp").on("shown.bs.modal", () => {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth/totp",
   })
-    .done(function (data) {
+    .done(data => {
       TOTPdata = data.totp;
       $("#totp_secret").text(data.totp.secret);
-      var qrlink =
+      const qrlink =
         "otpauth://totp/" +
         data.totp.issuer +
         ":" +
@@ -321,28 +321,28 @@ $("#modal-totp").on("shown.bs.modal", function () {
       $("#qrcode-spinner").hide();
       $("#qrcode").show();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 });
 
-var apppwhash = null;
-$("#modal-apppw").on("shown.bs.modal", function () {
+let apppwhash = null;
+$("#modal-apppw").on("shown.bs.modal", () => {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth/app",
   })
-    .done(function (data) {
+    .done(data => {
       apppwhash = data.app.hash;
       $("#password_code").text(data.app.password);
       $("#password_display").removeClass("hidden");
       $("#password-spinner").hide();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 });
 
-$("#apppw_submit").on("click", function () {
+$("#apppw_submit").on("click", () => {
   // Enable app password
   if (!apppwSet) {
     return setAppPassword();
@@ -353,7 +353,7 @@ $("#apppw_submit").on("click", function () {
     text: "Are you sure you want to replace your previous app password? You will need to re-login to continue using the web interface.",
     title: "Confirmation required",
     confirm: setAppPassword,
-    cancel: function () {
+    cancel() {
       // nothing to do
     },
     confirmButton: "Yes, replace password",
@@ -365,7 +365,7 @@ $("#apppw_submit").on("click", function () {
   });
 });
 
-$("#apppw_clear").on("click", function () {
+$("#apppw_clear").on("click", () => {
   // Disable app password
   apppwhash = "";
   setAppPassword();
@@ -380,7 +380,7 @@ function setAppPassword() {
     data: JSON.stringify({ config: { webserver: { api: { app_pwhash: apppwhash } } } }),
     contentType: "application/json; charset=utf-8",
   })
-    .done(function () {
+    .done(() => {
       $("#modal-apppw").modal("hide");
       const verb = apppwhash.length > 0 ? "enabled" : "disabled";
       const verb2 = apppwhash.length > 0 ? "will" : "may";
@@ -393,7 +393,7 @@ function setAppPassword() {
       );
       location.reload();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -408,12 +408,12 @@ $("#password_code").on("mouseout blur", function () {
 });
 
 // Trigger keyup event when pasting into the TOTP code input field
-$("#totp_code").on("paste", function (e) {
+$("#totp_code").on("paste", e => {
   $(e.target).keyup();
 });
 
 $("#totp_code").on("keyup", function () {
-  var code = parseInt($(this).val(), 10);
+  const code = Number.parseInt($(this).val(), 10);
   if (TOTPdata.codes.includes(code)) {
     $("#totp_div").removeClass("has-error");
     $("#totp_div").addClass("has-success");
@@ -433,12 +433,12 @@ function setTOTPSecret(secret) {
     data: JSON.stringify({ config: { webserver: { api: { totp_secret: secret } } } }),
     contentType: "application/json; charset=utf-8",
   })
-    .done(function () {
+    .done(() => {
       $("#button-enable-totp").addClass("hidden");
       $("#button-disable-totp").removeClass("hidden");
       $("#totp_code").val("");
       $("#modal-totp").modal("hide");
-      var verb = secret.length > 0 ? "enabled" : "disabled";
+      const verb = secret.length > 0 ? "enabled" : "disabled";
       alert(
         "Two-factor authentication has been " +
           verb +
@@ -446,12 +446,12 @@ function setTOTPSecret(secret) {
       );
       location.reload();
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$("#totp_submit").on("click", function () {
+$("#totp_submit").on("click", () => {
   // Enable TOTP
   setTOTPSecret(TOTPdata.secret);
 });
@@ -459,11 +459,11 @@ $("#totp_submit").on("click", function () {
 $("#button-disable-totp").confirm({
   text: "Are you sure you want to disable 2FA authentication on your Pi-hole?",
   title: "Confirmation required",
-  confirm: function () {
+  confirm() {
     // Disable TOTP
     setTOTPSecret("");
   },
-  cancel: function () {
+  cancel() {
     // nothing to do
   },
   confirmButton: "Yes, disable 2FA",
@@ -474,12 +474,12 @@ $("#button-disable-totp").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(document).ready(function () {
+$(document).ready(() => {
   processWebServerConfig();
   // Check if TOTP is enabled
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
-  }).done(function (data) {
+  }).done(data => {
     if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
     else $("#button-disable-totp").removeClass("hidden");
   });
