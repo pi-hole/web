@@ -368,10 +368,8 @@ select:-webkit-autofill {
 }
 
 .small-box > .small-box-footer {
-  color: #fff;
-}
-.small-box > .small-box-footer {
   background: rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
 /* Tables and Datatables */
