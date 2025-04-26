@@ -387,10 +387,6 @@ td.lookatme {
   float: none;
 }
 
-.version-info {
-  margin-top: 10px;
-}
-
 .daterangepicker {
   font-family: inherit;
 }
@@ -1266,10 +1262,6 @@ table.dataTable tbody > tr > .selected {
 #expert-settings,
 #only-changed {
   display: none;
-}
-
-.main-footer {
-  padding-bottom: 0px;
 }
 
 @keyframes error-border {

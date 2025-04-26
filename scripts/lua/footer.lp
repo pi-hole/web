@@ -49,17 +49,17 @@ end
         </div>
     </div> <!-- /.content-wrapper -->
 
-    <footer class="main-footer">
+    <footer class="main-footer pb-1">
         <div class="row row-centered text-center">
             <div class="col-xs-12 col-sm-6">
                 <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
             </div>
         </div>
 
-        <div class="row row-centered text-center version-info">
+        <div class="row row-centered text-center mt-3 version-info">
             <div class="col-xs-12 col-sm-12 col-md-10">
                 <ul class="list-inline" id="versions"></ul>
-                <p style="margin: 15px 0 0;" id="update-hint"></p>
+                <p id="update-hint" class="d-none my-3"></p>
             </div>
         </div>
     </footer>
@@ -68,6 +68,6 @@ end
 <!-- ./wrapper -->
 <script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 
-<div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-xff="<?=x_forwarded_for?>"></div>
+<div id="advanced-info-data" class="d-none" data-start-time="<?=starttime?>" data-end-time="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-xff="<?=x_forwarded_for?>"></div>
 </body>
 </html>

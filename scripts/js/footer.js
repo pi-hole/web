@@ -29,6 +29,8 @@ const REFRESH_INTERVAL = {
   clients: 600_000, // 10 min (dashboard)
 };
 
+const HUMAN_DATE_FMT = "dddd, MMMM Do YYYY, HH:mm:ss";
+
 function secondsTimeSpanToHMS(seconds) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
@@ -185,13 +187,16 @@ function applyCheckboxRadioStyle() {
   }
 }
 
-let systemTimer;
-let versionTimer;
+// Initialize the global timers
+let systemTimer = null;
+let versionTimer = null;
+let ftlinfoTimer = null;
+
 function updateInfo() {
-  updateSystemInfo();
-  updateVersionInfo();
-  updateFtlInfo();
   checkBlocking();
+  updateSystemInfo();
+  updateFtlInfo();
+  updateVersionInfo();
 }
 
 function updateQueryFrequency(intl, frequency) {
@@ -221,7 +226,6 @@ function updateQueryFrequency(intl, frequency) {
   queryFreqElem.title = title;
 }
 
-let ftlinfoTimer = null;
 function updateFtlInfo() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/ftl`).then(({ ftl }) => {
     const { database } = ftl;
@@ -261,9 +265,7 @@ function updateFtlInfo() {
 
     const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
     if (sysInfoUptimeFtl !== null) {
-      const startDate = moment()
-        .subtract(ftl.uptime, "milliseconds")
-        .format("dddd, MMMM Do YYYY, HH:mm:ss");
+      const startDate = moment().subtract(ftl.uptime, "milliseconds").format(HUMAN_DATE_FMT);
       sysInfoUptimeFtl.textContent = startDate;
     }
 
@@ -327,34 +329,27 @@ function updateSystemInfo() {
           : "No swap space available";
     }
 
-    const loadColor = system.cpu.load.raw[0] > system.cpu.nprocs ? "text-red" : "text-green-light";
-    const loadWarning =
-      system.cpu.load.raw[0] > system.cpu.nprocs
-        ? " (load is higher than the number of cores)"
-        : "";
+    const cores = system.cpu.nprocs;
+    const [load1, load5, load15] = system.cpu.load.raw;
+    const isHighLoad = load1 > cores;
+    const loadColor = isHighLoad ? "text-red" : "text-green-light";
+    const loadWarning = isHighLoad ? " (load is higher than the number of cores)" : "";
 
     cpuEl.innerHTML =
       `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load:&nbsp;` +
-      `${system.cpu.load.raw[0].toFixed(2)}&nbsp;/&nbsp;` +
-      `${system.cpu.load.raw[1].toFixed(2)}&nbsp;/&nbsp;` +
-      system.cpu.load.raw[2].toFixed(2);
+      `${load1.toFixed(2)}&nbsp;/&nbsp;${load5.toFixed(2)}&nbsp;/&nbsp;${load15.toFixed(2)}`;
     cpuEl.title =
       "Load averages for the past 1, 5, and 15 minutes\non a system with " +
-      `${system.cpu.nprocs} ${utils.pluralize(system.cpu.nprocs, "core")} running ` +
-      `${system.procs} ${utils.pluralize(system.procs, "process", "processes")} ` +
-      loadWarning;
+      `${cores} ${utils.pluralize(cores, "core")} running ${system.procs} ` +
+      `${utils.pluralize(system.procs, "process", "processes")}${loadWarning}`;
 
     if (sysInfoCpu !== null) {
       sysInfoCpu.textContent =
-        `${system.cpu["%cpu"].toFixed(1)}% on ${system.cpu.nprocs} ` +
-        `${utils.pluralize(system.cpu.nprocs, "core")} running ${system.procs} ` +
-        utils.pluralize(system.procs, "process", "processes");
+        `${system.cpu["%cpu"].toFixed(1)}% on ${cores} ${utils.pluralize(cores, "core")} ` +
+        `running ${system.procs} ${utils.pluralize(system.procs, "process", "processes")}`;
     }
 
-    const startDate = moment()
-      .subtract(system.uptime, "seconds")
-      .format("dddd, MMMM Do YYYY, HH:mm:ss");
-
+    const startDate = moment().subtract(system.uptime, "seconds").format(HUMAN_DATE_FMT);
     const humanUptime = moment.duration(1000 * system.uptime).humanize();
     statusEl.title = `System uptime: ${humanUptime} (running since ${startDate})`;
 
@@ -406,13 +401,12 @@ function versionCompare(v1, v2) {
 
 function updateVersionInfo() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/version`).then(({ version }) => {
-    let updateAvailable = false;
-    let dockerUpdate = false;
-    let isDocker = false;
     const versionsEl = document.getElementById("versions");
     const updateHintEl = document.getElementById("update-hint");
     versionsEl.innerHTML = "";
     updateHintEl.innerHTML = "";
+    let updateAvailable = false;
+    let isDockerUpdateAvailable = false;
 
     const versions = [
       {
@@ -452,33 +446,28 @@ function updateVersionInfo() {
       },
     ];
 
-    // Check if we are running in a Docker container
-    if (version.docker.local !== null) {
-      isDocker = true;
-    }
-
     for (const v of versions) {
       if (v.local === null) continue;
 
       // reset update status for each component
       let updateComponentAvailable = false;
       let localVersion = v.local;
+      let url = v.url;
+
       if (v.branch !== null && v.hash !== null) {
         if (v.branch === "master") {
-          localVersion = v.local.split("-")[0];
-          localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
-          if (versionCompare(v.local, v.remote) === -1) {
-            // Update available
-            updateComponentAvailable = true;
-          }
+          const baseVersion = v.local.split("-")[0];
+          localVersion = `<a href="${url}/${baseVersion}" rel="noopener noreferrer" target="_blank">${baseVersion}</a>`;
+          // Update available
+          updateComponentAvailable = versionCompare(v.local, v.remote) === -1;
         } else {
           // non-master branch
           localVersion = `vDev (${v.branch}, ${v.hash})`;
           if (v.hash_remote && v.hash !== v.hash_remote) {
-            // hash differ > Update available
+            // hashes differ > Update available
             updateComponentAvailable = true;
             // link to the commit history instead of release page
-            v.url = v.url.replace("releases", `commits/${v.branch}`);
+            url = url.replace("releases", `commits/${v.branch}`);
           }
         }
       }
@@ -487,32 +476,31 @@ function updateVersionInfo() {
         if (versionCompare(v.local, v.remote) === -1) {
           // Display update information for the docker tag
           updateComponentAvailable = true;
-          dockerUpdate = true;
+          isDockerUpdateAvailable = true;
         } else {
           // Display the link for the current tag
-          localVersion = `<a href="${v.url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
+          localVersion = `<a href="${url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
         }
       }
 
       // Display update information of individual components only if we are not running in a Docker container
-      if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-        versionsEl.innerHTML +=
-          `<li><strong>${v.name}</strong> ${localVersion}&nbsp;&middot; ` +
-          `<a class="lookatme" data-lookatme-text="Update available!" href="${v.url}" ` +
-          `rel="noopener noreferrer" target="_blank">Update available!</a></li>`;
-        // if at least one component can be updated, display the update-hint footer
-        updateAvailable = true;
-      } else {
-        versionsEl.innerHTML += `<li><strong>${v.name}</strong> ${localVersion}</li>`;
-      }
+      const showUpdate =
+        (version.docker.local === null || v.name === "Docker Tag") && updateComponentAvailable;
+
+      versionsEl.innerHTML += showUpdate
+        ? `<li><strong>${v.name}</strong> ${localVersion}&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="${url}" rel="noopener noreferrer" target="_blank">Update available!</a></li>`
+        : `<li><strong>${v.name}</strong> ${localVersion}</li>`;
+
+      // if at least one component can be updated, display the update-hint footer
+      updateAvailable ||= showUpdate;
     }
 
-    if (dockerUpdate)
-      updateHintEl.innerHTML =
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.';
-    else if (updateAvailable)
-      updateHintEl.innerHTML =
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
+    if (updateAvailable) {
+      updateHintEl.classList.remove("d-none");
+      updateHintEl.innerHTML = isDockerUpdateAvailable
+        ? 'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
+        : 'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
+    }
 
     clearTimeout(versionTimer);
     versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
@@ -649,35 +637,30 @@ function addAdvancedInfo() {
   const advancedInfoTarget = document.getElementById("advanced-info");
   if (!advancedInfoSource || !advancedInfoTarget) return;
 
-  const isTLS = location.protocol === "https:";
-  const clientIP = advancedInfoSource.dataset.clientIp;
-  const XForwardedFor = globalThis.atob(advancedInfoSource.dataset.xff || "") || null;
-  const starttime = Number.parseFloat(advancedInfoSource.dataset.starttime);
-  const endtime = Number.parseFloat(advancedInfoSource.dataset.endtime);
-  const totaltime = 1000 * (endtime - starttime);
+  const { clientIp, xff, startTime, endTime } = advancedInfoSource.dataset;
 
-  // Show advanced info
   // Add TLS and client IP info
-  const classes = isTLS ? "fa-lock text-green" : "fa-lock-open";
+  const isTLS = location.protocol === "https:";
+  const totalTime = 1000 * (Number.parseFloat(endTime) - Number.parseFloat(startTime));
+  const iconClasses = isTLS ? "fa-lock text-green" : "fa-lock-open";
   const title = `Your connection is ${isTLS ? "" : "NOT "}end-to-end encrypted (TLS/SSL)`;
+  const renderTime = totalTime > 0.5 ? totalTime.toFixed(1) : totalTime.toFixed(3);
+
   advancedInfoTarget.innerHTML =
-    `Client: <i class="fa-solid fa-fw ${classes}" title="${title}"></i>` +
-    '&nbsp;<span id="client-id"></span><br>';
+    `Client: <i class="fa-solid fa-fw mr-1 ${iconClasses}" title="${title}"></i>` +
+    `<span id="client-id"></span><br>Render time: ${renderTime} ms`;
 
   // Add client IP info
+  const xForwardedFor = globalThis.atob(xff || "") || null;
   const clientIdEl = document.getElementById("client-id");
-  clientIdEl.textContent = XForwardedFor ?? clientIP;
+  clientIdEl.textContent = xForwardedFor ?? clientIp;
 
   // If X-Forwarded-For is set, show the X-Forwarded-For in italics and add
-  // the real client IP as tooltip
-  if (XForwardedFor) {
+  // the real client IP as the title
+  if (xForwardedFor) {
     clientIdEl.style.fontStyle = "italic";
-    clientIdEl.title = `Original remote address: ${clientIP}`;
+    clientIdEl.title = `Original remote address: ${clientIp}`;
   }
-
-  // Add render time info
-  const renderTime = totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3);
-  advancedInfoTarget.innerHTML += `Render time: ${renderTime} ms`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -685,10 +668,9 @@ document.addEventListener("DOMContentLoaded", () => {
   addAdvancedInfo();
 });
 
-// Install custom AJAX error handler for DataTables
-// if $.fn.dataTable is available
+// Install custom AJAX error handler for DataTables if $.fn.dataTable is available
 if ($.fn.dataTable) {
-  $.fn.dataTable.ext.errMode = function (settings, helpPage, message) {
+  $.fn.dataTable.ext.errMode = (settings, helpPage, message) => {
     // eslint-disable-next-line no-console
     console.log(`DataTables warning: ${message}`);
   };
