@@ -62,54 +62,60 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     ],
     drawCallback() {
-      $('button[id^="deleteSession_"]').on("click", deleteThisSession);
+      const deleteSessionButtons = document.querySelectorAll('button[id^="deleteSession_"]');
+      for (const btn of deleteSessionButtons) {
+        btn.addEventListener("click", deleteThisSession);
+      }
 
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
-      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+      const dataTableButtons = document.querySelectorAll(".datatable-bt");
+      for (const btn of dataTableButtons) {
+        btn.style.visibility = hasRows ? "visible" : "hidden";
+      }
 
       // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
+      const dropdowns = document.querySelectorAll("body > .bootstrap-select.dropdown");
+      for (const el of dropdowns) el.remove();
     },
     rowCallback(row, data) {
-      $(row).attr("data-id", data.id);
+      row.dataset.id = data.id;
 
+      const tds = row.querySelectorAll("td");
       const deleteTitle = data.current_session
         ? "your current session\nWARNING: This will require you to re-login"
         : "this session";
       const button =
         `<button type="button" class="btn btn-danger btn-xs" id="deleteSession_${data.id}" ` +
-        `data-del-id="${data.id}" title="Delete ${deleteTitle}">` +
-        `<span class="far fa-trash-alt"></span></button>`;
+        `title="Delete ${deleteTitle}"><span class="far fa-trash-alt"></span></button>`;
 
-      $("td:eq(10)", row).html(button);
+      tds[10].innerHTML = button;
+
       if (data.current_session) {
         ownSessionID = data.id;
-        $(row).addClass("text-bold allowed-row");
-        $(row).attr("title", "This is the session you are currently using for the web interface");
+        row.classList.add("text-bold", "allowed-row");
+        row.title = "This is the session you are currently using for the web interface";
       }
 
-      let icon = "";
-      let title = "";
+      let iconClasses = "fa-xmark text-danger";
+      let title = "Session is NOT end-to-end encrypted (TLS/SSL)";
+
       if (data.tls.mixed) {
         title = "Session is PARTIALLY end-to-end encrypted";
-        icon = "fa-triangle-exclamation text-warning";
+        iconClasses = "fa-triangle-exclamation text-warning";
       } else if (data.tls.login) {
         title = "Session is end-to-end encrypted (TLS/SSL)";
-        icon = "fa-check text-success";
-      } else {
-        title = "Session is NOT end-to-end encrypted (TLS/SSL)";
-        icon = "fa-xmark text-danger";
+        iconClasses = "fa-check text-success";
       }
 
-      $("td:eq(3)", row).html(`<i class="fa-solid ${icon}" title="${title}"></i>`);
+      tds[3].innerHTML = `<i class="fa-solid ${iconClasses}" title="${title}"></i>`;
 
       // If x_forwarded_for is != null, the session is using a proxy
       // Show x-forwarded-for instead of the remote address in italics
       // and show the remote address in the title attribute
       if (data.x_forwarded_for !== null) {
-        $("td:eq(8)", row).html(`<em>${data.x_forwarded_for}</em>`);
-        $("td:eq(8)", row).attr("title", `Original remote address: ${data.remote_addr}`);
+        tds[8].innerHTML = `<em>${data.x_forwarded_for}</em>`;
+        tds[8].title = `Original remote address: ${data.remote_addr}`;
       }
     },
     select: {
@@ -182,23 +188,22 @@ document.addEventListener("DOMContentLoaded", () => {
       return data;
     },
   });
+
   apiSessionsTable.on("init select deselect", () => {
     utils.changeTableButtonStates(apiSessionsTable);
   });
 });
 
-function deleteThisSession() {
-  // This function is called when a red trash button is clicked
-  // We get the ID of the current item from the data-del-id attribute
-  const thisID = Number.parseInt($(this).attr("data-del-id"), 10);
+// This function is called when a red trash button is clicked
+function deleteThisSession(event) {
+  // We get the ID of the current item from the button's parent row data-id attribute
+  const id = Number.parseInt(event.currentTarget.closest("tr").dataset.id, 10);
   deleted = 0;
-  deleteOneSession(thisID, 1, false);
+  deleteOneSession(id, 1, false);
 }
 
+// This function is called when multiple sessions are selected and the trash button is clicked
 function deleteMultipleSessions(ids) {
-  // This function is called when multiple sessions are selected and the gray
-  // trash button is clicked
-
   // Check input validity
   if (!Array.isArray(ids)) return;
 
@@ -228,12 +233,12 @@ function deleteMultipleSessions(ids) {
   }
 }
 
+// This function is called to delete a single session
+// If we are batch deleting, we ensure that we do not delete our own session
+// before having successfully deleted all other sessions, the deletion of
+// our own session is then triggered by the last successful deletion of
+// another session (ownSessionDelete == true, len == global deleted)
 function deleteOneSession(id, len, ownSessionDelete) {
-  // This function is called to delete a single session
-  // If we are batch deleting, we ensure that we do not delete our own session
-  // before having successfully deleted all other sessions, the deletion of
-  // our own session is then triggered by the last successful deletion of
-  // another session (ownSessionDelete == true, len == global deleted)
   $.ajax({
     url: `${document.body.dataset.apiurl}/auth/session/${id}`,
     method: "DELETE",
@@ -266,11 +271,14 @@ function processWebServerConfig() {
       setConfigValues("webserver", "webserver", data.config.webserver);
       if (data.config.webserver.api.app_pwhash.value.length > 0) {
         apppwSet = true;
-        $("#existing_apppw_warning").show();
-        $("#apppw_submit").text("Replace app password");
-        $("#apppw_submit").removeClass("btn-success");
-        $("#apppw_submit").addClass("btn-warning");
-      } else $("#apppw_clear").hide();
+        document.getElementById("existing_apppw_warning").classList.remove("d-none");
+        const submitBtn = document.getElementById("apppw_submit");
+        submitBtn.textContent = "Replace app password";
+        submitBtn.classList.remove("btn-success");
+        submitBtn.classList.add("btn-warning");
+      } else {
+        document.getElementById("apppw_clear").classList.add("d-none");
+      }
     })
     .fail(data => {
       apiFailure(data);
@@ -466,11 +474,15 @@ $("#button-disable-totp").confirm({
 
 document.addEventListener("DOMContentLoaded", () => {
   processWebServerConfig();
+
   // Check if TOTP is enabled
   $.ajax({
     url: `${document.body.dataset.apiurl}/auth`,
   }).done(data => {
-    if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
-    else $("#button-disable-totp").removeClass("hidden");
+    if (data.session.totp === false) {
+      document.getElementById("button-enable-totp").classList.remove("hidden");
+    } else {
+      document.getElementById("button-disable-totp").classList.remove("hidden");
+    }
   });
 });
