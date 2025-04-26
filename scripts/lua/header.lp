@@ -40,19 +40,19 @@ function in_array (val, tab)
     return false
 end
 
--- Function to escape HTML characters
-function escape_html(str)
-    -- Replace special characters with HTML entities
-    str = str:gsub("&", "&amp;")
-    str = str:gsub("<", "&lt;")
-    str = str:gsub(">", "&gt;")
-    str = str:gsub('"', "&quot;")
-    str = str:gsub("'", "&apos;")
+-- Function to sanitize hostname containing invalid HTML characters
+function sanitize_hostname(str)
+    -- Check if string contains any of the HTML special characters
+    if str:find("&<>\"'") then
+        return "invalid hostname"
+    end
+
+    -- Return the original string if no special characters are found
     return str
 end
 
 -- Sanitize hostname
-hostname = escape_html(hostname)
+hostname = sanitize_hostname(hostname)
 
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
