@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, groups:false, getGroups:false, updateFtlInfo:false, apiFailure:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
 /* exported initTable */
 
 "use strict";
@@ -40,10 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Domain suggestion handling
   let suggestTimeout;
-  $("#new_domain").on("input", e => {
+  $("#new_domain").on("input", event => {
     hideSuggestDomains();
     clearTimeout(suggestTimeout);
-    suggestTimeout = setTimeout(showSuggestDomains, 1000, e.target.value);
+    suggestTimeout = setTimeout(showSuggestDomains, 1000, event.target.value);
   });
 
   utils.setBsSelectDefaults();
@@ -148,52 +148,57 @@ globalThis.initTable = function () {
     },
     rowCallback(row, data) {
       const dataId = `${utils.hexEncode(data.domain)}_${data.type}_${data.kind}`;
-      $(row).attr("data-id", dataId);
+      row.dataset.id = dataId;
+
+      const dateAdded = utils.datetime(data.date_added, false);
+      const dateModified = utils.datetime(data.date_modified, false);
       // Tooltip for domain
-      const tooltip =
-        "Added: " +
-        utils.datetime(data.date_added, false) +
-        "\nLast modified: " +
-        utils.datetime(data.date_modified, false) +
-        "\nDatabase ID: " +
-        data.id;
-      $("td:eq(1)", row).html(
-        '<code id="domain_' +
-          dataId +
-          '" title="' +
-          tooltip +
-          '" class="breakall">' +
-          utils.escapeHtml(data.unicode) +
-          (data.domain !== data.unicode ? " (" + utils.escapeHtml(data.domain) + ")" : "") +
-          "</code>"
-      );
+      const tooltip = `Added: ${dateAdded}\nLast modified: ${dateModified}\nDatabase ID: ${data.id}`;
+
+      const domainText = utils.escapeHtml(data.unicode);
+      const showOriginal = data.domain !== data.unicode;
+      const domainSuffix = showOriginal ? ` (${utils.escapeHtml(data.domain)})` : "";
+
+      const domainHtml = `<code id="domain_${dataId}" title="${tooltip}" class="breakall">${domainText}${domainSuffix}</code>`;
+
+      $("td:eq(1)", row).html(domainHtml);
 
       // Drop-down type selector
-      $("td:eq(2)", row).html(
-        '<select id="type_' +
-          dataId +
-          '" class="form-control">' +
-          '<option value="allow/exact"' +
-          (data.type === "allow" && data.kind === "exact" ? " selected" : "") +
-          ">Exact allow</option>" +
-          '<option value="allow/regex"' +
-          (data.type === "allow" && data.kind === "regex" ? " selected" : "") +
-          ">Regex allow</option>" +
-          '<option value="deny/exact"' +
-          (data.type === "deny" && data.kind === "exact" ? " selected " : "") +
-          ">Exact deny</option>" +
-          '<option value="deny/regex"' +
-          (data.type === "deny" && data.kind === "regex" ? " selected" : "") +
-          ">Regex deny</option>" +
-          "</select>" +
-          "<input type='hidden' id='old_type_" +
-          dataId +
-          "' value='" +
-          data.type +
-          "/" +
-          data.kind +
-          "'>"
-      );
+      const currentType = `${data.type}/${data.kind}`;
+      const options = [
+        {
+          value: "allow/exact",
+          text: "Exact allow",
+          selected: data.type === "allow" && data.kind === "exact",
+        },
+        {
+          value: "allow/regex",
+          text: "Regex allow",
+          selected: data.type === "allow" && data.kind === "regex",
+        },
+        {
+          value: "deny/exact",
+          text: "Exact deny",
+          selected: data.type === "deny" && data.kind === "exact",
+        },
+        {
+          value: "deny/regex",
+          text: "Regex deny",
+          selected: data.type === "deny" && data.kind === "regex",
+        },
+      ];
+
+      const optionsHtml = options
+        .map(
+          opt =>
+            `<option value="${opt.value}"${opt.selected ? " selected" : ""}>${opt.text}</option>`
+        )
+        .join("");
+
+      $("td:eq(2)", row).html(`
+        <select id="type_${dataId}" class="form-control">${optionsHtml}</select>
+        <input type="hidden" id="old_type_${dataId}" value="${currentType}">
+      `);
       const typeEl = $(`#type_${dataId}`, row);
       typeEl.on("change", editDomain);
 
@@ -201,6 +206,7 @@ globalThis.initTable = function () {
       $("td:eq(3)", row).html(
         `<input type="checkbox" id="enabled_${dataId}"${data.enabled ? " checked" : ""}>`
       );
+
       const statusEl = $(`#enabled_${dataId}`, row);
       statusEl.bootstrapToggle({
         on: "Enabled",
@@ -239,13 +245,14 @@ globalThis.initTable = function () {
         .on("show.bs.select", () => {
           const winWidth = $(globalThis).width();
           const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
+          if (dropdownEl.length === 0) return;
+
+          // Remove align-right class to recalculate
+          dropdownEl.removeClass("align-right");
+          const width = dropdownEl.width();
+          const left = dropdownEl.offset().left;
+          if (left + width > winWidth) {
+            dropdownEl.addClass("align-right");
           }
         })
         .on("changed.bs.select", () => {
@@ -273,9 +280,7 @@ globalThis.initTable = function () {
         .siblings(".dropdown-menu")
         .find(".bs-actionsbox")
         .prepend(
-          '<button type="button" id=btn_apply_' +
-            dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          `<button type="button" id=btn_apply_${dataId} class="btn btn-block btn-sm" disabled>Apply</button>`
         );
 
       // Highlight row (if url parameter "domainid=" is used)
@@ -288,13 +293,8 @@ globalThis.initTable = function () {
 
       // Add delete domain button
       const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_' +
-        dataId +
-        '" data-id="' +
-        dataId +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
+        `<button type="button" class="btn btn-danger btn-xs" id="deleteDomain_${dataId}" data-id="${dataId}">` +
+        '<span class="far fa-trash-alt"></span></button>';
       $("td:eq(6)", row).html(button);
     },
     select: {
@@ -356,10 +356,8 @@ globalThis.initTable = function () {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-domains-table");
 
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
+      // Return null if not available
+      if (data === null) return null;
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
@@ -387,20 +385,7 @@ globalThis.initTable = function () {
     utils.changeTableButtonStates(table);
   });
 
-  table.on("order.dt", () => {
-    const order = table.order();
-    const $resetButton = $("#resetButton");
-    if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $resetButton.removeClass("hidden");
-    } else {
-      $resetButton.addClass("hidden");
-    }
-  });
-
-  $("#resetButton").on("click", () => {
-    table.order([[0, "asc"]]).draw();
-    $("#resetButton").addClass("hidden");
-  });
+  handleTableOrderChange(table);
 };
 
 // Enable "filter by type" functionality, using checkboxes

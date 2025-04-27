@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
 /* exported initTable */
 
 "use strict";
@@ -26,63 +26,74 @@ document.addEventListener("DOMContentLoaded", () => {
 function format(data) {
   // Generate human-friendly status string
   const statusText = setStatusText(data, true);
-  let numbers = true;
-  if (data.status === 0 || data.status === 4) {
-    numbers = false;
-  }
+  const numbers = data.status !== 0 && data.status !== 4;
 
   // Compile extra info for displaying
+  const dateAddedRelative = utils.datetimeRelative(data.date_added);
   const dateAddedISO = utils.datetime(data.date_added, false);
+  const dateModifiedRelative = utils.datetimeRelative(data.date_modified);
   const dateModifiedISO = utils.datetime(data.date_modified, false);
+  const dateUpdatedRelative =
+    data.date_updated > 0 ? utils.datetimeRelative(data.date_updated) : null;
+  const dateUpdatedISO = data.date_updated > 0 ? utils.datetime(data.date_updated, false) : null;
   const dateUpdated =
-    data.date_updated > 0
-      ? utils.datetimeRelative(data.date_updated) +
-        "&nbsp;(" +
-        utils.datetime(data.date_updated, false) +
-        ")"
-      : "N/A";
-  const numberOfEntries =
-    (data.number !== null && numbers === true
-      ? Number.parseInt(data.number, 10).toLocaleString()
-      : "N/A") +
-    (data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true
-      ? " (out of which " +
-        Number.parseInt(data.abp_entries, 10).toLocaleString() +
-        " are in ABP-style)"
-      : "");
-  const nonDomains =
-    data.invalid_domains !== null && numbers === true
-      ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
+    dateUpdatedRelative && dateUpdatedISO
+      ? `${dateUpdatedRelative}&nbsp;(${dateUpdatedISO})`
       : "N/A";
 
-  return `<table>
+  const hasNumber = data.number !== null && numbers === true;
+  const numberValue = hasNumber ? Number.parseInt(data.number, 10).toLocaleString() : "N/A";
+  const hasAbpEntries =
+    data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true;
+  const abpEntriesValue = hasAbpEntries
+    ? ` (out of which ${Number.parseInt(data.abp_entries, 10).toLocaleString()} are in ABP-style)`
+    : "";
+  const numberOfEntries = `${numberValue}${abpEntriesValue}`;
+
+  const hasNonDomains = data.invalid_domains !== null && numbers === true;
+  const nonDomains = hasNonDomains
+    ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
+    : "N/A";
+
+  const typeIcon = setTypeIcon(data.type);
+  const typeLabel = `${data.type}list`;
+
+  return `
+    <table>
       <tr class="dataTables-child">
-        <td>Type:&nbsp;&nbsp;</td><td>${setTypeIcon(data.type)}${data.type}list</td>
+        <td>Type:&nbsp;&nbsp;</td>
+        <td>${typeIcon}${typeLabel}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Health status:&nbsp;&nbsp;</td><td>${statusText}</td>
+        <td>Health status:&nbsp;&nbsp;</td>
+        <td>${statusText}</td>
       </tr>
       <tr class="dataTables-child">
         <td>Added to Pi-hole:&nbsp;&nbsp;</td>
-        <td>${utils.datetimeRelative(data.date_added)}&nbsp;(${dateAddedISO})</td>
+        <td>${dateAddedRelative}&nbsp;(${dateAddedISO})</td>
       </tr>
       <tr class="dataTables-child">
         <td>Database entry last modified:&nbsp;&nbsp;</td>
-        <td>${utils.datetimeRelative(data.date_modified)}&nbsp;(${dateModifiedISO})</td>
+        <td>${dateModifiedRelative}&nbsp;(${dateModifiedISO})</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Content last updated on:&nbsp;&nbsp;</td><td>${dateUpdated}</td>
+        <td>Content last updated on:&nbsp;&nbsp;</td>
+        <td>${dateUpdated}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Number of entries:&nbsp;&nbsp;</td><td>${numberOfEntries}</td>
+        <td>Number of entries:&nbsp;&nbsp;</td>
+        <td>${numberOfEntries}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Number of non-domains:&nbsp;&nbsp;</td><td>${nonDomains}</td>
+        <td>Number of non-domains:&nbsp;&nbsp;</td>
+        <td>${nonDomains}</td>
       </tr>
       <tr class="dataTables-child">
-        <td>Database ID:</td><td>${data.id}</td>
+        <td>Database ID:</td>
+        <td>${data.id}</td>
       </tr>
-    </table>`;
+    </table>
+  `;
 }
 
 // Define the status icon element
@@ -109,44 +120,41 @@ function setStatusIcon(data) {
       break;
   }
 
-  return `<i class='fa fa-fw ${statusIcon}' title='${statusTitle}'></i>`;
+  return `<i class="fa fa-fw ${statusIcon}" title="${statusTitle}"></i>`;
 }
 
 // Define human-friendly status string
 function setStatusText(data, showdetails = false) {
   let statusText = "Unknown";
   let statusDetails = "";
-  if (data.status !== null) {
-    switch (Number.parseInt(data.status, 10)) {
-      case 0:
-        statusText =
-          data.enabled === 0
-            ? "List is disabled and not checked"
-            : "List was not downloaded so far";
-        break;
-      case 1:
-        statusText = "List download was successful";
-        statusDetails = ' (<span class="list-status-1">OK</span>)';
-        break;
-      case 2:
-        statusText = "List unchanged upstream, Pi-hole used a local copy";
-        statusDetails = ' (<span class="list-status-2">OK</span>)';
-        break;
-      case 3:
-        statusText = "List unavailable, Pi-hole used a local copy";
-        statusDetails = ' (<span class="list-status-3">check list</span>)';
-        break;
-      case 4:
-        statusText =
-          "List unavailable, there is no local copy of this list available on your Pi-hole";
-        statusDetails = ' (<span class="list-status-4">replace list</span>)';
-        break;
+  if (data.status === null) return statusText;
 
-      default:
-        statusText = "Unknown";
-        statusDetails = ` (<span class="list-status-0">${Number.parseInt(data.status, 10)}</span>)`;
-        break;
-    }
+  switch (Number.parseInt(data.status, 10)) {
+    case 0:
+      statusText =
+        data.enabled === 0 ? "List is disabled and not checked" : "List was not downloaded so far";
+      break;
+    case 1:
+      statusText = "List download was successful";
+      statusDetails = ' (<span class="list-status-1">OK</span>)';
+      break;
+    case 2:
+      statusText = "List unchanged upstream, Pi-hole used a local copy";
+      statusDetails = ' (<span class="list-status-2">OK</span>)';
+      break;
+    case 3:
+      statusText = "List unavailable, Pi-hole used a local copy";
+      statusDetails = ' (<span class="list-status-3">check list</span>)';
+      break;
+    case 4:
+      statusText =
+        "List unavailable, there is no local copy of this list available on your Pi-hole";
+      statusDetails = ' (<span class="list-status-4">replace list</span>)';
+      break;
+
+    default:
+      statusDetails = ` (<span class="list-status-0">${Number.parseInt(data.status, 10)}</span>)`;
+      break;
   }
 
   return statusText + (showdetails === true ? statusDetails : "");
@@ -166,7 +174,7 @@ function setTypeIcon(type) {
     title = "This is an allowlist";
   }
 
-  return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
+  return `<i class="fa fa-fw ${iconClass}" title="${title}\nClick for details about this list"></i> `;
 }
 
 globalThis.initTable = function () {
@@ -217,12 +225,9 @@ globalThis.initTable = function () {
       $(row).attr("data-address", utils.hexEncode(data.address));
       $(row).attr("data-type", data.type);
 
-      let statusCode = 0;
-      // If there is no status or the list is disabled, we keep
-      // status 0 (== unknown)
-      if (data.status !== null && data.enabled) {
-        statusCode = Number.parseInt(data.status, 10);
-      }
+      // If there is no status or the list is disabled, we keep status 0 (== unknown)
+      const statusCode =
+        data.status !== null && data.enabled ? Number.parseInt(data.status, 10) : 0;
 
       $("td:eq(1)", row).addClass(`list-status-${statusCode}`);
       $("td:eq(1)", row).html(setStatusIcon(data));
@@ -238,13 +243,8 @@ globalThis.initTable = function () {
         );
       } else {
         $("td:eq(3)", row).html(
-          '<a id="address_' +
-            dataId +
-            '" class="breakall" href="' +
-            encodeURI(data.address) +
-            '" target="_blank" rel="noopener noreferrer">' +
-            utils.escapeHtml(data.address) +
-            "</a>"
+          `<a id="address_${dataId}" class="breakall" href="${encodeURI(data.address)}" ` +
+            `target="_blank" rel="noopener noreferrer">${utils.escapeHtml(data.address)}</a>`
         );
       }
 
@@ -288,13 +288,14 @@ globalThis.initTable = function () {
         .on("show.bs.select", () => {
           const winWidth = $(globalThis).width();
           const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
+          if (dropdownEl.length === 0) return;
+
+          // Remove align-right class to recalculate
+          dropdownEl.removeClass("align-right");
+          const width = dropdownEl.width();
+          const left = dropdownEl.offset().left;
+          if (left + width > winWidth) {
+            dropdownEl.addClass("align-right");
           }
         })
         .on("changed.bs.select", () => {
@@ -319,9 +320,7 @@ globalThis.initTable = function () {
         .siblings(".dropdown-menu")
         .find(".bs-actionsbox")
         .prepend(
-          '<button type="button" id=btn_apply_' +
-            dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          `<button type="button" id=btn_apply_${dataId} class="btn btn-block btn-sm" disabled>Apply</button>`
         );
 
       // Highlight row (if url parameter "listid=" is used)
@@ -333,13 +332,8 @@ globalThis.initTable = function () {
       }
 
       const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteList_' +
-        dataId +
-        '" data-id="' +
-        dataId +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
+        `<button type="button" class="btn btn-danger btn-xs" id="deleteList_${dataId}" data-id="${dataId}">` +
+        '<span class="far fa-trash-alt"></span></button>';
       $("td:eq(7)", row).html(button);
     },
     dom:
@@ -404,10 +398,8 @@ globalThis.initTable = function () {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-lists-table");
 
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
+      // Return null if not available
+      if (data === null) return null;
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
@@ -432,20 +424,7 @@ globalThis.initTable = function () {
     utils.changeTableButtonStates(table);
   });
 
-  table.on("order.dt", () => {
-    const order = table.order();
-    const $resetButton = $("#resetButton");
-    if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $resetButton.removeClass("hidden");
-    } else {
-      $resetButton.addClass("hidden");
-    }
-  });
-
-  $("#resetButton").on("click", () => {
-    table.order([[0, "asc"]]).draw();
-    $("#resetButton").addClass("hidden");
-  });
+  handleTableOrderChange(table);
 
   // Add event listener for opening and closing details
   $("#listsTable tbody").on("click", "td.details-control", function () {

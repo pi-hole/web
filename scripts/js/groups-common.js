@@ -116,3 +116,21 @@ globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
       console.log(exception); // eslint-disable-line no-console
     });
 };
+
+globalThis.handleTableOrderChange = table => {
+  const resetButton = document.getElementById("resetButton");
+
+  table.on("order.dt", () => {
+    const order = table.order();
+    if (order[0][0] !== 0 || order[0][1] !== "asc") {
+      resetButton.classList.remove("d-none");
+    } else {
+      resetButton.classList.add("d-none");
+    }
+  });
+
+  resetButton.addEventListener("click", event => {
+    table.order([[0, "asc"]]).draw();
+    event.currentTarget.classList.add("d-none");
+  });
+};

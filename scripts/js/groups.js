@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
 
 "use strict";
 
@@ -65,14 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     rowCallback(row, data) {
       const dataId = utils.hexEncode(data.name);
-      $(row).attr("data-id", dataId);
-      const tooltip =
-        "Added: " +
-        utils.datetime(data.date_added, false) +
-        "\nLast modified: " +
-        utils.datetime(data.date_modified, false) +
-        "\nDatabase ID: " +
-        data.id;
+      row.dataset.id = dataId;
+
+      const dateAdded = utils.datetime(data.date_added, false);
+      const dateModified = utils.datetime(data.date_modified, false);
+      const tooltip = `Added: ${dateAdded}\nLast modified: ${dateModified}\nDatabase ID: ${data.id}`;
+
       $("td:eq(1)", row).html(
         `<input id="name_${dataId}" title="${tooltip}" class="form-control">`
       );
@@ -103,13 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Show delete button for all but the default group
       if (data.id !== 0) {
         const button =
-          '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
-          dataId +
-          '" data-id="' +
-          dataId +
-          '">' +
-          '<span class="far fa-trash-alt"></span>' +
-          "</button>";
+          `<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_${dataId}" data-id="${dataId}">` +
+          '<span class="far fa-trash-alt"></span></button>';
         $("td:eq(4)", row).html(button);
       }
     },
@@ -177,10 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-table");
 
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
+      // Return null if not available
+      if (data === null) return null;
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
@@ -202,20 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     utils.changeTableButtonStates(table);
   });
 
-  table.on("order.dt", () => {
-    const order = table.order();
-    const $resetButton = $("#resetButton");
-    if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $resetButton.removeClass("hidden");
-    } else {
-      $resetButton.addClass("hidden");
-    }
-  });
-
-  $("#resetButton").on("click", () => {
-    table.order([[0, "asc"]]).draw();
-    $("#resetButton").addClass("hidden");
-  });
+  handleTableOrderChange(table);
 });
 
 // Remove 'bnt-group' class from container, to avoid grouping

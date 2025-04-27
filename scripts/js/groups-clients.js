@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
 /* exported initTable */
 
 "use strict";
@@ -127,31 +127,17 @@ globalThis.initTable = function () {
     },
     rowCallback(row, data) {
       const dataId = utils.hexEncode(data.client);
-      $(row).attr("data-id", dataId);
-      const tooltip =
-        "Added: " +
-        utils.datetime(data.date_added, false) +
-        "\nLast modified: " +
-        utils.datetime(data.date_modified, false) +
-        "\nDatabase ID: " +
-        data.id;
-      let ipName =
-        '<code id="ip_' +
-        dataId +
-        '" title="' +
-        tooltip +
-        '" class="breakall">' +
-        utils.escapeHtml(data.client) +
-        "</code>";
+      row.dataset.id = dataId;
+
+      const addedDate = utils.datetime(data.date_added, false);
+      const modifiedDate = utils.datetime(data.date_modified, false);
+      const tooltip = `Added: ${addedDate}\nLast modified: ${modifiedDate}\nDatabase ID: ${data.id}`;
+
+      let ipName = `<code id="ip_${dataId}" title="${tooltip}" class="breakall">${utils.escapeHtml(data.client)}</code>`;
+
       if (data.name !== null && data.name.length > 0)
-        ipName +=
-          '<br><code id="name_' +
-          dataId +
-          '" title="' +
-          tooltip +
-          '" class="breakall">' +
-          utils.escapeHtml(data.name) +
-          "</code>";
+        ipName += `<br><code id="name_${dataId}" title="${tooltip}" class="breakall">${utils.escapeHtml(data.name)}</code>`;
+
       $("td:eq(1)", row).html(ipName);
 
       $("td:eq(2)", row).html(`<input id="comment_${dataId}" class="form-control">`);
@@ -181,13 +167,14 @@ globalThis.initTable = function () {
         .on("show.bs.select", () => {
           const winWidth = $(globalThis).width();
           const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
+          if (dropdownEl.length === 0) return;
+
+          // Remove align-right class to recalculate
+          dropdownEl.removeClass("align-right");
+          const width = dropdownEl.width();
+          const left = dropdownEl.offset().left;
+          if (left + width > winWidth) {
+            dropdownEl.addClass("align-right");
           }
         })
         .on("changed.bs.select", () => {
@@ -212,19 +199,12 @@ globalThis.initTable = function () {
         .siblings(".dropdown-menu")
         .find(".bs-actionsbox")
         .prepend(
-          '<button type="button" id=btn_apply_' +
-            dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+          `<button type="button" id=btn_apply_${dataId} class="btn btn-block btn-sm" disabled>Apply</button>`
         );
 
       const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteClient_' +
-        dataId +
-        '" data-id="' +
-        dataId +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
+        `<button type="button" class="btn btn-danger btn-xs" id="deleteClient_${dataId}" data-id="${dataId}">` +
+        '<span class="far fa-trash-alt"></span></button>';
       $("td:eq(4)", row).html(button);
     },
     select: {
@@ -288,10 +268,8 @@ globalThis.initTable = function () {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("groups-clients-table");
 
-      // Return if not available
-      if (data === null) {
-        return null;
-      }
+      // Return null if not available
+      if (data === null) return null;
 
       // Reset visibility of ID column
       data.columns[0].visible = false;
@@ -307,20 +285,7 @@ globalThis.initTable = function () {
     utils.changeTableButtonStates(table);
   });
 
-  table.on("order.dt", () => {
-    const order = table.order();
-    const $resetButton = $("#resetButton");
-    if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $resetButton.removeClass("hidden");
-    } else {
-      $resetButton.addClass("hidden");
-    }
-  });
-
-  $("#resetButton").on("click", () => {
-    table.order([[0, "asc"]]).draw();
-    $("#resetButton").addClass("hidden");
-  });
+  handleTableOrderChange(table);
 };
 
 // Remove 'bnt-group' class from container, to avoid grouping
