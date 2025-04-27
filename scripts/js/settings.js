@@ -175,18 +175,21 @@ function saveSettings() {
     .done(() => {
       utils.enableAll();
       // Success
-      utils.showAlert(
-        "success",
-        "fa-solid fa-fw fa-floppy-disk",
-        "Successfully saved and applied settings",
-        ""
-      );
+      utils.showAlert({
+        type: "success",
+        icon: "fa-solid fa-fw fa-floppy-disk",
+        title: "Successfully saved and applied settings",
+      });
       // Show loading overlay
       utils.loadingOverlay(true);
     })
     .fail((data, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      utils.showAlert({
+        type: "error",
+        title: "Error while applying settings",
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
       apiFailure(data);
     });

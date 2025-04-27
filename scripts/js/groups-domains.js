@@ -457,11 +457,15 @@ function addDomain() {
   const domainStr = JSON.stringify(domains);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
+  utils.showAlert({ type: "info", title: "Adding domain(s)...", message: domainStr });
 
   if (domains.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify at least one domain");
+    utils.showAlert({
+      type: "warning",
+      title: "Warning",
+      message: "Please specify at least one domain",
+    });
     return;
   }
 
@@ -510,7 +514,11 @@ function addDomain() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new domain", data.responseText);
+      utils.showAlert({
+        type: "error",
+        title: "Error while adding new domain",
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -565,7 +573,7 @@ function editDomain() {
 
   utils.disableAll();
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
-  utils.showAlert("info", "", "Editing domain...", domainDecoded);
+  utils.showAlert({ type: "info", title: "Editing domain...", message: domainDecoded });
   const url = `${document.body.dataset.apiurl}/domains/${newTypestr}/${encodeURIComponent(domainDecoded)}`;
   $.ajax({
     url,
@@ -588,12 +596,11 @@ function editDomain() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        `Error while ${notDone} domain ${domainDecoded}`,
-        data.responseText
-      );
+      utils.showAlert({
+        type: "error",
+        title: `Error while ${notDone} domain ${domainDecoded}`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });

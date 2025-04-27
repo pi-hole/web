@@ -221,12 +221,16 @@ function addGroup() {
   const groupStr = JSON.stringify(names);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding group(s)...", groupStr);
+  utils.showAlert({ type: "info", title: "Adding group(s)...", message: groupStr });
 
   if (names.length === 0) {
     // enable the ui elements again
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a group name");
+    utils.showAlert({
+      type: "warning",
+      title: "Warning",
+      message: "Please specify a group name",
+    });
     return;
   }
 
@@ -255,7 +259,11 @@ function addGroup() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new group", data.responseText);
+      utils.showAlert({
+        type: "error",
+        title: "Error while adding new group",
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -297,7 +305,7 @@ function editGroup() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing group...", oldName);
+  utils.showAlert({ type: "info", title: "Editing group...", message: oldName });
   $.ajax({
     url: `${document.body.dataset.apiurl}/groups/${oldName}`,
     method: "put",
@@ -317,12 +325,11 @@ function editGroup() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        `Error while ${notDone} group with name ${oldName}`,
-        data.responseText
-      );
+      utils.showAlert({
+        type: "error",
+        title: `Error while ${notDone} group with name ${oldName}`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });

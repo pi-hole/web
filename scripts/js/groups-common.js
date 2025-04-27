@@ -56,13 +56,22 @@ globalThis.getGroups = function () {
 globalThis.processGroupResult = function (data, type, done, notDone) {
   // Loop over data.processed.success and show toasts
   for (const item of data.processed.success) {
-    utils.showAlert("success", "fas fa-pencil-alt", `Successfully ${done} ${type}`, item);
+    utils.showAlert({
+      type: "success",
+      icon: "fas fa-pencil-alt",
+      title: `Successfully ${done} ${type}`,
+      message: item,
+    });
   }
 
   // Loop over errors and display them
   for (const error of data.processed.errors) {
     console.log(error); // eslint-disable-line no-console
-    utils.showAlert("error", "", `Error while ${notDone} ${type} ${error.item}`, error.error);
+    utils.showAlert({
+      type: "error",
+      title: `Error while ${notDone} ${type} ${error.item}`,
+      message: error.error,
+    });
   }
 };
 
@@ -89,7 +98,11 @@ globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", `Deleting ${ids.length} ${type}...`, idString);
+  utils.showAlert({
+    type: "info",
+    title: `Deleting ${ids.length} ${type}...`,
+    message: idString,
+  });
 
   $.ajax({
     url,
@@ -99,7 +112,12 @@ globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
   })
     .done(() => {
       utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", `Successfully deleted ${type}`, idString);
+      utils.showAlert({
+        type: "success",
+        icon: "far fa-trash-alt",
+        title: `Successfully deleted ${type}`,
+        message: idString,
+      });
       table.ajax.reload(null, false);
 
       // Clear selection after deletion
@@ -112,7 +130,11 @@ globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
     .fail((data, exception) => {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", `Error while deleting ${type}`, data.responseText);
+      utils.showAlert({
+        type: "error",
+        title: `Error while deleting ${type}`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     });
 };

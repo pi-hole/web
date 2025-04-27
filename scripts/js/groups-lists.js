@@ -472,12 +472,20 @@ function addList(event) {
   const addressestr = JSON.stringify(addresses);
 
   utils.disableAll();
-  utils.showAlert("info", "", `Adding subscribed ${type}list(s)...`, addressestr);
+  utils.showAlert({
+    type: "info",
+    title: `Adding subscribed ${type}list(s)...`,
+    message: addressestr,
+  });
 
   if (addresses.length === 0) {
     // enable the ui elements again
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", `Please specify ${type}list address`);
+    utils.showAlert({
+      type: "warning",
+      title: "Warning",
+      message: `Please specify ${type}list address`,
+    });
     return;
   }
 
@@ -502,7 +510,11 @@ function addList(event) {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", `Error while adding new ${type}list`, data.responseText);
+      utils.showAlert({
+        type: "error",
+        title: `Error while adding new ${type}list`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -546,7 +558,7 @@ function editList() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing address...", address);
+  utils.showAlert({ type: "info", title: "Editing address...", message: address });
   $.ajax({
     url: `${document.body.dataset.apiurl}/lists/${encodeURIComponent(address)}?type=${type}`,
     method: "put",
@@ -567,12 +579,11 @@ function editList() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        `Error while ${notDone}${type}list ${address}`,
-        data.responseText
-      );
+      utils.showAlert({
+        type: "error",
+        title: `Error while ${notDone}${type}list ${address}`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });

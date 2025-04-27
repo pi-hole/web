@@ -96,7 +96,15 @@ function unescapeHtml(text) {
 }
 
 let showAlertBox = null;
-function showAlert(type, icon, title, message, toast) {
+
+function showAlert({
+  type,
+  icon = undefined,
+  title = "",
+  message = "",
+  toast = undefined,
+  timeout = 5000,
+}) {
   const options = {
     title: `<strong class="ml-1">${escapeHtml(title)}</strong><br>`,
     message: escapeHtml(message),
@@ -104,16 +112,17 @@ function showAlert(type, icon, title, message, toast) {
   };
   const settings = {
     type,
-    delay: 5000, // default value
+    delay: timeout,
     mouse_over: "pause",
     animate: {
       enter: "animate__animated animate__fadeInDown",
       exit: "animate__animated animate__fadeOutUp",
     },
   };
+
   switch (type) {
     case "info":
-      options.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
+      options.icon = icon ?? "fas fa-clock";
 
       break;
     case "success":
@@ -551,12 +560,12 @@ function listsAlert(type, items, data) {
   const errorsLength = data.processed.errors.length;
 
   if (data.processed === undefined || successLength === items.length) {
-    showAlert(
-      "success",
-      "fas fa-plus",
-      `Successfully added ${pluralize(items.length, type)}`,
-      items.join(", ")
-    );
+    showAlert({
+      type: "success",
+      icon: "fas fa-plus",
+      title: `Successfully added ${pluralize(items.length, type)}`,
+      message: items.join(", "),
+    });
     return;
   }
 
@@ -598,12 +607,12 @@ function listsAlert(type, items, data) {
   // Show the warning message
   const total = successLength + errorsLength;
   const processed = `(${total} ${pluralize(total, type)} processed)`;
-  showAlert(
-    "warning",
-    "fas fa-exclamation-triangle",
-    `Some ${pluralize(items.length, type)} could not be added ${processed}`,
-    message
-  );
+  showAlert({
+    type: "warning",
+    icon: "fas fa-exclamation-triangle",
+    title: `Some ${pluralize(items.length, type)} could not be added ${processed}`,
+    message,
+  });
 }
 
 let waitMe = null;

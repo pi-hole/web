@@ -63,29 +63,28 @@ function deleteNetworkEntry() {
   const hwaddr = tr.attr("data-hwaddr");
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting network table entry...");
+  utils.showAlert({ type: "info", title: "Deleting network table entry..." });
   $.ajax({
     url: `${document.body.dataset.apiurl}/network/devices/${id}`,
     method: "DELETE",
     success() {
       utils.enableAll();
-      utils.showAlert(
-        "success",
-        "far fa-trash-alt",
-        "Successfully deleted network table entry",
-        hwaddr
-      );
+      utils.showAlert({
+        type: "success",
+        icon: "far fa-trash-alt",
+        title: "Successfully deleted network table entry",
+        message: hwaddr,
+      });
       tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
     },
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        `Error while deleting network table entry with ID ${id}`,
-        data.responseText
-      );
+      utils.showAlert({
+        type: "error",
+        title: `Error while deleting network table entry with ID ${id}`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });

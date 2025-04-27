@@ -322,22 +322,25 @@ function addClient() {
       // Convert input to upper case (important for MAC addresses)
       ips[index] = ip.toUpperCase();
     } else if (!utils.validateHostname(ip)) {
-      utils.showAlert(
-        "warning",
-        "",
-        "Warning",
-        "Input is neither a valid IP or MAC address nor a valid host name!"
-      );
+      utils.showAlert({
+        type: "warning",
+        title: "Warning",
+        message: "Input is neither a valid IP or MAC address nor a valid host name!",
+      });
       return;
     }
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding client(s)...", ipStr);
+  utils.showAlert({ type: "info", title: "Adding client(s)...", message: ipStr });
 
   if (ips.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
+    utils.showAlert({
+      type: "warning",
+      title: "Warning",
+      message: "Please specify a client IP or MAC address",
+    });
     return;
   }
 
@@ -362,7 +365,11 @@ function addClient() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new client", data.responseText);
+      utils.showAlert({
+        type: "error",
+        title: "Error while adding new client",
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -394,7 +401,7 @@ function editClient() {
 
   utils.disableAll();
   const clientDecoded = utils.hexDecode(client);
-  utils.showAlert("info", "", "Editing client...", clientDecoded);
+  utils.showAlert({ type: "info", title: "Editing client...", message: clientDecoded });
   $.ajax({
     url: `${document.body.dataset.apiurl}/clients/${encodeURIComponent(clientDecoded)}`,
     method: "put",
@@ -413,12 +420,11 @@ function editClient() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        `Error while ${notDone} client ${clientDecoded}`,
-        data.responseText
-      );
+      utils.showAlert({
+        type: "error",
+        title: `Error while ${notDone} client ${clientDecoded}`,
+        message: data.responseText,
+      });
       console.log(exception); // eslint-disable-line no-console
     },
   });
