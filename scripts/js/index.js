@@ -452,6 +452,9 @@ function updateSummaryData(runOnce = false) {
 }
 
 function labelWithPercentage(tooltipLabel, skipZero = false) {
+  const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
+  if (skipZero && data === 0) return;
+
   // Sum all queries for the current time by iterating over all values in the current dataset
   let sum = 0;
   for (const value of Object.values(tooltipLabel.parsed._stacks.y)) {
@@ -460,10 +463,7 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
     if (num) sum += num;
   }
 
-  const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
   const percentage = sum > 0 ? (100 * data) / sum : 0;
-
-  if (skipZero && data === 0) return;
 
   return `${tooltipLabel.dataset.label}: ${tooltipLabel.parsed.y} (${utils.toPercent(percentage, 1)})`;
 }
