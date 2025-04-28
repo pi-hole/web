@@ -401,11 +401,6 @@ function addFromQueryLog(domain, list) {
   });
 }
 
-// Helper functions to format the progress bars used on the Dashboard and Long-term Lists
-function addTD(content) {
-  return `<td>${content}</td> `;
-}
-
 function toPercent(number, fractionDigits = 0) {
   const userLocale = navigator.language || "en-US";
   return new Intl.NumberFormat(userLocale, {
@@ -806,6 +801,11 @@ function createPieChart(elementId, options = {}) {
   });
 }
 
+// Check if the obj is empty
+function isEmptyObject(obj) {
+  return obj === undefined || obj === null || Object.keys(obj).length === 0;
+}
+
 globalThis.utils = (function () {
   return {
     escapeHtml,
@@ -823,7 +823,6 @@ globalThis.utils = (function () {
     validateMAC,
     validateHostname,
     addFromQueryLog,
-    addTD,
     toPercent,
     colorBar,
     checkMessages,
@@ -846,5 +845,6 @@ globalThis.utils = (function () {
     disableSearchAutocorrect,
     hideAlerts,
     createPieChart,
+    isEmptyObject,
   };
 })();

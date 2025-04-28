@@ -1511,7 +1511,6 @@ table.dataTable tbody > tr > .selected {
 
 /* Dashboard graphics: reset zoom button and info tooltip */
 .zoom-reset {
-  display: none;
   margin-top: -1px;
 }
 

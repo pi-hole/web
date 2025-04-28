@@ -83,7 +83,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="queries-over-time">
             <div class="box-header with-border">
                 <h3 class="box-title">Total queries</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-history"><i class="fas fa-undo mr-1"></i>Reset zoom</button>
+                <button class="btn btn-xs btn-default pull-right zoom-reset d-none" data-sel="reset-history"><i class="fas fa-undo mr-1"></i>Reset zoom</button>
                 <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="box-body">
@@ -103,7 +103,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="clients">
             <div class="box-header with-border">
                 <h3 class="box-title">Client activity</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-clients"><i class="fas fa-undo mr-1"></i>Reset zoom</button>
+                <button class="btn btn-xs btn-default pull-right zoom-reset d-none" data-sel="reset-clients"><i class="fas fa-undo mr-1"></i>Reset zoom</button>
                 <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="box-body">

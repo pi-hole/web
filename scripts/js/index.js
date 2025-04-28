@@ -59,7 +59,7 @@ function updateChartData(config) {
     .then(data => {
       // Remove graph if there are no results (e.g. new installation or privacy mode enabled)
       if (
-        jQuery.isEmptyObject(
+        utils.isEmptyObject(
           data.history || data.types || data.upstreams || data.domains || data.clients
         )
       ) {
@@ -304,35 +304,39 @@ function updateTopTable(config) {
     apiPath,
   } = config;
 
-  const $table = $(tableElement);
-  const $tableContent = $table.find("td").parent();
-  const $overlay = $table.find(".overlay");
-  const $tbody = $table.find("tbody:last");
+  const table = document.querySelector(tableElement);
+  if (!table) return;
+
+  const tbody = table.querySelector("tbody");
+  const existingRows = tbody.querySelectorAll("tr");
+  const overlay = table.querySelector(".overlay");
 
   const style = blocked ? "queries-blocked" : "queries-permitted";
 
   utils
     .fetchFactory(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`)
     .then(data => {
-      // Clear tables before filling them with data
-      $tableContent.remove();
+      // Clear table rows before filling them with data
+      for (const row of existingRows) row.remove();
       const sum = blocked ? data.blocked_queries : data.total_queries;
 
       // When there is no data...
       // a) remove table if there are no results (privacy mode enabled) or
       // b) add note if there are no results (e.g. new installation)
-      if (jQuery.isEmptyObject(data[type])) {
+      if (utils.isEmptyObject(data[type])) {
         if (privacyLevel > 0) {
-          $table.remove();
+          table.remove();
         } else {
-          $tbody.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
-          $overlay.hide();
+          tbody.innerHTML += '<tr><td colspan="3" class="text-center">- No data -</td></tr>';
+          overlay.classList.add("d-none");
         }
 
         return;
       }
 
       // Populate table with content
+      let tableRows = "";
+
       for (const item of data[type]) {
         const count = item.count;
         let url;
@@ -355,13 +359,13 @@ function updateTopTable(config) {
         const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
 
         // Add row to table
-        $tbody.append(
-          `<tr> ${utils.addTD(urlHtml)}${utils.addTD(count)}${utils.addTD(utils.colorBar(percentage, sum, style))}</tr> `
-        );
+        tableRows += `<tr><td>${urlHtml}</td><td>${count}</td><td>${utils.colorBar(percentage, sum, style)}</td></tr>`;
       }
 
+      tbody.innerHTML = tableRows;
+
       // Hide overlay
-      $overlay.hide();
+      overlay.classList.add("d-none");
     });
 }
 
@@ -521,20 +525,22 @@ function createTimelineChart(elementId, options = {}) {
         // Update the y axis ticks and round values to natural numbers
         chart.options.scales.y.ticks.callback = value => value.toFixed(0);
 
-        const parent = $(chart.canvas).parent().parent().parent();
+        const parent = document.getElementById(chart.canvas.id).parentElement.parentElement
+          .parentElement;
+        const zoomInfoEl = parent.querySelector(".zoom-info");
+        const zoomResetEl = parent.querySelector(".zoom-reset");
 
-        // Update the top right info icon and reset zoom button depending on the
-        // current zoom level
+        // Update the top right info icon and reset zoom button depending on the current zoom level
         if (chart.getZoomLevel() === 1) {
           // Show the closest info icon to the current chart
-          parent.find(".zoom-info").show();
+          zoomInfoEl.classList.remove("d-none");
           // Hide the reset zoom button
-          parent.find(".zoom-reset").hide();
+          zoomResetEl.classList.add("d-none");
         } else {
           // Hide the closest info icon to the current chart
-          parent.find(".zoom-info").hide();
+          zoomInfoEl.classList.add("d-none");
           // Show the reset zoom button
-          parent.find(".zoom-reset").show();
+          zoomResetEl.classList.remove("d-none");
         }
       },
     },
@@ -673,15 +679,22 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSummaryData();
 
   // On click of the "Reset zoom" buttons, the closest chart to the button is reset
-  $(".zoom-reset").on("click", function () {
-    if ($(this).data("sel") === "reset-clients") clientsChart.resetZoom();
-    else timeLineChart.resetZoom();
+  for (const button of document.querySelectorAll(".zoom-reset")) {
+    button.addEventListener("click", event => {
+      const target = event.currentTarget;
 
-    // Show the closest info icon to the current chart
-    $(this).parent().find(".zoom-info").show();
-    // Hide the reset zoom button
-    $(this).hide();
-  });
+      if (target.dataset.sel === "reset-clients") {
+        clientsChart.resetZoom();
+      } else {
+        timeLineChart.resetZoom();
+      }
+
+      // Show the closest info icon to the current chart
+      target.parentElement.querySelector(".zoom-info").classList.remove("d-none");
+      // Hide the reset zoom button
+      target.classList.add("d-none");
+    });
+  }
 
   const queryOverTimeChartEl = document.getElementById("queryOverTimeChart");
 
@@ -741,6 +754,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Pull in data via AJAX
     updateForwardDestinationsPie();
   }
+
+  // Initialize Bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
 // Destroy all chartjs tooltips on window resize
@@ -749,9 +765,4 @@ window.addEventListener("resize", () => {
   for (const chartJsTooltip of chartJsTooltips) {
     chartJsTooltip.remove();
   }
-});
-
-// Tooltips
-document.addEventListener("DOMContentLoaded", () => {
-  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
