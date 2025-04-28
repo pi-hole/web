@@ -351,7 +351,7 @@ function updateTopTable(config) {
           url = `queries?client_ip=${ip}${blocked ? "&upstream=blocklist" : ""}`;
         }
 
-        const percentage = (count / sum) * 100;
+        const percentage = ((count / sum) * 100).toFixed(7);
         const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
 
         // Add row to table

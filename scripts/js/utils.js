@@ -418,8 +418,8 @@ function toPercent(number, fractionDigits = 0) {
 function colorBar(percentage, total, cssClass) {
   const formattedPercentage = toPercent(percentage, 1);
   const title = `${formattedPercentage} of ${total}`;
-  const bar = `<div class="progress-bar ${cssClass}" style="width: ${percentage}%"></div>`;
-  return `<div class="progress progress-sm" title="${title}"> ${bar} </div>`;
+  const bar = `<div class="progress-bar ${cssClass}" role="progressbar" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage}%"></div>`;
+  return `<div class="progress progress-sm" title="${title}">${bar}</div>`;
 }
 
 function checkMessages() {
