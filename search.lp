@@ -19,7 +19,6 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="box-header">
                 <div id="domain-search-block" class="input-group">
                     <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                    <input id="quiet" type="hidden" value="no">
                     <span class="input-group-btn">
                         <button type="button" id="btnSearch" class="btn btn-default">Search</button>
                     </span>
