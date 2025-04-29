@@ -13,9 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const url = `${document.body.dataset.apiurl}/network/gateway?detailed=true`;
 
   utils.fetchFactory(url).then(data => {
-    const intl = new Intl.NumberFormat();
     const gateways = extractGateways(data.gateway);
-    const { interfaces, masterInterfaces } = processInterfaces(data.interfaces, gateways, intl);
+    const { interfaces, masterInterfaces } = processInterfaces(data.interfaces, gateways);
     const masterInterfacesSorted = sortInterfaces(interfaces, masterInterfaces);
     const json = masterInterfacesSorted.map(iface => interfaces[iface]);
 
@@ -43,20 +42,20 @@ function extractGateways(gateway) {
   return gateways;
 }
 
-function processInterfaces(interfacesData, gateways, intl) {
+function processInterfaces(interfacesData, gateways) {
   const interfaces = {};
   const masterInterfaces = {};
 
   // For each interface in data.interface, create a new object and push it to json
   for (const iface of interfacesData) {
-    const obj = createInterfaceObject({ iface, gateways, intl, masterInterfaces, interfacesData });
+    const obj = createInterfaceObject({ iface, gateways, masterInterfaces, interfacesData });
     interfaces[iface.name] = obj;
   }
 
   return { interfaces, masterInterfaces };
 }
 
-function createInterfaceObject({ iface, gateways, intl, masterInterfaces, interfacesData }) {
+function createInterfaceObject({ iface, gateways, masterInterfaces, interfacesData }) {
   const carrierColor = iface.carrier ? "text-green" : "text-red";
   const stateText = determineStateText(iface);
   const status = `<span class="${carrierColor}">${stateText}</span>`;
@@ -75,13 +74,13 @@ function createInterfaceObject({ iface, gateways, intl, masterInterfaces, interf
   };
 
   addMasterDetails(obj, master);
-  addSpeedDetails(obj, iface, intl);
+  addSpeedDetails(obj, iface);
   addTypeDetails(obj, iface);
   addFlagsDetails(obj, iface);
   addHardwareAddressDetails(obj, iface);
-  addAddressDetails(obj, iface, intl);
-  addStatisticsDetails(obj, iface, intl);
-  addFurtherDetails(obj, iface, intl);
+  addAddressDetails(obj, iface);
+  addStatisticsDetails(obj, iface);
+  addFurtherDetails(obj, iface);
 
   return obj;
 }
@@ -127,10 +126,10 @@ function addMasterDetails(obj, master) {
   }
 }
 
-function addSpeedDetails(obj, iface, intl) {
+function addSpeedDetails(obj, iface) {
   if (iface.speed) {
     obj.nodes.push({
-      text: `Speed: ${intl.format(iface.speed)} Mbit/s`,
+      text: `Speed: ${utils.formatNumber(iface.speed)} Mbit/s`,
       icon: "fa fa-tachometer-alt fa-fw",
     });
   }
@@ -168,7 +167,7 @@ function addHardwareAddressDetails(obj, iface) {
   });
 }
 
-function addAddressDetails(obj, iface, intl) {
+function addAddressDetails(obj, iface) {
   if (iface.addresses === undefined) return;
 
   const count = iface.addresses.length;
@@ -182,14 +181,14 @@ function addAddressDetails(obj, iface, intl) {
   };
 
   for (const addr of iface.addresses) {
-    const jaddr = createAddressNode(addr, intl);
+    const jaddr = createAddressNode(addr);
     addresses.nodes.push(jaddr);
   }
 
   obj.nodes.push(addresses);
 }
 
-function createAddressNode(addr, intl) {
+function createAddressNode(addr) {
   let extraAddr = addr.prefixlen !== undefined ? ` / <code>${addr.prefixlen}</code>` : "";
 
   if (addr.address_type !== undefined) {
@@ -240,7 +239,8 @@ function createAddressNode(addr, intl) {
   }
 
   if (addr.prefered !== undefined) {
-    const pref = addr.prefered === 4_294_967_295 ? "forever" : `${intl.format(addr.prefered)} s`;
+    const pref =
+      addr.prefered === 4_294_967_295 ? "forever" : `${utils.formatNumber(addr.prefered)} s`;
     jaddr.nodes.push({
       text: `Preferred lifetime: ${pref}`,
       icon: "fa fa-clock fa-fw",
@@ -248,7 +248,7 @@ function createAddressNode(addr, intl) {
   }
 
   if (addr.valid !== undefined) {
-    const valid = addr.valid === 4_294_967_295 ? "forever" : `${intl.format(addr.valid)} s`;
+    const valid = addr.valid === 4_294_967_295 ? "forever" : `${utils.formatNumber(addr.valid)} s`;
     jaddr.nodes.push({
       text: `Valid lifetime: ${valid}`,
       icon: "fa fa-clock fa-fw",
@@ -279,7 +279,7 @@ function createAddressNode(addr, intl) {
   return jaddr;
 }
 
-function addStatisticsDetails(obj, iface, intl) {
+function addStatisticsDetails(obj, iface) {
   if (iface.stats === undefined) return;
 
   const stats = {
@@ -291,21 +291,21 @@ function addStatisticsDetails(obj, iface, intl) {
 
   if (iface.stats.rx_bytes !== undefined) {
     stats.nodes.push({
-      text: `RX bytes: ${intl.format(iface.stats.rx_bytes.value)} ${iface.stats.rx_bytes.unit}`,
+      text: `RX bytes: ${utils.formatNumber(iface.stats.rx_bytes.value)} ${iface.stats.rx_bytes.unit}`,
       icon: "fa fa-download fa-fw",
     });
   }
 
   if (iface.stats.tx_bytes !== undefined) {
     stats.nodes.push({
-      text: `TX bytes: ${intl.format(iface.stats.tx_bytes.value)} ${iface.stats.tx_bytes.unit}`,
+      text: `TX bytes: ${utils.formatNumber(iface.stats.tx_bytes.value)} ${iface.stats.tx_bytes.unit}`,
       icon: "fa fa-upload fa-fw",
     });
   }
 
   if (iface.stats.rx_packets !== undefined) {
     stats.nodes.push({
-      text: `RX packets: ${intl.format(iface.stats.rx_packets)}`,
+      text: `RX packets: ${utils.formatNumber(iface.stats.rx_packets)}`,
       icon: "fa fa-download fa-fw",
     });
   }
@@ -313,7 +313,7 @@ function addStatisticsDetails(obj, iface, intl) {
   if (iface.stats.rx_errors !== undefined && iface.stats.rx_packets) {
     const rxErrorPercentage = ((iface.stats.rx_errors / iface.stats.rx_packets) * 100).toFixed(1);
     stats.nodes.push({
-      text: `RX errors: ${intl.format(iface.stats.rx_errors)} (${rxErrorPercentage}%)`,
+      text: `RX errors: ${utils.formatNumber(iface.stats.rx_errors)} (${rxErrorPercentage}%)`,
       icon: "fa fa-download fa-fw",
     });
   }
@@ -323,14 +323,14 @@ function addStatisticsDetails(obj, iface, intl) {
     const rxPackets = iface.stats.rx_packets;
     const rxDroppedPercentage = ((rxDropped / rxPackets) * 100).toFixed(1);
     stats.nodes.push({
-      text: `RX dropped: ${intl.format(rxDropped)} (${rxDroppedPercentage}%)`,
+      text: `RX dropped: ${utils.formatNumber(rxDropped)} (${rxDroppedPercentage}%)`,
       icon: "fa fa-download fa-fw",
     });
   }
 
   if (iface.stats.tx_packets !== undefined) {
     stats.nodes.push({
-      text: `TX packets: ${intl.format(iface.stats.tx_packets)}`,
+      text: `TX packets: ${utils.formatNumber(iface.stats.tx_packets)}`,
       icon: "fa fa-upload fa-fw",
     });
   }
@@ -338,7 +338,7 @@ function addStatisticsDetails(obj, iface, intl) {
   if (iface.stats.tx_errors !== undefined && iface.stats.tx_packets) {
     const txErrorPercentage = ((iface.stats.tx_errors / iface.stats.tx_packets) * 100).toFixed(1);
     stats.nodes.push({
-      text: `TX errors: ${intl.format(iface.stats.tx_errors)} (${txErrorPercentage}%)`,
+      text: `TX errors: ${utils.formatNumber(iface.stats.tx_errors)} (${txErrorPercentage}%)`,
       icon: "fa fa-upload fa-fw",
     });
   }
@@ -348,21 +348,21 @@ function addStatisticsDetails(obj, iface, intl) {
     const txPackets = iface.stats.tx_packets;
     const txDroppedPercentage = ((txDropped / txPackets) * 100).toFixed(1);
     stats.nodes.push({
-      text: `TX dropped: ${intl.format(txDropped)} (${txDroppedPercentage}%)`,
+      text: `TX dropped: ${utils.formatNumber(txDropped)} (${txDroppedPercentage}%)`,
       icon: "fa fa-upload fa-fw",
     });
   }
 
   if (iface.stats.multicast !== undefined) {
     stats.nodes.push({
-      text: `Multicast: ${intl.format(iface.stats.multicast)}`,
+      text: `Multicast: ${utils.formatNumber(iface.stats.multicast)}`,
       icon: "fa fa-broadcast-tower fa-fw",
     });
   }
 
   if (iface.stats.collisions !== undefined) {
     stats.nodes.push({
-      text: `Collisions: ${intl.format(iface.stats.collisions)}`,
+      text: `Collisions: ${utils.formatNumber(iface.stats.collisions)}`,
       icon: "fa fa-exchange-alt fa-fw",
     });
   }
@@ -370,7 +370,7 @@ function addStatisticsDetails(obj, iface, intl) {
   obj.nodes.push(stats);
 }
 
-function addFurtherDetails(obj, iface, intl) {
+function addFurtherDetails(obj, iface) {
   const furtherDetails = {
     text: "Further details",
     icon: "fa fa-info-circle fa-fw",
@@ -407,7 +407,7 @@ function addFurtherDetails(obj, iface, intl) {
 
   if (iface.carrier_changes !== undefined) {
     furtherDetails.nodes.push({
-      text: `Carrier changes: ${intl.format(iface.carrier_changes)}`,
+      text: `Carrier changes: ${utils.formatNumber(iface.carrier_changes)}`,
       icon: "fa fa-exchange-alt fa-fw",
     });
   }
@@ -422,20 +422,20 @@ function addFurtherDetails(obj, iface, intl) {
   if (iface.mtu) {
     let extra = "";
     if (iface.min_mtu !== undefined && iface.max_mtu !== undefined) {
-      const minMtu = intl.format(iface.min_mtu);
-      const maxMtu = intl.format(iface.max_mtu);
+      const minMtu = utils.formatNumber(iface.min_mtu);
+      const maxMtu = utils.formatNumber(iface.max_mtu);
       extra += ` (min: ${minMtu} bytes, max: ${maxMtu} bytes)`;
     }
 
     furtherDetails.nodes.push({
-      text: `MTU: ${intl.format(iface.mtu)} bytes${extra}`,
+      text: `MTU: ${utils.formatNumber(iface.mtu)} bytes${extra}`,
       icon: "fa fa-arrows-alt-h fa-fw",
     });
   }
 
   if (iface.txqlen) {
     furtherDetails.nodes.push({
-      text: `TX queue length: ${intl.format(iface.txqlen)}`,
+      text: `TX queue length: ${utils.formatNumber(iface.txqlen)}`,
       icon: "fa fa-file-upload fa-fw",
     });
   }

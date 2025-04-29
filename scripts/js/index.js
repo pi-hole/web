@@ -338,7 +338,6 @@ function updateTopTable(config) {
       let tableRows = "";
 
       for (const item of data[type]) {
-        const count = item.count;
         let url;
         let itemName;
 
@@ -355,7 +354,8 @@ function updateTopTable(config) {
           url = `queries?client_ip=${ip}${blocked ? "&upstream=blocklist" : ""}`;
         }
 
-        const percentage = ((count / sum) * 100).toFixed(7);
+        const count = utils.formatNumber(item.count);
+        const percentage = ((item.count / sum) * 100).toFixed(7);
         const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
 
         // Add row to table
@@ -393,23 +393,26 @@ function updateSummaryData(runOnce = false) {
   utils
     .fetchFactory(`${document.body.dataset.apiurl}/stats/summary`)
     .then(data => {
-      const intl = new Intl.NumberFormat();
       const newCount = Number.parseInt(data.queries.total, 10);
       const dnsQueriesElement = document.getElementById("dns_queries");
       const activeClientsElement = document.getElementById("active_clients");
 
-      dnsQueriesElement.textContent = intl.format(newCount);
-      activeClientsElement.textContent = intl.format(Number.parseInt(data.clients.active, 10));
+      dnsQueriesElement.textContent = utils.formatNumber(newCount);
+      activeClientsElement.textContent = utils.formatNumber(
+        Number.parseInt(data.clients.active, 10)
+      );
 
       const totalClientsElement = document.getElementById("total_clients");
-      totalClientsElement.title = `${intl.format(Number.parseInt(data.clients.total, 10))} total clients`;
+      totalClientsElement.title = `${utils.formatNumber(Number.parseInt(data.clients.total, 10))} total clients`;
 
       const blockedQueriesElement = document.getElementById("blocked_queries");
-      blockedQueriesElement.textContent = intl.format(Number.parseFloat(data.queries.blocked));
+      blockedQueriesElement.textContent = utils.formatNumber(
+        Number.parseFloat(data.queries.blocked)
+      );
       const percentBlockedElement = document.getElementById("percent_blocked");
       percentBlockedElement.textContent = utils.toPercent(data.queries.percent_blocked, 1);
 
-      updateQueryFrequency(intl, data.queries.frequency);
+      updateQueryFrequency(data.queries.frequency);
 
       const lastupdate = Number.parseInt(data.gravity.last_update, 10);
       let updatetxt = "Lists were never updated";
@@ -426,7 +429,7 @@ function updateSummaryData(runOnce = false) {
         updatetxt = "Error! Update gravity to reset this value.";
         gravitySizeElement.textContent = `Error (${gravityCount})`;
       } else {
-        gravitySizeElement.textContent = intl.format(gravityCount);
+        gravitySizeElement.textContent = utils.formatNumber(gravityCount);
       }
 
       const gravitySizeContainer = gravitySizeElement.closest(".small-box");

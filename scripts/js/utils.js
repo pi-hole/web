@@ -401,19 +401,21 @@ function addFromQueryLog(domain, list) {
   });
 }
 
-function toPercent(number, fractionDigits = 0) {
-  const userLocale = navigator.language || "en-US";
-  return new Intl.NumberFormat(userLocale, {
+function formatNumber(value, options = {}) {
+  return Number.isNaN(value) ? "N/A" : new Intl.NumberFormat(undefined, options).format(value);
+}
+
+function toPercent(value, fractionDigits = 0) {
+  return formatNumber(value / 100, {
     style: "percent",
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
-  }).format(number / 100);
+  });
 }
 
-function colorBar(percentage, total, cssClass) {
-  const formattedPercentage = toPercent(percentage, 1);
-  const title = `${formattedPercentage} of ${total}`;
-  const bar = `<div class="progress-bar ${cssClass}" role="progressbar" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100" style="width: ${percentage}%"></div>`;
+function colorBar(value, total, cssClass) {
+  const title = `${toPercent(value, 1)} of ${formatNumber(total)}`;
+  const bar = `<div class="progress-bar ${cssClass}" role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></div>`;
   return `<div class="progress progress-sm" title="${title}">${bar}</div>`;
 }
 
@@ -823,6 +825,7 @@ globalThis.utils = (function () {
     validateMAC,
     validateHostname,
     addFromQueryLog,
+    formatNumber,
     toPercent,
     colorBar,
     checkMessages,

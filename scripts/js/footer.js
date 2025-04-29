@@ -199,7 +199,7 @@ function updateInfo() {
   updateVersionInfo();
 }
 
-function updateQueryFrequency(intl, frequency) {
+function updateQueryFrequency(frequency) {
   let freq = Number.parseFloat(frequency) * 60;
   let unit = "q/min";
   let title = "Queries per minute";
@@ -214,11 +214,10 @@ function updateQueryFrequency(intl, frequency) {
   // - 1 fraction digit for frequencies between 1 and 10
   // - 2 fraction digits for frequencies < 1
   const fractionDigits = freq > 10 ? 0 : freq < 1 ? 2 : 1;
-  const userLocale = navigator.language || "en-US";
-  const freqFormatted = new Intl.NumberFormat(userLocale, {
+  const freqFormatted = utils.formatNumber(freq, {
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
-  }).format(freq);
+  });
 
   const queryFreqElem = document.getElementById("query_frequency");
 
@@ -229,24 +228,25 @@ function updateQueryFrequency(intl, frequency) {
 function updateFtlInfo() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/ftl`).then(({ ftl }) => {
     const { database } = ftl;
-    const intl = new Intl.NumberFormat();
-    document.getElementById("num_groups").textContent = intl.format(database.groups);
-    document.getElementById("num_clients").textContent = intl.format(database.clients);
-    document.getElementById("num_lists").textContent = intl.format(database.lists);
-    document.getElementById("num_gravity").textContent = intl.format(database.gravity);
+    document.getElementById("num_groups").textContent = utils.formatNumber(database.groups);
+    document.getElementById("num_clients").textContent = utils.formatNumber(database.clients);
+    document.getElementById("num_lists").textContent = utils.formatNumber(database.lists);
+    document.getElementById("num_gravity").textContent = utils.formatNumber(database.gravity);
 
     const numAllowedEl = document.getElementById("num_allowed");
-    numAllowedEl.textContent = intl.format(database.domains.allowed + database.regex.allowed);
+    numAllowedEl.textContent = utils.formatNumber(
+      database.domains.allowed + database.regex.allowed
+    );
     numAllowedEl.title =
-      `Allowed: ${intl.format(database.domains.allowed)} exact domains and ` +
-      `${intl.format(database.regex.allowed)} regex filters are enabled`;
+      `Allowed: ${utils.formatNumber(database.domains.allowed)} exact domains and ` +
+      `${utils.formatNumber(database.regex.allowed)} regex filters are enabled`;
 
     const numDeniedEl = document.getElementById("num_denied");
-    numDeniedEl.textContent = intl.format(database.domains.denied + database.regex.denied);
+    numDeniedEl.textContent = utils.formatNumber(database.domains.denied + database.regex.denied);
     numDeniedEl.title =
-      `Denied: ${intl.format(database.domains.denied)} exact domains and ` +
-      `${intl.format(database.regex.denied)} regex filters are enabled`;
-    updateQueryFrequency(intl, ftl.query_frequency);
+      `Denied: ${utils.formatNumber(database.domains.denied)} exact domains and ` +
+      `${utils.formatNumber(database.regex.denied)} regex filters are enabled`;
+    updateQueryFrequency(ftl.query_frequency);
 
     const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
     if (sysInfoCpuFtl !== null) {
