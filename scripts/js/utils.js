@@ -700,13 +700,21 @@ function pluralize(count, singular, plural) {
   return count === 1 ? singular : plural || `${singular}s`;
 }
 
-function disableSearchAutocorrect(input = document.querySelector("input[type=search]")) {
-  if (!input) return;
+function disableAutocorrect(
+  selector = "input[type=search], input[type=url], input.disable-autocorrect"
+) {
+  const attributes = {
+    autocomplete: "off",
+    autocorrect: "off",
+    autocapitalize: "off",
+    spellcheck: false,
+  };
 
-  input.setAttribute("autocomplete", "off");
-  input.setAttribute("autocorrect", "off");
-  input.setAttribute("autocapitalize", "off");
-  input.setAttribute("spellcheck", false);
+  for (const input of document.querySelectorAll(selector)) {
+    for (const [attribute, value] of Object.entries(attributes)) {
+      input.setAttribute(attribute, value);
+    }
+  }
 }
 
 function hideAlerts(selector = "[data-hide]") {
@@ -845,7 +853,7 @@ globalThis.utils = (function () {
     isVisible,
     pluralize,
     fetchFactory,
-    disableSearchAutocorrect,
+    disableAutocorrect,
     hideAlerts,
     createPieChart,
     isEmptyObject,

@@ -30,11 +30,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_address">Address:</label>
-                        <input id="new_address" type="text" class="form-control" placeholder="URL" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                        <input id="new_address" type="text" class="form-control disable-autocorrect" placeholder="URL">
                     </div>
                     <div class="form-group col-lg-3 col-md-6">
                         <label for="new_comment">Comment:</label>
-                        <input id="new_comment" type="text" class="form-control" placeholder="List description (optional)">
+                        <input id="new_comment" type="text" class="form-control disable-autocorrect" placeholder="List description (optional)">
                     </div>
                     <div class="form-group col-lg-3 col-md-6">
                         <label for="new_group">Group assignment:</label>

@@ -12,11 +12,6 @@
 let table = null;
 const toasts = {};
 
-// DHCP leases tooltips
-document.addEventListener("DOMContentLoaded", () => {
-  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
-});
-
 function renderHostnameCLID(data, type) {
   // Display and search content
   return type === "display" || type === "filter" ? (data === "*" ? "<em>---</em>" : data) : data;
@@ -215,4 +210,8 @@ function processDHCPConfig() {
 
 document.addEventListener("DOMContentLoaded", () => {
   processDHCPConfig();
+  utils.disableAutocorrect();
+
+  // DHCP leases tooltips
+  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });

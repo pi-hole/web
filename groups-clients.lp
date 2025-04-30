@@ -36,7 +36,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="form-group col-lg-3 col-md-6">
                         <label for="new_comment">Comment:</label>
-                        <input id="new_comment" type="text" class="form-control" placeholder="Client description (optional)">
+                        <input id="new_comment" type="text" class="form-control disable-autocorrect" placeholder="Client description (optional)">
                     </div>
                     <div class="form-group col-lg-3 col-md-6">
                         <label for="new_group">Group assignment:</label>

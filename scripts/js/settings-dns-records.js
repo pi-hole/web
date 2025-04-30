@@ -220,6 +220,8 @@ document.addEventListener("DOMContentLoaded", () => {
   populateDataTable("hosts");
   populateDataTable("cnameRecords");
 
+  utils.disableAutocorrect();
+
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
     const elem = `${$("#Hip").val()} ${$("#Hdomain").val()}`;

@@ -35,9 +35,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Start</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.start" data-key="dhcp.start"
-                                    autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" value="">
+                                <input type="text" class="form-control DHCPgroup disable-autocorrect" id="dhcp.start" data-key="dhcp.start" value="">
                             </div>
                         </div>
                     </div>
@@ -45,9 +43,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">End</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.end" data-key="dhcp.end"
-                                    autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" value="">
+                                <input type="text" class="form-control DHCPgroup disable-autocorrect" id="dhcp.end" data-key="dhcp.end" value="">
                             </div>
                         </div>
                     </div>
@@ -56,9 +52,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Router</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.router" data-key="dhcp.router"
-                                    autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" value="">
+                                <input type="text" class="form-control DHCPgroup disable-autocorrect" id="dhcp.router" data-key="dhcp.router" value="">
                             </div>
                         </div>
                     </div>
@@ -67,9 +61,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Netmask</div>
-                                <input type="text" class="form-control DHCPgroup" id="dhcp.netmask" data-key="dhcp.netmask"
-                                    autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" value="" placeholder="automatic">
+                                <input type="text" class="form-control DHCPgroup disable-autocorrect" id="dhcp.netmask" data-key="dhcp.netmask"
+                                    value="" placeholder="automatic">
                             </div>
                         </div>
                     </div>
@@ -98,9 +91,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Lease time</div>
-                                <input type="text" class="form-control DHCPgroup"
-                                    autocomplete="off" spellcheck="false" autocapitalize="none"
-                                    autocorrect="off" id="dhcp.leaseTime" data-key="dhcp.leaseTime" value="">
+                                <input type="text" class="form-control DHCPgroup disable-autocorrect"
+                                  id="dhcp.leaseTime" data-key="dhcp.leaseTime" value="">
                             </div>
                         </div>
                         <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). If no lease time is specified (empty), <code>dnsmasq</code>'s default lease time is one hour for IPv4 and one day for IPv6. You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>

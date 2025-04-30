@@ -35,10 +35,10 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <tfoot class="add-new-item">
                                 <tr>
                                     <th>
-                                        <input id="Hdomain" type="url" class="form-control" data-configkeys="hosts" placeholder="Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hdomain" type="url" class="form-control" data-configkeys="hosts" placeholder="Domain">
                                     </th>
                                     <th>
-                                        <input id="Hip" type="text" class="form-control" data-configkeys="hosts" placeholder="Associated IP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Hip" type="text" class="form-control disable-autocorrect" data-configkeys="hosts" placeholder="Associated IP">
                                     </th>
                                     <th>
                                         <button type="button" id="btnAdd-host" class="btn btn-success btn-xs" data-configkeys="hosts"><i class="fa fa-plus"></i></button>
@@ -77,13 +77,13 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <tfoot class="add-new-item">
                                 <tr>
                                     <th>
-                                        <input id="Cdomain" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cdomain" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Domain">
                                     </th>
                                     <th>
-                                        <input id="Ctarget" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Ctarget" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Target Domain">
                                     </th>
                                     <th>
-                                        <input id="Cttl" type="numeric" class="form-control" data-configkeys="cnameRecords" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cttl" type="numeric" class="form-control disable-autocorrect" data-configkeys="cnameRecords">
                                     </th>
                                     <th>
                                         <button type="button" id="btnAdd-cname" class="btn btn-success btn-xs" data-configkeys="cnameRecords"><i class="fa fa-plus"></i></button>

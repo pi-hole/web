@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Disable autocorrect in the search box
-  utils.disableSearchAutocorrect();
+  utils.disableAutocorrect();
 
   table.on("init select deselect", () => {
     // if the Default group is selected, undo the selection of it

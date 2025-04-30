@@ -267,5 +267,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Disable autocorrect in the search box
-  utils.disableSearchAutocorrect();
+  utils.disableAutocorrect();
 });

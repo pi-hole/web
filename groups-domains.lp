@@ -42,13 +42,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="new_domain">Domain:</label>
-                                        <input id="new_domain" type="url" class="form-control active" placeholder="Domain to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="new_domain" type="url" class="form-control active" placeholder="Domain to be added">
                                         <div id="suggest_domains" class="table-responsive no-border"></div>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-6 form-group">
                                     <label for="new_domain_comment">Comment:</label>
-                                    <input id="new_domain_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                    <input id="new_domain_comment" type="text" class="form-control disable-autocorrect" placeholder="Description (optional)">
                                 </div>
                                 <div class="col-lg-3 col-md-6 form-group">
                                     <label for="new_domain_group">Group assignment:</label>
@@ -71,7 +71,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="new_regex">Regular Expression:</label>
-                                        <input id="new_regex" type="text" class="form-control active" placeholder="RegEx to be added">
+                                        <input id="new_regex" type="text" class="form-control disable-autocorrect active" placeholder="RegEx to be added">
                                     </div>
                                     <div class="form-group">
                                         <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
@@ -81,7 +81,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                                 <div class="col-lg-3 col-md-6 form-group">
                                     <label for="new_regex_comment">Comment:</label>
-                                    <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                    <input id="new_regex_comment" type="text" class="form-control disable-autocorrect" placeholder="Description (optional)">
                                 </div>
                                 <div class="col-lg-3 col-md-6 form-group">
                                     <label for="new_regex_group">Group assignment:</label>

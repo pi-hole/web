@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (Object.hasOwn(queryParams, "N") && queryParams.N !== undefined) {
     maxResultsInputField.value = queryParams.N;
   }
+
+  utils.disableAutocorrect();
 });
 
 function doSearch() {

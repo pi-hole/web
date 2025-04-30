@@ -194,7 +194,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-md-6 col-md-offset-3">
                         <div id="totp_div" class="has-feedback has-error">
                             <div class="pwd-field form-group">
-                                <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
+                                <input type="text" size="6" maxlength="6" class="form-control totp_token disable-autocorrect" id="totp_code" placeholder="">
                             </div>
                             <i class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></i>
                         </div>

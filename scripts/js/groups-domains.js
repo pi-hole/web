@@ -379,7 +379,7 @@ globalThis.initTable = function () {
   });
 
   // Disable autocorrect in the search box
-  utils.disableSearchAutocorrect();
+  utils.disableAutocorrect();
 
   table.on("init select deselect", () => {
     utils.changeTableButtonStates(table);

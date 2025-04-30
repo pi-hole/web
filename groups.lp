@@ -30,11 +30,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_name">Name:</label>
-                        <input id="new_name" type="text" class="form-control" placeholder="Group name">
+                        <input id="new_name" type="text" class="form-control disable-autocorrect" placeholder="Group name">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="new_comment">Comment:</label>
-                        <input id="new_comment" type="text" class="form-control" placeholder="Group comment (optional)">
+                        <input id="new_comment" type="text" class="form-control disable-autocorrect" placeholder="Group comment (optional)">
                     </div>
                 </div>
             </div>

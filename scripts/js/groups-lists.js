@@ -443,7 +443,7 @@ globalThis.initTable = function () {
   });
 
   // Disable autocorrect in the search box
-  utils.disableSearchAutocorrect();
+  utils.disableAutocorrect();
 };
 
 // Remove 'bnt-group' class from container, to avoid grouping
