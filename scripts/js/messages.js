@@ -50,22 +50,33 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     ],
     drawCallback() {
-      $('button[id^="deleteMessage_"]').on("click", deleteMessage);
+      const buttons = document.querySelectorAll('button[id^="deleteMessage_"]');
+      for (const button of buttons) {
+        button.addEventListener("click", event => {
+          deleteMessageFromButton(event.currentTarget.dataset.delId);
+        });
+      }
 
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
-      $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
+      const dataTableButtons = document.querySelectorAll(".datatable-bt");
+      for (const button of dataTableButtons) {
+        button.style.visibility = hasRows ? "visible" : "hidden";
+      }
 
       // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
+      const dropdowns = document.querySelectorAll("body > .bootstrap-select.dropdown");
+      for (const el of dropdowns) el.remove();
     },
     rowCallback(row, data) {
-      $(row).attr("data-id", data.id);
+      row.dataset.id = data.id;
+
+      const tds = row.querySelectorAll("td");
       const button =
         `<button type="button" class="btn btn-danger btn-xs" id="deleteMessage_${data.id}" data-del-id="${data.id}">` +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(4)", row).html(button);
+        '<span class="far fa-trash-alt"></span></button>';
+
+      tds[4].innerHTML = button;
     },
     select: {
       style: "multi",
@@ -104,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const selectedRows = document.querySelectorAll("tr.selected");
           for (const row of selectedRows) {
             // ... delete the row identified by "data-id".
-            delMsg(row.dataset.id);
+            deleteMessage(row.dataset.id);
           }
         },
       },
@@ -139,6 +150,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return data;
     },
   });
+
+  utils.disableAutocorrect();
+
   table.on("init select deselect", () => {
     utils.changeTableButtonStates(table);
   });
@@ -147,14 +161,16 @@ document.addEventListener("DOMContentLoaded", () => {
 // Remove 'bnt-group' class from container, to avoid grouping
 $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
-function deleteMessage() {
-  // Passes the button data-del-id attribute as ID
-  delMsg($(this).attr("data-del-id"));
+// The id is the button's data-del-id attribute
+function deleteMessageFromButton(id) {
+  deleteMessage(id);
 }
 
-function delMsg(id) {
+function deleteMessage(id) {
   id = Number.parseInt(id, 10);
+
   utils.disableAll();
+
   toasts[id] = utils.showAlert({
     type: "info",
     title: "Deleting message...",
@@ -167,6 +183,7 @@ function delMsg(id) {
   })
     .done(response => {
       utils.enableAll();
+
       if (response === undefined) {
         utils.showAlert({
           type: "success",
@@ -174,8 +191,8 @@ function delMsg(id) {
           title: "Successfully deleted message",
           message: `ID: ${id}`,
         });
-        table.row(id).remove();
 
+        table.row(id).remove();
         table.draw(false).ajax.reload(null, false);
       } else {
         utils.showAlert({
