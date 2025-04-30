@@ -330,18 +330,18 @@ function addFromQueryLog(domain, list) {
   // Exit the function here if the Modal is already shown (multiple running interlock)
   if (alertModal.css("display") !== "none") return;
 
-  const alProcessing = alertModal.find(".alProcessing");
-  const alSuccess = alertModal.find(".alSuccess");
-  const alFailure = alertModal.find(".alFailure");
-  const alNetworkErr = alertModal.find(".alFailure #alNetErr");
-  const alCustomErr = alertModal.find(".alFailure #alCustomErr");
-  const alList = "#alList";
-  const alDomain = "#alDomain";
+  const alertProcessing = alertModal.find(".alertProcessing");
+  const alertSuccess = alertModal.find(".alertSuccess");
+  const alertFailure = alertModal.find(".alertFailure");
+  const alNetworkErr = alertFailure.find("#alertNetworkError");
+  const alertCustomError = alertFailure.find("#alertCustomError");
+  const alertList = "#alertList";
+  const alertDomain = "#alertDomain";
 
   const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
-  alProcessing.children(alDomain).text(domain);
-  alProcessing.children(alList).text(listtype);
+  alertProcessing.children(alertDomain).text(domain);
+  alertProcessing.children(alertList).text(listtype);
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
@@ -359,12 +359,12 @@ function addFromQueryLog(domain, list) {
         kind: "exact",
       }),
       success(response) {
-        alProcessing.hide();
+        alertProcessing.hide();
         if (Object.hasOwn(response, "domains") && response.domains.length > 0) {
           // Success
-          alSuccess.children(alDomain).text(domain);
-          alSuccess.children(alList).text(listtype);
-          alSuccess.fadeIn(1000);
+          alertSuccess.children(alertDomain).text(domain);
+          alertSuccess.children(alertList).text(listtype);
+          alertSuccess.fadeIn(1000);
           // Update domains counter in the menu
           updateFtlInfo();
           setTimeout(() => {
@@ -373,8 +373,8 @@ function addFromQueryLog(domain, list) {
         } else {
           // Failure
           alNetworkErr.hide();
-          alCustomErr.html(response.message);
-          alFailure.fadeIn(1000);
+          alertCustomError.html(response.message);
+          alertFailure.fadeIn(1000);
           setTimeout(() => {
             alertModal.modal("hide");
           }, 10_000);
@@ -382,9 +382,9 @@ function addFromQueryLog(domain, list) {
       },
       error() {
         // Network Error
-        alProcessing.hide();
+        alertProcessing.hide();
         alNetworkErr.show();
-        alFailure.fadeIn(1000);
+        alertFailure.fadeIn(1000);
         setTimeout(() => {
           alertModal.modal("hide");
         }, 8000);
@@ -394,10 +394,16 @@ function addFromQueryLog(domain, list) {
 
   // Reset Modal after it has faded out
   alertModal.one("hidden.bs.modal", () => {
-    alProcessing.show();
-    alSuccess.add(alFailure).hide();
-    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
-    alCustomErr.html("");
+    alertProcessing.show();
+    alertSuccess.add(alertFailure).hide();
+    alertProcessing
+      .add(alertSuccess)
+      .children(alertDomain)
+      .html("")
+      .end()
+      .children(alertList)
+      .html("");
+    alertCustomError.html("");
   });
 }
 

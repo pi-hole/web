@@ -16,23 +16,23 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <span class="fa-stack fa-2x" style="margin-bottom: 10px">
-                        <div class="alProcessing">
+                        <div class="alertProcessing">
                             <i class="fa-stack-2x alSpinner"></i>
                         </div>
-                        <div class="alSuccess" style="display: none">
+                        <div class="alertSuccess" style="display: none">
                             <i class="fa fa-circle fa-stack-2x text-green"></i>
                             <i class="fa fa-check fa-stack-1x fa-inverse"></i>
                         </div>
-                        <div class="alFailure" style="display: none">
+                        <div class="alertFailure" style="display: none">
                             <i class="fa fa-circle fa-stack-2x text-red"></i>
                             <i class="fa fa-times fa-stack-1x fa-inverse"></i>
                         </div>
                     </span>
-                    <div class="alProcessing">Adding <span id="alDomain"></span> to the <span id="alList"></span>...</div>
-                    <div class="alSuccess text-bold text-green" style="display: none"><span id="alDomain"></span> successfully added to the <span id="alList"></span></div>
-                    <div class="alFailure text-bold text-red" style="display: none">
-                        <span id="alNetErr">Timeout or Network Connection Error!</span>
-                        <span id="alCustomErr"></span>
+                    <div class="alertProcessing">Adding <span id="alertDomain"></span> to the <span id="alertList"></span>...</div>
+                    <div class="alertSuccess text-bold text-green" style="display: none"><span id="alertDomain"></span> successfully added to the <span id="alertList"></span></div>
+                    <div class="alertFailure text-bold text-red" style="display: none">
+                        <span id="alertNetworkError">Timeout or Network Connection Error!</span>
+                        <span id="alertCustomError"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
