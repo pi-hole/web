@@ -327,7 +327,7 @@ function updateTopClientsTable(blocked) {
       if (privacyLevel > 1) {
         table.remove();
       } else {
-        clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+        clienttable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
         overlay.hide();
       }
 
@@ -404,7 +404,7 @@ function updateTopDomainsTable(blocked) {
       if (privacyLevel > 0) {
         table.remove();
       } else {
-        domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+        domaintable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
         overlay.hide();
       }
 
