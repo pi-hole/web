@@ -90,7 +90,7 @@ mg.include('scripts/lua/header.lp','r')
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body">
+                            <div class="box-body" style="display: none;">
                                 <p>After installing Pi-hole for the first time, a password is generated and displayed
                                     to the user. The password cannot be retrieved later on, but it is possible to set
                                     a new password (or explicitly disable the password by setting an empty password)

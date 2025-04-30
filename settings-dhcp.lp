@@ -198,7 +198,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body">
+                            <div class="box-body" style="display: none;">
                                 <ul>
                                     <li> Addresses allocated like this are not constrained to be in the DHCP range specified above but they must be in the same subnet. For subnets which don't need a pool of dynamically allocated addresses, you can set a one-address range above and specify only static leases here.</li>
                                     <li> It is allowed to use client identifiers (called client DUID in IPv6-land) rather than hardware addresses to identify hosts by prefixing with <code>id:</code>. Thus lines like <code>id:01:02:03:04,.....</code> refer to the host with client identifier <code>01:02:03:04</code>. It is also allowed to specify the client ID as text, like this: <code>id:clientidastext,.....</code></li>
