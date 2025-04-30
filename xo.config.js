@@ -47,6 +47,7 @@ module.exports = defineConfig([
           array: false,
         },
       ],
+      "prefer-template": "error",
       // This should be reverted to "error" later
       strict: ["error", "global"],
       "unicorn/no-anonymous-default-export": "off",
