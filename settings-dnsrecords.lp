@@ -46,7 +46,6 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 </tr>
                             </tfoot>
                         </table>
-                        <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
                     </div>
                 </div>
             </div>
@@ -92,7 +91,6 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 </tr>
                             </tfoot>
                         </table>
-                        <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Clear Filters</button>
                     </div>
                 </div>
             </div>
