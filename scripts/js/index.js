@@ -303,7 +303,7 @@ function updateTopClientsTable(blocked) {
 
     // Add note if there are no results (e.g. privacy mode enabled)
     if (jQuery.isEmptyObject(data.clients)) {
-      clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
+      clienttable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
       overlay.hide();
       return;
     }
