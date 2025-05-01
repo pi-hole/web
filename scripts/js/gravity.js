@@ -67,14 +67,6 @@ $(() => {
       .closest("." + $(this).attr("data-hide"))
       .hide();
   });
-
-  // Do we want to start updating immediately?
-  // gravity?go
-  const searchString = globalThis.location.search.substring(1);
-  if (searchString.includes("go")) {
-    $("#gravityBtn").prop("disabled", true);
-    eventsource();
-  }
 });
 
 function parseLines(ta, str) {
