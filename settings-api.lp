@@ -102,7 +102,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener noreferrer" target="_blank">our guide</a> how to construct valid regex entries.</p>
+                        <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener noreferrer" target="_blank">our guide</a> how to construct valid regex entries.</p>
                     </div>
                 </div>
             </div>
@@ -167,7 +167,9 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12 save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button">
+            <i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply
+        </button>
     </div>
 </div>
 
@@ -176,7 +178,8 @@ mg.include('scripts/lua/settings_header.lp','r')
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span></button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title">Enable two-factor authentication</h4>
             </div>
             <div class="modal-body">
@@ -215,25 +218,26 @@ mg.include('scripts/lua/settings_header.lp','r')
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span></button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title">Configure application password</h4>
             </div>
             <div class="modal-body">
                 <p>After you turn on two-factor (2FA) verification and set up an
-                Authenticator app, you may run into issues if you use apps or
-                other services that don't support two-step verification. In this
-                case, you can create and use an app password to sign in.</p>
+                    Authenticator app, you may run into issues if you use apps or
+                    other services that don't support two-step verification. In this
+                    case, you can create and use an app password to sign in.</p>
                 <p>An app password is a long, randomly generated password that
-                can be used instead of your regular password + 2FA token when
-                signing in to the API. You can revoke the app password at any
-                time. The app password can also be used when 2FA is not enabled.</p>
+                    can be used instead of your regular password + 2FA token when
+                    signing in to the API. You can revoke the app password at any
+                    time. The app password can also be used when 2FA is not enabled.</p>
                 <div class="text-center">
                     <i id="password-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
                 </div>
                 <p id="password_display" class="text-center hidden">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
                 <p>IMPORTANT: The app password generated here will only be shown
-                once and cannot be recovered. Make sure to store it in a safe
-                place!</p>
+                    once and cannot be recovered. Make sure to store it in a safe
+                    place!</p>
                 <div class="callout callout-warning d-none" id="existing_apppw_warning">
                     <h4>Application password already configured</h4>Enabling the new app password will forcefully log out all existing applications.
                 </div>

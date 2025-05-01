@@ -12,13 +12,13 @@ mg.include('scripts/lua/header.lp','r')
 <body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(mg.request_info.request_uri)?>">
     <div class="box login-box">
         <section style="padding: 15px;">
-                <h2 class="error-headline text-yellow">404</h2>
-                <div class="error-content">
-                    <h3><i class="fa fa-warning text-yellow"></i> Oops! Page not found.</h3>
-                    <p>
-                        We could not find the page you were looking for.<br>
-                        Meanwhile, you may want to return to <a href="<?=pihole.webhome()?>">the dashboard</a>.
-                    </p>
+            <h2 class="error-headline text-yellow">404</h2>
+            <div class="error-content">
+                <h3><i class="fa fa-warning text-yellow"></i> Oops! Page not found.</h3>
+                <p>
+                    We could not find the page you were looking for.<br>
+                    Meanwhile, you may want to return to <a href="<?=pihole.webhome()?>">the dashboard</a>.
+                </p>
             </div>
         </section>
     </div>

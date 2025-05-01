@@ -16,7 +16,9 @@ mg.include('scripts/lua/header.lp','r')
             <div class="text-center">
                 <img src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo" width="140" height="202">
             </div>
-            <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
+            <div class="panel-title text-center">
+                <span class="logo-lg" style="font-size: 25px;">Pi-<strong>hole</strong></span>
+            </div>
         </div>
         <!-- /.login-logo -->
 
@@ -34,7 +36,11 @@ mg.include('scripts/lua/header.lp','r')
                     </div>
                 </div>
                 <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
-                    <label class="control-label"><i class="fa fa-times-circle"></i> <span id="error-message"></span><br><span id="error-hint" style="display: none;"></span></label>
+                    <label class="control-label">
+                        <i class="fa fa-times-circle"></i>
+                        <span id="error-message"></span><br>
+                        <span id="error-hint" style="display: none;"></span>
+                    </label>
                 </div>
 
                 <form id="loginform">
@@ -73,10 +79,12 @@ mg.include('scripts/lua/header.lp','r')
                                 </div>
                             </div>
                             <div class="box-body">
-                                <p>Your Pi-hole has two-factor authentication enabled. You have to
-                                    enter a valid <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm" rel="noopener noreferrer" target="_blank">TOTP</a>
-                                    token in addition to your password. You see this message because your
-                                    token was incorrect or has already expired.</p>
+                                <p>
+                                    Your Pi-hole has two-factor authentication enabled. You have to
+                                    enter a valid <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm"
+                                    rel="noopener noreferrer" target="_blank">TOTP</a> token in addition to your
+                                    password. You see this message because your token was incorrect
+                                    or has already expired.</p>
                             </div>
                         </div>
                     </div>
@@ -93,10 +101,11 @@ mg.include('scripts/lua/header.lp','r')
                                 </div>
                             </div>
                             <div class="box-body" style="display: none;">
-                                <p>After installing Pi-hole for the first time, a password is generated and displayed
-                                    to the user. The password cannot be retrieved later on, but it is possible to set
-                                    a new password (or explicitly disable the password by setting an empty password)
-                                    using the command
+                                <p>
+                                    After installing Pi-hole for the first time, a password is generated and
+                                    displayed to the user. The password cannot be retrieved later on, but it
+                                    is possible to set a new password (or explicitly disable the password by
+                                    setting an empty password) using the command
                                 </p>
                                 <pre>pihole setpassword</pre>
                             </div>
@@ -106,9 +115,15 @@ mg.include('scripts/lua/header.lp','r')
             </div>
             <!-- /.login-card-body -->
             <div class="login-footer" style="margin-top: 15px; display: flex; justify-content: space-between;">
-                <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
+                <a class="btn btn-default btn-sm" role="button" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank">
+                    <i class="fas fa-question-circle"></i> Documentation
+                </a>
+                <a class="btn btn-default btn-sm" role="button" href="https://github.com/pi-hole/" rel="noopener noreferrer" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a class="btn btn-default btn-sm" role="button" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank">
+                    <i class="fab fa-discourse"></i> Pi-hole Discourse
+                </a>
             </div>
         </div>
     </section>

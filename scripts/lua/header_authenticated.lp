@@ -29,7 +29,9 @@ mg.include('header.lp','r')
     <!-- JS Warning -->
     <div>
         <input type="checkbox" id="js-hide">
-        <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript is required for the site to function.</p>
+        <div class="js-warn" id="js-warn-exit">
+            <h1>JavaScript Is Disabled</h1>
+            <p>JavaScript is required for the site to function.</p>
             <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener noreferrer" target="_blank">here</a></p><label for="js-hide">Close</label>
         </div>
     </div>
@@ -72,9 +74,7 @@ mg.include('header.lp','r')
                             <!-- User image -->
                             <li class="user-header">
                                 <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
-                                <p>
-                                    Open Source Ad Blocker
-                                </p>
+                                <p>Open Source Ad Blocker</p>
                             </li>
                             <!-- Menu Body -->
                             <li class="user-body" id="advanced-info"></li>

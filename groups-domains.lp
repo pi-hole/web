@@ -20,9 +20,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="box" id="add-group">
             <div class="box-header with-border">
-                <h3 class="box-title">
-                    Add a new domain or regex filter
-                </h3>
+                <h3 class="box-title">Add a new domain or regex filter</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -92,7 +90,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                 </div>
                 <div>
-                    <p><strong>Note:</strong><br>
+                    <p>
+                        <strong>Note:</strong><br>
                         The domain or regex filter will be automatically assigned to the Default Group.<br>
                         Other groups can optionally be assigned in the list below (using <strong>Group assignment</strong>).<br>
                         You can add multiple entries at once by separating them with spaces (e.g. <code>example.com example.org</code>).
@@ -118,9 +117,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="box" id="domains-list">
             <div class="box-header with-border">
-                <h3 class="box-title">
-                    List of domains
-                </h3>
+                <h3 class="box-title">List of domains</h3>
                 <div class="filter_types">
                     <div class="line">
                         <span><input type="checkbox" name="typ" value="allow/exact" id="typ0" checked><label for="typ0">Exact allow</label></span>

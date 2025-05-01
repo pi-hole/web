@@ -185,7 +185,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 </tr>
                             </tbody>
                         </table>
-<!--                    <table class="table table-striped table-bordered nowrap">
+                        <!-- <table class="table table-striped table-bordered nowrap">
                             <tbody id="dns-cache-table">
                             </tbody>
                         </table> -->
@@ -197,7 +197,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div style="width:50%">
                             <canvas id="cachePieChart" width="280" height="280"></canvas>
                         </div>
-                        <div class="chart-legend" style="width:50%" id="cache-legend" ></div>
+                        <div class="chart-legend" style="width:50%" id="cache-legend"></div>
                     </div>
                 </div>
             </div>

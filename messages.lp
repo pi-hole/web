@@ -33,7 +33,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         </tr>
                     </thead>
                 </table>
-                <p>Note: If errors are shown, you generate a debug log (use <code>pihole -d</code>), which will do a thorough Pi-hole evaluation.</p>
+                <p>
+                    Note: If errors are shown, you generate a debug log (use <code>pihole -d</code>), which will do a
+                    thorough Pi-hole evaluation.
+                </p>
             </div>
             <!-- /.box-body -->
         </div>

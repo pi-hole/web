@@ -92,7 +92,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <div class="input-group">
                                 <div class="input-group-addon">Lease time</div>
                                 <input type="text" class="form-control DHCPgroup disable-autocorrect"
-                                  id="dhcp.leaseTime" data-key="dhcp.leaseTime" value="">
+                                    id="dhcp.leaseTime" data-key="dhcp.leaseTime" value="">
                             </div>
                         </div>
                         <p>The lease time can be in seconds, minutes (e.g., "45m"), hours (e.g., "1h"), days (like "2d"), or even weeks ("1w"). If no lease time is specified (empty), <code>dnsmasq</code>'s default lease time is one hour for IPv4 and one day for IPv6. You may also use "infinite" as string but be aware of the drawbacks: assigned addresses are will only be made available again after the lease time has passed or when leases are manually deleted below.</p>
@@ -174,9 +174,15 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-md-6">
                         <p>Examples:</p>
                         <ul>
-                            <li><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code><br>&nbsp;</li>
-                            <li><pre>00:20:e0:3b:13:af,laptop</pre>tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code><br>&nbsp;</li>
-                            <li><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease<br>&nbsp;</li>
+                            <li>
+                                <pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code><br>&nbsp;
+                            </li>
+                            <li>
+                                <pre>00:20:e0:3b:13:af,laptop</pre>tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code><br>&nbsp;
+                            </li>
+                            <li>
+                                <pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease<br>&nbsp;
+                            </li>
                         </ul>
                     </div>
                     <div class="col-xs-12">
@@ -213,7 +219,9 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12 save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button">
+            <i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply
+        </button>
     </div>
 </div>
 <script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>

@@ -42,7 +42,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                    <p>Pi-hole's long-term database is stored at <code id="files.database"></code></p>
+                                <p>Pi-hole's long-term database is stored at <code id="files.database"></code></p>
                                 <div>
                                     <input type="checkbox" id="database.DBimport" data-key="database.DBimport" title="log-queries">
                                     <label for="database.DBimport"><strong>Should FTL load queries from the database on (re)start?</strong></label>
@@ -100,7 +100,9 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12 save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button">
+            <i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply
+        </button>
     </div>
 </div>
 

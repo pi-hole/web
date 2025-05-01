@@ -21,9 +21,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="add-group">
             <!-- /.box-header -->
             <div class="box-header with-border">
-                <h3 class="box-title">
-                    Add a new subscribed list
-                </h3>
+                <h3 class="box-title">Add a new subscribed list</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -65,9 +63,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="box" id="lists-list">
             <div class="box-header with-border">
-                <h3 class="box-title">
-                    Subscribed lists
-                </h3>
+                <h3 class="box-title">Subscribed lists</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

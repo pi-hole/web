@@ -83,7 +83,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="queries-over-time">
             <div class="box-header with-border">
                 <h3 class="box-title">Total queries</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset d-none" data-sel="reset-history"><i class="fas fa-undo mr-1"></i>Reset zoom</button>
+                <button class="btn btn-xs btn-default pull-right zoom-reset d-none" data-sel="reset-history">
+                    <i class="fas fa-undo mr-1"></i>Reset zoom
+                </button>
                 <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="box-body">
@@ -103,7 +105,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="clients">
             <div class="box-header with-border">
                 <h3 class="box-title">Client activity</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset d-none" data-sel="reset-clients"><i class="fas fa-undo mr-1"></i>Reset zoom</button>
+                <button class="btn btn-xs btn-default pull-right zoom-reset d-none" data-sel="reset-clients">
+                    <i class="fas fa-undo mr-1"></i>Reset zoom
+                </button>
                 <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="box-body">
@@ -129,7 +133,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div style="width:50%">
                     <canvas id="queryTypePieChart" width="280" height="280"></canvas>
                 </div>
-                <div class="chart-legend" style="width:50%" id="query-types-legend" ></div>
+                <div class="chart-legend" style="width:50%" id="query-types-legend"></div>
             </div>
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
@@ -169,9 +173,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                            <th>Domain</th>
-                            <th>Hits</th>
-                            <th>Frequency</th>
+                                <th>Domain</th>
+                                <th>Hits</th>
+                                <th>Frequency</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -198,9 +202,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                            <th>Domain</th>
-                            <th>Hits</th>
-                            <th>Frequency</th>
+                                <th>Domain</th>
+                                <th>Hits</th>
+                                <th>Frequency</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -229,9 +233,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                            <th>Client</th>
-                            <th>Requests</th>
-                            <th>Frequency</th>
+                                <th>Client</th>
+                                <th>Requests</th>
+                                <th>Frequency</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -258,9 +262,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                            <th>Client</th>
-                            <th>Requests</th>
-                            <th>Frequency</th>
+                                <th>Client</th>
+                                <th>Requests</th>
+                                <th>Frequency</th>
                             </tr>
                         </thead>
                         <tbody>

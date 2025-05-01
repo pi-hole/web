@@ -28,8 +28,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <i class="fa fa-times fa-stack-1x fa-inverse"></i>
                         </div>
                     </span>
-                    <div class="alertProcessing">Adding <span id="alertDomain"></span> to the <span id="alertList"></span>...</div>
-                    <div class="alertSuccess text-bold text-green" style="display: none"><span id="alertDomain"></span> successfully added to the <span id="alertList"></span></div>
+                    <div class="alertProcessing">
+                        Adding <span id="alertDomain"></span> to the <span id="alertList"></span>...
+                    </div>
+                    <div class="alertSuccess text-bold text-green" style="display: none">
+                        <span id="alertDomain"></span> successfully added to the <span id="alertList"></span>
+                    </div>
                     <div class="alertFailure text-bold text-red" style="display: none">
                         <span id="alertNetworkError">Timeout or Network Connection Error!</span>
                         <span id="alertCustomError"></span>
@@ -59,14 +63,20 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="form-group col-md-6">
                         <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="far fa-clock"></i>
-                        </div>
-                        <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
+                            <div class="input-group-addon">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
                         </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <div><input type="checkbox" id="disk"><label for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours. This option disables live update.</label></div>
+                        <div>
+                            <input type="checkbox" id="disk">
+                            <label for="disk">
+                                Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain
+                                queries older than 24 hours. This option disables live update.
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

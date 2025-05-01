@@ -88,16 +88,19 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <p>Block clients making more than <input type="number" id="dns.rateLimit.count" data-key="dns.rateLimit.count" data-type="integer" value="" min="0" step="10" style="width: 5em;"> queries within
-                            <input type="number" id="dns.rateLimit.interval" data-key="dns.rateLimit.interval" data-type="integer" value="" min="0" step="10" style="width: 4em;"> seconds.</p>
-                            <p>When a client makes too many queries in too short time, it
+                            <input type="number" id="dns.rateLimit.interval" data-key="dns.rateLimit.interval" data-type="integer" value="" min="0" step="10" style="width: 4em;"> seconds.
+                        </p>
+                        <p>When a client makes too many queries in too short time, it
                             gets rate-limited. Rate-limited queries are answered with a
                             <code>REFUSED</code> reply and not further processed by FTL
                             and prevent Pi-holes getting overwhelmed by rogue clients.
                             It is important to note that rate-limiting is happening on a
                             per-client basis. Other clients can continue to use FTL while
-                            rate-limited clients are short-circuited at the same time.</p>
+                            rate-limited clients are short-circuited at the same time.
+                        </p>
                         <p>Rate-limiting may be disabled altogether by setting both
-                            values to zero.</p>
+                            values to zero.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -171,7 +174,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
                                 with "no such domain" rather than being forwarded upstream. The set
                                 of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303" rel="noopener noreferrer" target="_blank">RFC6303</a>.</p>
-                                <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
+                            <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
                                 but may also prevent you from being able to access local hostnames if the Pi-hole is not used as DHCP server.
                                 Make sure you have set up conditional forwarding in this case.</p>
                         </div>
@@ -186,7 +189,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                 the size of your log might increase significantly
                                 when enabling DNSSEC. A DNSSEC resolver test can be found
-                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener noreferrer" target="_blank">here</a>.</p>
+                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener noreferrer" target="_blank">here</a>.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -202,11 +206,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <p>If not configured as your DHCP server, Pi-hole typically won't be able to
-                            determine the names of devices on your local network.  As a
+                            determine the names of devices on your local network. As a
                             result, tables such as Top Clients will only show IP addresses.</p>
                         <p>One solution for this is to configure Pi-hole to forward these
                             requests to your DHCP server (most likely your router), but only for devices on your
-                            home network.  To configure this we will need to know the IP
+                            home network. To configure this we will need to know the IP
                             address of your DHCP server and which addresses belong to your local network.
                             Exemplary input is given below as placeholder in the text boxes (if empty).</p>
                         <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
@@ -217,7 +221,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                             Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
                             Feel free to reach out to us on our
                             <a href="https://discourse.pi-hole.net" rel="noopener noreferrer" target="_blank">Discourse forum</a>
-                            in case you need any assistance setting up local host name resolution for your particular system.</p>
+                            in case you need any assistance setting up local host name resolution for your particular system.
+                        </p>
                         <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
                             devices ending in your local domain name will not leave your network, however, this is optional.
                             The local domain name must match the domain name specified
@@ -232,7 +237,9 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12 save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+        <button type="button" class="btn btn-primary save-button">
+            <i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply
+        </button>
     </div>
 </div>
 <script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
