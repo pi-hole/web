@@ -408,8 +408,8 @@ $("#password_code").on("mouseout blur", function () {
 });
 
 // Trigger keyup event when pasting into the TOTP code input field
-$("#totp_code").on("paste", e => {
-  $(e.target).keyup();
+$("#totp_code").on("paste", event => {
+  $(event.target).trigger("keyup");
 });
 
 $("#totp_code").on("keyup", function () {
