@@ -200,13 +200,18 @@ function enableAll() {
 
 // Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
 function validateIPv4CIDR(ip) {
-  // One IPv4 element is 8bit: 0 - 256
+  // One IPv4 element is 8bit: 0 - 255
   const ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
-  // CIDR for IPv4 is 1 - 32 bit
+
+  // CIDR for IPv4 is 1 - 32 bit (optional)
   const v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
+
+  // Build the complete IPv4/CIDR validator
+  // Format: xxx.xxx.xxx.xxx[/yy] where each xxx is 0-255 and optional yy is 1-32
   const ipv4validator = new RegExp(
-    "^" + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + v4cidr + "$"
+    `^${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}${v4cidr}$`
   );
+
   return ipv4validator.test(ip);
 }
 
@@ -214,25 +219,14 @@ function validateIPv4CIDR(ip) {
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
   const ipv6elem = "[0-9A-Fa-f]{1,4}";
-  // CIDR for IPv6 is 1- 128 bit
+
+  // CIDR for IPv6 is 1-128 bit (optional)
   const v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
+
   const ipv6validator = new RegExp(
-    "^(((?:" +
-      ipv6elem +
-      "))*((?::" +
-      ipv6elem +
-      "))*::((?:" +
-      ipv6elem +
-      "))*((?::" +
-      ipv6elem +
-      "))*|((?:" +
-      ipv6elem +
-      "))((?::" +
-      ipv6elem +
-      ")){7})" +
-      v6cidr +
-      "$"
+    `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`
   );
+
   return ipv6validator.test(ip);
 }
 
