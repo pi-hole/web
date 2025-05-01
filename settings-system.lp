@@ -34,7 +34,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 </tr>
                                 <tr>
                                     <th scope="row">RAM:</th>
-                                    <td><span id="sysinfo-memory-ram"></span> <span id="sysinfo-ram-ftl"></span</td>
+                                    <td><span id="sysinfo-memory-ram"></span> <span id="sysinfo-ram-ftl"></span></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Swap:</th>
