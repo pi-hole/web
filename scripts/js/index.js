@@ -316,6 +316,9 @@ function updateTopTable(config) {
   utils
     .fetchFactory(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`)
     .then(data => {
+      // Destroy any previously shown tooltips
+      $(`${tableElement} [data-toggle="tooltip"]`).tooltip("destroy");
+
       // Clear table rows before filling them with data
       for (const row of existingRows) row.remove();
       const sum = blocked ? data.blocked_queries : data.total_queries;
@@ -363,6 +366,9 @@ function updateTopTable(config) {
       }
 
       tbody.innerHTML = tableRows;
+
+      // Initialize Bootstrap tooltips for the newly added colorbar elements
+      $(`${tableElement} [data-toggle="tooltip"]`).tooltip({ container: "body" });
 
       // Hide overlay
       overlay.classList.add("d-none");

@@ -420,9 +420,14 @@ function toPercent(value, fractionDigits = 0) {
 }
 
 function colorBar(value, total, cssClass) {
-  const title = `${toPercent(value, 1)} of ${formatNumber(total)}`;
-  const bar = `<div class="progress-bar ${cssClass}" role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%"></div>`;
-  return `<div class="progress progress-sm" title="${title}">${bar}</div>`;
+  const title = `${toPercent(value, 2)} of ${formatNumber(total)}`;
+
+  return `
+<div class="progress progress-sm" data-toggle="tooltip" data-placement="top" title="${title}" tabindex="0">
+  <div class="progress-bar ${cssClass}" role="progressbar" aria-valuenow="${value}" aria-valuemin="0" aria-valuemax="100" style="width: ${value}%">
+    <span class="sr-only">${title}</span>
+  </div>
+</div>`;
 }
 
 function checkMessages() {
