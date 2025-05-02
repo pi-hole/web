@@ -204,7 +204,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" id="totp_submit" disabled="true" class="btn btn-default">Enable 2FA</button>
+                <button type="button" id="totp_submit" class="btn btn-default" disabled>Enable 2FA</button>
             </div>
         </div>
     </div>
