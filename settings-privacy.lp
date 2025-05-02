@@ -14,7 +14,7 @@ PageTitle = "Privacy Settings"
 mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6 settings-level-basic">
+    <div class="col-md-6">
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-warning">
@@ -99,7 +99,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-basic save-button-container">
+    <div class="col-lg-12 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>

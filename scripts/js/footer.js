@@ -642,23 +642,24 @@ $("#pihole-disable-custom").on("click", e => {
 });
 
 function initSettingsLevel() {
-  const elem = $("#expert-settings");
+  // Apply expert settings level
+  applyExpertSettings();
+
+  const expertSettingsElement = document.getElementById("expert-settings");
 
   // Skip init if element is not present (e.g. on login page)
-  if (elem.length === 0) {
-    applyExpertSettings();
-    return;
-  }
+  if (!expertSettingsElement) return;
 
   // Restore settings level from local storage (if available) or default to "false"
-  if (localStorage.getItem("expert_settings") === null) {
+  const storedExpertSettings = localStorage.getItem("expert_settings");
+  if (storedExpertSettings === null) {
     localStorage.setItem("expert_settings", "false");
   }
 
-  elem.prop("checked", localStorage.getItem("expert_settings") === "true");
+  expertSettingsElement.checked = storedExpertSettings === "true";
 
   // Init the settings level toggle
-  elem.bootstrapToggle({
+  $(expertSettingsElement).bootstrapToggle({
     on: "Expert",
     off: "Basic",
     size: "small",
@@ -668,26 +669,23 @@ function initSettingsLevel() {
   });
 
   // Add handler for settings level toggle
-  elem.on("change", function () {
-    localStorage.setItem("expert_settings", $(this).prop("checked") ? "true" : "false");
+  $(expertSettingsElement).on("change", event => {
+    localStorage.setItem("expert_settings", event.currentTarget.checked ? "true" : "false");
     applyExpertSettings();
   });
-
-  // Apply settings level
-  applyExpertSettings();
 }
 
+// Apply expert settings level, this will hide/show elements with the class
+// "settings-level-expert" depending on the current settings level
+// If "expert_settings" is not set, we default to !"true"
 function applyExpertSettings() {
-  // Apply settings level, this will hide/show elements with the class
-  // "settings-level-basic" or "settings-level-expert" depending on the
-  // current settings level
-  // If "expert_settings" is not set, we default to !"true" (basic settings)
+  const expertSettingsNodes = document.querySelectorAll(".settings-level-expert");
+  if (expertSettingsNodes.length === 0) return;
+
   if (localStorage.getItem("expert_settings") === "true") {
-    $(".settings-level-basic").show();
-    $(".settings-level-expert").show();
+    for (const element of expertSettingsNodes) element.classList.remove("d-none");
   } else {
-    $(".settings-level-basic").show();
-    $(".settings-level-expert").hide();
+    for (const element of expertSettingsNodes) element.classList.add("d-none");
 
     // If we left with an empty page (no visible boxes) after switching from
     // Expert to Basic settings, redirect to admin/settings/system instead
@@ -696,9 +694,8 @@ function applyExpertSettings() {
     //    settings page as well, even when the button has "only modified"
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
-    if ($(".settings-selector").length > 0 && $(".box:visible").length === 0) {
-      const webhome = document.body.dataset.webhome;
-      globalThis.location.href = webhome + "settings/system";
+    if (document.querySelector(".settings-selector") && $(".box:visible").length === 0) {
+      globalThis.location.href = `${document.body.dataset.webhome}settings/system`;
     }
   }
 }
