@@ -166,7 +166,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Domain</th>
@@ -195,7 +195,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Domain</th>
@@ -226,7 +226,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Client</th>
@@ -255,7 +255,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Client</th>
