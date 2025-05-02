@@ -391,8 +391,8 @@ function setAppPassword() {
 }
 
 // Remove class "password_background" from the password input field with ID
-// password_code when the user hovers over it or if it is focused
-$("#password_code").on("mouseover focus", function () {
+// password_code when the user hovers over it, it's focused or clicked
+$("#password_code").on("mouseover focus click", function () {
   $(this).removeClass("password_background");
 });
 $("#password_code").on("mouseout blur", function () {
