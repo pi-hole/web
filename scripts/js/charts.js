@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams:false */
+/* global utils:false, upstreams:false */
 
 "use strict";
 
@@ -54,50 +54,29 @@ globalThis.htmlLegendPlugin = {
     options.lastLegendItems = items;
 
     const ul = getOrCreateLegendList(options.containerID);
-
-    // Remove old legend items
-    while (ul.firstChild) {
-      ul.firstChild.remove();
-    }
+    const fragment = document.createDocumentFragment();
 
     for (const item of items) {
       const li = document.createElement("li");
 
       // Color checkbox (toggle visibility)
       const boxSpan = document.createElement("span");
+      const iconClass = item.hidden ? "fa-square" : "fa-check-square";
       boxSpan.title = "Toggle visibility";
       boxSpan.style.color = item.fillStyle;
-      boxSpan.innerHTML = `<i class="colorBoxWrapper fa ${item.hidden ? "fa-square" : "fa-check-square"}"></i>`;
-
-      boxSpan.addEventListener("click", () => {
-        const { type } = chart.config;
-        const isPieOrDoughnut = type === "pie" || type === "doughnut";
-
-        if (isPieOrDoughnut) {
-          // Pie and doughnut charts only have a single dataset and visibility is per item
-          chart.toggleDataVisibility(item.index);
-        } else {
-          const isVisible = chart.isDatasetVisible(item.datasetIndex);
-          chart.setDatasetVisibility(item.datasetIndex, !isVisible);
-        }
-
-        chart.update();
-      });
+      boxSpan.innerHTML = `<i class="colorBoxWrapper fa ${iconClass}"></i>`;
+      boxSpan.addEventListener("click", () => handleLegendClick(chart, item));
 
       const skipLink = chart.canvas.id === "cachePieChart";
       const contentElement = skipLink ? document.createElement("p") : document.createElement("a");
-      const isQueryTypeChart = chart.canvas.id === "queryTypePieChart";
-      const isForwardDestinationChart = chart.canvas.id === "forwardDestinationPieChart";
 
-      if (!skipLink && (isQueryTypeChart || isForwardDestinationChart)) {
-        // Text (link to query log page)
+      if (!skipLink) {
         contentElement.title = `List ${item.text} queries`;
-
-        if (isQueryTypeChart) {
-          contentElement.href = `${document.body.dataset.webhome}queries?type=${encodeURIComponent(item.text)}`;
-        } else if (isForwardDestinationChart) {
-          contentElement.href = `${document.body.dataset.webhome}queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
-        }
+        const query =
+          chart.canvas.id === "queryTypePieChart"
+            ? `type=${encodeURIComponent(item.text)}`
+            : `upstream=${encodeURIComponent(upstreams[item.text])}`;
+        contentElement.href = `${document.body.dataset.webhome}queries?${query}`;
       }
 
       contentElement.style.textDecoration = item.hidden ? "line-through" : "";
@@ -105,8 +84,10 @@ globalThis.htmlLegendPlugin = {
       contentElement.textContent = item.text;
 
       li.append(boxSpan, contentElement);
-      ul.append(li);
+      fragment.append(li);
     }
+
+    ul.replaceChildren(fragment);
   },
 };
 
@@ -135,6 +116,55 @@ globalThis.customTooltips = context => {
   // Make tooltip visible
   tooltipEl.style.opacity = 1;
 };
+
+globalThis.doughnutTooltip = tooltipLabel => {
+  if (tooltipLabel.parsed === 0) return "";
+
+  const label = ` ${tooltipLabel.label}`;
+  const total = tooltipLabel.chart._metasets[0].total;
+  const roundedTotal = total.toFixed(1);
+  const isVerySmallValue = tooltipLabel.parsed < 0.1;
+
+  // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
+  // to compensate rounding errors we round to one decimal
+  // if we only show < 1% percent of all, show each item with two decimals
+  const decimals = total < 1 ? 2 : 1;
+
+  // show with one decimal, but in case the item share is really small it could be rounded to 0.0
+  // we compensate for this
+  const itemPercentage =
+    isVerySmallValue && decimals === 1 ? "< 0.1%" : utils.toPercent(tooltipLabel.parsed, decimals);
+
+  // even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less than 100
+  // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
+  if (roundedTotal > 99.9) {
+    // All items shown
+    return `${label}: ${itemPercentage}`;
+  }
+
+  // set percentageTotalShown again without rounding to account
+  // for cases where the total shown percentage would be <0.1% of all
+  const percentageOfShownItems = utils.toPercent((tooltipLabel.parsed * 100) / total, 1);
+
+  return (
+    `${label}:<br>&bull; ${itemPercentage} of all data<br>` +
+    `&bull; ${percentageOfShownItems} of shown items`
+  );
+};
+
+function handleLegendClick(chart, item) {
+  const { type } = chart.config;
+
+  if (type === "pie" || type === "doughnut") {
+    // Pie and doughnut charts only have a single dataset and visibility is per item
+    chart.toggleDataVisibility(item.index);
+  } else {
+    const isVisible = chart.isDatasetVisible(item.datasetIndex);
+    chart.setDatasetVisibility(item.datasetIndex, !isVisible);
+  }
+
+  chart.update();
+}
 
 function getOrCreateTooltipElement(canvasId, options, context) {
   let tooltipEl = document.getElementById(`${canvasId}-customTooltip`);
@@ -325,43 +355,6 @@ function positionTooltip(tooltipEl, tooltip, context) {
 
   arrowEl.style.left = arrowLeftPosition;
 }
-
-globalThis.doughnutTooltip = tooltipLabel => {
-  if (tooltipLabel.parsed === 0) return "";
-
-  // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
-  // to compensate rounding errors we round to one decimal
-  let percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(1);
-  const label = ` ${tooltipLabel.label}`;
-  let itemPercentage;
-
-  // if we only show < 1% percent of all, show each item with two decimals
-  if (percentageTotalShown < 1) {
-    itemPercentage = tooltipLabel.parsed.toFixed(2);
-  } else {
-    // show with one decimal, but in case the item share is really small it could be rounded to 0.0
-    // we compensate for this
-    itemPercentage =
-      tooltipLabel.parsed.toFixed(1) === "0.0" ? "< 0.1" : tooltipLabel.parsed.toFixed(1);
-  }
-
-  // even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less than 100
-  // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
-  if (percentageTotalShown > 99.9) {
-    // All items shown
-    return `${label}: ${itemPercentage}%`;
-  }
-
-  // set percentageTotalShown again without rounding to account
-  // for cases where the total shown percentage would be <0.1% of all
-  percentageTotalShown = tooltipLabel.chart._metasets[0].total;
-  const percentageOfShownItems = ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1);
-
-  return (
-    `${label}:<br>&bull; ${itemPercentage}% of all data<br>` +
-    `&bull; ${percentageOfShownItems}% of shown items`
-  );
-};
 
 // chartjs plugin used by the custom doughnut legend
 function getOrCreateLegendList(id) {
