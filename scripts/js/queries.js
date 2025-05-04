@@ -539,7 +539,7 @@ $(() => {
         if (cursor !== null) d.cursor = cursor;
       },
       dataFilter(d) {
-        const json = jQuery.parseJSON(d);
+        const json = JSON.parse(d);
         cursor = json.cursor; // Extract cursor from original data
         if (liveMode) {
           utils.setTimer(liveUpdate, REFRESH_INTERVAL.query_log);
