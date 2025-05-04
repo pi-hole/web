@@ -44,12 +44,12 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
                 <div class="form-group">
                     <label for="import-selection">Select what to import</label>
-                    <div><input type="checkbox" id="import.config" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.config"><strong>Configuration</strong></label></div>
-                    <div><input type="checkbox" id="import.dhcp_leases" data-key="dhcp_leases" class="import-select" checked="true">&nbsp;<label for="import.dhcp_leases"><strong>DHCP leases</strong></label></div>
-                    <div><input type="checkbox" id="import.gravity.group" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.group"><strong>Groups</strong></label></div>
-                    <div><input type="checkbox" id="import.gravity.adlist" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.adlist"><strong>Lists</strong></label></div>
-                    <div><input type="checkbox" id="import.gravity.domainlist" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.domainlist"><strong>Domains/Regexes</strong></label></div>
-                    <div><input type="checkbox" id="import.gravity.client" data-key="config" class="import-select" checked="true">&nbsp;<label for="import.gravity.client"><strong>Clients</strong></label></div>
+                    <div><input type="checkbox" id="import.config" data-key="config" class="import-select" checked>&nbsp;<label for="import.config"><strong>Configuration</strong></label></div>
+                    <div><input type="checkbox" id="import.dhcp_leases" data-key="dhcp_leases" class="import-select" checked>&nbsp;<label for="import.dhcp_leases"><strong>DHCP leases</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.group" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.group"><strong>Groups</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.adlist" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.adlist"><strong>Lists</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.domainlist" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.domainlist"><strong>Domains/Regexes</strong></label></div>
+                    <div><input type="checkbox" id="import.gravity.client" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.client"><strong>Clients</strong></label></div>
                 </div>
                 <div class="pull-right">
                     <a class="btn btn-app btn-success" id="submit-import">

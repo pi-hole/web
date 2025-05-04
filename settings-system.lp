@@ -303,13 +303,13 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <button type="button" id="loggingButton" class="btn btn-block button-pad btn-primary"><i class="fa fa-spinner fa-pulse"></i></button>
                     </div>
                     <div class="col-xs-12 col-md-6 col-lg-3">
-                        <button type="button" class="btn btn-warning confirm-restartdns btn-block button-pad destructive_action" disabled="true">Restart DNS resolver</button>
+                        <button type="button" class="btn btn-warning confirm-restartdns btn-block button-pad destructive_action" disabled>Restart DNS resolver</button>
                     </div>
                     <div class="col-xs-12 col-md-6 col-lg-3">
-                        <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled="true">Flush network table</button>
+                        <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled>Flush network table</button>
                     </div>
                     <div class="col-xs-12 col-md-6 col-lg-3 settings-level-expert">
-                        <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled="true">Flush logs (last 24 hours)</button>
+                        <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled>Flush logs (last 24 hours)</button>
                     </div>
                 </div>
             </div>
