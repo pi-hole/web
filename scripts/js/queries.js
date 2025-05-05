@@ -76,7 +76,7 @@ function handleAjaxError(xhr, textStatus) {
     alert(`An unknown error occurred while loading the data.\n${xhr.responseText}`);
   }
 
-  $("#all-queries_processing").hide();
+  document.getElementById("all-queries_processing")?.classList.add("d-none");
   table.clear();
   table.draw();
 }
@@ -361,16 +361,19 @@ function formatInfo(data) {
 }
 
 function addSelectSuggestion(name, dict, data) {
-  const obj = $(`#${name}_filter`);
+  const filterElement = document.getElementById(`${name}_filter`);
+  if (!filterElement) return;
+
   let value = "";
-  obj.empty();
+  filterElement.innerHTML = "";
 
   // In order for the placeholder value to appear, we have to have a blank
   // <option> as the first option in our <select> control. This is because
   // the browser tries to select the first option by default. If our first
   // option were non-empty, the browser would display this instead of the
   // placeholder.
-  obj.append($("<option />"));
+  const option = document.createElement("option");
+  filterElement.append(option);
 
   // Add GET parameter as first suggestion (if present and not already included)
   if (name in dict) {
@@ -380,12 +383,15 @@ function addSelectSuggestion(name, dict, data) {
 
   // Add data obtained from API
   for (const text of Object.values(data)) {
-    obj.append($("<option />").val(text).text(text));
+    const option = document.createElement("option");
+    option.value = text;
+    option.textContent = text;
+    filterElement.append(option);
   }
 
   // Select GET parameter (if present)
   if (name in dict) {
-    obj.val(value);
+    filterElement.value = value;
   }
 }
 
@@ -402,7 +408,9 @@ function getSuggestions(dict) {
 }
 
 function parseFilters() {
-  return Object.fromEntries(filters.map(filter => [filter, $(`#${filter}_filter`).val()]));
+  return Object.fromEntries(
+    filters.map(filter => [filter, document.getElementById(`${filter}_filter`).value])
+  );
 }
 
 function getApiUrl(filters) {
@@ -426,15 +434,17 @@ function getApiUrl(filters) {
   if (from > beginningOfTime) params.set("from", from);
   if (until > beginningOfTime && until < endOfTime) params.set("until", until);
 
-  if ($("#disk").prop("checked")) params.set("disk", "true");
+  if (document.getElementById("disk").checked) params.set("disk", "true");
 
   return `${baseUrl}?${params.toString()}`;
 }
 
 let liveMode = false;
-$("#live").prop("checked", liveMode);
-$("#live").on("click", function () {
-  liveMode = $(this).prop("checked");
+const liveCheckbox = document.getElementById("live");
+liveCheckbox.checked = liveMode;
+
+liveCheckbox.addEventListener("click", event => {
+  liveMode = event.currentTarget.checked;
   liveUpdate();
 });
 
@@ -527,52 +537,46 @@ document.addEventListener("DOMContentLoaded", () => {
       return utils.stateLoadCallback("query_log_table");
     },
     rowCallback(row, data) {
-      const querystatus = parseQueryStatus(data);
-      const dnssec = parseDNSSEC(data);
+      const tds = row.querySelectorAll("td");
+      const queryStatus = parseQueryStatus(data);
 
-      if (querystatus.icon !== false) {
-        const classes = `${querystatus.icon} ${querystatus.colorClass}`;
-        $("td:eq(1)", row).html(
-          `<i class="fa fa-fw ${classes}" title="${utils.escapeHtml(querystatus.fieldText)}"></i>`
-        );
-      } else if (querystatus.colorClass !== false) {
-        $(row).addClass(querystatus.colorClass);
+      if (queryStatus.icon !== false) {
+        const classes = `${queryStatus.icon} ${queryStatus.colorClass}`;
+        const title = utils.escapeHtml(queryStatus.fieldText);
+        tds[1].innerHTML = `<i class="fa fa-fw ${classes}" title="${title}"></i>`;
+      } else if (queryStatus.colorClass !== false) {
+        row.classList.add(queryStatus.colorClass);
       }
 
       // Define row background color
-      $(row).addClass(querystatus.blocked === true ? "blocked-row" : "allowed-row");
-
-      // Substitute domain by "." if empty
-      let domain = data.domain === 0 ? "." : data.domain;
+      row.classList.add(queryStatus.blocked === true ? "blocked-row" : "allowed-row");
 
       // Prefix colored DNSSEC icon to domain text
-      const dnssecIcon = `<i class="mr-2 fa fa-fw ${dnssec.icon} ${dnssec.color}" title="DNSSEC: ${dnssec.text}"></i>`;
+      const dnssec = parseDNSSEC(data);
+      const dnssecIconHtml = `<i class="mr-2 fa fa-fw ${dnssec.icon} ${dnssec.color}" title="DNSSEC: ${dnssec.text}"></i>`;
 
-      // Escape HTML in domain
-      domain = dnssecIcon + utils.escapeHtml(domain);
+      // Substitute domain by "." if empty and escape domain
+      const domain = data.domain === 0 ? "." : dnssecIconHtml + utils.escapeHtml(data.domain);
 
-      if (querystatus.isCNAME) {
-        // Add domain in CNAME chain causing the query to have been blocked
+      // Add domain in CNAME chain causing the query to have been blocked
+      if (queryStatus.isCNAME) {
         data.cname = utils.escapeHtml(data.cname);
-        $("td:eq(3)", row).html(`${domain}\n(blocked ${data.cname})`);
+        tds[3].innerHTML = `${domain}\n(blocked ${data.cname})`;
       } else {
-        $("td:eq(3)", row).html(domain);
+        tds[3].innerHTML = domain;
       }
 
       // Show hostname instead of IP if available
-      if (data.client.name !== null && data.client.name !== "") {
-        $("td:eq(4)", row).text(data.client.name);
-      } else {
-        $("td:eq(4)", row).text(data.client.ip);
-      }
+      tds[4].textContent =
+        data.client.name !== null && data.client.name !== "" ? data.client.name : data.client.ip;
 
       // Show X-icon instead of reply time if no reply was received
       if (data.reply.type === "UNKNOWN") {
-        $("td:eq(5)", row).html('<i class="fa fa-times"></i>');
+        tds[5].innerHTML = '<i class="fa fa-times"></i>';
       }
 
-      if (querystatus.buttonHtml !== false) {
-        $("td:eq(6)", row).html(querystatus.buttonHtml);
+      if (queryStatus.buttonHtml !== false) {
+        tds[6].innerHTML = queryStatus.buttonHtml;
       }
     },
     initComplete() {
@@ -582,9 +586,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Skip columns that are not searchable
           const colIdx = this.index();
           const bSearchable = this.context[0].aoColumns[colIdx].bSearchable;
-          if (!bSearchable) {
-            return null;
-          }
+          if (!bSearchable) return null;
 
           // Replace footer text with input field for searchable columns
           const input = document.createElement("input");
@@ -603,55 +605,58 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Add event listener for adding domains to the allow-/blocklist
-  $("#all-queries tbody").on("click", "button", function (event) {
-    const button = $(this);
-    const tr = button.parents("tr");
-    const allowButton = button[0].classList.contains("text-green");
-    const denyButton = button[0].classList.contains("text-red");
-    const data = table.row(tr).data();
-    if (denyButton) {
-      utils.addFromQueryLog(data.domain, "deny");
-    } else if (allowButton) {
-      utils.addFromQueryLog(data.domain, "allow");
-    }
-    // else: no (colorful) button, so nothing to do
+  // Add event listener for both row details and buttons in a single handler
+  document.querySelector("#all-queries tbody").addEventListener("click", event => {
+    const tr = event.target.closest("tr");
 
-    // Prevent tr click even to be triggered for row from opening/closing
-    event.stopPropagation();
-  });
+    // If no tr found or it has the details-row class, exit
+    if (!tr || tr.classList.contains("details-row")) return;
 
-  // Add event listener for opening and closing details, except on rows with "details-row" class
-  $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
-    const tr = $(this);
-    const row = table.row(tr);
+    // Handle button clicks
+    const button = event.target.closest("button");
+    if (button) {
+      // Get row data from DataTables API
+      const data = table.row(tr).data();
 
-    if (globalThis.getSelection().toString().length > 0) {
-      // This event was triggered by a selection, so don't open the row
+      // Process based on button type
+      if (button.classList.contains("btn-whitelist")) {
+        utils.addFromQueryLog(data.domain, "allow");
+      } else if (button.classList.contains("btn-blacklist")) {
+        utils.addFromQueryLog(data.domain, "deny");
+      }
+
       return;
     }
+
+    // Handle row click for expanding details
+    // Skip if text is selected
+    if (globalThis.getSelection().toString().length > 0) return;
+
+    // Get the DataTables row
+    const row = table.row(tr);
 
     if (row.child.isShown()) {
       // This row is already open - close it
       row.child.hide();
-      tr.removeClass("shown");
+      tr.classList.remove("shown");
     } else {
-      // Open this row. Add a class to the row
+      // Open this row and add class
       row.child(formatInfo(row.data()), "details-row").show();
-      tr.addClass("shown");
+      tr.classList.add("shown");
     }
   });
 
-  $("#refresh").on("click", refreshTable);
+  document.getElementById("refresh").addEventListener("click", refreshTable);
 
   // Disable live mode when #disk is checked
-  $("#disk").on("click", function () {
-    if ($(this).prop("checked")) {
-      $("#live").prop("checked", false);
-      $("#live").prop("disabled", true);
+  document.getElementById("disk").addEventListener("click", event => {
+    const liveCheckbox = document.getElementById("live");
+    if (event.currentTarget.checked) {
+      liveCheckbox.checked = false;
+      liveCheckbox.disabled = true;
       liveMode = false;
     } else {
-      $("#live").prop("disabled", false);
+      liveCheckbox.disabled = false;
     }
   });
 });
