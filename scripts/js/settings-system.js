@@ -90,8 +90,8 @@ function updateHostInfo() {
         uname.domainname !== "(none)" ? `${uname.nodename}.${uname.domainname}` : uname.nodename;
       const kernel = `${uname.sysname} ${uname.nodename} ${uname.release} ${uname.version} ${uname.machine}`;
 
-      $("#sysinfo-hostname").text(hostname);
-      $("#sysinfo-kernel").text(kernel);
+      document.getElementById("sysinfo-hostname").textContent = hostname;
+      document.getElementById("sysinfo-kernel").textContent = kernel;
 
       clearTimeout(hostinfoTimer);
       hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
@@ -111,14 +111,15 @@ function setMetrics(data, prefix) {
       cacheData[val.name] = val.count;
 
       // Create table row for each DNS cache entry (if table exists)
-      if ($("#dns-cache-table").length > 0) {
+      const dnsTableElement = document.getElementById("dns-cache-table");
+      if (dnsTableElement) {
         const name =
           val.name !== "OTHER"
             ? `Valid ${val.name !== null ? val.name : `TYPE ${val.type}`}`
             : "Other valid";
         const tr = `<tr><th>${name} records in cache:</th><td>${val.count}</td></tr>`;
         // Append row to DNS cache table
-        $("#dns-cache-table").append(tr);
+        dnsTableElement.insertAdjacentHTML("beforeend", tr);
       }
     } else if (typeof val === "object") {
       setMetrics(val, `${prefix + key}-`);
@@ -126,10 +127,16 @@ function setMetrics(data, prefix) {
       // Compute and display percentage of DNS replies in addition to the absolute value
       const lval = val.toLocaleString();
       const percent = (100 * val) / data.sum;
-      $(`#${prefix}${key}`).text(`${lval} (${percent.toFixed(1)}%)`);
+      const element = document.getElementById(`${prefix}${key}`);
+      if (element) {
+        element.textContent = `${lval} (${percent.toFixed(1)}%)`;
+      }
     } else {
       const lval = val.toLocaleString();
-      $(`#${prefix}${key}`).text(lval);
+      const element = document.getElementById(`${prefix}${key}`);
+      if (element) {
+        element.textContent = lval;
+      }
     }
   }
 
@@ -146,7 +153,10 @@ function updateMetrics() {
     url: `${document.body.dataset.apiurl}/info/metrics`,
   })
     .done(({ metrics }) => {
-      $("#dns-cache-table").empty();
+      const dnsTableElement = document.getElementById("dns-cache-table");
+      if (dnsTableElement) {
+        dnsTableElement.innerHTML = "";
+      }
 
       // Set global cache size
       cacheSize = metrics.dns.cache.size;
@@ -154,11 +164,16 @@ function updateMetrics() {
       // Set metrics
       setMetrics(metrics, "sysinfo-");
 
-      $("#cache-utilization").text(
-        `${cacheEntries.toLocaleString()} (${((100 * cacheEntries) / cacheSize).toFixed(1)}%)`
-      );
+      const formattedEntries = cacheEntries.toLocaleString();
+      const utilizationPercent = (100 * cacheEntries) / cacheSize;
+      const formattedPercent = utilizationPercent.toFixed(1);
+      const utilizationText = `${formattedEntries} (${formattedPercent}%)`;
+      document.getElementById("cache-utilization").textContent = utilizationText;
 
-      $("div[id^='sysinfo-metrics-overlay']").hide();
+      for (const el of document.querySelectorAll("div[id^='sysinfo-metrics-overlay']")) {
+        el.classList.add("d-none");
+      }
+
       clearTimeout(metricsTimer);
       metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
     })
@@ -168,17 +183,17 @@ function updateMetrics() {
 }
 
 function showQueryLoggingButton(state) {
-  const $btn = $("#loggingButton");
+  const button = document.getElementById("loggingButton");
   if (state) {
-    $btn.addClass("btn-warning");
-    $btn.removeClass("btn-success");
-    $btn.text("Disable query logging");
-    $btn.data("state", "enabled");
+    button.classList.add("btn-warning");
+    button.classList.remove("btn-success");
+    button.textContent = "Disable query logging";
+    button.dataset.state = "enabled";
   } else {
-    $btn.addClass("btn-success");
-    $btn.removeClass("btn-warning");
-    $btn.text("Enable query logging");
-    $btn.data("state", "disabled");
+    button.classList.add("btn-success");
+    button.classList.remove("btn-warning");
+    button.textContent = "Enable query logging";
+    button.dataset.state = "disabled";
   }
 }
 
@@ -275,10 +290,13 @@ $("#loggingButton").confirm({
     "Furthermore, you will be logged out of the web interface.",
   title: "Confirmation required",
   confirm() {
-    const data = {};
-    data.config = {};
-    data.config.dns = {};
-    data.config.dns.queryLogging = $("#loggingButton").data("state") !== "enabled";
+    const data = {
+      config: {
+        dns: {
+          queryLogging: document.getElementById("loggingButton").dataset.state !== "enabled",
+        },
+      },
+    };
     $.ajax({
       url: `${document.body.dataset.apiurl}/config/dns/queryLogging`,
       type: "PATCH",
@@ -324,10 +342,19 @@ document.addEventListener("DOMContentLoaded", () => {
       // Get first object in gateway that has family == "inet6"
       const inet6 = gateway.find(obj => obj.family === "inet6");
 
-      $("#sysinfo-gw-v4-addr").text(inet ? inet.local.join("\n") : "N/A");
-      $("#sysinfo-gw-v4-iface").text(inet ? inet.interface : "N/A");
-      $("#sysinfo-gw-v6-addr").text(inet6 ? inet6.local.join("\n") : "N/A");
-      $("#sysinfo-gw-v6-iface").text(inet6 ? inet6.interface : "N/A");
+      // IPv4 gateway information
+      const ipv4Address = inet ? inet.local.join("\n") : "N/A";
+      const ipv4Interface = inet ? inet.interface : "N/A";
+
+      // IPv6 gateway information
+      const ipv6Address = inet6 ? inet6.local.join("\n") : "N/A";
+      const ipv6Interface = inet6 ? inet6.interface : "N/A";
+
+      // Update DOM elements
+      document.getElementById("sysinfo-gw-v4-addr").textContent = ipv4Address;
+      document.getElementById("sysinfo-gw-v4-iface").textContent = ipv4Interface;
+      document.getElementById("sysinfo-gw-v6-addr").textContent = ipv6Address;
+      document.getElementById("sysinfo-gw-v6-iface").textContent = ipv6Interface;
     })
     .fail(data => {
       apiFailure(data);
