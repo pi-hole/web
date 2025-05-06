@@ -24,7 +24,7 @@ function handleAjaxError(xhr, textStatus) {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
   }
 
-  $("#network-entries_processing").hide();
+  document.getElementById("network-entries_processing")?.classList.add("d-none");
   tableApi.clear();
   tableApi.draw();
 }
@@ -57,13 +57,13 @@ function parseColor(input) {
   }
 }
 
-function deleteNetworkEntry() {
-  const tr = $(this).closest("tr");
-  const id = tr.attr("data-id");
-  const hwaddr = tr.attr("data-hwaddr");
+function deleteNetworkEntry(event) {
+  const tr = event.currentTarget.closest("tr");
+  const { id, hwaddr } = tr.dataset;
 
   utils.disableAll();
   utils.showAlert({ type: "info", title: "Deleting network table entry..." });
+
   $.ajax({
     url: `${document.body.dataset.apiurl}/network/devices/${id}`,
     method: "DELETE",
@@ -97,10 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
       let iconClasses = "";
       const lastQuery = Number.parseInt(data.lastQuery, 10);
       const diff = getTimestamp() - lastQuery;
-      const networkRecent = $(".network-recent").css("background-color");
-      const networkOld = $(".network-old").css("background-color");
-      const networkOlder = $(".network-older").css("background-color");
-      const networkNever = $(".network-never").css("background-color");
+
+      const networkRecent = utils.getStylePropertyFromClass("network-recent", "background-color");
+      const networkOld = utils.getStylePropertyFromClass("network-old", "background-color");
+      const networkOlder = utils.getStylePropertyFromClass("network-older", "background-color");
+      const networkNever = utils.getStylePropertyFromClass("network-never", "background-color");
 
       if (lastQuery > 0) {
         if (diff <= DAY_IN_SECONDS) {
@@ -121,18 +122,21 @@ document.addEventListener("DOMContentLoaded", () => {
         iconClasses = "fas fa-times";
       }
 
+      const tds = row.querySelectorAll("td");
+
       // Set determined background color
-      $(row).css("background-color", color);
-      $("td:eq(6)", row).html(`<i class="${iconClasses}"></i>`);
+      row.style.backgroundColor = color;
+      // Add icon to the status column
+      tds[6].innerHTML = `<i class="${iconClasses}"></i>`;
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
       if (data.lastQuery === 0) {
-        $("td:eq(4)", row).text("Never");
+        tds[4].textContent = "Never";
       }
 
       // Set number of queries to localized string (add thousand separators)
-      $("td:eq(5)", row).text(data.numQueries.toLocaleString());
+      tds[5].textContent = data.numQueries.toLocaleString();
 
       const ips = [];
       const iptitles = [];
@@ -165,32 +169,30 @@ document.addEventListener("DOMContentLoaded", () => {
         // We hit the maximum above, add "..." to symbolize we would have more to show here
         ips.push("...");
         // Show the IPs on the title when there are more than MAXIPDISPLAY items
-        $("td:eq(0)", row).attr("title", iptitles.join("\n"));
+        tds[0].title = iptitles.join("\n");
       }
 
       // Show the IPs in the first column
-      $("td:eq(0)", row).html(ips.join("<br>"));
+      tds[0].innerHTML = ips.join("<br>");
 
       // MAC + Vendor field if available
       if (data.macVendor && data.macVendor.length > 0) {
-        $("td:eq(1)", row).html(
-          `${utils.escapeHtml(data.hwaddr)}<br>${utils.escapeHtml(data.macVendor)}`
-        );
+        tds[1].innerHTML = `${utils.escapeHtml(data.hwaddr)}<br>${utils.escapeHtml(data.macVendor)}`;
       }
 
       // Make mock MAC addresses italics and add title
       if (data.hwaddr.startsWith("ip-")) {
-        $("td:eq(1)", row).css("font-style", "italic");
-        $("td:eq(1)", row).attr("title", "Mock MAC address");
+        tds[1].style.fontStyle = "italic";
+        tds[1].title = "Mock MAC address";
       }
 
       // Add delete button
-      $(row).attr("data-id", data.id);
-      $(row).attr("data-hwaddr", data.hwaddr);
+      row.dataset.id = data.id;
+      row.dataset.hwaddr = data.hwaddr;
       const button =
         `<button type="button" class="btn btn-danger btn-xs" id="deleteNetworkEntry_${data.id}">` +
         '<span class="far fa-trash-alt"></span></button>';
-      $("td:eq(7)", row).html(button);
+      tds[7].innerHTML = button;
     },
     dom:
       "<'row'<'col-sm-12'f>>" +
@@ -235,11 +237,15 @@ document.addEventListener("DOMContentLoaded", () => {
       { data: null, width: "6%", orderable: false },
       { data: "ips[].name", visible: false, class: "hide" },
     ],
-
     drawCallback() {
-      $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
+      const deleteNetworkButtons = document.querySelectorAll('button[id^="deleteNetworkEntry_"]');
+      for (const btn of deleteNetworkButtons) {
+        btn.addEventListener("click", deleteNetworkEntry);
+      }
+
       // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
+      const dropdowns = document.querySelectorAll("body > .bootstrap-select.dropdown");
+      for (const el of dropdowns) el.remove();
     },
     lengthMenu: [
       [10, 25, 50, 100, -1],
