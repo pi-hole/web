@@ -9,8 +9,6 @@ updates:
     open-pull-requests-limit: 10
     target-branch: development
     versioning-strategy: increase
-    reviewers:
-      - "pi-hole/web-maintainers"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -19,5 +17,3 @@ updates:
       time: "10:00"
     open-pull-requests-limit: 10
     target-branch: development
-    reviewers:
-      - "pi-hole/web-maintainers"
