@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Set number of queries to localized string (add thousand separators)
-      tds[5].textContent = data.numQueries.toLocaleString();
+      tds[5].textContent = utils.formatNumber(data.numQueries);
 
       const ips = [];
       const iptitles = [];

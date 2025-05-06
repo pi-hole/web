@@ -128,7 +128,7 @@ function generateListResults(groupedResults, searchQuery, totalLists, matchType)
       `  <strong class="${listClass}">${list.type} list</strong><br>` +
       `  added:         ${addedDate}<br>` +
       `  last modified: ${modifiedDate}<br>` +
-      `  last updated:  ${updatedDate} (${list.number.toLocaleString()} domains)<br>` +
+      `  last updated:  ${updatedDate} (${utils.formatNumber(list.number)} domains)<br>` +
       `  ${listStatus}, used in ${totalGroups} ${groupLabel}${commentHtml}<br>` +
       `  matching entries:<br>`;
 

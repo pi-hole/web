@@ -124,18 +124,16 @@ function setMetrics(data, prefix) {
     } else if (typeof val === "object") {
       setMetrics(val, `${prefix + key}-`);
     } else if (prefix === "sysinfo-dns-replies-" && data.sum !== 0) {
-      // Compute and display percentage of DNS replies in addition to the absolute value
-      const lval = val.toLocaleString();
-      const percent = (100 * val) / data.sum;
       const element = document.getElementById(`${prefix}${key}`);
       if (element) {
-        element.textContent = `${lval} (${percent.toFixed(1)}%)`;
+        // Compute and display percentage of DNS replies in addition to the absolute value
+        const percentage = (100 * val) / data.sum;
+        element.textContent = `${utils.formatNumber(val)} (${utils.toPercent(percentage, 1)})`;
       }
     } else {
-      const lval = val.toLocaleString();
       const element = document.getElementById(`${prefix}${key}`);
       if (element) {
-        element.textContent = lval;
+        element.textContent = utils.formatNumber(val);
       }
     }
   }
@@ -164,11 +162,9 @@ function updateMetrics() {
       // Set metrics
       setMetrics(metrics, "sysinfo-");
 
-      const formattedEntries = cacheEntries.toLocaleString();
-      const utilizationPercent = (100 * cacheEntries) / cacheSize;
-      const formattedPercent = utilizationPercent.toFixed(1);
-      const utilizationText = `${formattedEntries} (${formattedPercent}%)`;
-      document.getElementById("cache-utilization").textContent = utilizationText;
+      const percentage = (100 * cacheEntries) / cacheSize;
+      const text = `${utils.formatNumber(cacheEntries)} (${utils.toPercent(percentage, 1)})`;
+      document.getElementById("cache-utilization").textContent = text;
 
       for (const el of document.querySelectorAll("div[id^='sysinfo-metrics-overlay']")) {
         el.classList.add("d-none");

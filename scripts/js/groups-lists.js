@@ -42,17 +42,17 @@ function format(data) {
       : "N/A";
 
   const hasNumber = data.number !== null && numbers === true;
-  const numberValue = hasNumber ? Number.parseInt(data.number, 10).toLocaleString() : "N/A";
+  const numberValue = hasNumber ? utils.formatNumber(Number.parseInt(data.number, 10)) : "N/A";
   const hasAbpEntries =
     data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true;
   const abpEntriesValue = hasAbpEntries
-    ? ` (out of which ${Number.parseInt(data.abp_entries, 10).toLocaleString()} are in ABP-style)`
+    ? ` (out of which ${utils.formatNumber(Number.parseInt(data.abp_entries, 10))} are in ABP-style)`
     : "";
   const numberOfEntries = `${numberValue}${abpEntriesValue}`;
 
   const hasNonDomains = data.invalid_domains !== null && numbers === true;
   const nonDomains = hasNonDomains
-    ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
+    ? utils.formatNumber(Number.parseInt(data.invalid_domains, 10))
     : "N/A";
 
   const typeIcon = setTypeIcon(data.type);

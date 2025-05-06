@@ -311,9 +311,10 @@ function addStatisticsDetails(obj, iface) {
   }
 
   if (iface.stats.rx_errors !== undefined && iface.stats.rx_packets) {
-    const rxErrorPercentage = ((iface.stats.rx_errors / iface.stats.rx_packets) * 100).toFixed(1);
+    const percentage = (iface.stats.rx_errors / iface.stats.rx_packets) * 100;
+    const formattedPercentage = utils.toPercent(percentage, 1);
     stats.nodes.push({
-      text: `RX errors: ${utils.formatNumber(iface.stats.rx_errors)} (${rxErrorPercentage}%)`,
+      text: `RX errors: ${utils.formatNumber(iface.stats.rx_errors)} (${formattedPercentage})`,
       icon: "fa fa-download fa-fw",
     });
   }
@@ -321,9 +322,9 @@ function addStatisticsDetails(obj, iface) {
   if (iface.stats.rx_dropped !== undefined && iface.stats.rx_packets) {
     const rxDropped = iface.stats.rx_dropped;
     const rxPackets = iface.stats.rx_packets;
-    const rxDroppedPercentage = ((rxDropped / rxPackets) * 100).toFixed(1);
+    const formattedPercentage = utils.toPercent((rxDropped / rxPackets) * 100, 1);
     stats.nodes.push({
-      text: `RX dropped: ${utils.formatNumber(rxDropped)} (${rxDroppedPercentage}%)`,
+      text: `RX dropped: ${utils.formatNumber(rxDropped)} (${formattedPercentage})`,
       icon: "fa fa-download fa-fw",
     });
   }
@@ -336,9 +337,10 @@ function addStatisticsDetails(obj, iface) {
   }
 
   if (iface.stats.tx_errors !== undefined && iface.stats.tx_packets) {
-    const txErrorPercentage = ((iface.stats.tx_errors / iface.stats.tx_packets) * 100).toFixed(1);
+    const percentage = (iface.stats.tx_errors / iface.stats.tx_packets) * 100;
+    const formattedPercentage = utils.toPercent(percentage, 1);
     stats.nodes.push({
-      text: `TX errors: ${utils.formatNumber(iface.stats.tx_errors)} (${txErrorPercentage}%)`,
+      text: `TX errors: ${utils.formatNumber(iface.stats.tx_errors)} (${formattedPercentage})`,
       icon: "fa fa-upload fa-fw",
     });
   }
@@ -346,9 +348,9 @@ function addStatisticsDetails(obj, iface) {
   if (iface.stats.tx_dropped !== undefined && iface.stats.tx_packets) {
     const txDropped = iface.stats.tx_dropped;
     const txPackets = iface.stats.tx_packets;
-    const txDroppedPercentage = ((txDropped / txPackets) * 100).toFixed(1);
+    const formattedPercentage = utils.toPercent((txDropped / txPackets) * 100, 1);
     stats.nodes.push({
-      text: `TX dropped: ${utils.formatNumber(txDropped)} (${txDroppedPercentage}%)`,
+      text: `TX dropped: ${utils.formatNumber(txDropped)} (${formattedPercentage})`,
       icon: "fa fa-upload fa-fw",
     });
   }

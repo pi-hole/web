@@ -250,12 +250,12 @@ function updateFtlInfo() {
 
     const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
     if (sysInfoCpuFtl !== null) {
-      sysInfoCpuFtl.textContent = `(${ftl["%cpu"].toFixed(1)}% used by FTL)`;
+      sysInfoCpuFtl.textContent = `(${utils.toPercent(ftl["%cpu"], 1)} used by FTL)`;
     }
 
     const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
     if (sysInfoRamFtl !== null) {
-      sysInfoRamFtl.textContent = `(${ftl["%mem"].toFixed(1)}% used by FTL)`;
+      sysInfoRamFtl.textContent = `(${utils.toPercent(ftl["%mem"], 1)} used by FTL)`;
     }
 
     const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
@@ -300,9 +300,9 @@ function updateSystemInfo() {
       totalSwapUnit = "GB";
     }
 
-    const swap =
+    const swapUsage =
       system.memory.swap.total > 0
-        ? `${((100 * system.memory.swap.used) / system.memory.swap.total).toFixed(1)} %`
+        ? `${utils.toPercent((100 * system.memory.swap.used) / system.memory.swap.total, 1)}`
         : "N/A";
     const ramColor = percentRAM > 75 ? "text-red" : "text-green-light";
 
@@ -315,17 +315,17 @@ function updateSystemInfo() {
     const sysInfoUptime = document.getElementById("sysinfo-uptime");
     const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
 
-    memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>Memory usage:&nbsp;${percentRAM.toFixed(1)}&thinsp;%`;
-    memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swap}`;
+    memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>Memory usage:&nbsp;${utils.toPercent(percentRAM, 1)}`;
+    memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swapUsage}`;
 
     if (sysInfoRam !== null) {
-      sysInfoRam.textContent = `${percentRAM.toFixed(1)}% of ${totalRAM.toFixed(1)} ${totalRAMUnit} is used`;
+      sysInfoRam.textContent = `${utils.toPercent(percentRAM, 1)} of ${totalRAM.toFixed(1)} ${totalRAMUnit} is used`;
     }
 
     if (sysInfoSwapEl !== null) {
       sysInfoSwapEl.textContent =
         system.memory.swap.total > 0
-          ? `${percentSwap.toFixed(1)}% of ${totalSwap.toFixed(1)} ${totalSwapUnit} is used`
+          ? `${utils.toPercent(percentSwap, 1)} of ${totalSwap.toFixed(1)} ${totalSwapUnit} is used`
           : "No swap space available";
     }
 
@@ -345,7 +345,7 @@ function updateSystemInfo() {
 
     if (sysInfoCpu !== null) {
       sysInfoCpu.textContent =
-        `${system.cpu["%cpu"].toFixed(1)}% on ${cores} ${utils.pluralize(cores, "core")} ` +
+        `${utils.toPercent(system.cpu["%cpu"], 1)} on ${cores} ${utils.pluralize(cores, "core")} ` +
         `running ${system.procs} ${utils.pluralize(system.procs, "process", "processes")}`;
     }
 
