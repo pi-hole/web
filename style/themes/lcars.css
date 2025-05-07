@@ -5,7 +5,7 @@
   --sidebar-width: 230px;
   --gradient-pos: 304px;
   --primary-color: #48f;
-  --text-color: #9ab;
+  --text-color: #abc;
   --net-never-color: #000;
   --net-recent-color: #055;
   --net-old-color: #125;
@@ -35,7 +35,7 @@ html {
 
 body {
   font-size: 17px;
-  color: #9ab;
+  color: var(--text-color);
   background: #000;
   font-family:
     Antonio, Oswald, "Myriad Pro Cond", "Roboto Condensed", "Futura Condensed",
@@ -101,7 +101,7 @@ pre {
   line-height: 1em;
   font-size: 1em;
   color: #000;
-  background-color: #9ab;
+  background-color: var(--text-color);
   border-radius: 4px;
 }
 
@@ -127,7 +127,7 @@ pre {
   padding: 10px 3px;
   border-radius: 12px;
   background: #181818;
-  color: #9ab;
+  color: var(--text-color);
 }
 
 td code {
@@ -136,7 +136,7 @@ td code {
 
 kbd {
   color: #000;
-  background-color: #9ab;
+  background-color: var(--text-color);
   box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.5);
   vertical-align: middle;
 }
@@ -176,7 +176,7 @@ th {
 }
 
 .btn-default {
-  background-color: #9ab;
+  background-color: var(--text-color);
   border: none;
 }
 
@@ -206,7 +206,7 @@ th {
 }
 
 .btn.btn-box-tool {
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .btn.btn-box-tool:hover,
@@ -422,7 +422,7 @@ p.login-box-msg,
 
 .select2 .select2-selection {
   background-color: #000;
-  color: #9ab;
+  color: var(--text-color);
   border: 2px solid #567;
   border-radius: 8px;
 }
@@ -435,7 +435,7 @@ p.login-box-msg,
 }
 
 .select2-dropdown {
-  background-color: #9ab;
+  background-color: var(--text-color);
   color: #000;
   border: none;
 }
@@ -531,7 +531,7 @@ p.login-box-msg,
   margin: 5px 0;
   padding: 0;
   overflow: hidden;
-  color: #9ab;
+  color: var(--text-color);
   background: #111111 !important;
   border: 3px solid #4488ff !important;
   border-radius: 8px;
@@ -581,7 +581,7 @@ p.login-box-msg,
 .open > .dropdown-menu {
   border-radius: 8px;
   border-width: 2px;
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .bootstrap-select.bs-container .dropdown-menu.open,
@@ -594,7 +594,7 @@ p.login-box-msg,
 .dropdown-toggle.btn-default:active,
 .open > .dropdown-toggle.btn-default {
   padding: 0.4em 1em 0.2em 2em;
-  color: #9ab;
+  color: var(--text-color);
   background-color: #000;
   border: 2px solid #567 !important;
   border-radius: 8px;
@@ -1050,7 +1050,7 @@ p.login-box-msg,
 }
 
 .user-panel > .info > span {
-  margin: 0;
+  margin: 1px 0;
 }
 
 .user-panel .pull-left.image {
@@ -1058,7 +1058,8 @@ p.login-box-msg,
 }
 
 .user-panel > .info i {
-  text-shadow: 0 0 1px black;
+  text-shadow: 0 0 1px #fff;
+  margin: 0 2px 0 -2px;
 }
 
 .user-panel > .info i.text-orange,
@@ -1198,7 +1199,7 @@ footer a:focus {
 .comment-text,
 .comment-text .username,
 .box-info {
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .btn .box-title {
@@ -1290,7 +1291,7 @@ table.table-bordered.dataTable td {
 .nav-tabs-custom > .nav-tabs > li {
   margin: 0 2px;
   border: none;
-  background: #9ab;
+  background: var(--text-color);
 }
 
 .nav-tabs-custom > .nav-tabs > li > a {
@@ -1462,7 +1463,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   margin: 0 1px;
   padding: 3px 4px 4px;
   min-width: 34px;
-  background: #9ab;
+  background: var(--text-color);
   color: #000;
   text-align: center;
   border: none;
@@ -1974,20 +1975,24 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .graphs-ticks {
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .progress-bar {
   background-color: #48f;
 }
 
+/*--- Used on the status panel  ---*/
+.user-panel .text-green-light {
+  color: #23c027 !important;
+}
+.user-panel .text-red {
+  color: #f60d1a !important;
+}
+
 /*--- Used in the Query Log table ---*/
 .text-black {
   color: #000 !important;
-}
-
-.text-green-light {
-  color: #7fff00 !important;
 }
 
 .text-green {
@@ -2170,4 +2175,8 @@ td.highlight {
 .fas.fa-hand-paper {
   --fa: "\f259" !important;
   --fa--fa: "\f259\f259" !important;
+}
+
+.help-block {
+  color: #76808A;
 }
