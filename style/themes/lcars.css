@@ -2125,9 +2125,23 @@ td.highlight {
   color: #000;
 }
 
+/*** Tools > Interface page ***/
 .bstreeview .list-group-item {
-  padding-top: 0.2em;
-  padding-bottom: 0.55em;
+  padding-top: 0.15em;
+  padding-bottom: 0.5em;
+}
+
+.list-group > .list-group-item {
+  padding-left: 1.75em !important;
+}
+.list-group .list-group > .list-group-item {
+  padding-left: 3.5em !important;
+}
+.list-group .list-group .list-group > .list-group-item {
+  padding-left: 5.25em !important;
+}
+.list-group .list-group .list-group .list-group > .list-group-item {
+  padding-left: 7em !important;
 }
 
 /*** 🖖 ***/
