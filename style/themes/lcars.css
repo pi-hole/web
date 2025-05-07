@@ -527,8 +527,17 @@ p.login-box-msg,
   box-shadow: 0 0 0 2000vmax rgba(0, 0, 0, 0.6);
 }
 
-.dropdown-menu > li > a:hover {
-  color: #06c;
+.dropdown-menu {
+  background: none;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:active,
+.dropdown-menu > li > a:focus {
+  color: #fff;
+  background: #000;
+}
+
 }
 
 .dropdown-toggle {
@@ -552,19 +561,30 @@ p.login-box-msg,
 
 .bootstrap-select.bs-container .dropdown-menu,
 .open > .dropdown-menu {
-  border-radius: 12px;
+  border-radius: 8px;
   border-width: 2px;
+  color: #9ab;
 }
 
 .bootstrap-select.bs-container .dropdown-menu.open,
 .open > .dropdown-menu.open {
-  filter: invert(0.88) hue-rotate(180deg);
+  background: #111;
+  border-color: #567;
 }
 
-.open > .dropdown-toggle.btn-default,
-.open > .dropdown-toggle.btn-default:active {
-  background-color: #353c42;
-  color: #bec5cb;
+.dropdown-toggle.btn-default,
+.dropdown-toggle.btn-default:active,
+.open > .dropdown-toggle.btn-default {
+  padding: 0.4em 1em 0.2em 2em;
+  color: #9ab;
+  background-color: #000;
+  border: 2px solid #567 !important;
+  border-radius: 8px;
+}
+
+.open > .dropdown-toggle.btn-default:hover {
+  background: #567;
+  color:#fff;
 }
 
 /*** Set .dropdown-toggle width to fill the whole table cell ***/
@@ -1663,11 +1683,6 @@ table.dataTable {
   }
   .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
-  }
-  .dropdown-menu > li > a:hover,
-  .dropdown-menu > li > a:active,
-  .dropdown-menu > li > a:focus {
-    color: #48f;
   }
   .main-header .logo {
     width: 150px;
