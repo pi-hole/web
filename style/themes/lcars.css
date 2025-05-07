@@ -189,8 +189,19 @@ th {
   text-transform: uppercase;
 }
 
+.btn-app {
+  padding: 15px 5px;
+  text-align: center;
+  margin: 0;
+  background: #48f;
+}
+
+.btn-app:hover {
+  background: #FFF;
+}
+
 .btn-xs {
-  padding: 1px 5px;
+  padding: 0 5px 2px;
   border-radius: 5px;
 }
 
@@ -538,6 +549,13 @@ p.login-box-msg,
   background: #000;
 }
 
+.dropdown-menu .bs-actionsbox button {
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+.dropdown-menu .bs-actionsbox button[disabled] {
+  background: #567;
 }
 
 .dropdown-toggle {
@@ -1223,6 +1241,10 @@ footer a:focus {
 table.table-bordered.dataTable th,
 table.table-bordered.dataTable td {
   border: none !important;
+}
+
+.add-new-item {
+  vertical-align: baseline;
 }
 
 .box-footer {

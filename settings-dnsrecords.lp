@@ -41,7 +41,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                         <input id="Hip" type="text" class="form-control" data-configkeys="hosts" placeholder="Associated IP" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
-                                        <button type="button" id="btnAdd-host" class="btn btn-primary btn-xs" data-configkeys="hosts"><i class="fa fa-plus"></i></button>
+                                        <button type="button" id="btnAdd-host" class="btn btn-success btn-xs" data-configkeys="hosts"><i class="fa fa-plus"></i></button>
                                     </th>
                                 </tr>
                             </tfoot>
@@ -86,7 +86,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                         <input id="Cttl" type="numeric" class="form-control" data-configkeys="cnameRecords" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
-                                        <button type="button" id="btnAdd-cname" class="btn btn-primary btn-xs" data-configkeys="cnameRecords"><i class="fa fa-plus"></i></button>
+                                        <button type="button" id="btnAdd-cname" class="btn btn-success btn-xs" data-configkeys="cnameRecords"><i class="fa fa-plus"></i></button>
                                     </th>
                                 </tr>
                             </tfoot>
