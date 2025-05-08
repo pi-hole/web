@@ -254,14 +254,14 @@ function formatReplyTime(time, type) {
   //  - milliseconds if time >= 100 µs
   //  - microseconds otherwise
   if (time < 1e-4) {
-    return `${(1_000_000 * time).toFixed(1)} µs`;
+    return `${utils.formatNumber(1_000_000 * time, 1)} µs`;
   }
 
   if (time < 1) {
-    return `${(1000 * time).toFixed(1)} ms`;
+    return `${utils.formatNumber(1000 * time, 1)} ms`;
   }
 
-  return `${time.toFixed(1)} s`;
+  return `${utils.formatNumber(time, 1)} s`;
 }
 
 // Parse DNSSEC status

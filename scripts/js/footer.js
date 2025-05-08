@@ -44,7 +44,7 @@ function formatMemorySize(sizeInKB) {
   const size = sizeInKB / (isGB ? 1024 * 1024 : 1024);
   const unit = isGB ? "GB" : "MB";
 
-  return { value: size.toFixed(1), unit };
+  return { value: utils.formatNumber(size, 1), unit };
 }
 
 // Format system uptime information
@@ -231,10 +231,7 @@ function updateQueryFrequency(frequency) {
   // - 1 fraction digit for frequencies between 1 and 10
   // - 2 fraction digits for frequencies < 1
   const fractionDigits = freq > 10 ? 0 : freq < 1 ? 2 : 1;
-  const freqFormatted = utils.formatNumber(freq, {
-    minimumFractionDigits: fractionDigits,
-    maximumFractionDigits: fractionDigits,
-  });
+  const freqFormatted = utils.formatNumber(freq, fractionDigits);
 
   const queryFreqElem = document.getElementById("query_frequency");
 
@@ -333,7 +330,7 @@ function updateGeneralSystemInfo(system) {
 
   cpuEl.innerHTML =
     `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load:&nbsp;` +
-    `${load1.toFixed(2)}&nbsp;/&nbsp;${load5.toFixed(2)}&nbsp;/&nbsp;${load15.toFixed(2)}`;
+    `${utils.formatNumber(load1, 2)}&nbsp;/&nbsp;${utils.formatNumber(load5, 2)}&nbsp;/&nbsp;${utils.formatNumber(load15, 2)}`;
   cpuEl.title =
     "Load averages for the past 1, 5, and 15 minutes\non a system with " +
     `${cores} ${utils.pluralize(cores, "core")} running ${system.procs} ` +
@@ -644,7 +641,7 @@ function addAdvancedInfo() {
   const totalTime = 1000 * (Number.parseFloat(endTime) - Number.parseFloat(startTime));
   const iconClasses = isTLS ? "fa-lock text-green" : "fa-lock-open";
   const title = `Your connection is ${isTLS ? "" : "NOT "}end-to-end encrypted (TLS/SSL)`;
-  const renderTime = totalTime > 0.5 ? totalTime.toFixed(1) : totalTime.toFixed(3);
+  const renderTime = utils.formatNumber(totalTime, totalTime > 0.5 ? 1 : 3);
 
   advancedInfoTarget.innerHTML =
     `Client: <i class="fa-solid fa-fw mr-1 ${iconClasses}" title="${title}"></i>` +

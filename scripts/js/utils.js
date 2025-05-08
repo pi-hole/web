@@ -408,6 +408,15 @@ function addFromQueryLog(domain, list) {
 }
 
 function formatNumber(value, options = {}) {
+  // If options is a number, use it for both min and max fraction digits
+  if (typeof options === "number") {
+    options = {
+      style: "decimal",
+      minimumFractionDigits: options, // We could try 0 which is the default
+      maximumFractionDigits: options,
+    };
+  }
+
   return Number.isNaN(value) ? "N/A" : new Intl.NumberFormat(undefined, options).format(value);
 }
 
