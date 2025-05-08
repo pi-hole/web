@@ -7,7 +7,7 @@
 
 /*
   global moment:false, Chart:false, htmlLegendPlugin:false, customTooltips:false,
-  doughnutTooltip:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false
+  doughnutTooltip:false, apiFailure: false, NProgress:false, WaitMe:false
 */
 
 "use strict";
@@ -324,89 +324,6 @@ function stateLoadCallback(itemName) {
   return data;
 }
 
-function addFromQueryLog(domain, list) {
-  const alertModal = $("#alertModal");
-
-  // Exit the function here if the Modal is already shown (multiple running interlock)
-  if (alertModal.css("display") !== "none") return;
-
-  const alertProcessing = alertModal.find(".alertProcessing");
-  const alertSuccess = alertModal.find(".alertSuccess");
-  const alertFailure = alertModal.find(".alertFailure");
-  const alNetworkErr = alertFailure.find("#alertNetworkError");
-  const alertCustomError = alertFailure.find("#alertCustomError");
-  const alertList = "#alertList";
-  const alertDomain = "#alertDomain";
-
-  const listtype = list === "allow" ? "Allowlist" : "Denylist";
-
-  alertProcessing.children(alertDomain).text(domain);
-  alertProcessing.children(alertList).text(listtype);
-  alertModal.modal("show");
-
-  // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", () => {
-    $.ajax({
-      url: `${document.body.dataset.apiurl}/domains/${list}/exact`,
-      method: "post",
-      dataType: "json",
-      processData: false,
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify({
-        domain,
-        comment: "Added from Query Log",
-        type: list,
-        kind: "exact",
-      }),
-      success(response) {
-        alertProcessing.hide();
-        if (Object.hasOwn(response, "domains") && response.domains.length > 0) {
-          // Success
-          alertSuccess.children(alertDomain).text(domain);
-          alertSuccess.children(alertList).text(listtype);
-          alertSuccess.fadeIn(1000);
-          // Update domains counter in the menu
-          updateFtlInfo();
-          setTimeout(() => {
-            alertModal.modal("hide");
-          }, 2000);
-        } else {
-          // Failure
-          alNetworkErr.hide();
-          alertCustomError.html(response.message);
-          alertFailure.fadeIn(1000);
-          setTimeout(() => {
-            alertModal.modal("hide");
-          }, 10_000);
-        }
-      },
-      error() {
-        // Network Error
-        alertProcessing.hide();
-        alNetworkErr.show();
-        alertFailure.fadeIn(1000);
-        setTimeout(() => {
-          alertModal.modal("hide");
-        }, 8000);
-      },
-    });
-  });
-
-  // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", () => {
-    alertProcessing.show();
-    alertSuccess.add(alertFailure).hide();
-    alertProcessing
-      .add(alertSuccess)
-      .children(alertDomain)
-      .html("")
-      .end()
-      .children(alertList)
-      .html("");
-    alertCustomError.html("");
-  });
-}
-
 function formatNumber(value, options = {}) {
   // If options is a number, use it for both min and max fraction digits
   if (typeof options === "number") {
@@ -480,15 +397,6 @@ function checkMessages() {
 
       apiFailure(error);
     });
-}
-
-function doLogout(url) {
-  fetchFactory(`${document.body.dataset.apiurl}/auth`, {
-    method: "DELETE",
-    json: false,
-  }).finally(() => {
-    globalThis.location = url;
-  });
 }
 
 function renderTimestamp(data, type) {
@@ -847,17 +755,15 @@ globalThis.utils = (function () {
     enableAll,
     validateIPv4CIDR,
     validateIPv6CIDR,
+    validateMAC,
+    validateHostname,
     setBsSelectDefaults,
     stateSaveCallback,
     stateLoadCallback,
-    validateMAC,
-    validateHostname,
-    addFromQueryLog,
     formatNumber,
     toPercent,
     colorBar,
     checkMessages,
-    doLogout,
     renderTimestamp,
     renderTimespan,
     changeTableButtonStates,

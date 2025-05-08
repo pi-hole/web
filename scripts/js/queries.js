@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, REFRESH_INTERVAL:false */
+/* global moment:false, utils:false, REFRESH_INTERVAL:false, updateFtlInfo: false */
 
 "use strict";
 
@@ -620,9 +620,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Process based on button type
       if (button.classList.contains("btn-whitelist")) {
-        utils.addFromQueryLog(data.domain, "allow");
+        addFromQueryLog(data.domain, "allow");
       } else if (button.classList.contains("btn-blacklist")) {
-        utils.addFromQueryLog(data.domain, "deny");
+        addFromQueryLog(data.domain, "deny");
       }
 
       return;
@@ -674,4 +674,87 @@ function refreshTable() {
   filters.until = until;
   const apiUrl = getApiUrl(filters);
   table.ajax.url(apiUrl).draw();
+}
+
+function addFromQueryLog(domain, list) {
+  const alertModal = $("#alertModal");
+
+  // Exit the function here if the Modal is already shown (multiple running interlock)
+  if (alertModal.css("display") !== "none") return;
+
+  const alertProcessing = alertModal.find(".alertProcessing");
+  const alertSuccess = alertModal.find(".alertSuccess");
+  const alertFailure = alertModal.find(".alertFailure");
+  const alNetworkErr = alertFailure.find("#alertNetworkError");
+  const alertCustomError = alertFailure.find("#alertCustomError");
+  const alertList = "#alertList";
+  const alertDomain = "#alertDomain";
+
+  const listtype = list === "allow" ? "Allowlist" : "Denylist";
+
+  alertProcessing.children(alertDomain).text(domain);
+  alertProcessing.children(alertList).text(listtype);
+  alertModal.modal("show");
+
+  // add Domain to List after Modal has faded in
+  alertModal.one("shown.bs.modal", () => {
+    $.ajax({
+      url: `${document.body.dataset.apiurl}/domains/${list}/exact`,
+      method: "post",
+      dataType: "json",
+      processData: false,
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({
+        domain,
+        comment: "Added from Query Log",
+        type: list,
+        kind: "exact",
+      }),
+      success(response) {
+        alertProcessing.hide();
+        if (Object.hasOwn(response, "domains") && response.domains.length > 0) {
+          // Success
+          alertSuccess.children(alertDomain).text(domain);
+          alertSuccess.children(alertList).text(listtype);
+          alertSuccess.fadeIn(1000);
+          // Update domains counter in the menu
+          updateFtlInfo();
+          setTimeout(() => {
+            alertModal.modal("hide");
+          }, 2000);
+        } else {
+          // Failure
+          alNetworkErr.hide();
+          alertCustomError.html(response.message);
+          alertFailure.fadeIn(1000);
+          setTimeout(() => {
+            alertModal.modal("hide");
+          }, 10_000);
+        }
+      },
+      error() {
+        // Network Error
+        alertProcessing.hide();
+        alNetworkErr.show();
+        alertFailure.fadeIn(1000);
+        setTimeout(() => {
+          alertModal.modal("hide");
+        }, 8000);
+      },
+    });
+  });
+
+  // Reset Modal after it has faded out
+  alertModal.one("hidden.bs.modal", () => {
+    alertProcessing.show();
+    alertSuccess.add(alertFailure).hide();
+    alertProcessing
+      .add(alertSuccess)
+      .children(alertDomain)
+      .html("")
+      .end()
+      .children(alertList)
+      .html("");
+    alertCustomError.html("");
+  });
 }

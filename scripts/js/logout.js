@@ -17,6 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   logoutButton.addEventListener("click", event => {
     event.preventDefault();
-    utils.doLogout(logoutUrl);
+    doLogout(logoutUrl);
   });
 });
+
+function doLogout(url) {
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/auth`, {
+      method: "DELETE",
+      json: false,
+    })
+    .finally(() => {
+      globalThis.location = url;
+    });
+}
