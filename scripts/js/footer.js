@@ -38,6 +38,23 @@ function secondsTimeSpanToHMS(seconds) {
   return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+// Format memory size with appropriate unit
+function formatMemorySize(sizeInKB) {
+  const isGB = sizeInKB >= 1024 * 1024;
+  const size = sizeInKB / (isGB ? 1024 * 1024 : 1024);
+  const unit = isGB ? "GB" : "MB";
+
+  return { value: size.toFixed(1), unit };
+}
+
+// Format system uptime information
+function formatUptime(uptimeSeconds) {
+  const startDate = moment().subtract(uptimeSeconds, "seconds").format(HUMAN_DATE_FMT);
+  const humanUptime = moment.duration(1000 * uptimeSeconds).humanize();
+
+  return { startDate, humanUptime };
+}
+
 function piholeChanged(blocking, timer = null) {
   const status = document.getElementById("status");
   const enableElement = document.getElementById("pihole-enable");
@@ -227,138 +244,149 @@ function updateQueryFrequency(frequency) {
 
 function updateFtlInfo() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/ftl`).then(({ ftl }) => {
-    const { database } = ftl;
-    document.getElementById("num_groups").textContent = utils.formatNumber(database.groups);
-    document.getElementById("num_clients").textContent = utils.formatNumber(database.clients);
-    document.getElementById("num_lists").textContent = utils.formatNumber(database.lists);
-    document.getElementById("num_gravity").textContent = utils.formatNumber(database.gravity);
-
-    const numAllowedEl = document.getElementById("num_allowed");
-    numAllowedEl.textContent = utils.formatNumber(
-      database.domains.allowed + database.regex.allowed
-    );
-    numAllowedEl.title =
-      `Allowed: ${utils.formatNumber(database.domains.allowed)} exact domains and ` +
-      `${utils.formatNumber(database.regex.allowed)} regex filters are enabled`;
-
-    const numDeniedEl = document.getElementById("num_denied");
-    numDeniedEl.textContent = utils.formatNumber(database.domains.denied + database.regex.denied);
-    numDeniedEl.title =
-      `Denied: ${utils.formatNumber(database.domains.denied)} exact domains and ` +
-      `${utils.formatNumber(database.regex.denied)} regex filters are enabled`;
-    updateQueryFrequency(ftl.query_frequency);
-
-    const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
-    if (sysInfoCpuFtl !== null) {
-      sysInfoCpuFtl.textContent = `(${utils.toPercent(ftl["%cpu"], 1)} used by FTL)`;
-    }
-
-    const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
-    if (sysInfoRamFtl !== null) {
-      sysInfoRamFtl.textContent = `(${utils.toPercent(ftl["%mem"], 1)} used by FTL)`;
-    }
-
-    const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
-    if (sysInfoPidFtl !== null) {
-      sysInfoPidFtl.textContent = ftl.pid;
-    }
-
-    const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
-    if (sysInfoUptimeFtl !== null) {
-      const startDate = moment().subtract(ftl.uptime, "milliseconds").format(HUMAN_DATE_FMT);
-      sysInfoUptimeFtl.textContent = startDate;
-    }
-
-    const destructiveActions = document.querySelectorAll(".destructive_action");
-    for (const element of destructiveActions) {
-      element.disabled = !ftl.allow_destructive;
-      element.title = ftl.allow_destructive
-        ? ""
-        : "Destructive actions are disabled by a config setting";
-    }
+    updateGeneralFtlInfo(ftl);
+    updateFtlSysinfoElements(ftl);
 
     clearTimeout(ftlinfoTimer);
     ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
   });
 }
 
+function updateGeneralFtlInfo(ftl) {
+  const { domains, regex, groups, clients, lists, gravity } = ftl.database;
+
+  document.getElementById("num_groups").textContent = utils.formatNumber(groups);
+  document.getElementById("num_clients").textContent = utils.formatNumber(clients);
+  document.getElementById("num_lists").textContent = utils.formatNumber(lists);
+  document.getElementById("num_gravity").textContent = utils.formatNumber(gravity);
+
+  const allowedEl = document.getElementById("num_allowed");
+  allowedEl.textContent = utils.formatNumber(domains.allowed + regex.allowed);
+  allowedEl.title =
+    `Allowed: ${utils.formatNumber(domains.allowed)} exact domains and ` +
+    `${utils.formatNumber(regex.allowed)} regex filters are enabled`;
+
+  const deniedEl = document.getElementById("num_denied");
+  deniedEl.textContent = utils.formatNumber(domains.denied + regex.denied);
+  deniedEl.title =
+    `Denied: ${utils.formatNumber(domains.denied)} exact domains and ` +
+    `${utils.formatNumber(regex.denied)} regex filters are enabled`;
+
+  updateQueryFrequency(ftl.query_frequency);
+}
+
+function updateFtlSysinfoElements(ftl) {
+  const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
+  if (sysInfoCpuFtl !== null) {
+    sysInfoCpuFtl.textContent = `(${utils.toPercent(ftl["%cpu"], 1)} used by FTL)`;
+  }
+
+  const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
+  if (sysInfoRamFtl !== null) {
+    sysInfoRamFtl.textContent = `(${utils.toPercent(ftl["%mem"], 1)} used by FTL)`;
+  }
+
+  const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
+  if (sysInfoPidFtl !== null) {
+    sysInfoPidFtl.textContent = ftl.pid;
+  }
+
+  const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
+  if (sysInfoUptimeFtl !== null) {
+    const startDate = moment().subtract(ftl.uptime, "milliseconds").format(HUMAN_DATE_FMT);
+    sysInfoUptimeFtl.textContent = startDate;
+  }
+
+  const destructiveActions = document.querySelectorAll(".destructive_action");
+  for (const element of destructiveActions) {
+    if (!ftl.allow_destructive) {
+      element.disabled = true;
+      element.title = "Destructive actions are disabled by a config setting";
+    } else {
+      element.removeAttribute("disabled");
+      element.removeAttribute("title");
+    }
+  }
+}
+
+function updateGeneralSystemInfo(system) {
+  const memoryEl = document.getElementById("memory");
+  const cpuEl = document.getElementById("cpu");
+  const statusEl = document.getElementById("status");
+
+  const percentRAM = system.memory.ram["%used"];
+  const percentSwap = system.memory.swap["%used"];
+  const ramColor = percentRAM > 75 ? "text-red" : "text-green-light";
+  const swapUsage = system.memory.swap.total > 0 ? utils.toPercent(percentSwap, 1) : "N/A";
+  const { value, unit } = formatMemorySize(system.memory.ram.total);
+
+  memoryEl.innerHTML =
+    `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>` +
+    `Memory usage:&nbsp;${utils.toPercent(percentRAM, 1)}`;
+  memoryEl.title = `Total memory: ${value} ${unit}, Swap usage: ${swapUsage}`;
+
+  const cores = system.cpu.nprocs;
+  const [load1, load5, load15] = system.cpu.load.raw;
+  const isHighLoad = load1 > cores;
+  const loadColor = isHighLoad ? "text-red" : "text-green-light";
+  const loadWarning = isHighLoad ? " (load is higher than the number of cores)" : "";
+
+  cpuEl.innerHTML =
+    `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load:&nbsp;` +
+    `${load1.toFixed(2)}&nbsp;/&nbsp;${load5.toFixed(2)}&nbsp;/&nbsp;${load15.toFixed(2)}`;
+  cpuEl.title =
+    "Load averages for the past 1, 5, and 15 minutes\non a system with " +
+    `${cores} ${utils.pluralize(cores, "core")} running ${system.procs} ` +
+    `${utils.pluralize(system.procs, "process", "processes")}${loadWarning}`;
+
+  const { startDate, humanUptime } = formatUptime(system.uptime);
+  statusEl.title = `System uptime: ${humanUptime} (running since ${startDate})`;
+}
+
+function updateSysinfoElements(system) {
+  const sysInfoRam = document.getElementById("sysinfo-memory-ram");
+  const sysInfoSwapEl = document.getElementById("sysinfo-memory-swap");
+  const sysInfoCpu = document.getElementById("sysinfo-cpu");
+  const sysInfoUptime = document.getElementById("sysinfo-uptime");
+  const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
+
+  if (sysInfoRam !== null) {
+    const percentRAM = system.memory.ram["%used"];
+    const { value, unit } = formatMemorySize(system.memory.ram.total);
+    sysInfoRam.textContent = `${utils.toPercent(percentRAM, 1)} of ${value} ${unit} is used`;
+  }
+
+  if (sysInfoSwapEl !== null) {
+    if (system.memory.swap.total > 0) {
+      const percentSwap = system.memory.swap["%used"];
+      const { value, unit } = formatMemorySize(system.memory.swap.total);
+      sysInfoSwapEl.textContent = `${utils.toPercent(percentSwap, 1)} of ${value} ${unit} is used`;
+    } else {
+      sysInfoSwapEl.textContent = "No swap space available";
+    }
+  }
+
+  if (sysInfoCpu !== null) {
+    const cores = system.cpu.nprocs;
+    sysInfoCpu.textContent =
+      `${utils.toPercent(system.cpu["%cpu"], 1)} on ${cores} ${utils.pluralize(cores, "core")} ` +
+      `running ${system.procs} ${utils.pluralize(system.procs, "process", "processes")}`;
+  }
+
+  if (sysInfoUptime !== null) {
+    const { startDate, humanUptime } = formatUptime(system.uptime);
+    sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
+
+    if (sysInfoSystemOverlay !== null) {
+      sysInfoSystemOverlay.classList.add("d-none");
+    }
+  }
+}
+
 function updateSystemInfo() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/system`).then(({ system }) => {
-    const percentRAM = system.memory.ram["%used"];
-    const percentSwap = system.memory.swap["%used"];
-    let totalRAM = system.memory.ram.total / 1024;
-    let totalRAMUnit = "MB";
-    if (totalRAM > 1024) {
-      totalRAM /= 1024;
-      totalRAMUnit = "GB";
-    }
-
-    let totalSwap = system.memory.swap.total / 1024;
-    let totalSwapUnit = "MB";
-    if (totalSwap > 1024) {
-      totalSwap /= 1024;
-      totalSwapUnit = "GB";
-    }
-
-    const swapUsage =
-      system.memory.swap.total > 0
-        ? `${utils.toPercent((100 * system.memory.swap.used) / system.memory.swap.total, 1)}`
-        : "N/A";
-    const ramColor = percentRAM > 75 ? "text-red" : "text-green-light";
-
-    const memoryEl = document.getElementById("memory");
-    const sysInfoRam = document.getElementById("sysinfo-memory-ram");
-    const sysInfoSwapEl = document.getElementById("sysinfo-memory-swap");
-    const cpuEl = document.getElementById("cpu");
-    const sysInfoCpu = document.getElementById("sysinfo-cpu");
-    const statusEl = document.getElementById("status");
-    const sysInfoUptime = document.getElementById("sysinfo-uptime");
-    const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
-
-    memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>Memory usage:&nbsp;${utils.toPercent(percentRAM, 1)}`;
-    memoryEl.title = `Total memory: ${totalRAM.toFixed(1)} ${totalRAMUnit}, Swap usage: ${swapUsage}`;
-
-    if (sysInfoRam !== null) {
-      sysInfoRam.textContent = `${utils.toPercent(percentRAM, 1)} of ${totalRAM.toFixed(1)} ${totalRAMUnit} is used`;
-    }
-
-    if (sysInfoSwapEl !== null) {
-      sysInfoSwapEl.textContent =
-        system.memory.swap.total > 0
-          ? `${utils.toPercent(percentSwap, 1)} of ${totalSwap.toFixed(1)} ${totalSwapUnit} is used`
-          : "No swap space available";
-    }
-
-    const cores = system.cpu.nprocs;
-    const [load1, load5, load15] = system.cpu.load.raw;
-    const isHighLoad = load1 > cores;
-    const loadColor = isHighLoad ? "text-red" : "text-green-light";
-    const loadWarning = isHighLoad ? " (load is higher than the number of cores)" : "";
-
-    cpuEl.innerHTML =
-      `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load:&nbsp;` +
-      `${load1.toFixed(2)}&nbsp;/&nbsp;${load5.toFixed(2)}&nbsp;/&nbsp;${load15.toFixed(2)}`;
-    cpuEl.title =
-      "Load averages for the past 1, 5, and 15 minutes\non a system with " +
-      `${cores} ${utils.pluralize(cores, "core")} running ${system.procs} ` +
-      `${utils.pluralize(system.procs, "process", "processes")}${loadWarning}`;
-
-    if (sysInfoCpu !== null) {
-      sysInfoCpu.textContent =
-        `${utils.toPercent(system.cpu["%cpu"], 1)} on ${cores} ${utils.pluralize(cores, "core")} ` +
-        `running ${system.procs} ${utils.pluralize(system.procs, "process", "processes")}`;
-    }
-
-    const startDate = moment().subtract(system.uptime, "seconds").format(HUMAN_DATE_FMT);
-    const humanUptime = moment.duration(1000 * system.uptime).humanize();
-    statusEl.title = `System uptime: ${humanUptime} (running since ${startDate})`;
-
-    if (sysInfoUptime !== null) {
-      sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
-      if (sysInfoSystemOverlay !== null) {
-        sysInfoSystemOverlay.style.display = "none";
-      }
-    }
+    updateGeneralSystemInfo(system);
+    updateSysinfoElements(system);
 
     clearTimeout(systemTimer);
     systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
