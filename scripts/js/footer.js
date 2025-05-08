@@ -507,34 +507,6 @@ function updateVersionInfo() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (!globalThis._isLoginPage) updateInfo();
-
-  const enableTimer = document.getElementById("enableTimer");
-  if (enableTimer) {
-    const target = new Date(Number.parseInt(enableTimer.textContent, 10));
-    const seconds = Math.round((target.getTime() - Date.now()) / 1000);
-    if (seconds > 0) {
-      setTimeout(countDown, 100);
-    }
-  }
-
-  const cookieInfoElement = document.getElementById("cookieInfo");
-  if (!testCookies() && cookieInfoElement) {
-    cookieInfoElement.classList.remove("d-none");
-  }
-
-  // Apply icheckbox/iradio style
-  applyCheckboxRadioStyle();
-
-  if (!globalThis._isLoginPage) {
-    // Run check immediately after page loading ...
-    utils.checkMessages();
-    // ... and then periodically
-    utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
-  }
-});
-
 // Handle Enable/Disable buttons
 function setupEnableDisableButtons(buttonId, action, duration, preCallback = null) {
   const button = document.getElementById(buttonId);
@@ -664,6 +636,32 @@ function addAdvancedInfo() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!globalThis._isLoginPage) updateInfo();
+
+  const enableTimer = document.getElementById("enableTimer");
+  if (enableTimer) {
+    const target = new Date(Number.parseInt(enableTimer.textContent, 10));
+    const seconds = Math.round((target.getTime() - Date.now()) / 1000);
+    if (seconds > 0) {
+      setTimeout(countDown, 100);
+    }
+  }
+
+  const cookieInfoElement = document.getElementById("cookieInfo");
+  if (!testCookies() && cookieInfoElement) {
+    cookieInfoElement.classList.remove("d-none");
+  }
+
+  // Apply icheckbox/iradio style
+  applyCheckboxRadioStyle();
+
+  if (!globalThis._isLoginPage) {
+    // Run check immediately after page loading ...
+    utils.checkMessages();
+    // ... and then periodically
+    utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
+  }
+
   initSettingsLevel();
   addAdvancedInfo();
 });
