@@ -23,10 +23,7 @@ Chart.defaults.set("plugins.deferred", {
 
 function updateCachePie(data) {
   // Compute total number of cache entries
-  cacheEntries = 0;
-  for (const item of Object.keys(data)) {
-    cacheEntries += data[item].valid + data[item].stale;
-  }
+  cacheEntries = Object.values(data).reduce((sum, item) => sum + (item.valid + item.stale), 0);
 
   // Create sorted chart data object with OTHER always last
   const chartData = Object.fromEntries(

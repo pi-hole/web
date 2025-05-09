@@ -181,12 +181,9 @@ const processors = {
     const values = [];
     const colors = [];
     const labels = [];
-    let sum = 0;
 
     // Compute total number of queries
-    for (const value of Object.values(data.types)) {
-      sum += value;
-    }
+    const sum = Object.values(data.types).reduce((total, value) => total + value, 0);
 
     // Fill chart with data (only include query types which appeared recently)
     for (const [i, [item, value]] of Object.entries(data.types).entries()) {
@@ -206,7 +203,6 @@ const processors = {
     const values = [];
     const colors = [];
     const labels = [];
-    let sum = 0;
 
     // Clear the upstreams object
     for (const key of Object.keys(upstreams)) {
@@ -214,9 +210,7 @@ const processors = {
     }
 
     // Compute total number of queries
-    for (const item of data.upstreams) {
-      sum += item.count;
-    }
+    const sum = data.upstreams.reduce((total, item) => total + item.count, 0);
 
     // Collect values and colors
     for (const [i, item] of data.upstreams.entries()) {
@@ -468,13 +462,11 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
   if (skipZero && data === 0) return;
 
-  // Sum all queries for the current time by iterating over all values in the current dataset
-  let sum = 0;
-  for (const value of Object.values(tooltipLabel.parsed._stacks.y)) {
-    if (value === undefined) continue;
-    const num = Number.parseInt(value, 10);
-    if (num) sum += num;
-  }
+  // Sum all queries for the current time
+  const sum = Object.values(tooltipLabel.parsed._stacks.y).reduce(
+    (total, value) => total + (Number.parseInt(value, 10) || 0),
+    0
+  );
 
   const percentage = sum > 0 ? (100 * data) / sum : 0;
 
