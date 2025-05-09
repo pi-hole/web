@@ -109,31 +109,6 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
 
-    <!-- TODO: Why is this commented out?
-    <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Query Log</h3>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div>
-                            <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then ?>checked<? end ?>>
-                            <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
-                            <p class="help-block"><span class="text-red">This will show all permitted domain entries in the query log.</span></p>
-                        </div>
-                        <div>
-                            <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then ?>checked<? end ?>>
-                            <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
-                            <p class="help-block"><span class="text-red">This will show all blocked domain entries in the query log.</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>-->
-
     <div class="col-md-12 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">

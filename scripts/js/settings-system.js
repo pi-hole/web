@@ -106,18 +106,6 @@ function setMetrics(data, prefix) {
   for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
       cacheData[val.name] = val.count;
-
-      // Create table row for each DNS cache entry (if table exists)
-      const dnsTableElement = document.getElementById("dns-cache-table");
-      if (dnsTableElement) {
-        const name =
-          val.name !== "OTHER"
-            ? `Valid ${val.name !== null ? val.name : `TYPE ${val.type}`}`
-            : "Other valid";
-        const tr = `<tr><th>${name} records in cache:</th><td>${val.count}</td></tr>`;
-        // Append row to DNS cache table
-        dnsTableElement.insertAdjacentHTML("beforeend", tr);
-      }
     } else if (typeof val === "object") {
       setMetrics(val, `${prefix + key}-`);
     } else if (prefix === "sysinfo-dns-replies-" && data.sum !== 0) {
@@ -148,11 +136,6 @@ function updateMetrics() {
     url: `${document.body.dataset.apiurl}/info/metrics`,
   })
     .done(({ metrics }) => {
-      const dnsTableElement = document.getElementById("dns-cache-table");
-      if (dnsTableElement) {
-        dnsTableElement.innerHTML = "";
-      }
-
       // Set global cache size
       cacheSize = metrics.dns.cache.size;
 
