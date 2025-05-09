@@ -237,15 +237,15 @@ function generateRow(topic, key, value) {
   }
 
   // else: we have a setting we can display
-  const boxDescription = utils.escapeHtml(value.description).replaceAll("\n", "<br>");
-  const box =
-    `<div class="box settings-box">` +
-    `  <div class="box-header with-border">` +
-    `    <h3 class="box-title" data-key="${key}" data-modified="${value.modified ? "true" : "false"}">${key}${boxIcons(value)}</h3>` +
-    `  </div>` +
-    `  <div class="box-body">${boxDescription}</div>` +
-    `  <div class="box-footer">${valueDetails(key, value)}</div>` +
-    "</div> ";
+  const box = `
+  <div class="box settings-box">
+    <div class="box-header with-border">
+      <h3 class="box-title" data-key="${key}" data-modified="${value.modified}">${key}${boxIcons(value)}</h3>
+    </div>
+    <div class="box-body">${utils.escapeHtml(value.description).replaceAll("\n", "<br>")}</div>
+    <div class="box-footer">${valueDetails(key, value)}</div>
+  </div>
+  `;
 
   const [topKey] = key.split(".");
   const elem = document.querySelector(`#advanced-content-${topKey}-flex`);
@@ -259,21 +259,29 @@ function createDynamicConfigTabs() {
     .done(data => {
       // Create the tabs for the advanced dynamic config topics
       for (const topic of Object.values(data.topics)) {
-        $("#advanced-settings-tabs").append(`
+        const tabsContainer = document.getElementById("advanced-settings-tabs");
+        tabsContainer.insertAdjacentHTML(
+          "beforeend",
+          `
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
             <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
             <div class="row" id="advanced-content-${topic.name}-body">
               <div class="col-xs-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
             </div>
           </div>
-        `);
+        `
+        );
 
         // Dynamically create the settings menu
-        $("#advanced-settings-menu ul").append(`
+        const menuUl = document.querySelector("#advanced-settings-menu ul");
+        menuUl.insertAdjacentHTML(
+          "beforeend",
+          `
           <li role="presentation">
             <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="tab" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
-        `);
+        `
+        );
       }
 
       // Dynamically fill the tabs with config topics
@@ -281,18 +289,16 @@ function createDynamicConfigTabs() {
         generateRow(topic, topic, value);
       }
 
-      $("#advanced-overlay").hide();
+      document.getElementById("advanced-overlay").classList.add("d-none");
 
-      // Select the first tab and show the content, or activate tab from URL hash if it exists
+      // Show the first tab from URL hash if it exists
       const hash = globalThis.location.hash;
-      if (hash && $(hash).length > 0 && $(hash).is(".tab-pane")) {
-        $("#advanced-settings-menu ul li").removeClass("active");
-        $("#advanced-settings-tabs > div").removeClass("active in");
-        $(`a[href='${hash}']`).parent().addClass("active");
-        $(hash).addClass("active in");
+      const hashElement = hash ? document.querySelector(hash) : null;
+      if (hash && hashElement && hashElement.classList.contains("tab-pane")) {
+        $(`a[href="${hash}"]`).tab("show");
       } else {
-        $("#advanced-settings-menu ul li:first-child").addClass("active");
-        $("#advanced-settings-tabs > div:first-child").addClass("active in");
+        // No valid hash, activate the first tab
+        $("#advanced-settings-menu ul li:first-child a").tab("show");
       }
 
       applyCheckboxRadioStyle();
@@ -304,16 +310,19 @@ function createDynamicConfigTabs() {
 }
 
 function initOnlyChanged() {
-  const elem = $("#only-changed");
+  const elem = document.getElementById("only-changed");
+  if (!elem) return;
 
   // Restore settings level from local storage (if available) or default to "false"
   if (localStorage.getItem("only-changed") === null) {
     localStorage.setItem("only-changed", "false");
   }
 
-  elem.prop("checked", localStorage.getItem("only-changed") === "true");
+  elem.checked = localStorage.getItem("only-changed") === "true";
 
-  elem.bootstrapToggle({
+  const $elem = $(elem);
+
+  $elem.bootstrapToggle({
     on: "Modified settings",
     off: "All settings",
     onstyle: "primary",
@@ -322,41 +331,54 @@ function initOnlyChanged() {
     width: "180px",
   });
 
-  elem.on("change", function () {
-    localStorage.setItem("only-changed", $(this).prop("checked") ? "true" : "false");
+  $elem.on("change", event => {
+    localStorage.setItem("only-changed", event.currentTarget.checked ? "true" : "false");
     applyOnlyChanged();
   });
 
-  elem.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
-  elem.trigger("change");
+  $elem.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
+  $elem.trigger("change");
 }
 
 function applyOnlyChanged() {
   // Store current hash/active tab before making changes
   const currentHash = globalThis.location.hash;
-  const hasValidHash = currentHash && $(currentHash).length > 0 && $(currentHash).is(".tab-pane");
+  const hashElement = currentHash ? document.querySelector(currentHash) : null;
+  const hasValidHash = hashElement && hashElement.classList.contains("tab-pane");
 
   if (localStorage.getItem("only-changed") === "true") {
     // Show only modified settings (hide tabs menu and empty tabs).
 
     // Hide the tabs menu
-    $("#advanced-settings-menu").hide();
+    document.getElementById("advanced-settings-menu").classList.add("d-none");
 
     // Show all tabs that have modified settings
-    $("#advanced-settings-tabs > .tab-pane").addClass("in active");
-    $("#advanced-settings-tabs > .tab-pane:not(:has(h3[data-modified='true']))").removeClass(
-      "in active"
-    );
+    const tabPanes = document.querySelectorAll("#advanced-settings-tabs > .tab-pane");
+    for (const tabPane of tabPanes) {
+      tabPane.classList.add("in", "active");
+      if (!tabPane.querySelector("h3[data-modified='true']")) {
+        tabPane.classList.remove("in", "active");
+      }
+    }
 
     // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
-    $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
+    for (const boxTitle of document.querySelectorAll(".box-title[data-key]")) {
+      if (boxTitle.dataset.modified !== "true") {
+        boxTitle.closest(".box").classList.add("d-none");
+      }
+    }
   } else {
     // Show the tabs menu
-    $("#advanced-settings-menu").show();
+    document.getElementById("advanced-settings-menu").classList.remove("d-none");
 
     // Reset all tab states
-    $("#advanced-settings-menu ul li").removeClass("active");
-    $("#advanced-settings-tabs > .tab-pane").removeClass("in active");
+    for (const li of document.querySelectorAll("#advanced-settings-menu ul li")) {
+      li.classList.remove("active");
+    }
+
+    for (const tabPane of document.querySelectorAll("#advanced-settings-tabs > .tab-pane")) {
+      tabPane.classList.remove("in", "active");
+    }
 
     // If we have a valid hash in the URL, activate that tab
     if (hasValidHash) {
@@ -367,7 +389,9 @@ function applyOnlyChanged() {
     }
 
     // Show all boxes with data-key attribute
-    $(".box-title[data-key]").closest(".box").show();
+    for (const boxTitle of document.querySelectorAll(".box-title[data-key]")) {
+      boxTitle.closest(".box").classList.remove("d-none");
+    }
   }
 }
 
