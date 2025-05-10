@@ -5,7 +5,7 @@
   --sidebar-width: 230px;
   --gradient-pos: 304px;
   --primary-color: #48f;
-  --text-color: #9ab;
+  --text-color: #abc;
   --net-never-color: #000;
   --net-recent-color: #055;
   --net-old-color: #125;
@@ -35,7 +35,7 @@ html {
 
 body {
   font-size: 17px;
-  color: #9ab;
+  color: var(--text-color);
   background: #000;
   font-family:
     Antonio, Oswald, "Myriad Pro Cond", "Roboto Condensed", "Futura Condensed",
@@ -101,7 +101,7 @@ pre {
   line-height: 1em;
   font-size: 1em;
   color: #000;
-  background-color: #9ab;
+  background-color: var(--text-color);
   border-radius: 4px;
 }
 
@@ -127,7 +127,7 @@ pre {
   padding: 10px 3px;
   border-radius: 12px;
   background: #181818;
-  color: #9ab;
+  color: var(--text-color);
 }
 
 td code {
@@ -136,7 +136,7 @@ td code {
 
 kbd {
   color: #000;
-  background-color: #9ab;
+  background-color: var(--text-color);
   box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.5);
   vertical-align: middle;
 }
@@ -176,7 +176,7 @@ th {
 }
 
 .btn-default {
-  background-color: #9ab;
+  background-color: var(--text-color);
   border: none;
 }
 
@@ -189,13 +189,24 @@ th {
   text-transform: uppercase;
 }
 
+.btn-app {
+  padding: 15px 5px;
+  text-align: center;
+  margin: 0;
+  background: #48f;
+}
+
+.btn-app:hover {
+  background: #fff;
+}
+
 .btn-xs {
-  padding: 1px 5px;
+  padding: 0 5px 2px;
   border-radius: 5px;
 }
 
 .btn.btn-box-tool {
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .btn.btn-box-tool:hover,
@@ -411,7 +422,7 @@ p.login-box-msg,
 
 .select2 .select2-selection {
   background-color: #000;
-  color: #9ab;
+  color: var(--text-color);
   border: 2px solid #567;
   border-radius: 8px;
 }
@@ -424,7 +435,7 @@ p.login-box-msg,
 }
 
 .select2-dropdown {
-  background-color: #9ab;
+  background-color: var(--text-color);
   color: #000;
   border: none;
 }
@@ -520,15 +531,31 @@ p.login-box-msg,
   margin: 5px 0;
   padding: 0;
   overflow: hidden;
-  color: #9ab;
+  color: var(--text-color);
   background: #111111 !important;
   border: 3px solid #4488ff !important;
   border-radius: 8px;
   box-shadow: 0 0 0 2000vmax rgba(0, 0, 0, 0.6);
 }
 
-.dropdown-menu > li > a:hover {
-  color: #06c;
+.dropdown-menu {
+  background: none;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:active,
+.dropdown-menu > li > a:focus {
+  color: #fff;
+  background: #000;
+}
+
+.dropdown-menu .bs-actionsbox button {
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+.dropdown-menu .bs-actionsbox button[disabled] {
+  background: #567;
 }
 
 .dropdown-toggle {
@@ -552,19 +579,30 @@ p.login-box-msg,
 
 .bootstrap-select.bs-container .dropdown-menu,
 .open > .dropdown-menu {
-  border-radius: 12px;
+  border-radius: 8px;
   border-width: 2px;
+  color: var(--text-color);
 }
 
 .bootstrap-select.bs-container .dropdown-menu.open,
 .open > .dropdown-menu.open {
-  filter: invert(0.88) hue-rotate(180deg);
+  background: #111;
+  border-color: #567;
 }
 
-.open > .dropdown-toggle.btn-default,
-.open > .dropdown-toggle.btn-default:active {
-  background-color: #353c42;
-  color: #bec5cb;
+.dropdown-toggle.btn-default,
+.dropdown-toggle.btn-default:active,
+.open > .dropdown-toggle.btn-default {
+  padding: 0.4em 1em 0.2em 2em;
+  color: var(--text-color);
+  background-color: #000;
+  border: 2px solid #567 !important;
+  border-radius: 8px;
+}
+
+.open > .dropdown-toggle.btn-default:hover {
+  background: #567;
+  color: #fff;
 }
 
 /*** Set .dropdown-toggle width to fill the whole table cell ***/
@@ -1012,7 +1050,7 @@ p.login-box-msg,
 }
 
 .user-panel > .info > span {
-  margin: 0;
+  margin: 1px 0;
 }
 
 .user-panel .pull-left.image {
@@ -1020,7 +1058,8 @@ p.login-box-msg,
 }
 
 .user-panel > .info i {
-  text-shadow: 0 0 1px black;
+  text-shadow: 0 0 1px #fff;
+  margin: 0 2px 0 -2px;
 }
 
 .user-panel > .info i.text-orange,
@@ -1160,7 +1199,7 @@ footer a:focus {
 .comment-text,
 .comment-text .username,
 .box-info {
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .btn .box-title {
@@ -1203,6 +1242,10 @@ footer a:focus {
 table.table-bordered.dataTable th,
 table.table-bordered.dataTable td {
   border: none !important;
+}
+
+.add-new-item {
+  vertical-align: baseline;
 }
 
 .box-footer {
@@ -1248,7 +1291,7 @@ table.table-bordered.dataTable td {
 .nav-tabs-custom > .nav-tabs > li {
   margin: 0 2px;
   border: none;
-  background: #9ab;
+  background: var(--text-color);
 }
 
 .nav-tabs-custom > .nav-tabs > li > a {
@@ -1420,7 +1463,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   margin: 0 1px;
   padding: 3px 4px 4px;
   min-width: 34px;
-  background: #9ab;
+  background: var(--text-color);
   color: #000;
   text-align: center;
   border: none;
@@ -1663,11 +1706,6 @@ table.dataTable {
   }
   .main-header .navbar .dropdown-menu li.divider {
     background-color: rgba(255, 255, 255, 0.1);
-  }
-  .dropdown-menu > li > a:hover,
-  .dropdown-menu > li > a:active,
-  .dropdown-menu > li > a:focus {
-    color: #48f;
   }
   .main-header .logo {
     width: 150px;
@@ -1937,20 +1975,24 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 .graphs-ticks {
-  color: #9ab;
+  color: var(--text-color);
 }
 
 .progress-bar {
   background-color: #48f;
 }
 
+/*--- Used on the status panel  ---*/
+.user-panel .text-green-light {
+  color: #23c027 !important;
+}
+.user-panel .text-red {
+  color: #f60d1a !important;
+}
+
 /*--- Used in the Query Log table ---*/
 .text-black {
   color: #000 !important;
-}
-
-.text-green-light {
-  color: #7fff00 !important;
 }
 
 .text-green {
@@ -2110,13 +2152,31 @@ td.highlight {
   color: #000;
 }
 
+/*** Tools > Interface page ***/
 .bstreeview .list-group-item {
-  padding-top: 0.2em;
-  padding-bottom: 0.55em;
+  padding-top: 0.15em;
+  padding-bottom: 0.5em;
+}
+
+.list-group > .list-group-item {
+  padding-left: 1.75em !important;
+}
+.list-group .list-group > .list-group-item {
+  padding-left: 3.5em !important;
+}
+.list-group .list-group .list-group > .list-group-item {
+  padding-left: 5.25em !important;
+}
+.list-group .list-group .list-group .list-group > .list-group-item {
+  padding-left: 7em !important;
 }
 
 /*** 🖖 ***/
 .fas.fa-hand-paper {
   --fa: "\f259" !important;
   --fa--fa: "\f259\f259" !important;
+}
+
+.help-block {
+  color: #76808a;
 }
