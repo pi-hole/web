@@ -197,7 +197,7 @@ th {
 }
 
 .btn-app:hover {
-  background: #FFF;
+  background: #fff;
 }
 
 .btn-xs {
@@ -602,7 +602,7 @@ p.login-box-msg,
 
 .open > .dropdown-toggle.btn-default:hover {
   background: #567;
-  color:#fff;
+  color: #fff;
 }
 
 /*** Set .dropdown-toggle width to fill the whole table cell ***/
@@ -2178,5 +2178,5 @@ td.highlight {
 }
 
 .help-block {
-  color: #76808A;
+  color: #76808a;
 }
