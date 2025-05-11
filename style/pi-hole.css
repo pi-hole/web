@@ -908,6 +908,7 @@ body:not([class*="lcars"])
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
   height: auto;
   padding: 15px 15px 5px;
+  font-weight: 600;
 }
 
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
