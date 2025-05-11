@@ -310,7 +310,7 @@ function formatInfo(data) {
     // Some list matched - add link to search page
     const searchLink =
       data.domain !== "hidden"
-        ? `, <a href="search?domain=${encodeURIComponent(data.domain)}" target="_blank">search lists</a>`
+        ? `, <a href="search?domain=${encodeURIComponent(queryStatus.isCNAME ? data.cname : data.domain)}" target="_blank">search lists</a>`
         : "";
     listInfo = `${divStart}Query was ${queryStatus.matchText}${searchLink}</div>`;
   }
