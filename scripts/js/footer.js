@@ -217,26 +217,24 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(frequency) {
-  let freq = Number.parseFloat(frequency) * 60;
-  let unit = "q/min";
-  let title = "Queries per minute";
-  if (freq > 100) {
-    freq /= 60;
-    unit = "q/s";
-    title = "Queries per second";
-  }
+  // Calculate rate and determine appropriate unit
+  const baseRate = Number.parseFloat(frequency) * 60;
+  const isHighFrequency = baseRate > 100;
 
-  // Determine number of fraction digits based on the frequency
-  // - 0 fraction digits for frequencies > 10
+  // Determine final rate and unit based on frequency
+  const rate = isHighFrequency ? baseRate / 60 : baseRate;
+  const unit = isHighFrequency ? "q/s" : "q/min";
+
+  // Determine the number of fraction digits based on the rate
+  // - 0 fraction digits for frequencies >= 10
   // - 1 fraction digit for frequencies between 1 and 10
   // - 2 fraction digits for frequencies < 1
-  const fractionDigits = freq > 10 ? 0 : freq < 1 ? 2 : 1;
-  const freqFormatted = utils.formatNumber(freq, fractionDigits);
+  const fractionDigits = rate >= 10 ? 0 : rate < 1 ? 2 : 1;
+  const freqFormatted = utils.formatNumber(rate, fractionDigits);
 
   const queryFreqElem = document.getElementById("query_frequency");
-
   queryFreqElem.innerHTML = `<i class="fa fa-fw fa-gauge-high text-green-light mr-2"></i>${freqFormatted}&thinsp;${unit}`;
-  queryFreqElem.title = title;
+  queryFreqElem.title = isHighFrequency ? "Queries per second" : "Queries per minute";
 }
 
 function updateFtlInfo() {
