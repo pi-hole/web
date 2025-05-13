@@ -108,7 +108,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
-                    <canvas id="clientsChart" class="extratooltipcanvas no-user-select"></canvas>
+                    <canvas id="clientsChart" class="no-user-select"></canvas>
                 </div>
             </div>
             <div class="overlay">
@@ -144,7 +144,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <div class="box-body">
                 <div style="width:50%">
-                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="extratooltipcanvas no-user-select"></canvas>
+                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="no-user-select"></canvas>
                 </div>
                 <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
             </div>
