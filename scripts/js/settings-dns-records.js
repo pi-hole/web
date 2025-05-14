@@ -66,7 +66,7 @@ function populateDataTable(endpoint) {
 
   const setByEnv = false;
   $.ajax({
-    url: `/api/config/dns/${endpoint}?detailed=true`,
+    url: document.body.dataset.apiurl + "/config/dns/" + endpoint + "?detailed=true",
   }).done(data => {
     // Set the title icons if needed
     setConfigValues("dns", "dns", data.config.dns);
@@ -79,7 +79,7 @@ function populateDataTable(endpoint) {
 
   $(`#${endpoint}-Table`).DataTable({
     ajax: {
-      url: `/api/config/dns/${endpoint}`,
+      url: document.body.dataset.apiurl + "/config/dns/" + endpoint,
       type: "GET",
       dataSrc: `config.dns.${endpoint}`,
     },
