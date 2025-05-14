@@ -72,7 +72,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Domain</label>
+                            <label>Domain*</label>
                             <select id="domain_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -80,7 +80,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Client (by IP)</label>
+                            <label>Client (by IP)*</label>
                             <select id="client_ip_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -88,7 +88,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Client (by name)</label>
+                            <label>Client (by name)*</label>
                             <select id="client_name_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -96,7 +96,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Upstream</label>
+                            <label>Upstream*</label>
                             <select id="upstream_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -138,6 +138,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix">
+                <span class="pull-left">* Those input fields allow manual input as well. Use <code>*</code> for wildcard search.</span>
                 <span class="pull-right">Click "Refresh" below to apply.</span>
             </div>
             <!-- /.box -->
