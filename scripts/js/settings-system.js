@@ -80,7 +80,7 @@ function updateCachePie(data) {
   // and push it at once
   cachePieChart.data.datasets[0] = dd;
   cachePieChart.data.labels = k;
-  $("#cache-pie-chart .overlay").hide();
+
   // Passing 'none' will prevent rotation animation for further updates
   //https://www.chartjs.org/docs/latest/developers/updates.html#preventing-animations
   cachePieChart.update("none");
