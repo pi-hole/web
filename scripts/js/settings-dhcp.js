@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues: false */
 
 "use strict";
 
@@ -196,16 +196,10 @@ function fillDHCPhosts(data) {
 }
 
 function processDHCPConfig() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/config/dhcp?detailed=true`,
-  })
-    .done(data => {
-      fillDHCPhosts(data.config.dhcp.hosts);
-      setConfigValues("dhcp", "dhcp", data.config.dhcp);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+  utils.fetchFactory(`${document.body.dataset.apiurl}/config/dhcp?detailed=true`).then(data => {
+    fillDHCPhosts(data.config.dhcp.hosts);
+    setConfigValues("dhcp", "dhcp", data.config.dhcp);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

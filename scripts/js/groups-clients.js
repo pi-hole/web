@@ -13,58 +13,53 @@
 let table;
 
 function reloadClientSuggestions() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/clients/_suggestions`,
-    type: "GET",
-    dataType: "json",
-    success(data) {
-      const sel = $("#select");
-      sel.empty();
+  utils.fetchFactory(`${document.body.dataset.apiurl}/clients/_suggestions`).then(data => {
+    const sel = $("#select");
+    sel.empty();
 
-      // In order for the placeholder value to appear, we have to have a blank
-      // <option> as the first option in our <select> control. This is because
-      // the browser tries to select the first option by default. If our first
-      // option were non-empty, the browser would display this instead of the
-      // placeholder.
-      sel.append($("<option />"));
+    // In order for the placeholder value to appear, we have to have a blank
+    // <option> as the first option in our <select> control. This is because
+    // the browser tries to select the first option by default. If our first
+    // option were non-empty, the browser would display this instead of the
+    // placeholder.
+    sel.append($("<option />"));
 
-      // Add data obtained from API
-      for (const client of data.clients) {
-        const hwaddr = client.hwaddr.toUpperCase();
-        const mockDevice = hwaddr.startsWith("IP-");
-        // Mock MAC address for address-only devices
-        const key = mockDevice ? hwaddr.substring(3) : hwaddr;
-        let text = key;
+    // Add data obtained from API
+    for (const client of data.clients) {
+      const hwaddr = client.hwaddr.toUpperCase();
+      const mockDevice = hwaddr.startsWith("IP-");
+      // Mock MAC address for address-only devices
+      const key = mockDevice ? hwaddr.substring(3) : hwaddr;
+      let text = key;
 
-        // Append additional info if available
-        let extraInfo = "";
-        if (client.names !== null && client.names.length > 0) {
-          // Count number of "," in client.names to determine number of hostnames
-          const numHostnames = client.names.split(",").length;
-          const pluralHostnames = utils.pluralize(numHostnames, "hostname");
-          extraInfo = `${numHostnames} ${pluralHostnames}: ${utils.escapeHtml(client.names)}`;
-        }
-
-        if (client.macVendor !== null && client.macVendor.length > 0) {
-          if (extraInfo.length > 0) extraInfo += "; ";
-          extraInfo += `vendor: ${utils.escapeHtml(client.macVendor)}`;
-        }
-
-        // Do not add addresses for mock devices as their address is already
-        // the hwaddr
-        if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
-          if (extraInfo.length > 0) extraInfo += "; ";
-          // Count number of "," in client.addresses to determine number of addresses
-          const numAddresses = client.addresses.split(",").length;
-          const pluralAddresses = utils.pluralize(numAddresses, "address", "addresses");
-          extraInfo += `${numAddresses} ${pluralAddresses}: ${utils.escapeHtml(client.addresses)}`;
-        }
-
-        if (extraInfo.length > 0) text += ` (${extraInfo})`;
-
-        sel.append($("<option />").val(key).text(text));
+      // Append additional info if available
+      let extraInfo = "";
+      if (client.names !== null && client.names.length > 0) {
+        // Count number of "," in client.names to determine number of hostnames
+        const numHostnames = client.names.split(",").length;
+        const pluralHostnames = utils.pluralize(numHostnames, "hostname");
+        extraInfo = `${numHostnames} ${pluralHostnames}: ${utils.escapeHtml(client.names)}`;
       }
-    },
+
+      if (client.macVendor !== null && client.macVendor.length > 0) {
+        if (extraInfo.length > 0) extraInfo += "; ";
+        extraInfo += `vendor: ${utils.escapeHtml(client.macVendor)}`;
+      }
+
+      // Do not add addresses for mock devices as their address is already
+      // the hwaddr
+      if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
+        if (extraInfo.length > 0) extraInfo += "; ";
+        // Count number of "," in client.addresses to determine number of addresses
+        const numAddresses = client.addresses.split(",").length;
+        const pluralAddresses = utils.pluralize(numAddresses, "address", "addresses");
+        extraInfo += `${numAddresses} ${pluralAddresses}: ${utils.escapeHtml(client.addresses)}`;
+      }
+
+      if (extraInfo.length > 0) text += ` (${extraInfo})`;
+
+      sel.append($("<option />").val(key).text(text));
+    }
   });
 }
 

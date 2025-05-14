@@ -78,24 +78,18 @@ function updateCachePie(data) {
 }
 
 function updateHostInfo() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/info/host`,
-  })
-    .done(({ host }) => {
-      const { uname } = host;
-      const hostname =
-        uname.domainname !== "(none)" ? `${uname.nodename}.${uname.domainname}` : uname.nodename;
-      const kernel = `${uname.sysname} ${uname.nodename} ${uname.release} ${uname.version} ${uname.machine}`;
+  utils.fetchFactory(`${document.body.dataset.apiurl}/info/host`).then(({ host }) => {
+    const { uname } = host;
+    const hostname =
+      uname.domainname !== "(none)" ? `${uname.nodename}.${uname.domainname}` : uname.nodename;
+    const kernel = `${uname.sysname} ${uname.nodename} ${uname.release} ${uname.version} ${uname.machine}`;
 
-      document.getElementById("sysinfo-hostname").textContent = hostname;
-      document.getElementById("sysinfo-kernel").textContent = kernel;
+    document.getElementById("sysinfo-hostname").textContent = hostname;
+    document.getElementById("sysinfo-kernel").textContent = kernel;
 
-      clearTimeout(hostinfoTimer);
-      hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+    clearTimeout(hostinfoTimer);
+    hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
+  });
 }
 
 // Walk nested objects, create a dash-separated global key and assign the value
@@ -132,30 +126,24 @@ function setMetrics(data, prefix) {
 let metricsTimer = null;
 
 function updateMetrics() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/info/metrics`,
-  })
-    .done(({ metrics }) => {
-      // Set global cache size
-      cacheSize = metrics.dns.cache.size;
+  utils.fetchFactory(`${document.body.dataset.apiurl}/info/metrics`).then(({ metrics }) => {
+    // Set global cache size
+    cacheSize = metrics.dns.cache.size;
 
-      // Set metrics
-      setMetrics(metrics, "sysinfo-");
+    // Set metrics
+    setMetrics(metrics, "sysinfo-");
 
-      const percentage = (100 * cacheEntries) / cacheSize;
-      const text = `${utils.formatNumber(cacheEntries)} (${utils.toPercent(percentage, 1)})`;
-      document.getElementById("cache-utilization").textContent = text;
+    const percentage = (100 * cacheEntries) / cacheSize;
+    const text = `${utils.formatNumber(cacheEntries)} (${utils.toPercent(percentage, 1)})`;
+    document.getElementById("cache-utilization").textContent = text;
 
-      for (const el of document.querySelectorAll("div[id^='sysinfo-metrics-overlay']")) {
-        el.classList.add("d-none");
-      }
+    for (const el of document.querySelectorAll("div[id^='sysinfo-metrics-overlay']")) {
+      el.classList.add("d-none");
+    }
 
-      clearTimeout(metricsTimer);
-      metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+    clearTimeout(metricsTimer);
+    metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
+  });
 }
 
 function showQueryLoggingButton(state) {
@@ -174,15 +162,9 @@ function showQueryLoggingButton(state) {
 }
 
 function getLoggingButton() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/config/dns/queryLogging`,
-  })
-    .done(data => {
-      showQueryLoggingButton(data.config.dns.queryLogging);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+  utils.fetchFactory(`${document.body.dataset.apiurl}/config/dns/queryLogging`).then(data => {
+    showQueryLoggingButton(data.config.dns.queryLogging);
+  });
 }
 
 $(".confirm-restartdns").confirm({
@@ -309,30 +291,24 @@ document.addEventListener("DOMContentLoaded", () => {
     tooltipTitle: "Cache content",
   });
 
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/network/gateway`,
-  })
-    .done(({ gateway }) => {
-      // Get first object in gateway that has family == "inet"
-      const inet = gateway.find(obj => obj.family === "inet");
-      // Get first object in gateway that has family == "inet6"
-      const inet6 = gateway.find(obj => obj.family === "inet6");
+  utils.fetchFactory(`${document.body.dataset.apiurl}/network/gateway`).then(({ gateway }) => {
+    // Get first object in gateway that has family == "inet"
+    const inet = gateway.find(obj => obj.family === "inet");
+    // Get first object in gateway that has family == "inet6"
+    const inet6 = gateway.find(obj => obj.family === "inet6");
 
-      // IPv4 gateway information
-      const ipv4Address = inet ? inet.local.join("\n") : "N/A";
-      const ipv4Interface = inet ? inet.interface : "N/A";
+    // IPv4 gateway information
+    const ipv4Address = inet ? inet.local.join("\n") : "N/A";
+    const ipv4Interface = inet ? inet.interface : "N/A";
 
-      // IPv6 gateway information
-      const ipv6Address = inet6 ? inet6.local.join("\n") : "N/A";
-      const ipv6Interface = inet6 ? inet6.interface : "N/A";
+    // IPv6 gateway information
+    const ipv6Address = inet6 ? inet6.local.join("\n") : "N/A";
+    const ipv6Interface = inet6 ? inet6.interface : "N/A";
 
-      // Update DOM elements
-      document.getElementById("sysinfo-gw-v4-addr").textContent = ipv4Address;
-      document.getElementById("sysinfo-gw-v4-iface").textContent = ipv4Interface;
-      document.getElementById("sysinfo-gw-v6-addr").textContent = ipv6Address;
-      document.getElementById("sysinfo-gw-v6-iface").textContent = ipv6Interface;
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+    // Update DOM elements
+    document.getElementById("sysinfo-gw-v4-addr").textContent = ipv4Address;
+    document.getElementById("sysinfo-gw-v4-iface").textContent = ipv4Interface;
+    document.getElementById("sysinfo-gw-v6-addr").textContent = ipv6Address;
+    document.getElementById("sysinfo-gw-v6-iface").textContent = ipv6Interface;
+  });
 });

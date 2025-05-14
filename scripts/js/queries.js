@@ -396,15 +396,13 @@ function addSelectSuggestion(name, dict, data) {
 }
 
 function getSuggestions(dict) {
-  $.get(
-    `${document.body.dataset.apiurl}/queries/suggestions`,
-    data => {
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/queries/suggestions`)
+    .then(({ suggestions }) => {
       for (const filter of Object.values(filters)) {
-        addSelectSuggestion(filter, dict, data.suggestions[filter]);
+        addSelectSuggestion(filter, dict, suggestions[filter]);
       }
-    },
-    "json"
-  );
+    });
 }
 
 function parseFilters() {

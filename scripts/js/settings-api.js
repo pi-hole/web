@@ -264,10 +264,9 @@ function deleteOneSession(id, len, ownSessionDelete) {
 }
 
 function processWebServerConfig() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/config/webserver?detailed=true`,
-  })
-    .done(data => {
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/config/webserver?detailed=true`)
+    .then(data => {
       setConfigValues("webserver", "webserver", data.config.webserver);
       if (data.config.webserver.api.app_pwhash.value.length > 0) {
         apppwSet = true;
@@ -279,55 +278,40 @@ function processWebServerConfig() {
       } else {
         document.getElementById("apppw_clear").classList.add("d-none");
       }
-    })
-    .fail(data => {
-      apiFailure(data);
     });
 }
 
 $("#modal-totp").on("shown.bs.modal", () => {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/auth/totp`,
-  })
-    .done(data => {
-      TOTPdata = data.totp;
+  utils.fetchFactory(`${document.body.dataset.apiurl}/auth/totp`).then(data => {
+    TOTPdata = data.totp;
 
-      const { issuer, account, secret, algorithm, digits, period } = TOTPdata;
-      $("#totp_secret").text(secret);
+    const { issuer, account, secret, algorithm, digits, period } = TOTPdata;
+    $("#totp_secret").text(secret);
 
-      const qrlink =
-        `otpauth://totp/${issuer}:${account}?secret=${secret}&issuer=${issuer}` +
-        `&algorithm=${algorithm}&digits=${digits}&period=${period}`;
+    const qrlink =
+      `otpauth://totp/${issuer}:${account}?secret=${secret}&issuer=${issuer}` +
+      `&algorithm=${algorithm}&digits=${digits}&period=${period}`;
 
-      /* eslint-disable-next-line no-new */
-      new QRious({
-        element: document.getElementById("qrcode"),
-        value: qrlink,
-        level: "Q",
-        size: 300,
-      });
-      $("#qrcode-spinner").hide();
-      $("#qrcode").show();
-    })
-    .fail(data => {
-      apiFailure(data);
+    /* eslint-disable-next-line no-new */
+    new QRious({
+      element: document.getElementById("qrcode"),
+      value: qrlink,
+      level: "Q",
+      size: 300,
     });
+    $("#qrcode-spinner").hide();
+    $("#qrcode").show();
+  });
 });
 
 let apppwhash = null;
 $("#modal-apppw").on("shown.bs.modal", () => {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/auth/app`,
-  })
-    .done(data => {
-      apppwhash = data.app.hash;
-      $("#password_code").text(data.app.password);
-      $("#password_display").removeClass("hidden");
-      $("#password-spinner").hide();
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+  utils.fetchFactory(`${document.body.dataset.apiurl}/auth/app`).then(data => {
+    apppwhash = data.app.hash;
+    $("#password_code").text(data.app.password);
+    $("#password_display").removeClass("hidden");
+    $("#password-spinner").hide();
+  });
 });
 
 $("#apppw_submit").on("click", () => {
@@ -476,9 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
   processWebServerConfig();
 
   // Check if TOTP is enabled
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/auth`,
-  }).done(data => {
+  utils.fetchFactory(`${document.body.dataset.apiurl}/auth`).then(data => {
     if (data.session.totp === false) {
       document.getElementById("button-enable-totp").classList.remove("hidden");
     } else {

@@ -544,13 +544,12 @@ let waitMe = null;
 // Callback function for the loading overlay timeout
 function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
   // Try to ping FTL to see if it finished restarting
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/info/login`,
-    method: "GET",
-    cache: false,
-    dataType: "json",
+  fetchFactory(`${document.body.dataset.apiurl}/info/login`, {
+    headers: {
+      "Cache-Control": "no-cache",
+    },
   })
-    .done(() => {
+    .then(() => {
       // FTL is running again, hide loading overlay
       NProgress.done();
       if (reloadAfterTimeout) {
@@ -559,7 +558,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
         waitMe.hideAll();
       }
     })
-    .fail(() => {
+    .catch(() => {
       // FTL is not running yet, try again in 500ms
       setTimeout(loadingOverlayTimeoutCallback, 500, reloadAfterTimeout);
     });

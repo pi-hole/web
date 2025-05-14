@@ -5,20 +5,14 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues:false */
 
 "use strict";
 
 function getConfig() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/config/?detailed=true`,
-  })
-    .done(data => {
-      setConfigValues("", "", data.config);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+  utils.fetchFactory(`${document.body.dataset.apiurl}/config/?detailed=true`).then(data => {
+    setConfigValues("", "", data.config);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

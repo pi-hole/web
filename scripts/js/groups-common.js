@@ -30,26 +30,18 @@ function populateGroupSelect(selectEl) {
 }
 
 globalThis.getGroups = function () {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/groups`,
-    type: "GET",
-    dataType: "json",
-    success(data) {
-      groups = data.groups;
+  utils.fetchFactory(`${document.body.dataset.apiurl}/groups`).then(data => {
+    groups = data.groups;
 
-      // Get all all <select> elements with the class "selectpicker"
-      const groupSelector = $(".selectpicker");
-      // Populate the groupSelector with the groups
-      for (const element of groupSelector) {
-        populateGroupSelect($(element));
-      }
+    // Get all all <select> elements with the class "selectpicker"
+    const groupSelector = $(".selectpicker");
+    // Populate the groupSelector with the groups
+    for (const element of groupSelector) {
+      populateGroupSelect($(element));
+    }
 
-      // Actually load table contents
-      initTable();
-    },
-    error(data) {
-      apiFailure(data);
-    },
+    // Actually load table contents
+    initTable();
   });
 };
 

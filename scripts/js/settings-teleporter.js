@@ -75,27 +75,32 @@ function importZIP() {
 }
 
 // Inspired by https://stackoverflow.com/a/59576416/2087442
-$("#GETTeleporter").on("click", () => {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/teleporter`,
-    headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
-    method: "GET",
-    xhrFields: {
-      responseType: "blob",
-    },
-    success(data, status, xhr) {
+document.getElementById("GETTeleporter").addEventListener("click", () => {
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/teleporter`, {
+      json: false,
+    })
+    .then(response => {
+      const contentDisposition = response.headers.get("Content-Disposition");
+      const filename = contentDisposition.match(/filename="([^"]*)"/)[1];
+
+      return response.blob().then(blob => ({ blob, filename }));
+    })
+    .then(({ blob, filename }) => {
       const a = document.createElement("a");
-      const url = globalThis.URL.createObjectURL(data);
+      const url = globalThis.URL.createObjectURL(blob);
 
       a.href = url;
-      a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];
+      a.download = filename;
       document.body.append(a);
       a.click();
       a.remove();
 
       globalThis.URL.revokeObjectURL(url);
-    },
-  });
+    })
+    .catch(error => {
+      console.error(error); // eslint-disable-line no-console
+    });
 });
 
 document.addEventListener("DOMContentLoaded", () => {

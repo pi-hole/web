@@ -65,17 +65,17 @@ function populateDataTable(endpoint) {
   }
 
   const setByEnv = false;
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/config/dns/${endpoint}?detailed=true`,
-  }).done(data => {
-    // Set the title icons if needed
-    setConfigValues("dns", "dns", data.config.dns);
+  utils
+    .fetchFactory(`${document.body.dataset.apiurl}/config/dns/${endpoint}?detailed=true`)
+    .then(data => {
+      // Set the title icons if needed
+      setConfigValues("dns", "dns", data.config.dns);
 
-    // disable input fields if set by env var
-    if (data.config.dns[endpoint].flags.env_var) {
-      $(`.${endpoint}`).prop("disabled", true);
-    }
-  });
+      // disable input fields if set by env var
+      if (data.config.dns[endpoint].flags.env_var) {
+        $(`.${endpoint}`).prop("disabled", true);
+      }
+    });
 
   $(`#${endpoint}-Table`).DataTable({
     ajax: {

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false */
+/* global utils:false, applyCheckboxRadioStyle: false */
 
 "use strict";
 
@@ -253,16 +253,13 @@ function generateRow(topic, key, value) {
 }
 
 function createDynamicConfigTabs() {
-  $.ajax({
-    url: `${document.body.dataset.apiurl}/config?detailed=true`,
-  })
-    .done(data => {
-      // Create the tabs for the advanced dynamic config topics
-      for (const topic of Object.values(data.topics)) {
-        const tabsContainer = document.getElementById("advanced-settings-tabs");
-        tabsContainer.insertAdjacentHTML(
-          "beforeend",
-          `
+  utils.fetchFactory(`${document.body.dataset.apiurl}/config?detailed=true`).then(data => {
+    // Create the tabs for the advanced dynamic config topics
+    for (const topic of Object.values(data.topics)) {
+      const tabsContainer = document.getElementById("advanced-settings-tabs");
+      tabsContainer.insertAdjacentHTML(
+        "beforeend",
+        `
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
             <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
             <div class="row" id="advanced-content-${topic.name}-body">
@@ -270,43 +267,40 @@ function createDynamicConfigTabs() {
             </div>
           </div>
         `
-        );
+      );
 
-        // Dynamically create the settings menu
-        const menuUl = document.querySelector("#advanced-settings-menu ul");
-        menuUl.insertAdjacentHTML(
-          "beforeend",
-          `
+      // Dynamically create the settings menu
+      const menuUl = document.querySelector("#advanced-settings-menu ul");
+      menuUl.insertAdjacentHTML(
+        "beforeend",
+        `
           <li role="presentation">
             <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="tab" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
         `
-        );
-      }
+      );
+    }
 
-      // Dynamically fill the tabs with config topics
-      for (const [topic, value] of Object.entries(data.config)) {
-        generateRow(topic, topic, value);
-      }
+    // Dynamically fill the tabs with config topics
+    for (const [topic, value] of Object.entries(data.config)) {
+      generateRow(topic, topic, value);
+    }
 
-      document.getElementById("advanced-overlay").classList.add("d-none");
+    document.getElementById("advanced-overlay").classList.add("d-none");
 
-      // Show the first tab from URL hash if it exists
-      const hash = globalThis.location.hash;
-      const hashElement = hash ? document.querySelector(hash) : null;
-      if (hash && hashElement && hashElement.classList.contains("tab-pane")) {
-        $(`a[href="${hash}"]`).tab("show");
-      } else {
-        // No valid hash, activate the first tab
-        $("#advanced-settings-menu ul li:first-child a").tab("show");
-      }
+    // Show the first tab from URL hash if it exists
+    const hash = globalThis.location.hash;
+    const hashElement = hash ? document.querySelector(hash) : null;
+    if (hash && hashElement && hashElement.classList.contains("tab-pane")) {
+      $(`a[href="${hash}"]`).tab("show");
+    } else {
+      // No valid hash, activate the first tab
+      $("#advanced-settings-menu ul li:first-child a").tab("show");
+    }
 
-      applyCheckboxRadioStyle();
-      applyOnlyChanged();
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
+    applyCheckboxRadioStyle();
+    applyOnlyChanged();
+  });
 }
 
 function initOnlyChanged() {
