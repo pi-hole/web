@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false, saveSettings:false */
+/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false */
 /* exported createDynamicConfigTabs */
 
 "use strict";
@@ -335,10 +335,6 @@ function createDynamicConfigTabs() {
       // Select the first tab and show the content
       $("#advanced-settings-menu ul li:first-child").addClass("active");
       $("#advanced-settings-tabs > div:first-child").addClass("active in");
-
-      $("button[id='save']").on("click", () => {
-        saveSettings();
-      });
 
       applyCheckboxRadioStyle();
       applyOnlyChanged();
