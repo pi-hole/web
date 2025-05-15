@@ -234,7 +234,7 @@ $(document).ready(() => {
       .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
-        utils.showAlert("error", "", "Error while deleting DNS record", data.responseText);
+        utils.showAlert("error", "", "Error while adding DNS record", data.responseText);
         console.log(exception); // eslint-disable-line no-console
       });
   });
@@ -263,7 +263,7 @@ $(document).ready(() => {
       .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
-        utils.showAlert("error", "", "Error while deleting CNAME record", data.responseText);
+        utils.showAlert("error", "", "Error while adding CNAME record", data.responseText);
         console.log(exception); // eslint-disable-line no-console
       });
   });
