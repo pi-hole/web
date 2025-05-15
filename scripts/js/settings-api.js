@@ -212,11 +212,9 @@ function deleteMultipleSessions(ids) {
   // Check input validity
   if (!Array.isArray(ids)) return;
 
-  // Exploit prevention: Return early for non-numeric IDs
+  // Exploit prevention: return early for non-numeric IDs
   for (const id of ids) {
-    // TODO Fix eslint
-    // eslint-disable-next-line unicorn/prefer-number-properties
-    if (Object.hasOwn(ids, id) && isNaN(ids[id])) return;
+    if (!Number.isInteger(id)) return;
   }
 
   // Convert all ids to integers
