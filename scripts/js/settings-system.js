@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, Chart:false, THEME_COLORS:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
+/* global Chart:false, THEME_COLORS:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
 
 "use strict";
 
@@ -178,7 +178,7 @@ $(".confirm-restartdns").confirm({
       url: `${document.body.dataset.apiurl}/action/restartdns`,
       type: "POST",
     }).fail(data => {
-      apiFailure(data);
+      utils.apiFailure(data);
     });
   },
   cancel() {
@@ -202,7 +202,7 @@ $(".confirm-flushlogs").confirm({
       url: `${document.body.dataset.apiurl}/action/flush/logs`,
       type: "POST",
     }).fail(data => {
-      apiFailure(data);
+      utils.apiFailure(data);
     });
   },
   cancel() {
@@ -226,7 +226,7 @@ $(".confirm-flusharp").confirm({
       url: `${document.body.dataset.apiurl}/action/flush/arp`,
       type: "POST",
     }).fail(data => {
-      apiFailure(data);
+      utils.apiFailure(data);
     });
   },
   cancel() {
@@ -267,7 +267,7 @@ $("#loggingButton").confirm({
         showQueryLoggingButton(data.config.dns.queryLogging);
       })
       .fail(data => {
-        apiFailure(data);
+        utils.apiFailure(data);
       });
   },
   cancel() {

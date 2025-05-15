@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, apiFailure:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
+/* global utils:false, groups:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
 /* exported initTable */
 
 "use strict";
@@ -508,7 +508,7 @@ function addList(event) {
       updateFtlInfo();
     },
     error(data, exception) {
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.enableAll();
       utils.showAlert({
         type: "error",
@@ -577,7 +577,7 @@ function editList() {
       table.ajax.reload(null, false);
     },
     error(data, exception) {
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.enableAll();
       utils.showAlert({
         type: "error",

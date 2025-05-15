@@ -388,13 +388,6 @@ function updateSystemInfo() {
   });
 }
 
-globalThis.apiFailure = function (data) {
-  if (data.status === 401) {
-    // Unauthorized, reload page
-    globalThis.location.reload();
-  }
-};
-
 // Method to compare two versions.
 // Returns 1 if v2 is smaller, -1 if v1 is smaller, 0 if equal.
 function versionCompare(v1, v2) {

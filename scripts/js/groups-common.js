@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global apiFailure:false, utils:false, initTable:false, updateFtlInfo:false */
+/* global utils:false, initTable:false, updateFtlInfo:false */
 
 "use strict";
 
@@ -120,7 +120,7 @@ globalThis.delGroupItems = function (type, ids, table, listType = undefined) {
       updateFtlInfo();
     })
     .fail((data, exception) => {
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.enableAll();
       utils.showAlert({
         type: "error",

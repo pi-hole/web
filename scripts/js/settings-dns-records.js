@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Precord see LICENSE file for your rights under this license. */
 
-/* global utils: false, apiFailure:false, setConfigValues: false */
+/* global utils: false, setConfigValues: false */
 
 "use strict";
 
@@ -171,7 +171,7 @@ function delHosts(elem) {
     })
     .fail((data, exception) => {
       utils.enableAll();
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.showAlert({
         type: "error",
         title: `Error while deleting DNS record: <code>${elem}</code>`,
@@ -206,7 +206,7 @@ function delCNAME(elem) {
     })
     .fail((data, exception) => {
       utils.enableAll();
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.showAlert({
         type: "error",
         title: `Error while deleting CNAME record: <code>${elem}</code>`,
@@ -245,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .fail((data, exception) => {
         utils.enableAll();
-        apiFailure(data);
+        utils.apiFailure(data);
         utils.showAlert({
           type: "error",
           title: "Error while adding DNS record",
@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .fail((data, exception) => {
         utils.enableAll();
-        apiFailure(data);
+        utils.apiFailure(data);
         utils.showAlert({
           type: "error",
           title: "Error while adding CNAME record",

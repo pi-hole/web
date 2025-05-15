@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false*/
+/* global utils:false */
 
 "use strict";
 
@@ -191,6 +191,6 @@ function saveSettings() {
         message: data.responseText,
       });
       console.log(exception); // eslint-disable-line no-console
-      apiFailure(data);
+      utils.apiFailure(data);
     });
 }

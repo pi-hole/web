@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
+/* global utils:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
 
 "use strict";
 
@@ -257,7 +257,7 @@ function addGroup() {
       updateFtlInfo();
     },
     error(data, exception) {
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.enableAll();
       utils.showAlert({
         type: "error",
@@ -323,7 +323,7 @@ function editGroup() {
       table.ajax.reload(null, false);
     },
     error(data, exception) {
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.enableAll();
       utils.showAlert({
         type: "error",

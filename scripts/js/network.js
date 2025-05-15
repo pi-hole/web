@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global utils:false, apiFailure:false */
+/* global utils:false */
 
 "use strict";
 
@@ -78,7 +78,7 @@ function deleteNetworkEntry(event) {
       tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
     },
     error(data, exception) {
-      apiFailure(data);
+      utils.apiFailure(data);
       utils.enableAll();
       utils.showAlert({
         type: "error",

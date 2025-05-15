@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, setConfigValues: false, apiFailure: false, QRious: false */
+/* global utils:false, setConfigValues: false, QRious: false */
 
 "use strict";
 
@@ -259,7 +259,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
       }
     })
     .fail(data => {
-      apiFailure(data);
+      utils.apiFailure(data);
     });
 }
 
@@ -370,7 +370,7 @@ function setAppPassword() {
       location.reload();
     })
     .fail(data => {
-      apiFailure(data);
+      utils.apiFailure(data);
     });
 }
 
@@ -429,7 +429,7 @@ function setTOTPSecret(secret) {
       location.reload();
     })
     .fail(data => {
-      apiFailure(data);
+      utils.apiFailure(data);
     });
 }
 

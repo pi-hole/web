@@ -7,7 +7,7 @@
 
 /*
   global moment:false, Chart:false, htmlLegendPlugin:false, customTooltips:false,
-  doughnutTooltip:false, apiFailure: false, NProgress:false, WaitMe:false
+  doughnutTooltip:false, NProgress:false, WaitMe:false
 */
 
 "use strict";
@@ -53,6 +53,13 @@ async function fetchFactory(
 
   if (response.ok) return json === true ? response.json() : response;
   if (handleFailure === true) return apiFailure(response);
+}
+
+function apiFailure(data) {
+  if (data.status === 401) {
+    // Unauthorized, reload page
+    globalThis.location.reload();
+  }
 }
 
 // Credit: https://stackoverflow.com/a/4835406
@@ -774,6 +781,7 @@ globalThis.utils = (function () {
     loadingOverlay,
     setTimer,
     setInter,
+    apiFailure,
     toggleBoxCollapse,
     isVisible,
     pluralize,
