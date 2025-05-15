@@ -59,20 +59,6 @@ function unescapeHtml(text) {
   );
 }
 
-// Helper function for converting Objects to Arrays after sorting the keys
-function objectToArray(obj) {
-  const arr = [];
-  const idx = [];
-  const sortedKeys = Object.keys(obj).sort((a, b) => a - b);
-
-  for (const key of sortedKeys) {
-    arr.push(obj[key]);
-    idx.push(key);
-  }
-
-  return [idx, arr];
-}
-
 function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
@@ -720,7 +706,6 @@ globalThis.utils = (function () {
   return {
     escapeHtml,
     unescapeHtml,
-    objectToArray,
     padNumber,
     showAlert,
     datetime,
