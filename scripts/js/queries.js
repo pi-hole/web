@@ -306,17 +306,16 @@ function formatInfo(data) {
   }
 
   let listInfo = "";
-  let cnameInfo = "";
   if (data.list_id !== null && data.list_id !== -1) {
     // Some list matched - add link to search page
-
-    const listLink =
-      '<a href="search?domain=' +
-      encodeURIComponent(data.domain) +
-      '" target="_blank">search lists</a>';
-    listInfo = divStart + "Query was " + queryStatus.matchText + ", " + listLink + "</div>";
+    const searchLink =
+      data.domain !== "hidden"
+        ? `, <a href="search?domain=${encodeURIComponent(queryStatus.isCNAME ? data.cname : data.domain)}" target="_blank">search lists</a>`
+        : "";
+    listInfo = `${divStart}Query was ${queryStatus.matchText}${searchLink}</div>`;
   }
 
+  let cnameInfo = "";
   if (queryStatus.isCNAME) {
     cnameInfo =
       divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
