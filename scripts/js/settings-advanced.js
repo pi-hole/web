@@ -6,7 +6,6 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false */
-/* exported createDynamicConfigTabs */
 
 "use strict";
 
@@ -402,7 +401,7 @@ function applyOnlyChanged() {
   }
 }
 
-$(document).ready(() => {
+$(() => {
   createDynamicConfigTabs();
   initOnlyChanged();
 });

@@ -214,7 +214,7 @@ function delCNAME(elem) {
     });
 }
 
-$(document).ready(() => {
+$(() => {
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();

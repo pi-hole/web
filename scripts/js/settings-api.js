@@ -474,7 +474,7 @@ $("#button-disable-totp").confirm({
   dialogClass: "modal-dialog",
 });
 
-$(document).ready(() => {
+$(() => {
   processWebServerConfig();
   // Check if TOTP is enabled
   $.ajax({

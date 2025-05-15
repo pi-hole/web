@@ -135,6 +135,6 @@ function processDNSConfig() {
     });
 }
 
-$(document).ready(() => {
+$(() => {
   processDNSConfig();
 });
