@@ -14,6 +14,7 @@ let timeLineChart;
 let clientsChart;
 let queryTypePieChart;
 let forwardDestinationPieChart;
+let privacyLevel = 0;
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -21,6 +22,21 @@ Chart.defaults.set("plugins.deferred", {
   yOffset: "20%",
   delay: 300,
 });
+
+// Set the privacy level
+function initPrivacyLevel() {
+  return $.ajax({
+    url: document.body.dataset.apiurl + "/info/ftl",
+  })
+    .done(data => {
+      privacyLevel = data.ftl.privacy_level;
+    })
+    .fail(data => {
+      apiFailure(data);
+      // Set privacy level to 0 by default if the request fails
+      privacyLevel = 0;
+    });
+}
 
 // Functions to update data in page
 
@@ -277,18 +293,21 @@ function updateForwardDestinationsPie() {
 function updateTopClientsTable(blocked) {
   let api;
   let style;
+  let table;
   let tablecontent;
   let overlay;
   let clienttable;
   if (blocked) {
     api = document.body.dataset.apiurl + "/stats/top_clients?blocked=true";
     style = "queries-blocked";
+    table = $("#client-frequency-blocked");
     tablecontent = $("#client-frequency-blocked td").parent();
     overlay = $("#client-frequency-blocked .overlay");
     clienttable = $("#client-frequency-blocked").find("tbody:last");
   } else {
     api = document.body.dataset.apiurl + "/stats/top_clients";
     style = "queries-permitted";
+    table = $("#client-frequency");
     tablecontent = $("#client-frequency td").parent();
     overlay = $("#client-frequency .overlay");
     clienttable = $("#client-frequency").find("tbody:last");
@@ -301,10 +320,17 @@ function updateTopClientsTable(blocked) {
     let percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Add note if there are no results (e.g. privacy mode enabled)
+    // When there is no data...
+    // a) remove table if there are no results (privacy mode enabled) or
+    // b) add note if there are no results (e.g. new installation)
     if (jQuery.isEmptyObject(data.clients)) {
-      clienttable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
-      overlay.hide();
+      if (privacyLevel > 1) {
+        table.remove();
+      } else {
+        clienttable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+        overlay.hide();
+      }
+
       return;
     }
 
@@ -342,18 +368,21 @@ function updateTopClientsTable(blocked) {
 function updateTopDomainsTable(blocked) {
   let api;
   let style;
+  let table;
   let tablecontent;
   let overlay;
   let domaintable;
   if (blocked) {
     api = document.body.dataset.apiurl + "/stats/top_domains?blocked=true";
     style = "queries-blocked";
+    table = $("#ad-frequency");
     tablecontent = $("#ad-frequency td").parent();
     overlay = $("#ad-frequency .overlay");
     domaintable = $("#ad-frequency").find("tbody:last");
   } else {
     api = document.body.dataset.apiurl + "/stats/top_domains";
     style = "queries-permitted";
+    table = $("#domain-frequency");
     tablecontent = $("#domain-frequency td").parent();
     overlay = $("#domain-frequency .overlay");
     domaintable = $("#domain-frequency").find("tbody:last");
@@ -368,10 +397,17 @@ function updateTopDomainsTable(blocked) {
     let urlText;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
-    // Add note if there are no results (e.g. privacy mode enabled)
+    // When there is no data...
+    // a) remove table if there are no results (privacy mode enabled) or
+    // b) add note if there are no results (e.g. new installation)
     if (jQuery.isEmptyObject(data.domains)) {
-      domaintable.append('<tr><td colspan="3"><center>- No data -</center></td></tr>');
-      overlay.hide();
+      if (privacyLevel > 0) {
+        table.remove();
+      } else {
+        domaintable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+        overlay.hide();
+      }
+
       return;
     }
 
@@ -795,7 +831,11 @@ $(() => {
     updateClientsOverTime();
   }
 
-  updateTopLists();
+  // Initialize privacy level before loading any data that depends on it
+  initPrivacyLevel().then(() => {
+    // After privacy level is initialized, load the top lists
+    updateTopLists();
+  });
 
   $("#queryOverTimeChart").on("click", evt => {
     const activePoints = timeLineChart.getElementsAtEventForMode(
