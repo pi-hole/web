@@ -44,7 +44,7 @@ function piholeChanged(blocking, timer = null) {
   const enaT = $("#enableTimer");
 
   if (timer !== null && Number.parseFloat(timer) > 0) {
-    enaT.html(Date.now() + Number.parseFloat(timer) * 1000);
+    enaT.text(Date.now() + Number.parseFloat(timer) * 1000);
     setTimeout(countDown, 100);
   }
 
@@ -591,7 +591,7 @@ function updateVersionInfo() {
 $(() => {
   if (!globalThis._isLoginPage) updateInfo();
   const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.html(), 10));
+  const target = new Date(Number.parseInt(enaT.text(), 10));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
