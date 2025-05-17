@@ -13,12 +13,7 @@
 "use strict";
 
 // Define global variables
-let timeLineChart;
-let clientsChart;
-let queryTypePieChart;
-let forwardDestinationPieChart;
 let privacyLevel = 0;
-
 let failures = 0;
 const upstreams = {};
 
@@ -232,8 +227,11 @@ const processors = {
 };
 
 function updateQueriesOverTime() {
+  const chart = Chart.getChart("queryOverTimeChart");
+  if (!chart) return;
+
   updateChartData({
-    chart: timeLineChart,
+    chart,
     apiEndpoint: "/history",
     processor: processors.queriesOverTime,
     container: "#queries-over-time",
@@ -242,8 +240,11 @@ function updateQueriesOverTime() {
 }
 
 function updateClientsOverTime() {
+  const chart = Chart.getChart("clientsChart");
+  if (!chart) return;
+
   updateChartData({
-    chart: clientsChart,
+    chart,
     apiEndpoint: "/history/clients",
     processor: processors.clientsOverTime,
     container: "#clients",
@@ -252,8 +253,11 @@ function updateClientsOverTime() {
 }
 
 function updateQueryTypesPie() {
+  const chart = Chart.getChart("queryTypePieChart");
+  if (!chart) return;
+
   updateChartData({
-    chart: queryTypePieChart,
+    chart,
     apiEndpoint: "/stats/query_types",
     processor: processors.queryTypes,
     container: "#query-types-pie",
@@ -262,8 +266,11 @@ function updateQueryTypesPie() {
 }
 
 function updateForwardDestinationsPie() {
+  const chart = Chart.getChart("forwardDestinationPieChart");
+  if (!chart) return;
+
   updateChartData({
-    chart: forwardDestinationPieChart,
+    chart,
     apiEndpoint: "/stats/upstreams",
     processor: processors.forwardDestinations,
     container: "#forward-destinations-pie",
@@ -685,9 +692,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = event.currentTarget;
 
       if (target.dataset.sel === "reset-clients") {
-        clientsChart.resetZoom();
+        const clientsChart = Chart.getChart("clientsChart");
+        clientsChart?.resetZoom();
       } else {
-        timeLineChart.resetZoom();
+        const timeLineChart = Chart.getChart("queryOverTimeChart");
+        timeLineChart?.resetZoom();
       }
 
       // Show the closest info icon to the current chart
@@ -699,7 +708,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const queryOverTimeChartEl = document.getElementById("queryOverTimeChart");
 
-  timeLineChart = createTimelineChart("queryOverTimeChart", {
+  // Create the timeline chart
+  const timeLineChart = createTimelineChart("queryOverTimeChart", {
     tooltipTitlePrefix: "Queries",
     useCustomTooltips: false,
     skipZeroValues: false,
@@ -712,14 +722,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Create / load "Top Clients over Time" only if authorized
   const clientsChartEl = document.getElementById("clientsChart");
   if (clientsChartEl) {
-    clientsChart = createTimelineChart("clientsChart", {
+    const clientsChart = createTimelineChart("clientsChart", {
       tooltipTitlePrefix: "Client activity",
       useCustomTooltips: true,
       skipZeroValues: true,
     });
 
     // Pull in data via AJAX
-    updateClientsOverTime();
+    if (clientsChart) {
+      updateClientsOverTime();
+    }
   }
 
   // Initialize privacy level before loading any data that depends on it
@@ -732,27 +744,32 @@ document.addEventListener("DOMContentLoaded", () => {
     addChartClickHandler(queryOverTimeChartEl, timeLineChart);
   }
 
-  if (clientsChartEl && clientsChart) {
-    addChartClickHandler(clientsChartEl, clientsChart);
+  if (clientsChartEl) {
+    const clientsChart = Chart.getChart("clientsChart");
+    if (clientsChart) {
+      addChartClickHandler(clientsChartEl, clientsChart);
+    }
   }
 
-  queryTypePieChart = utils.createPieChart("queryTypePieChart", {
+  // Create query types pie chart
+  const queryTypePieChart = utils.createPieChart("queryTypePieChart", {
     legendContainerId: "query-types-legend",
     tooltipTitle: "Query type",
   });
 
+  // Pull in data via AJAX
   if (queryTypePieChart) {
-    // Pull in data via AJAX
     updateQueryTypesPie();
   }
 
-  forwardDestinationPieChart = utils.createPieChart("forwardDestinationPieChart", {
+  // Create forward destinations pie chart
+  const forwardDestinationPieChart = utils.createPieChart("forwardDestinationPieChart", {
     legendContainerId: "forward-destinations-legend",
     tooltipTitle: "Upstream server",
   });
 
+  // Pull in data via AJAX
   if (forwardDestinationPieChart) {
-    // Pull in data via AJAX
     updateForwardDestinationsPie();
   }
 

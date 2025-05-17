@@ -10,7 +10,6 @@
 "use strict";
 
 let hostinfoTimer = null;
-let cachePieChart = null;
 let cacheSize = 0;
 let cacheEntries = 0;
 
@@ -22,6 +21,9 @@ Chart.defaults.set("plugins.deferred", {
 });
 
 function updateCachePie(data) {
+  const cachePieChart = Chart.getChart("cachePieChart");
+  if (!cachePieChart) return;
+
   // Compute total number of cache entries
   cacheEntries = Object.values(data).reduce((sum, item) => sum + (item.valid + item.stale), 0);
 
@@ -61,7 +63,7 @@ function updateCachePie(data) {
     }
   }
 
-  // Build a single dataset with the data to be pushed
+  // Build a single dataset with the data
   cachePieChart.data = {
     datasets: [
       {
@@ -286,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateMetrics();
   getLoggingButton();
 
-  cachePieChart = utils.createPieChart("cachePieChart", {
+  utils.createPieChart("cachePieChart", {
     legendContainerId: "cache-legend",
     tooltipTitle: "Cache content",
   });
