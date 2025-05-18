@@ -30,7 +30,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 
     <div class="col-sm-12 save-button-container">
         <button type="button" class="btn btn-primary save-button">
-            <i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply
+            <i class="fa-solid fa-fw fa-floppy-disk mr-2"></i>Save & Apply
         </button>
     </div>
 </div>

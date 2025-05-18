@@ -315,9 +315,7 @@ function updateGeneralSystemInfo(system) {
   const swapUsage = system.memory.swap.total > 0 ? utils.toPercent(percentSwap, 1) : "N/A";
   const { value, unit } = formatMemorySize(system.memory.ram.total);
 
-  memoryEl.innerHTML =
-    `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>` +
-    `Memory usage:&nbsp;${utils.toPercent(percentRAM, 1)}`;
+  memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>Memory usage: ${utils.toPercent(percentRAM, 1)}`;
   memoryEl.title = `Total memory: ${value} ${unit}, Swap usage: ${swapUsage}`;
 
   const cores = system.cpu.nprocs;
@@ -327,8 +325,8 @@ function updateGeneralSystemInfo(system) {
   const loadWarning = isHighLoad ? " (load is higher than the number of cores)" : "";
 
   cpuEl.innerHTML =
-    `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load:&nbsp;` +
-    `${utils.formatNumber(load1, 2)}&nbsp;/&nbsp;${utils.formatNumber(load5, 2)}&nbsp;/&nbsp;${utils.formatNumber(load15, 2)}`;
+    `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load: ` +
+    `${utils.formatNumber(load1, 2)} / ${utils.formatNumber(load5, 2)} / ${utils.formatNumber(load15, 2)}`;
   cpuEl.title =
     "Load averages for the past 1, 5, and 15 minutes\non a system with " +
     `${cores} ${utils.pluralize(cores, "core")} running ${system.procs} ` +
@@ -504,7 +502,7 @@ function updateVersionInfo() {
         (version.docker.local === null || v.name === "Docker Tag") && updateComponentAvailable;
 
       versionsEl.innerHTML += showUpdate
-        ? `<li><strong>${v.name}</strong> ${localVersion}&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="${url}" rel="noopener noreferrer" target="_blank">Update available!</a></li>`
+        ? `<li><strong>${v.name}</strong> ${localVersion} &middot; <a class="lookatme" data-lookatme-text="Update available!" href="${url}" rel="noopener noreferrer" target="_blank">Update available!</a></li>`
         : `<li><strong>${v.name}</strong> ${localVersion}</li>`;
 
       // if at least one component can be updated, display the update-hint footer
