@@ -171,7 +171,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th scope="row">Total cache insertions:</th>
                                     <td id="sysinfo-dns-cache-inserted">&nbsp;</td>
                                 </tr>
-                                <tr title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size" lookatme-text="DNS cache evictions:">
+                                <tr title="Number of cache entries that had to be removed although they are not expired. When this number if larger than zero, you should consider increasing your total cache size">
                                     <th scope="row">DNS cache evictions:</th>
                                     <td id="sysinfo-dns-cache-evicted">&nbsp;</td>
                                 </tr>
