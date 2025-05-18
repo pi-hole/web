@@ -131,11 +131,11 @@ $(() => {
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
       if (data.lastQuery === 0) {
-        $("td:eq(4)", row).html("Never");
+        $("td:eq(4)", row).text("Never");
       }
 
       // Set number of queries to localized string (add thousand separators)
-      $("td:eq(5)", row).html(data.numQueries.toLocaleString());
+      $("td:eq(5)", row).text(data.numQueries.toLocaleString());
 
       const ips = [];
       const iptitles = [];

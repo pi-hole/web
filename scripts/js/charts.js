@@ -112,7 +112,7 @@ const htmlLegendPlugin = {
       textLink.style.padding = 0;
       textLink.style.textDecoration = item.hidden ? "line-through" : "";
       textLink.className = "legend-label-text";
-      textLink.append(item.text);
+      textLink.textContent = item.text;
 
       li.append(boxSpan, textLink);
       ul.append(li);
