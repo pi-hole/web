@@ -25,7 +25,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-md-12">
                         <div>
                             <input type="checkbox" id="dhcp.active" data-key="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label>
-                            <p class="help-block" id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                            <p class="help-block" id="dhcpnotice">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                         </div>
                     </div>
                     <div class="col-xs-12">
