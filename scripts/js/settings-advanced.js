@@ -318,7 +318,7 @@ function createDynamicConfigTabs() {
         // Dynamically create the settings menu
         $("#advanced-settings-menu ul").append(`
           <li role="presentation">
-            <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="pill" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
+            <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="tab" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
         `);
       }
