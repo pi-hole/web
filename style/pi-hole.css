@@ -75,9 +75,9 @@ td.lookatme {
 .lookatme:after {
   color: #e33100;
   text-shadow: 0 0 5px #e33100;
-  /* in the html, the lookatme-text attribute must */
+  /* in the html, the data-lookatme-text attribute must */
   /* contain the same text as the .lookatme element */
-  content: attr(lookatme-text);
+  content: attr(data-lookatme-text);
   padding: inherit;
   position: absolute;
   inset: 0;
