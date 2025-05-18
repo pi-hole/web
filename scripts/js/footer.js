@@ -671,7 +671,6 @@ function initSettingsLevel() {
   elem.on("change", function () {
     localStorage.setItem("expert_settings", $(this).prop("checked") ? "true" : "false");
     applyExpertSettings();
-    addAdvancedInfo();
   });
 
   // Apply settings level
