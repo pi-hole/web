@@ -21,7 +21,7 @@ function addAllowedValues(allowed) {
   }
 
   if (typeof allowed === "string") {
-    return "<p><small>Allowed value: " + utils.escapeHtml(allowed) + "</small></p>";
+    return `<p class="small">Allowed value: ${utils.escapeHtml(allowed)}</p>`;
   }
 }
 
