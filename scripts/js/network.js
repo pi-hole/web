@@ -249,8 +249,8 @@ $(() => {
         },
       },
       { data: "numQueries", width: "9%", render: $.fn.dataTable.render.text() },
-      { data: "", width: "6%", orderable: false },
-      { data: "", width: "6%", orderable: false },
+      { data: null, width: "6%", orderable: false },
+      { data: null, width: "6%", orderable: false },
       { data: "ips[].name", visible: false, class: "hide" },
     ],
 
