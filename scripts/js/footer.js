@@ -9,8 +9,6 @@
 
 "use strict";
 
-globalThis._isLoginPage = false;
-
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
   summary: 1000, // 1 sec (dashboard)
@@ -271,26 +269,20 @@ function updateGeneralFtlInfo(ftl) {
 }
 
 function updateFtlSysinfoElements(ftl) {
+  if (!document.body.classList.contains("page-settings-system")) return;
+
   const sysInfoCpuFtl = document.getElementById("sysinfo-cpu-ftl");
-  if (sysInfoCpuFtl !== null) {
-    sysInfoCpuFtl.textContent = `(${utils.toPercent(ftl["%cpu"], 1)} used by FTL)`;
-  }
+  sysInfoCpuFtl.textContent = `(${utils.toPercent(ftl["%cpu"], 1)} used by FTL)`;
 
   const sysInfoRamFtl = document.getElementById("sysinfo-ram-ftl");
-  if (sysInfoRamFtl !== null) {
-    sysInfoRamFtl.textContent = `(${utils.toPercent(ftl["%mem"], 1)} used by FTL)`;
-  }
+  sysInfoRamFtl.textContent = `(${utils.toPercent(ftl["%mem"], 1)} used by FTL)`;
 
   const sysInfoPidFtl = document.getElementById("sysinfo-pid-ftl");
-  if (sysInfoPidFtl !== null) {
-    sysInfoPidFtl.textContent = ftl.pid;
-  }
+  sysInfoPidFtl.textContent = ftl.pid;
 
   const sysInfoUptimeFtl = document.getElementById("sysinfo-uptime-ftl");
-  if (sysInfoUptimeFtl !== null) {
-    const startDate = moment().subtract(ftl.uptime, "milliseconds").format(HUMAN_DATE_FMT);
-    sysInfoUptimeFtl.textContent = startDate;
-  }
+  const startDate = moment().subtract(ftl.uptime, "milliseconds").format(HUMAN_DATE_FMT);
+  sysInfoUptimeFtl.textContent = startDate;
 
   const destructiveActions = document.querySelectorAll(".destructive_action");
   for (const element of destructiveActions) {
@@ -337,43 +329,35 @@ function updateGeneralSystemInfo(system) {
 }
 
 function updateSysinfoElements(system) {
+  if (!document.body.classList.contains("page-settings-system")) return;
+
   const sysInfoRam = document.getElementById("sysinfo-memory-ram");
   const sysInfoSwapEl = document.getElementById("sysinfo-memory-swap");
   const sysInfoCpu = document.getElementById("sysinfo-cpu");
   const sysInfoUptime = document.getElementById("sysinfo-uptime");
   const sysInfoSystemOverlay = document.getElementById("sysinfo-system-overlay");
 
-  if (sysInfoRam !== null) {
-    const percentRAM = system.memory.ram["%used"];
-    const { value, unit } = formatMemorySize(system.memory.ram.total);
-    sysInfoRam.textContent = `${utils.toPercent(percentRAM, 1)} of ${value} ${unit} is used`;
+  const percentRAM = system.memory.ram["%used"];
+  const { value, unit } = formatMemorySize(system.memory.ram.total);
+  sysInfoRam.textContent = `${utils.toPercent(percentRAM, 1)} of ${value} ${unit} is used`;
+
+  if (system.memory.swap.total > 0) {
+    const percentSwap = system.memory.swap["%used"];
+    const { value, unit } = formatMemorySize(system.memory.swap.total);
+    sysInfoSwapEl.textContent = `${utils.toPercent(percentSwap, 1)} of ${value} ${unit} is used`;
+  } else {
+    sysInfoSwapEl.textContent = "No swap space available";
   }
 
-  if (sysInfoSwapEl !== null) {
-    if (system.memory.swap.total > 0) {
-      const percentSwap = system.memory.swap["%used"];
-      const { value, unit } = formatMemorySize(system.memory.swap.total);
-      sysInfoSwapEl.textContent = `${utils.toPercent(percentSwap, 1)} of ${value} ${unit} is used`;
-    } else {
-      sysInfoSwapEl.textContent = "No swap space available";
-    }
-  }
+  const cores = system.cpu.nprocs;
+  sysInfoCpu.textContent =
+    `${utils.toPercent(system.cpu["%cpu"], 1)} on ${cores} ${utils.pluralize(cores, "core")} ` +
+    `running ${system.procs} ${utils.pluralize(system.procs, "process", "processes")}`;
 
-  if (sysInfoCpu !== null) {
-    const cores = system.cpu.nprocs;
-    sysInfoCpu.textContent =
-      `${utils.toPercent(system.cpu["%cpu"], 1)} on ${cores} ${utils.pluralize(cores, "core")} ` +
-      `running ${system.procs} ${utils.pluralize(system.procs, "process", "processes")}`;
-  }
+  const { startDate, humanUptime } = formatUptime(system.uptime);
+  sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
 
-  if (sysInfoUptime !== null) {
-    const { startDate, humanUptime } = formatUptime(system.uptime);
-    sysInfoUptime.textContent = `${humanUptime} (running since ${startDate})`;
-
-    if (sysInfoSystemOverlay !== null) {
-      sysInfoSystemOverlay.classList.add("d-none");
-    }
-  }
+  sysInfoSystemOverlay.classList.add("d-none");
 }
 
 function updateSystemInfo() {
@@ -650,7 +634,8 @@ function addAdvancedInfo() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!globalThis._isLoginPage) updateInfo();
+  const isLoginPage = document.body.classList.contains("page-login");
+  if (!isLoginPage) updateInfo();
 
   const enableTimer = document.getElementById("enableTimer");
   if (enableTimer) {
@@ -669,7 +654,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Apply icheckbox/iradio style
   applyCheckboxRadioStyle();
 
-  if (!globalThis._isLoginPage) {
+  if (!isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
