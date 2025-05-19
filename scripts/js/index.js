@@ -120,14 +120,14 @@ function updateQueryTypesPie() {
     let sum = 0;
 
     // Compute total number of queries
-    for (const item of Object.keys(data.types)) {
-      sum += data.types[item];
+    for (const value of Object.values(data.types)) {
+      sum += value;
     }
 
     // Fill chart with data (only include query types which appeared recently)
-    for (const item of Object.keys(data.types)) {
-      if (data.types[item] > 0) {
-        v.push((100 * data.types[item]) / sum);
+    for (const [item, value] of Object.entries(data.types)) {
+      if (value > 0) {
+        v.push((100 * value) / sum);
         c.push(THEME_COLORS[i % THEME_COLORS.length]);
         k.push(item);
       }
@@ -165,9 +165,9 @@ function updateClientsOverTime() {
     let numClients = 0;
     const labels = [];
     const clients = {};
-    for (const ip of Object.keys(data.clients)) {
+    for (const [ip, clientData] of Object.entries(data.clients)) {
       clients[ip] = numClients++;
-      labels.push(data.clients[ip].name !== null ? data.clients[ip].name : ip);
+      labels.push(clientData.name !== null ? clientData.name : ip);
     }
 
     // Remove possibly already existing data
@@ -192,15 +192,11 @@ function updateClientsOverTime() {
 
     // Add data for each dataset that is available
     // We need to iterate over all time slots and fill in the data for each client
-    for (const item of Object.keys(data.history)) {
-      for (const client of Object.keys(clients)) {
-        if (data.history[item].data[client] === undefined) {
-          // If there is no data for this client in this timeslot, we push 0
-          clientsChart.data.datasets[clients[client]].data.push(0);
-        } else {
-          // Otherwise, we push the data
-          clientsChart.data.datasets[clients[client]].data.push(data.history[item].data[client]);
-        }
+    for (const item of Object.values(data.history)) {
+      for (const [client, index] of Object.entries(clients)) {
+        const clientData = item.data[client];
+        // If there is no data for this client in this timeslot, we push 0, otherwise the data
+        clientsChart.data.datasets[index].data.push(clientData === undefined ? 0 : clientData);
       }
     }
 
@@ -525,10 +521,10 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   // Sum all queries for the current time by iterating over all keys in the
   // current dataset
   let sum = 0;
-  const keys = Object.keys(tooltipLabel.parsed._stacks.y);
-  for (let i = 0; i < keys.length; i++) {
-    if (tooltipLabel.parsed._stacks.y[i] === undefined) continue;
-    sum += Number.parseInt(tooltipLabel.parsed._stacks.y[i], 10);
+  for (const value of Object.values(tooltipLabel.parsed._stacks.y)) {
+    if (value === undefined) continue;
+    const num = Number.parseInt(value, 10);
+    if (num) sum += num;
   }
 
   let percentage = 0;

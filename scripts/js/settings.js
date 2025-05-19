@@ -28,8 +28,7 @@ $(() => {
 function setConfigValues(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    for (const subkey of Object.keys(value)) {
-      const subvalue = value[subkey];
+    for (const [subkey, subvalue] of Object.entries(value)) {
       // If the key is empty, we are at the top level
       const newKey = key === "" ? subkey : key + "." + subkey;
       setConfigValues(topic, newKey, subvalue);

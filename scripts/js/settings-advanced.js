@@ -264,8 +264,7 @@ function valueDetails(key, value) {
 function generateRow(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    for (const subkey of Object.keys(value)) {
-      const subvalue = value[subkey];
+    for (const [subkey, subvalue] of Object.entries(value)) {
       generateRow(topic, key + "." + subkey, subvalue);
     }
 
@@ -303,9 +302,7 @@ function createDynamicConfigTabs() {
   })
     .done(data => {
       // Create the tabs for the advanced dynamic config topics
-      for (const n of Object.keys(data.topics)) {
-        const topic = data.topics[n];
-
+      for (const topic of Object.values(data.topics)) {
         $("#advanced-settings-tabs").append(`
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
             <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
@@ -324,8 +321,7 @@ function createDynamicConfigTabs() {
       }
 
       // Dynamically fill the tabs with config topics
-      for (const topic of Object.keys(data.config)) {
-        const value = data.config[topic];
+      for (const [topic, value] of Object.entries(data.config)) {
         generateRow(topic, topic, value);
       }
 
