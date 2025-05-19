@@ -1251,14 +1251,6 @@ table.dataTable tbody > tr > .selected {
   display: none;
 }
 
-.settings-level-basic {
-  display: none;
-}
-
-.settings-level-expert {
-  display: none;
-}
-
 .main-footer {
   padding-bottom: 0px;
 }
@@ -1495,6 +1487,10 @@ table.dataTable tbody > tr > .selected {
 .py-3 {
   padding-bottom: 1rem !important;
   padding-top: 1rem !important;
+}
+
+.d-none {
+  display: none !important;
 }
 
 .password_background {
