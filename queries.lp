@@ -45,7 +45,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-warning collapsed-box box-solid">
+        <div class="box box-info collapsed-box box-solid">
             <div class="box-header with-border pointer no-user-select p-4" data-widget="collapse">
                 <h3 class="box-title">Advanced filtering</h3>
                 <div class="box-tools pull-right">
