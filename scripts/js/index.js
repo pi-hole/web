@@ -331,21 +331,14 @@ function updateTopTable(config) {
   const table = document.querySelector(tableElement);
   if (!table) return;
 
-  const tbody = table.querySelector("tbody");
-  const existingRows = tbody.querySelectorAll("tr");
-  const overlay = table.querySelector(".overlay");
-
-  const style = blocked ? "queries-blocked" : "queries-permitted";
-
   utils
     .fetchFactory(`${document.body.dataset.apiurl}${apiPath}${blocked ? "?blocked=true" : ""}`)
     .then(data => {
       // Destroy any previously shown tooltips
       $(`${tableElement} [data-toggle="tooltip"]`).tooltip("destroy");
 
-      // Clear table rows before filling them with data
-      for (const row of existingRows) row.remove();
-      const sum = blocked ? data.blocked_queries : data.total_queries;
+      const tbody = table.querySelector("tbody");
+      const overlay = table.querySelector(".overlay");
 
       // When there is no data...
       // a) remove table if there are no results (privacy mode enabled) or
@@ -354,7 +347,9 @@ function updateTopTable(config) {
         if (privacyLevel > 0) {
           table.remove();
         } else {
-          tbody.innerHTML += '<tr><td colspan="3" class="text-center">- No data -</td></tr>';
+          const row = document.createElement("tr");
+          row.innerHTML = '<td colspan="3" class="text-center">- No data -</td>';
+          tbody.replaceChildren(row);
           overlay.classList.add("d-none");
         }
 
@@ -362,7 +357,9 @@ function updateTopTable(config) {
       }
 
       // Populate table with content
-      let tableRows = "";
+      const fragment = document.createDocumentFragment();
+      const sum = blocked ? data.blocked_queries : data.total_queries;
+      const style = blocked ? "queries-blocked" : "queries-permitted";
 
       for (const item of data[type]) {
         let url;
@@ -385,11 +382,14 @@ function updateTopTable(config) {
         const percentage = ((item.count / sum) * 100).toFixed(7);
         const urlHtml = `<a href="${url}">${utils.escapeHtml(itemName)}</a>`;
 
-        // Add row to table
-        tableRows += `<tr><td>${urlHtml}</td><td>${count}</td><td>${utils.colorBar(percentage, sum, style)}</td></tr>`;
+        // Create row element
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${urlHtml}</td><td>${count}</td><td>${utils.colorBar(percentage, sum, style)}</td>`;
+        fragment.append(row);
       }
 
-      tbody.innerHTML = tableRows;
+      // Add rows to table replacing old ones in one step
+      tbody.replaceChildren(fragment);
 
       // Initialize Bootstrap tooltips for the newly added colorbar elements
       $(`${tableElement} [data-toggle="tooltip"]`).tooltip({ container: "body" });
