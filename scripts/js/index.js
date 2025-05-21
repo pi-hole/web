@@ -15,7 +15,7 @@
 // Define global variables
 let privacyLevel = 0;
 let failures = 0;
-const upstreams = {};
+globalThis.upstreams = {};
 
 // Register the ChartDeferred plugin to all charts:
 Chart.register(ChartDeferred);
@@ -216,8 +216,8 @@ const processors = {
     const labels = [];
 
     // Clear the upstreams object
-    for (const key of Object.keys(upstreams)) {
-      delete upstreams[key];
+    for (const key of Object.keys(globalThis.upstreams)) {
+      delete globalThis.upstreams[key];
     }
 
     // Compute total number of queries
@@ -228,8 +228,8 @@ const processors = {
       const portSuffix = item.port > 0 ? `#${item.port}` : "";
       const label = (item.name || item.ip) + portSuffix;
 
-      // Store upstreams for generating links to the Query Log
-      upstreams[label] = item.ip + portSuffix;
+      // Store upstreams for generating links to the Query Log in charts.js
+      globalThis.upstreams[label] = item.ip + portSuffix;
 
       values.push((100 * item.count) / sum);
       colors.push(THEME_COLORS[i % THEME_COLORS.length]);
