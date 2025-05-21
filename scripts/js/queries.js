@@ -497,12 +497,10 @@ $(() => {
 
   if ("from" in GETDict) {
     from = GETDict.from;
-    $("#from").val(moment.unix(from).format("Y-MM-DD HH:mm:ss"));
   }
 
   if ("until" in GETDict) {
     until = GETDict.until;
-    $("#until").val(moment.unix(until).format("Y-MM-DD HH:mm:ss"));
   }
 
   initDateRangePicker();
