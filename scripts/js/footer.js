@@ -459,6 +459,7 @@ function updateVersionInfo() {
     let dockerUpdate = false;
     let isDocker = false;
     $("#versions").empty();
+    $("#update-hint").empty();
 
     const versions = [
       {
