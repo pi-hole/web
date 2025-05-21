@@ -752,7 +752,10 @@ fieldset[disabled] .form-control {
   color: var(--main-text-color);
 }
 
-.box.box-solid.box-info,
+.box.box-solid.box-info {
+  border: 1px solid #367fa9;
+}
+
 .box.box-solid.box-info > .box-header {
   color: var(--main-text-color);
   background-color: #367fa9 !important;
