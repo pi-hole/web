@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
       enabledEl.on("change", editGroup);
 
       $("td:eq(3)", row).html(`<input id="comment_${dataId}" class="form-control">`);
-      const comment = data.comment !== null ? data.comment : "";
+      const comment = data.comment ?? "";
       const commentEl = $(`#comment_${dataId}`, row);
       commentEl.val(comment);
       commentEl.on("change", editGroup);

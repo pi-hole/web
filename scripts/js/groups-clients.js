@@ -34,21 +34,21 @@ function reloadClientSuggestions() {
 
       // Append additional info if available
       let extraInfo = "";
-      if (client.names !== null && client.names.length > 0) {
+      if (client.names?.length > 0) {
         // Count number of "," in client.names to determine number of hostnames
         const numHostnames = client.names.split(",").length;
         const pluralHostnames = utils.pluralize(numHostnames, "hostname");
         extraInfo = `${numHostnames} ${pluralHostnames}: ${utils.escapeHtml(client.names)}`;
       }
 
-      if (client.macVendor !== null && client.macVendor.length > 0) {
+      if (client.macVendor?.length > 0) {
         if (extraInfo.length > 0) extraInfo += "; ";
         extraInfo += `vendor: ${utils.escapeHtml(client.macVendor)}`;
       }
 
       // Do not add addresses for mock devices as their address is already
       // the hwaddr
-      if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
+      if (client.addresses?.length > 0 && !mockDevice) {
         if (extraInfo.length > 0) extraInfo += "; ";
         // Count number of "," in client.addresses to determine number of addresses
         const numAddresses = client.addresses.split(",").length;
@@ -130,8 +130,9 @@ globalThis.initTable = function () {
 
       let ipName = `<code id="ip_${dataId}" title="${tooltip}" class="breakall">${utils.escapeHtml(data.client)}</code>`;
 
-      if (data.name !== null && data.name.length > 0)
+      if (data.name?.length > 0) {
         ipName += `<br><code id="name_${dataId}" title="${tooltip}" class="breakall">${utils.escapeHtml(data.name)}</code>`;
+      }
 
       $("td:eq(1)", row).html(ipName);
 

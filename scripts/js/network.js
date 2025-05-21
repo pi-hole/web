@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tds[0].innerHTML = ips.join("<br>");
 
       // MAC + Vendor field if available
-      if (data.macVendor && data.macVendor.length > 0) {
+      if (data.macVendor?.length > 0) {
         tds[1].innerHTML = `${utils.escapeHtml(data.hwaddr)}<br>${utils.escapeHtml(data.macVendor)}`;
       }
 

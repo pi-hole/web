@@ -76,9 +76,7 @@ function generateDomainResults(domains, searchQuery, totalDomains, matchType) {
     const totalGroups = domain.groups.length;
     const groupLabel = utils.pluralize(totalGroups, "group");
     const commentHtml =
-      domain.comment && domain.comment.length > 0
-        ? `<br>  comment: ${utils.escapeHtml(domain.comment)}`
-        : "";
+      domain.comment?.length > 0 ? `<br>  comment: ${utils.escapeHtml(domain.comment)}` : "";
 
     resultHtml +=
       `- <a href="groups-domains?domainid=${domain.id}" target="_blank">` +
@@ -118,9 +116,7 @@ function generateListResults(groupedResults, searchQuery, totalLists, matchType)
     const totalGroups = list.groups.length;
     const groupLabel = utils.pluralize(totalGroups, "group");
     const commentHtml =
-      list.comment && list.comment.length > 0
-        ? `<br>  comment: ${utils.escapeHtml(list.comment)}`
-        : "";
+      list.comment?.length > 0 ? `<br>  comment: ${utils.escapeHtml(list.comment)}` : "";
 
     resultHtml +=
       `- <a href="groups-lists?listid=${list.id}" target="_blank">` +

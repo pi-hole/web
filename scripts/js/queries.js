@@ -324,7 +324,7 @@ function formatInfo(data) {
 
   // Show client information, show hostname only if available
   const ipInfo =
-    data.client.name !== null && data.client.name.length > 0
+    data.client.name?.length > 0
       ? `${utils.escapeHtml(data.client.name)} (${data.client.ip})`
       : data.client.ip;
   const clientInfo = `${divStart}Client:&nbsp;&nbsp;<strong>${ipInfo}</strong></div>`;
