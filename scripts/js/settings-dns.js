@@ -102,10 +102,20 @@ function fillDNSupstreams(value, servers) {
 }
 
 function setInterfaceName(name) {
-  // If dns.interface is empty in pihole.toml, we show "eth0"
+  // If dns.interface is empty in pihole.toml, we use the first interface
   // (same default value used by FTL)
   if (name === "") {
-    name = "eth0";
+    $.ajax({
+      url: document.body.dataset.apiurl + "/network/gateway",
+      async: false,
+    })
+      .done(data => {
+        name = data.gateway[0].interface;
+      })
+      .fail(data => {
+        apiFailure(data);
+        name = "not found";
+      });
   }
 
   $("#interface-name-1").text(name);
