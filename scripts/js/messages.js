@@ -194,7 +194,7 @@ function delMsg(id) {
       utils.changeTableButtonStates(table);
     })
     .done(
-      utils.checkMessages // Update icon warnings count
+      utils.checkMessages() // Update icon warnings count
     )
     .fail((jqXHR, exception) => {
       utils.enableAll();
