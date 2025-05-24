@@ -170,7 +170,6 @@ function setTypeIcon(type) {
   return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
 }
 
-// eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#listsTable").DataTable({
     processing: true,

@@ -99,7 +99,6 @@ function hideSuggestDomains() {
   $("#suggest_domains").slideUp("fast");
 }
 
-// eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#domainsTable").DataTable({
     processing: true,
