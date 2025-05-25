@@ -153,9 +153,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/groups-domains.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/groups-domains.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

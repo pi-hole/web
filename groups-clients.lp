@@ -99,10 +99,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/groups-clients.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/groups-clients.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

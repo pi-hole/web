@@ -9,20 +9,20 @@
 ]]--
 mg.include('header.lp','r')
 ?>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs-adapter-moment/chartjs-adapter-moment.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/hammer/hammer.min.js')?>"></script> <!-- Needed for chartjs-plugin-zoom -->
-    <script src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
-    <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/chartjs/chart.umd.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/chartjs-adapter-moment/chartjs-adapter-moment.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/hammer/hammer.min.js')?>"></script> <!-- Needed for chartjs-plugin-zoom -->
+    <script defer src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
+    <script defer src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
 </head>
 <body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(mg.request_info.request_uri)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
 <noscript>

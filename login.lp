@@ -134,7 +134,7 @@ mg.include('scripts/lua/header.lp','r')
         <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
-<script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/login.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/login.js')?>"></script>
 </body>
 </html>

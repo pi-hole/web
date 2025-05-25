@@ -283,7 +283,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/index.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/index.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

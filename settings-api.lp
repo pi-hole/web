@@ -228,10 +228,10 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>
+<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>
