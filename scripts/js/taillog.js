@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, utils: false, REFRESH_INTERVAL: false */
+/* global moment:false, utils:false */
 
 "use strict";
 
@@ -78,7 +78,7 @@ function getData() {
   // Only update when the feed icon has the fa-play class
   const feedIcon = document.getElementById("feed-icon");
   if (!feedIcon.classList.contains("fa-play")) {
-    utils.setTimer(getData, REFRESH_INTERVAL.logs);
+    utils.setTimer(getData, utils.REFRESH_INTERVAL.logs);
     return;
   }
 
@@ -132,7 +132,7 @@ function getData() {
           outputElement.innerHTML = "<div><em>*** Log file is empty ***</em></div>";
         }
 
-        utils.setTimer(getData, REFRESH_INTERVAL.logs);
+        utils.setTimer(getData, utils.REFRESH_INTERVAL.logs);
         return;
       }
 
@@ -220,10 +220,10 @@ function getData() {
       // Update nextID
       nextID = data.nextID;
 
-      utils.setTimer(getData, REFRESH_INTERVAL.logs);
+      utils.setTimer(getData, utils.REFRESH_INTERVAL.logs);
     })
     .catch(() => {
-      utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
+      utils.setTimer(getData, 5 * utils.REFRESH_INTERVAL.logs);
     });
 }
 

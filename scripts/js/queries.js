@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, REFRESH_INTERVAL:false, updateFtlInfo: false */
+/* global moment:false, utils:false, updateFtlInfo:false */
 
 "use strict";
 
@@ -490,7 +490,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const json = JSON.parse(d);
         cursor = json.cursor; // Extract cursor from original data
         if (liveMode) {
-          utils.setTimer(liveUpdate, REFRESH_INTERVAL.query_log);
+          utils.setTimer(liveUpdate, utils.REFRESH_INTERVAL.query_log);
         }
 
         return d;

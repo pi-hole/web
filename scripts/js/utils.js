@@ -23,6 +23,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+const REFRESH_INTERVAL = {
+  logs: 500, // 0.5 sec (logs page)
+  summary: 1000, // 1 sec (dashboard)
+  query_log: 2000, // 2 sec (Query Log)
+  blocking: 10_000, // 10 sec (all pages, sidebar)
+  metrics: 10_000, // 10 sec (settings page)
+  system: 20_000, // 20 sec (all pages, sidebar)
+  query_types: 60_000, // 1 min (dashboard)
+  upstreams: 60_000, // 1 min (dashboard)
+  top_lists: 60_000, // 1 min (dashboard)
+  messages: 60_000, // 1 min (all pages)
+  version: 120_000, // 2 min (all pages, footer)
+  ftl: 120_000, // 2 min (all pages, sidebar)
+  hosts: 120_000, // 2 min (settings page)
+  history: 600_000, // 10 min (dashboard)
+  clients: 600_000, // 10 min (dashboard)
+};
+
 /**
  * A wrapper around the fetch API with CSRF token handling
  * @param {string} url - The URL to fetch from
@@ -752,6 +770,7 @@ function isEmptyObject(obj) {
 
 globalThis.utils = (function () {
   return {
+    REFRESH_INTERVAL,
     escapeHtml,
     unescapeHtml,
     showAlert,

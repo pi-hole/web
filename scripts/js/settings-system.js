@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global Chart:false, THEME_COLORS:false, ChartDeferred:false, REFRESH_INTERVAL: false, utils: false */
+/* global Chart:false, THEME_COLORS:false, ChartDeferred:false, utils:false */
 
 "use strict";
 
@@ -90,7 +90,7 @@ function updateHostInfo() {
     document.getElementById("sysinfo-kernel").textContent = kernel;
 
     clearTimeout(hostinfoTimer);
-    hostinfoTimer = utils.setTimer(updateHostInfo, REFRESH_INTERVAL.hosts);
+    hostinfoTimer = utils.setTimer(updateHostInfo, utils.REFRESH_INTERVAL.hosts);
   });
 }
 
@@ -144,7 +144,7 @@ function updateMetrics() {
     }
 
     clearTimeout(metricsTimer);
-    metricsTimer = utils.setTimer(updateMetrics, REFRESH_INTERVAL.metrics);
+    metricsTimer = utils.setTimer(updateMetrics, utils.REFRESH_INTERVAL.metrics);
   });
 }
 

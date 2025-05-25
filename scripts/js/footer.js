@@ -9,24 +9,6 @@
 
 "use strict";
 
-const REFRESH_INTERVAL = {
-  logs: 500, // 0.5 sec (logs page)
-  summary: 1000, // 1 sec (dashboard)
-  query_log: 2000, // 2 sec (Query Log)
-  blocking: 10_000, // 10 sec (all pages, sidebar)
-  metrics: 10_000, // 10 sec (settings page)
-  system: 20_000, // 20 sec (all pages, sidebar)
-  query_types: 60_000, // 1 min (dashboard)
-  upstreams: 60_000, // 1 min (dashboard)
-  top_lists: 60_000, // 1 min (dashboard)
-  messages: 60_000, // 1 min (all pages)
-  version: 120_000, // 2 min (all pages, footer)
-  ftl: 120_000, // 2 min (all pages, sidebar)
-  hosts: 120_000, // 2 min (settings page)
-  history: 600_000, // 10 min (dashboard)
-  clients: 600_000, // 10 min (dashboard)
-};
-
 const HUMAN_DATE_FMT = "dddd, MMMM Do YYYY, HH:mm:ss";
 
 function secondsTimeSpanToHMS(seconds) {
@@ -127,10 +109,10 @@ function checkBlocking() {
     .fetchFactory(`${document.body.dataset.apiurl}/dns/blocking`)
     .then(data => {
       piholeChanged(data.blocking, data.timer);
-      utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
+      utils.setTimer(checkBlocking, utils.REFRESH_INTERVAL.blocking);
     })
     .catch(() => {
-      utils.setTimer(checkBlocking, 3 * REFRESH_INTERVAL.blocking);
+      utils.setTimer(checkBlocking, 3 * utils.REFRESH_INTERVAL.blocking);
     });
 }
 
@@ -241,7 +223,7 @@ function updateFtlInfo() {
     updateFtlSysinfoElements(ftl);
 
     clearTimeout(ftlinfoTimer);
-    ftlinfoTimer = utils.setTimer(updateFtlInfo, REFRESH_INTERVAL.ftl);
+    ftlinfoTimer = utils.setTimer(updateFtlInfo, utils.REFRESH_INTERVAL.ftl);
   });
 }
 
@@ -366,7 +348,7 @@ function updateSystemInfo() {
     updateSysinfoElements(system);
 
     clearTimeout(systemTimer);
-    systemTimer = utils.setTimer(updateSystemInfo, REFRESH_INTERVAL.system);
+    systemTimer = utils.setTimer(updateSystemInfo, utils.REFRESH_INTERVAL.system);
   });
 }
 
@@ -501,7 +483,7 @@ function updateVersionInfo() {
     }
 
     clearTimeout(versionTimer);
-    versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
+    versionTimer = utils.setTimer(updateVersionInfo, utils.REFRESH_INTERVAL.version);
   });
 }
 
@@ -658,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically
-    utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
+    utils.setInter(utils.checkMessages, utils.REFRESH_INTERVAL.messages);
   }
 
   initSettingsLevel();

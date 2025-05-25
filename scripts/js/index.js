@@ -7,7 +7,7 @@
 
 /*
   global utils:false, Chart:false, THEME_COLORS:false, customTooltips:false,
-  ChartDeferred:false, REFRESH_INTERVAL: false, updateQueryFrequency: false
+  ChartDeferred:false, updateQueryFrequency:false
 */
 
 "use strict";
@@ -258,7 +258,7 @@ function updateQueriesOverTime() {
     apiEndpoint: "/history",
     processor: processors.queriesOverTime,
     container: "#queries-over-time",
-    refreshInterval: REFRESH_INTERVAL.history,
+    refreshInterval: utils.REFRESH_INTERVAL.history,
   });
 }
 
@@ -271,7 +271,7 @@ function updateClientsOverTime() {
     apiEndpoint: "/history/clients",
     processor: processors.clientsOverTime,
     container: "#clients",
-    refreshInterval: REFRESH_INTERVAL.clients,
+    refreshInterval: utils.REFRESH_INTERVAL.clients,
   });
 }
 
@@ -284,7 +284,7 @@ function updateQueryTypesPie() {
     apiEndpoint: "/stats/query_types",
     processor: processors.queryTypes,
     container: "#query-types-pie",
-    refreshInterval: REFRESH_INTERVAL.query_types,
+    refreshInterval: utils.REFRESH_INTERVAL.query_types,
   });
 }
 
@@ -297,7 +297,7 @@ function updateForwardDestinationsPie() {
     apiEndpoint: "/stats/upstreams",
     processor: processors.forwardDestinations,
     container: "#forward-destinations-pie",
-    refreshInterval: REFRESH_INTERVAL.upstreams,
+    refreshInterval: utils.REFRESH_INTERVAL.upstreams,
   });
 }
 
@@ -413,7 +413,7 @@ function updateTopLists() {
   updateTopClientsTable(false);
 
   // Update top lists data every 10 seconds
-  utils.setTimer(updateTopLists, REFRESH_INTERVAL.top_lists);
+  utils.setTimer(updateTopLists, utils.REFRESH_INTERVAL.top_lists);
 }
 
 let previousCount = 0;
@@ -481,10 +481,10 @@ function updateSummaryData(runOnce = false) {
       previousCount = newCount;
       firstSummaryUpdate = false;
 
-      if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
+      if (!runOnce) utils.setTimer(updateSummaryData, utils.REFRESH_INTERVAL.summary);
     })
     .catch(() => {
-      utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
+      utils.setTimer(updateSummaryData, 3 * utils.REFRESH_INTERVAL.summary);
     });
 }
 
