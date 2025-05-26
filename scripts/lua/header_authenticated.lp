@@ -80,7 +80,6 @@ mg.include('header.lp','r')
                                     <? mg.include('../../img/logo-bw.svg', 'r') ?>
                                     Pi-hole Website
                                 </a>
-                                <hr>
                                 <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener" target="_blank"><i class="fa-fw menu-icon fa-solid fa-circle-question"></i> Documentation</a>
                                 <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-discourse"></i> Pi-hole Discourse</a>
                                 <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
