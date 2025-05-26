@@ -74,7 +74,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <i class="fa fa-sync fa-spin"></i>
             </div>
         </div>
-        <div class="box settings-level-expert">
+        <div class="box settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title">DHCP server metrics</h3>
             </div>
@@ -150,7 +150,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-6">
-        <div class="box settings-level-expert" id="cache-metrics">
+        <div class="box settings-level-expert d-none" id="cache-metrics">
             <div class="box-header with-border">
                 <h3 class="box-title">DNS cache metrics</h3>
             </div>
@@ -185,7 +185,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 </tr>
                             </tbody>
                         </table>
-<!--                    <table class="table table-striped table-bordered nowrap settings-level-expert">
+<!--                    <table class="table table-striped table-bordered nowrap settings-level-expert d-none">
                             <tbody id="dns-cache-table">
                             </tbody>
                         </table> -->
@@ -230,7 +230,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th scope="row">Unanswered queries:</th>
                                     <td id="sysinfo-dns-replies-unanswered">&nbsp;</td>
                                 </tr>
-                                <tr class="settings-level-expert">
+                                <tr class="settings-level-expert d-none">
                                     <th scope="row">Authoritative replies:</th>
                                     <td id="sysinfo-dns-replies-auth">&nbsp;</td>
                                 </tr>
@@ -244,7 +244,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12 settings-level-expert">
+    <div class="col-md-12 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Actions</h3>
@@ -260,7 +260,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled>Flush network table</button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3 settings-level-expert">
+                    <div class="col-xs-12 col-md-6 col-lg-3 settings-level-expert d-none">
                         <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled>Flush logs (last 24 hours)</button>
                     </div>
                 </div>
