@@ -85,7 +85,6 @@
                 </li>
 
                 <li class="header text-uppercase">DNS Control</li>
-                <!-- Local DNS Records -->
                 <!-- Enable/Disable Blocking -->
                 <li id="pihole-disable" class="menu-dns treeview">
                     <a href="<?=webhome?>#">
@@ -133,7 +132,7 @@
                 </li>
                 <li class="header text-uppercase">System</li>
                 <!-- Settings -->
-                <li class="menu-system treeview <? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
+                <li class="menu-system treeview<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
                     <a href="<?=webhome?>#">
                         <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
                         <span class="pull-right-container">
@@ -141,42 +140,42 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="<? if scriptname == 'settings/system' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/system' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/system">
                                 <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/dns' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/dns' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/dns">
                                 <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span>DNS</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/dhcp' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/dhcp' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/dhcp">
                                 <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span>DHCP</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/api' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/api' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/api">
                                 <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span>Web interface / API</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/privacy' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/privacy' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/privacy">
                                 <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span>Privacy</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/teleporter' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/teleporter' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/teleporter">
                                 <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?>">
+                        <li<? if scriptname == 'settings/dnsrecords' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>settings/dnsrecords">
                                 <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
                             </a>
                         </li>
-                        <li class="<? if scriptname == 'settings/all' then ?> active<? end ?> settings-level-expert">
+                        <li class="settings-level-expert<? if scriptname == 'settings/all' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/all">
                                 <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>All settings</span>
                             </a>
@@ -194,14 +193,14 @@
                     </a>
                     <ul class="treeview-menu">
                         <!-- Pi-hole diagnosis -->
-                        <li class="<? if scriptname == 'messages' then ?> active<? end ?>">
+                        <li<? if scriptname == 'messages' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>messages">
                                 <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
                                 <span class="pull-right-container warning-count hidden"></span>
                             </a>
                         </li>
                         <!-- Tail log files -->
-                        <li class="treeview <? if scriptname == 'taillog' then ?> active<? end ?>">
+                        <li class="treeview<? if scriptname == 'taillog' then ?> active<? end ?>">
                             <a href="<?=webhome?>#">
                                 <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span>Tail log files</span>
                                 <span class="pull-right-container">
@@ -210,45 +209,45 @@
                             </a>
                             <ul class="treeview-menu">
                                 <!-- Tail pihole.log -->
-                                <li class="<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
+                                <li<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> class="active"<? end ?>>
                                     <a href="<?=webhome?>taillog?file=dnsmasq">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> pihole.log
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
-                                <li class="<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
+                                <li<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> class="active"<? end ?>>
                                     <a href="<?=webhome?>taillog?file=ftl">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> FTL.log
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
-                                <li class="<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
+                                <li<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> class="active"<? end ?>>
                                     <a href="<?=webhome?>taillog?file=webserver">
                                         <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> webserver.log
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <!-- Run gravity.sh -->
-                        <li class="<? if scriptname == 'gravity' then ?> active<? end ?>">
+                        <!-- Update Gravity -->
+                        <li<? if scriptname == 'gravity' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>gravity">
                                 <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span>Update Gravity</span>
                             </a>
                         </li>
                         <!-- Query Lists -->
-                        <li class="<? if scriptname == 'search' then ?> active<? end ?>">
+                        <li<? if scriptname == 'search' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>search">
                                 <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Lists</span>
                             </a>
                         </li>
                         <!-- Interfaces -->
-                        <li class="<? if scriptname == 'interfaces' then ?> active<? end ?>">
+                        <li<? if scriptname == 'interfaces' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>interfaces">
                                 <i class="fa fa-fw menu-icon fa-wifi"></i> <span>Interfaces</span>
                             </a>
                         </li>
                         <!-- Network -->
-                        <li class="<? if scriptname == 'network' then ?> active<? end ?>">
+                        <li<? if scriptname == 'network' then ?> class="active"<? end ?>>
                             <a href="<?=webhome?>network">
                                 <i class="fa fa-fw menu-icon fa-network-wired"></i> <span>Network</span>
                             </a>
