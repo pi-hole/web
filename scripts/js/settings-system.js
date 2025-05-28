@@ -10,6 +10,7 @@
 "use strict";
 
 let hostinfoTimer = null;
+let metricsTimer = null;
 let cacheSize = 0;
 let cacheEntries = 0;
 
@@ -125,8 +126,6 @@ function setMetrics(data, prefix) {
   }
 }
 
-let metricsTimer = null;
-
 function updateMetrics() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/metrics`).then(({ metrics }) => {
     // Set global cache size
@@ -161,12 +160,6 @@ function showQueryLoggingButton(state) {
     button.textContent = "Enable query logging";
     button.dataset.state = "disabled";
   }
-}
-
-function getLoggingButton() {
-  utils.fetchFactory(`${document.body.dataset.apiurl}/config/dns/queryLogging`).then(data => {
-    showQueryLoggingButton(data.config.dns.queryLogging);
-  });
 }
 
 $(".confirm-restartdns").confirm({
@@ -286,11 +279,14 @@ $("#loggingButton").confirm({
 document.addEventListener("DOMContentLoaded", () => {
   updateHostInfo();
   updateMetrics();
-  getLoggingButton();
 
   utils.createPieChart("cachePieChart", {
     legendContainerId: "cache-legend",
     tooltipTitle: "Cache content",
+  });
+
+  utils.fetchFactory(`${document.body.dataset.apiurl}/config/dns/queryLogging`).then(data => {
+    showQueryLoggingButton(data.config.dns.queryLogging);
   });
 
   utils.fetchFactory(`${document.body.dataset.apiurl}/network/gateway`).then(({ gateway }) => {
