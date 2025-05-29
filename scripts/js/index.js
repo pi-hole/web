@@ -801,4 +801,6 @@ window.addEventListener("resize", () => {
   for (const chartJsTooltip of chartJsTooltips) {
     chartJsTooltip.remove();
   }
+
+  $('[data-toggle="tooltip"]').tooltip("hide");
 });
