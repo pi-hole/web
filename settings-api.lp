@@ -102,7 +102,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener" target="_blank">our guide</a> how to construct valid regex entries.</p>
+                        <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener noreferrer" target="_blank">our guide</a> how to construct valid regex entries.</p>
                     </div>
                 </div>
             </div>

@@ -191,7 +191,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         </table> -->
                     </div>
                     <div class="col-lg-12">
-                        See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.<br>&nbsp;
+                        See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener noreferrer" target="_blank">DNS cache documentation</a>.<br>&nbsp;
                     </div>
                     <div class="col-lg-12" id="cache-metrics-chart">
                         <div style="width:50%">

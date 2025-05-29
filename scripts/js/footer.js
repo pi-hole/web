@@ -517,7 +517,7 @@ function updateVersionInfo() {
               v.url +
               "/" +
               localVersion +
-              '" rel="noopener" target="_blank">' +
+              '" rel="noopener noreferrer" target="_blank">' +
               localVersion +
               "</a>";
             if (versionCompare(v.local, v.remote) === -1) {
@@ -548,7 +548,7 @@ function updateVersionInfo() {
               v.url +
               "/" +
               localVersion +
-              '" rel="noopener" target="_blank">' +
+              '" rel="noopener noreferrer" target="_blank">' +
               localVersion +
               "</a>";
           }
@@ -563,7 +563,7 @@ function updateVersionInfo() {
               localVersion +
               '&nbsp&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
               v.url +
-              '" rel="noopener" target="_blank">Update available!</a></li>'
+              '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
           );
           // if at least one component can be updated, display the update-hint footer
           updateAvailable = true;
@@ -575,11 +575,11 @@ function updateVersionInfo() {
 
     if (dockerUpdate)
       $("#update-hint").html(
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener" target="_blank">replace this old container with a fresh upgraded image</a>.'
+        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
       );
     else if (updateAvailable)
       $("#update-hint").html(
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener" target="_blank">pihole -up</a></code>.'
+        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
       );
 
     clearTimeout(versionTimer);

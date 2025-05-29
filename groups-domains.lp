@@ -75,7 +75,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                     </div>
                                     <div class="form-group">
                                         <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
-                                        <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener" target="_blank">
+                                        <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener noreferrer" target="_blank">
                                             regular expressions tutorial</a>.
                                     </div>
                                 </div>
