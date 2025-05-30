@@ -57,7 +57,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-expert">
+        <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
             </div>
@@ -81,7 +81,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-expert">
+        <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
             </div>
@@ -106,7 +106,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-6 settings-level-expert">
+    <div class="col-lg-6 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h1 class="box-title" data-configkeys="dns.listeningMode">Interface settings</h1>
@@ -197,7 +197,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="box box-warning settings-level-expert">
+        <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>

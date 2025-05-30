@@ -86,7 +86,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6 settings-level-expert">
+    <div class="col-md-6 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
@@ -165,7 +165,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12 settings-level-expert">
+    <div class="col-md-12 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dhcp.hosts">Static DHCP configuration</h3>

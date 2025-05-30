@@ -175,7 +175,7 @@
                                 <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
                             </a>
                         </li>
-                        <li class="settings-level-expert<? if scriptname == 'settings/all' then ?> active<? end ?>">
+                        <li class="settings-level-expert d-none<? if scriptname == 'settings/all' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/all">
                                 <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>All settings</span>
                             </a>

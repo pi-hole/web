@@ -684,7 +684,7 @@ function applyExpertSettings() {
   if (localStorage.getItem("expert_settings") === "true") {
     for (const element of expertSettingsNodes) element.classList.remove("d-none");
   } else {
-    for (const element of expertSettingsNodes) element.classList.add("d-none");
+    for (const element of expertSettingsNodes) element.classList.toggle("d-none", true);
 
     // If we left with an empty page (no visible boxes) after switching from
     // Expert to Basic settings, redirect to admin/settings/system instead
