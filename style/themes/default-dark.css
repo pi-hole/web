@@ -565,7 +565,10 @@ fieldset[disabled] .form-control {
   border: 1px solid #353c42;
   color: #bec5cb;
 }
-.box.box-solid.box-info,
+
+.box.box-solid.box-info {
+  border: 1px solid #367fa9;
+}
 .box.box-solid.box-info > .box-header {
   color: #bec5cb;
   background-color: #367fa9 !important;
@@ -589,17 +592,6 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 .network-gradient {
   background-image: linear-gradient(to right, #114100 0%, #525200 100%);
-}
-
-.icheckbox_polaris,
-.icheckbox_futurico,
-.icheckbox_minimal-blue {
-  margin-right: 10px;
-}
-.iradio_polaris,
-.iradio_futurico,
-.iradio_minimal-blue {
-  margin-right: 8px;
 }
 
 /* Overlay box with spinners as shown during data collection for graphs */

@@ -3,7 +3,7 @@ name: Codespell
 on:
   push:
     branches:
-      - '**'
+      - "**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
@@ -12,11 +12,12 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout repository
+      - name: Clone repository
         uses: actions/checkout@v4.2.2
-      -
-        name: Spell-Checking
+        with:
+          persist-credentials: false
+
+      - name: Spell-Checking
         uses: codespell-project/actions-codespell@master
         with:
           ignore_words_file: .codespellignore

@@ -4,19 +4,20 @@
  *
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
-/* global apiUrl: false */
+
+"use strict";
 
 function eventsource() {
-  var alInfo = $("#alInfo");
-  var alSuccess = $("#alSuccess");
-  var ta = $("#output");
+  const alInfo = $("#alInfo");
+  const alSuccess = $("#alSuccess");
+  const ta = $("#output");
 
   ta.html("");
   ta.show();
   alInfo.show();
   alSuccess.hide();
 
-  fetch(apiUrl + "/action/gravity", {
+  fetch(document.body.dataset.apiurl + "/action/gravity", {
     method: "POST",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
   })
@@ -38,10 +39,10 @@ function eventsource() {
 
               // Enqueue the next data chunk into our target stream
               controller.enqueue(value);
-              var string = new TextDecoder().decode(value);
+              const string = new TextDecoder().decode(value);
               parseLines(ta, string);
 
-              if (string.indexOf("Done.") !== -1) {
+              if (string.includes("Done.")) {
                 alSuccess.show();
               }
 
@@ -54,26 +55,18 @@ function eventsource() {
     .catch(error => console.error(error)); // eslint-disable-line no-console
 }
 
-$("#gravityBtn").on("click", function () {
+$("#gravityBtn").on("click", () => {
   $("#gravityBtn").prop("disabled", true);
   eventsource();
 });
 
 // Handle hiding of alerts
-$(function () {
+$(() => {
   $("[data-hide]").on("click", function () {
     $(this)
       .closest("." + $(this).attr("data-hide"))
       .hide();
   });
-
-  // Do we want to start updating immediately?
-  // gravity?go
-  var searchString = globalThis.location.search.substring(1);
-  if (searchString.indexOf("go") !== -1) {
-    $("#gravityBtn").prop("disabled", true);
-    eventsource();
-  }
 });
 
 function parseLines(ta, str) {
@@ -81,18 +74,18 @@ function parseLines(ta, str) {
   // We want to split the text before an "OVER" escape sequence to allow overwriting previous line when needed
 
   // Splitting the text on "\r"
-  var lines = str.split(/(?=\r)/g);
+  const lines = str.split(/(?=\r)/g);
 
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i][0] === "\r") {
+  for (let line of lines) {
+    if (line[0] === "\r") {
       // This line starts with the "OVER" sequence. Replace them with "\n" before print
-      lines[i] = lines[i].replaceAll("\r[K", "\n").replaceAll("\r", "\n");
+      line = line.replaceAll("\r[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
       ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
     }
 
     // Append the new text to the end of the output
-    ta.append(lines[i]);
+    ta.append(line);
   }
 }

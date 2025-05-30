@@ -5,11 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false, apiUrl: false */
+/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+
+"use strict";
 
 // Remove an element from an array (inline)
 function removeFromArray(arr, what) {
-  var found = arr.indexOf(what);
+  let found = arr.indexOf(what);
 
   while (found !== -1) {
     arr.splice(found, 1);
@@ -18,16 +20,16 @@ function removeFromArray(arr, what) {
 }
 
 function fillDNSupstreams(value, servers) {
-  var disabledStr = "";
+  let disabledStr = "";
   if (value.flags.env_var === true) {
     $("#DNSupstreamsTextfield").prop("disabled", true);
     disabledStr = 'disabled="Disabled"';
   }
 
-  var i = 0;
-  var customServers = value.value.length;
-  servers.forEach(element => {
-    var row = "<tr>";
+  let i = 0;
+  let customServers = value.value.length;
+  for (const element of servers) {
+    let row = "<tr>";
     // Build checkboxes for IPv4 and IPv6
     const addresses = [element.v4, element.v6];
     // Loop over address types (IPv4, IPv6)
@@ -36,7 +38,7 @@ function fillDNSupstreams(value, servers) {
       // Loop over available addresses (up to 2)
       for (let index = 0; index < 2; index++) {
         if (address.length > index) {
-          var checkedStr = "";
+          let checkedStr = "";
           if (
             value.value.includes(address[index]) ||
             value.value.includes(address[index] + "#53")
@@ -65,14 +67,14 @@ function fillDNSupstreams(value, servers) {
 
     // Add row to table
     $("#DNSupstreamsTable").append(row);
-  });
+  }
 
   // Add event listener to checkboxes
-  $("input[id^='DNSupstreams-']").on("change", function () {
-    var upstreams = $("#DNSupstreamsTextfield").val().split("\n");
-    var customServers = 0;
+  $("input[id^='DNSupstreams-']").on("change", () => {
+    const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
+    let customServers = 0;
     $("#DNSupstreamsTable input").each(function () {
-      var title = $(this).closest("td").attr("title");
+      const title = $(this).closest("td").attr("title");
       if (this.checked && !upstreams.includes(title)) {
         // Add server to array
         upstreams.push(title);
@@ -99,9 +101,25 @@ function fillDNSupstreams(value, servers) {
   applyCheckboxRadioStyle();
 }
 
-function setInterfaceName(interface) {
-  $("#interface-name-1").text(interface);
-  $("#interface-name-2").text(interface);
+function setInterfaceName(name) {
+  // If dns.interface is empty in pihole.toml, we use the first interface
+  // (same default value used by FTL)
+  if (name === "") {
+    $.ajax({
+      url: document.body.dataset.apiurl + "/network/gateway",
+      async: false,
+    })
+      .done(data => {
+        name = data.gateway[0].interface;
+      })
+      .fail(data => {
+        apiFailure(data);
+        name = "not found";
+      });
+  }
+
+  $("#interface-name-1").text(name);
+  $("#interface-name-2").text(name);
 }
 
 // Update the textfield with all (incl. custom) upstream servers
@@ -114,19 +132,19 @@ function updateDNSserversTextfield(upstreams, customServers) {
 
 function processDNSConfig() {
   $.ajax({
-    url: apiUrl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
+    url: document.body.dataset.apiurl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
   })
-    .done(function (data) {
+    .done(data => {
       // Initialize the DNS upstreams
       fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
       setInterfaceName(data.config.dns.interface.value);
       setConfigValues("dns", "dns", data.config.dns);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$(document).ready(function () {
+$(() => {
   processDNSConfig();
 });

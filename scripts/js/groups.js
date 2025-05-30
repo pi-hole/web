@@ -5,9 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
+/* global utils:false, apiFailure:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false */
 
-var table;
+"use strict";
+
+let table;
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -20,13 +22,13 @@ function handleAjaxError(xhr, textStatus) {
   table.draw();
 }
 
-$(function () {
+$(() => {
   $("#btnAdd").on("click", addGroup);
 
   table = $("#groupsTable").DataTable({
     processing: true,
     ajax: {
-      url: apiUrl + "/groups",
+      url: document.body.dataset.apiurl + "/groups",
       error: handleAjaxError,
       dataSrc: "groups",
       type: "GET",
@@ -44,7 +46,7 @@ $(function () {
       {
         targets: 1,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -53,18 +55,18 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       // Hide buttons if all groups were deleted
       // if there is one row, it's the default group
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 1;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 1;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteGroup_"]').on("click", deleteGroup);
     },
-    rowCallback: function (row, data) {
-      var dataId = utils.hexEncode(data.name);
+    rowCallback(row, data) {
+      const dataId = utils.hexEncode(data.name);
       $(row).attr("data-id", dataId);
-      var tooltip =
+      const tooltip =
         "Added: " +
         utils.datetime(data.date_added, false) +
         "\nLast modified: " +
@@ -74,7 +76,7 @@ $(function () {
       $("td:eq(1)", row).html(
         '<input id="name_' + dataId + '" title="' + tooltip + '" class="form-control">'
       );
-      var nameEl = $("#name_" + dataId, row);
+      const nameEl = $("#name_" + dataId, row);
       nameEl.val(data.name);
       nameEl.on("change", editGroup);
 
@@ -85,7 +87,7 @@ $(function () {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      var enabledEl = $("#enabled_" + dataId, row);
+      const enabledEl = $("#enabled_" + dataId, row);
       enabledEl.bootstrapToggle({
         on: "Enabled",
         off: "Disabled",
@@ -96,15 +98,15 @@ $(function () {
       enabledEl.on("change", editGroup);
 
       $("td:eq(3)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      var comment = data.comment !== null ? data.comment : "";
-      var commentEl = $("#comment_" + dataId, row);
+      const comment = data.comment !== null ? data.comment : "";
+      const commentEl = $("#comment_" + dataId, row);
       commentEl.val(comment);
       commentEl.on("change", editGroup);
 
       $("td:eq(4)", row).empty();
       // Show delete button for all but the default group
       if (data.id !== 0) {
-        var button =
+        const button =
           '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
           dataId +
           '" data-id="' +
@@ -125,7 +127,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -133,7 +135,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           table.rows({ page: "current" }).select();
         },
       },
@@ -147,9 +149,9 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
-          var ids = [];
+          const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
             ids.push({ item: $(this).attr("data-id") });
@@ -171,11 +173,11 @@ $(function () {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("groups-table", data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("groups-table");
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("groups-table");
 
       // Return if not available
       if (data === null) {
@@ -190,7 +192,7 @@ $(function () {
   });
 
   // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
+  const input = document.querySelector("input[type=search]");
   if (input !== null) {
     input.setAttribute("autocomplete", "off");
     input.setAttribute("autocorrect", "off");
@@ -198,8 +200,9 @@ $(function () {
     input.setAttribute("spellcheck", false);
   }
 
-  table.on("init select deselect", function () {
+  table.on("init select deselect", () => {
     // if the Default group is selected, undo the selection of it
+    // eslint-disable-next-line unicorn/prefer-includes
     if (table.rows({ selected: true }).data().pluck("id").indexOf(0) !== -1) {
       table.rows(0).deselect();
     }
@@ -207,8 +210,8 @@ $(function () {
     utils.changeBulkDeleteStates(table);
   });
 
-  table.on("order.dt", function () {
-    var order = table.order();
+  table.on("order.dt", () => {
+    const order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
       $("#resetButton").removeClass("hidden");
     } else {
@@ -216,7 +219,7 @@ $(function () {
     }
   });
 
-  $("#resetButton").on("click", function () {
+  $("#resetButton").on("click", () => {
     table.order([[0, "asc"]]).draw();
     $("#resetButton").addClass("hidden");
   });
@@ -237,17 +240,13 @@ function addGroup() {
   // Check if the user wants to add multiple groups (space or newline separated)
   // If so, split the input and store it in an array, however, do not split
   // group names enclosed in quotes
-  var names = utils
+  let names = utils
     .escapeHtml($("#new_name"))
     .val()
     .match(/(?:[^\s"]+|"[^"]*")+/g)
-    .map(function (name) {
-      return name.replaceAll(/(^"|"$)/g, "");
-    });
+    .map(name => name.replaceAll(/(^"|"$)/g, ""));
   // Remove empty elements
-  names = names.filter(function (el) {
-    return el !== "";
-  });
+  names = names.filter(el => el !== "");
   const groupStr = JSON.stringify(names);
 
   utils.disableAll();
@@ -261,17 +260,17 @@ function addGroup() {
   }
 
   $.ajax({
-    url: apiUrl + "/groups",
+    url: document.body.dataset.apiurl + "/groups",
     method: "post",
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       name: names,
-      comment: comment,
+      comment,
       enabled: true,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       utils.listsAlert("group", names, data);
       $("#new_name").val("");
@@ -282,7 +281,7 @@ function addGroup() {
       // Update number of groups in the sidebar
       updateFtlInfo();
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert("error", "", "Error while adding new group", data.responseText);
@@ -300,8 +299,8 @@ function editGroup() {
   const enabled = tr.find("#enabled_" + id).is(":checked");
   const comment = tr.find("#comment_" + id).val();
 
-  var done = "edited";
-  var notDone = "editing";
+  let done = "edited";
+  let notDone = "editing";
   switch (elem) {
     case "enabled_" + id:
       if (!enabled) {
@@ -329,22 +328,22 @@ function editGroup() {
   utils.disableAll();
   utils.showAlert("info", "", "Editing group...", oldName);
   $.ajax({
-    url: apiUrl + "/groups/" + oldName,
+    url: document.body.dataset.apiurl + "/groups/" + oldName,
     method: "put",
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
-      name: name,
-      comment: comment,
-      enabled: enabled,
+      name,
+      comment,
+      enabled,
     }),
-    success: function (data) {
+    success(data) {
       utils.enableAll();
       processGroupResult(data, "group", done, notDone);
       table.ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(

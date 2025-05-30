@@ -22,7 +22,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-bordered">
+                        <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th colspan="2">IPv4</th>
@@ -45,7 +45,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body">
+                            <div class="box-body" style="display: none;">
                                 <p>The following list contains all DNS servers selected above. Furthermore, you can add your own custom DNS servers here. The expected format is one server per line in form of <code>IP#port</code>, where the <code>port</code> is optional. If given, it has to be separated by a hash <code>#</code> from the address (e.g. <code>127.0.0.1#5335</code> for a local <code>unbound</code> instance running on port <code>5335</code>). The port defaults to 53 if omitted.</p>
                                 <textarea class="form-control" rows="3" id="DNSupstreamsTextfield" data-key="dns.upstreams" placeholder="Enter upstream DNS servers, one per line" style="resize: vertical;"></textarea>
                             </div>
@@ -57,7 +57,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-expert">
+        <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
             </div>
@@ -81,7 +81,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-expert">
+        <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
             </div>
@@ -99,14 +99,14 @@ mg.include('scripts/lua/settings_header.lp','r')
                             rate-limited clients are short-circuited at the same time.</p>
                         <p>Rate-limiting may be disabled altogether by setting both
                             values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener" target="_blank">our documentation</a>
+                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener noreferrer" target="_blank">our documentation</a>
                             for further details.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6 settings-level-expert">
+    <div class="col-lg-6 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h1 class="box-title" data-configkeys="dns.listeningMode">Interface settings</h1>
@@ -144,7 +144,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     in your router!) they are safe to use.</p>
                             </div>
                         </div>
-                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" rel="noopener" target="_blank">our documentation</a> for further technical details.</p>
+                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" rel="noopener noreferrer" target="_blank">our documentation</a> for further technical details.</p>
                     </div>
                 </div>
             </div>
@@ -173,7 +173,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <p class="help-block">All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                 which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
                                 with "no such domain" rather than being forwarded upstream. The set
-                                of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
+                                of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303" rel="noopener noreferrer" target="_blank">RFC6303</a>.</p>
                                 <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
                                 but may also prevent you from being able to access local hostnames if the Pi-hole is not used as DHCP server.
                                 Make sure you have set up conditional forwarding in this case.</p>
@@ -189,7 +189,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                 the size of your log might increase significantly
                                 when enabling DNSSEC. A DNSSEC resolver test can be found
-                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener noreferrer" target="_blank">here</a>.</p>
                         </div>
                     </div>
                 </div>
@@ -197,7 +197,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="box box-warning settings-level-expert">
+        <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>
@@ -219,7 +219,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
                             Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
                             Feel free to reach out to us on our
-                            <a href="https://discourse.pi-hole.net" rel="noopener" target="_blank">Discourse forum</a>
+                            <a href="https://discourse.pi-hole.net" rel="noopener noreferrer" target="_blank">Discourse forum</a>
                             in case you need any assistance setting up local host name resolution for your particular system.</p>
                         <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
                             devices ending in your local domain name will not leave your network, however, this is optional.
@@ -234,12 +234,12 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-basic save-button-container">
+    <div class="col-lg-12 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings-dns.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings-dns.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

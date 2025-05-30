@@ -75,7 +75,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                     </div>
                                     <div class="form-group">
                                         <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
-                                        <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener" target="_blank">
+                                        <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener noreferrer" target="_blank">
                                             regular expressions tutorial</a>.
                                     </div>
                                 </div>
@@ -156,9 +156,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/groups-domains.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/groups-domains.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

@@ -45,17 +45,17 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-warning collapsed-box box-solid">
-            <div class="box-header with-border">
-                <button type="button" class="btn btn-box-tool btn-block" data-widget="collapse">
-                    <h3 class="box-title pull-left">Advanced filtering</h3>
-                    <div class="pull-right">
+        <div class="box box-info collapsed-box box-solid">
+            <div class="box-header with-border pointer no-user-select p-4" data-widget="collapse">
+                <h3 class="box-title">Advanced filtering</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool">
                         <i class="fa fa-plus"></i>
-                    </div>
-                </button>
+                    </button>
+                </div>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
+            <div class="box-body" style="display: none;">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <div class="input-group">
@@ -72,7 +72,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Domain</label>
+                            <label>Domain*</label>
                             <select id="domain_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -80,7 +80,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Client (by IP)</label>
+                            <label>Client (by IP)*</label>
                             <select id="client_ip_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -88,7 +88,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Client (by name)</label>
+                            <label>Client (by name)*</label>
                             <select id="client_name_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -96,7 +96,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Upstream</label>
+                            <label>Upstream*</label>
                             <select id="upstream_filter" class="form-control" placeholder="">
                                 <option disabled selected>Loading...</option>
                             </select>
@@ -138,6 +138,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix">
+                <span class="pull-left">* These input fields allow manual input as well. Use <code>*</code> for wildcard search.</span>
                 <span class="pull-right">Click "Refresh" below to apply.</span>
             </div>
             <!-- /.box -->
@@ -194,9 +195,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/queries.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/queries.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

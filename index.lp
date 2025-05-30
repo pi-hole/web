@@ -16,7 +16,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <!-- small box -->
         <div class="small-box bg-aqua no-user-select" id="total_queries" title="Total number of queries">
             <div class="inner">
-                <p>Total queries</p>
+                <p>Total Queries</p>
                 <h3 class="statistic"><span id="dns_queries">---</span></h3>
             </div>
             <div class="icon">
@@ -108,7 +108,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <div class="box-body">
                 <div class="chart" style="width: 100%; height: 180px">
-                    <canvas id="clientsChart" class="extratooltipcanvas no-user-select"></canvas>
+                    <canvas id="clientsChart" class="no-user-select"></canvas>
                 </div>
             </div>
             <div class="overlay">
@@ -144,7 +144,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <div class="box-body">
                 <div style="width:50%">
-                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="extratooltipcanvas no-user-select"></canvas>
+                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="no-user-select"></canvas>
                 </div>
                 <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
             </div>
@@ -166,7 +166,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Domain</th>
@@ -195,7 +195,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Domain</th>
@@ -226,7 +226,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Client</th>
@@ -255,7 +255,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <!-- /.box-header -->
             <div class="box-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
                             <th>Client</th>
@@ -279,7 +279,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script defer src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/index.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/index.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

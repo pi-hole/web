@@ -5,14 +5,16 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl: false, NProgress:false */
+/* global utils:false, NProgress:false */
 
-var _isLoginPage = true;
+"use strict";
+
+globalThis._isLoginPage = true;
 
 function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to dashboard
-  var target = ".";
+  let target = ".";
 
   // If DNS failure: send to Pi-hole diagnosis messages page
   if ($("#dns-failure-label").is(":visible")) {
@@ -25,8 +27,8 @@ function redirect() {
 
 function wrongPassword(isError = false, isSuccess = false, data = null) {
   if (isError) {
-    let isErrorResponse = false,
-      isInvalidTOTP = false;
+    let isErrorResponse = false;
+    let isInvalidTOTP = false;
 
     // Reset hint and error message
     $("#error-message").text("");
@@ -71,7 +73,9 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     }
 
     return;
-  } else if (isSuccess) {
+  }
+
+  if (isSuccess) {
     $("#pw-field").addClass("has-success");
     $("#totp_input").addClass("has-success");
   } else {
@@ -91,35 +95,29 @@ function doLogin(password) {
   NProgress.start();
   utils.disableAll();
   $.ajax({
-    url: apiUrl + "/auth",
+    url: document.body.dataset.apiurl + "/auth",
     method: "POST",
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ password: password, totp: parseInt($("#totp").val(), 10) }),
+    data: JSON.stringify({ password, totp: Number.parseInt($("#totp").val(), 10) }),
   })
-    .done(function (data) {
+    .done(data => {
       wrongPassword(false, true, data);
       NProgress.done();
       redirect();
     })
-    .fail(function (data) {
+    .fail(data => {
       wrongPassword(true, false, data);
       NProgress.done();
       utils.enableAll();
     });
 }
 
-$("#loginform").submit(function (e) {
+$("#loginform").on("submit", event => {
   // Cancel the native submit event (prevent the form from being
   // submitted) because we want to do a two-step challenge-response login
-  e.preventDefault();
-
-  // Check if cookie checkbox is enabled
-  /*  if (!$("#logincookie").is(":checked")) {
-    alert("Please consent to using a login cookie to be able to log in. It is necessary to keep you logged in between page reloads. You can end the session by clicking on the logout button in the top right menu at any time.");
-    return;
-  }*/
+  event.preventDefault();
 
   doLogin($("#current-password").val());
 });
@@ -129,7 +127,7 @@ $("#totp").on("input", function () {
   const code = $(this).val();
   const password = $("#current-password").val();
   if (code.length === 6 && password.length > 0) {
-    $("#loginform").submit();
+    $("#loginform").trigger("submit");
   }
 });
 
@@ -139,7 +137,7 @@ $("#toggle-password").on("click", function () {
   $(".field-icon", this).toggleClass("fa-eye fa-eye-slash");
 
   // Password field
-  var $pwd = $("#current-password");
+  const $pwd = $("#current-password");
   if ($pwd.attr("type") === "password") {
     $pwd.attr("type", "text");
     $pwd.attr("title", "Hide password");
@@ -160,16 +158,16 @@ function showDNSfailure() {
   $("#login-box").addClass("error-box");
 }
 
-$(function () {
+$(() => {
   // Check if we need to login at all
   $.ajax({
-    url: apiUrl + "/auth",
+    url: document.body.dataset.apiurl + "/auth",
   })
-    .done(function (data) {
+    .done(data => {
       // If we are already logged in, redirect to dashboard
       if (data.session.valid === true) redirect();
     })
-    .fail(function (xhr) {
+    .fail(xhr => {
       const session = xhr.responseJSON.session;
       // If TOPT is enabled, show the input field and add the required attribute
       if (session.totp === true) {
@@ -182,8 +180,8 @@ $(function () {
 
   // Get information about HTTPS port and DNS status
   $.ajax({
-    url: apiUrl + "/info/login",
-  }).done(function (data) {
+    url: document.body.dataset.apiurl + "/info/login",
+  }).done(data => {
     if (data.dns === false) showDNSfailure();
 
     // Generate HTTPS redirection link (only used if not already HTTPS)

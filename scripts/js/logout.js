@@ -7,11 +7,13 @@
 
 /* global utils:false */
 
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-button");
-  const logoutUrl = document.body.dataset.logoutUrl;
+  const logoutUrl = document.body.dataset.webhome + "login";
 
-  logoutButton.addEventListener("click", event => {
+  logoutButton?.addEventListener("click", event => {
     event.preventDefault();
     utils.doLogout(logoutUrl);
   });

@@ -2,7 +2,7 @@ name: Mark stale issues
 
 on:
   schedule:
-    - cron: '0 8 * * *'
+    - cron: "0 8 * * *"
   workflow_dispatch:
   issue_comment:
 
@@ -17,17 +17,17 @@ jobs:
       issues: write
 
     steps:
-    - uses: actions/stale@v9.1.0
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        days-before-stale: 30
-        days-before-close: 5
-        stale-issue-message: 'This issue is stale because it has been open 30 days with no activity. Please comment or update this issue or it will be closed in 5 days.'
-        stale-issue-label: '${{ env.stale_label }}'
-        exempt-issue-labels: 'internal, Fixed In Next Release, Bug, never-stale'
-        exempt-all-issue-assignees: true
-        operations-per-run: 300
-        close-issue-reason: 'not_planned'
+      - uses: actions/stale@v9.1.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 30
+          days-before-close: 5
+          stale-issue-message: "This issue is stale because it has been open 30 days with no activity. Please comment or update this issue or it will be closed in 5 days."
+          stale-issue-label: "${{ env.stale_label }}"
+          exempt-issue-labels: "internal, Fixed In Next Release, Bug, never-stale, Bug: Confirmed"
+          exempt-all-issue-assignees: true
+          operations-per-run: 300
+          close-issue-reason: "not_planned"
 
   remove_stale:
     # trigger "stale" removal immediately when stale issues are commented on
@@ -40,8 +40,10 @@ jobs:
       issues: write #  to edit issues label
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Clone repository
         uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
       - name: Remove 'stale' label
         run: gh issue edit ${{ github.event.issue.number }} --remove-label ${{ env.stale_label }}
         env:

@@ -5,20 +5,22 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global setConfigValues: false, apiFailure: false, apiUrl: false */
+/* global setConfigValues: false, apiFailure: false */
+
+"use strict";
 
 function getConfig() {
   $.ajax({
-    url: apiUrl + "/config/?detailed=true",
+    url: document.body.dataset.apiurl + "/config/?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       setConfigValues("", "", data.config);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$(document).ready(function () {
+$(() => {
   getConfig();
 });

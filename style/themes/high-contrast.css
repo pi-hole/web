@@ -304,13 +304,6 @@ a:hover {
   background: #eb4;
 }
 
-.icheckbox_minimal-blue {
-  margin-right: 10px;
-}
-.iradio_minimal-blue {
-  margin-right: 8px;
-}
-
 .datatable-bt,
 .datatable-bt:active,
 .datatable-bt:active:focus,
@@ -375,10 +368,8 @@ select:-webkit-autofill {
 }
 
 .small-box > .small-box-footer {
-  color: #fff;
-}
-.small-box > .small-box-footer {
   background: rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
 /* Tables and Datatables */

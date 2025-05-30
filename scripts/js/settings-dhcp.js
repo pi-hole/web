@@ -5,13 +5,15 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues: false, apiFailure: false */
 
-var dhcpLeaesTable = null,
-  toasts = {};
+"use strict";
+
+let dhcpLeaesTable = null;
+const toasts = {};
 
 // DHCP leases tooltips
-$(function () {
+$(() => {
   $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
 });
 
@@ -19,7 +21,7 @@ function renderHostnameCLID(data, type) {
   // Display and search content
   if (type === "display" || type === "filter") {
     if (data === "*") {
-      return "<i>---</i>";
+      return "<em>---</em>";
     }
 
     return data;
@@ -29,10 +31,10 @@ function renderHostnameCLID(data, type) {
   return data;
 }
 
-$(function () {
+$(() => {
   dhcpLeaesTable = $("#DHCPLeasesTable").DataTable({
     ajax: {
-      url: apiUrl + "/dhcp/leases",
+      url: document.body.dataset.apiurl + "/dhcp/leases",
       type: "GET",
       dataSrc: "leases",
     },
@@ -51,7 +53,7 @@ $(function () {
         targets: 0,
         orderable: false,
         className: "select-checkbox",
-        render: function () {
+        render() {
           return "";
         },
       },
@@ -60,19 +62,19 @@ $(function () {
         render: $.fn.dataTable.render.text(),
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteLease_"]').on("click", deleteLease);
 
       // Hide buttons if all messages were deleted
-      var hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
+      const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
     },
-    rowCallback: function (row, data) {
+    rowCallback(row, data) {
       $(row).attr("data-id", data.ip);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteLease_' +
         data.ip +
         '" data-del-ip="' +
@@ -92,7 +94,7 @@ $(function () {
         text: '<span class="far fa-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectAll",
-        action: function () {
+        action() {
           dhcpLeaesTable.rows({ page: "current" }).select();
         },
       },
@@ -100,7 +102,7 @@ $(function () {
         text: '<span class="far fa-plus-square"></span>',
         titleAttr: "Select All",
         className: "btn-sm datatable-bt selectMore",
-        action: function () {
+        action() {
           dhcpLeaesTable.rows({ page: "current" }).select();
         },
       },
@@ -114,7 +116,7 @@ $(function () {
         text: '<span class="far fa-trash-alt"></span>',
         titleAttr: "Delete Selected",
         className: "btn-sm datatable-bt deleteSelected",
-        action: function () {
+        action() {
           // For each ".selected" row ...
           $("tr.selected").each(function () {
             // ... delete the row identified by "data-id".
@@ -138,11 +140,11 @@ $(function () {
     },
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("dhcp-leases-table", data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("dhcp-leases-table");
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("dhcp-leases-table");
       // Return if not available
       if (data === null) {
         return null;
@@ -152,7 +154,7 @@ $(function () {
       return data;
     },
   });
-  dhcpLeaesTable.on("init select deselect", function () {
+  dhcpLeaesTable.on("init select deselect", () => {
     utils.changeTableButtonStates(dhcpLeaesTable);
   });
 });
@@ -167,10 +169,10 @@ function delLease(ip) {
   toasts[ip] = utils.showAlert("info", "", "Deleting lease...", ip, null);
 
   $.ajax({
-    url: apiUrl + "/dhcp/leases/" + encodeURIComponent(ip),
+    url: document.body.dataset.apiurl + "/dhcp/leases/" + encodeURIComponent(ip),
     method: "DELETE",
   })
-    .done(function (response) {
+    .done(response => {
       utils.enableAll();
       if (response === undefined) {
         utils.showAlert(
@@ -195,7 +197,7 @@ function delLease(ip) {
       dhcpLeaesTable.rows().deselect();
       utils.changeTableButtonStates(dhcpLeaesTable);
     })
-    .fail(function (jqXHR, exception) {
+    .fail((jqXHR, exception) => {
       utils.enableAll();
       utils.showAlert(
         "error",
@@ -214,17 +216,17 @@ function fillDHCPhosts(data) {
 
 function processDHCPConfig() {
   $.ajax({
-    url: apiUrl + "/config/dhcp?detailed=true",
+    url: document.body.dataset.apiurl + "/config/dhcp?detailed=true",
   })
-    .done(function (data) {
+    .done(data => {
       fillDHCPhosts(data.config.dhcp.hosts);
       setConfigValues("dhcp", "dhcp", data.config.dhcp);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
-$(document).ready(function () {
+$(() => {
   processDHCPConfig();
 });

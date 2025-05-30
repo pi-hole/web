@@ -5,9 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, apiFailure:false*/
+/* global utils:false, apiFailure:false*/
 
-$(function () {
+"use strict";
+
+$(() => {
   // Handle hiding of alerts
   $("[data-hide]").on("click", function () {
     $(this)
@@ -16,7 +18,7 @@ $(function () {
   });
 
   // Handle saving of settings
-  $(".save-button").on("click", function () {
+  $(".save-button").on("click", () => {
     saveSettings();
   });
 });
@@ -26,18 +28,18 @@ $(function () {
 function setConfigValues(topic, key, value) {
   // If the value is an object, we need to recurse
   if (!("description" in value)) {
-    Object.keys(value).forEach(function (subkey) {
-      var subvalue = value[subkey];
+    for (const [subkey, subvalue] of Object.entries(value)) {
       // If the key is empty, we are at the top level
-      var newKey = key === "" ? subkey : key + "." + subkey;
+      const newKey = key === "" ? subkey : key + "." + subkey;
       setConfigValues(topic, newKey, subvalue);
-    });
+    }
+
     return;
   }
 
   // else: we have a setting we can set
-  var escapedKey = key.replaceAll(".", "\\.");
-  var envTitle = $(`[data-configkeys~='${key}']`);
+  const escapedKey = key.replaceAll(".", "\\.");
+  const envTitle = $(`[data-configkeys~='${key}']`);
 
   if (
     envTitle.parents().parents().hasClass("settings-level-expert") &&
@@ -71,13 +73,14 @@ function setConfigValues(topic, key, value) {
       // Remove all options from select
       $("#" + escapedKey + " option").remove();
       // Add allowed select items (if available)
-      value.allowed.forEach(function (allowedValue) {
+      for (const allowedValue of value.allowed) {
         $("#" + escapedKey + "-" + allowedValue.item).prop("disabled", value.flags.env_var);
-        var newopt = $("<option></option>")
+        const newopt = $("<option></option>")
           .attr("value", allowedValue.item)
           .text(allowedValue.description);
         $("#" + escapedKey).append(newopt);
-      });
+      }
+
       // Select the current value
       $("#" + escapedKey)
         .val(value.value)
@@ -116,11 +119,11 @@ function setConfigValues(topic, key, value) {
 }
 
 function saveSettings() {
-  var settings = {};
+  const settings = {};
   utils.disableAll();
   $("[data-key]").each(function () {
-    var key = $(this).data("key");
-    var value = $(this).val();
+    const key = $(this).data("key");
+    let value = $(this).val();
 
     // If this is a checkbox, use the checked state
     if ($(this).is(":checkbox")) {
@@ -138,20 +141,20 @@ function saveSettings() {
 
     // If this is an integer number, parse it accordingly
     if ($(this).data("type") === "integer") {
-      value = parseInt(value, 10);
+      value = Number.parseInt(value, 10);
     }
 
     // If this is a floating point value, parse it accordingly
     if ($(this).data("type") === "float") {
-      value = parseFloat(value);
+      value = Number.parseFloat(value);
     }
 
     // Build deep object
     // Transform "foo.bar.baz" into {foo: {bar: {baz: value}}}
-    var parts = key.split(".");
-    var obj = {};
-    var tmp = obj;
-    for (var i = 0; i < parts.length - 1; i++) {
+    const parts = key.split(".");
+    const obj = {};
+    let tmp = obj;
+    for (let i = 0; i < parts.length - 1; i++) {
       tmp[parts[i]] = {};
       tmp = tmp[parts[i]];
     }
@@ -164,14 +167,14 @@ function saveSettings() {
 
   // Apply changes
   $.ajax({
-    url: apiUrl + "/config",
+    url: document.body.dataset.apiurl + "/config",
     method: "PATCH",
     dataType: "json",
     processData: false,
     data: JSON.stringify({ config: settings }),
     contentType: "application/json; charset=utf-8",
   })
-    .done(function () {
+    .done(() => {
       utils.enableAll();
       // Success
       utils.showAlert(
@@ -183,7 +186,7 @@ function saveSettings() {
       // Show loading overlay
       utils.loadingOverlay(true);
     })
-    .fail(function (data, exception) {
+    .fail((data, exception) => {
       utils.enableAll();
       utils.showAlert("error", "", "Error while applying settings", data.responseText);
       console.log(exception); // eslint-disable-line no-console

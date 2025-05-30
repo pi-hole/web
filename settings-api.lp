@@ -14,7 +14,7 @@ PageTitle = "Web Interface - API Settings"
 mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6 settings-level-basic">
+    <div class="col-md-6">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
@@ -49,7 +49,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
 
-    <div class="col-md-6 settings-level-expert">
+    <div class="col-md-6 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
@@ -82,7 +82,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 </div>
 
 <div class="row">
-        <div class="col-md-12 settings-level-expert">
+    <div class="col-md-12 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
@@ -102,7 +102,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                    <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener" target="_blank">our guide</a> how to construct valid regex entries.
+                        <p><strong>Important</strong>:<br>Those input fields accept regex entries only.<br>Please refer to  <a href="https://docs.pi-hole.net/regex/tutorial/" rel="noopener noreferrer" target="_blank">our guide</a> how to construct valid regex entries.</p>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>-->
 
-    <div class="col-md-12 settings-level-expert">
+    <div class="col-md-12 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title">Currently active sessions</h3>
@@ -166,7 +166,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-basic save-button-container">
+    <div class="col-lg-12 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
@@ -204,7 +204,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" id="totp_submit" disabled="true" class="btn btn-default">Enable 2FA</button>
+                <button type="button" id="totp_submit" class="btn btn-default" disabled>Enable 2FA</button>
             </div>
         </div>
     </div>
@@ -246,10 +246,10 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 </div>
 
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

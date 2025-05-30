@@ -14,7 +14,8 @@ webhome = pihole.webhome()
 theme = pihole.webtheme()
 
 -- Get name of script by matching whatever is after the last "/" in the URI
-scriptname = mg.request_info.request_uri:match(webhome.."(.*)$")
+scriptname = mg.script_name:match(".*/(.*).lp$"):gsub("-", "/")
+
 -- Fall back to "index.lp" if no match is found (e.g. when accessing the root)
 if scriptname == nil or string.len(scriptname) == 0 then scriptname = "index.lp" end
 
@@ -25,6 +26,10 @@ end
 
 -- Function returning GET parameter value (or nil if not set)
 function GET(name)
+    if not mg.request_info.query_string then
+        return nil
+    end
+
     return mg.request_info.query_string:match(name.."=([^&]*)")
     -- mg.get_var(mg.request_info.query_string, "REQUEST_URI")
 end
@@ -40,6 +45,20 @@ function in_array (val, tab)
     return false
 end
 
+-- Function to sanitize hostname containing invalid HTML characters
+function sanitize_hostname(str)
+    -- Check if string contains any of the HTML special characters
+    if str:find("&<>\"'") then
+        return "invalid hostname"
+    end
+
+    -- Return the original string if no special characters are found
+    return str
+end
+
+-- Sanitize hostname
+hostname = sanitize_hostname(hostname)
+
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
@@ -47,12 +66,8 @@ is_authenticated = mg.request_info.is_authenticated
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
-    <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Pi-hole <?=hostname?></title>
-
     <meta name="csrf-token" content="<?=mg.request_info.csrf_token?>">
 
     <link rel="apple-touch-icon" href="<?=webhome?>img/favicons/apple-touch-icon.png" sizes="180x180">
@@ -81,6 +96,7 @@ is_authenticated = mg.request_info.is_authenticated
 
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/icheck/icheck-bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
@@ -114,10 +130,10 @@ is_authenticated = mg.request_info.is_authenticated
     <noscript><link rel="stylesheet" href="<?=pihole.fileversion('vendor/js-warn/js-warn.css')?>"></noscript>
 
     <!-- scripts -->
-    <script defer src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
-    <script defer src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>

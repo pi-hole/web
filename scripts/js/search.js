@@ -5,10 +5,13 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl:false, apiFailure:false */
-var GETDict = {};
+/* global utils:false, apiFailure:false */
 
-$(function () {
+"use strict";
+
+let GETDict = {};
+
+$(() => {
   GETDict = utils.parseQueryString();
   if (GETDict.domain !== undefined) {
     $("input[id^='domain']").val(GETDict.domain);
@@ -31,23 +34,23 @@ function doSearch() {
     return;
   }
 
-  var verb = partial ? "partially" : "exactly";
+  const verb = partial ? "partially" : "exactly";
 
   $.ajax({
     method: "GET",
-    url: apiUrl + "/search/" + encodeURIComponent(q),
+    url: document.body.dataset.apiurl + "/search/" + encodeURIComponent(q),
     async: false,
     data: {
-      partial: partial,
-      N: N,
+      partial,
+      N,
     },
   })
-    .done(function (data) {
+    .done(data => {
       ta.empty();
       ta.show();
 
       const res = data.search;
-      var result = "";
+      let result = "";
       const numDomains = res.domains.length;
       result =
         "Found " +
@@ -91,7 +94,7 @@ function doSearch() {
       }
 
       // Group results in res.gravity by res.gravity[].address
-      var grouped = {};
+      const grouped = {};
       for (const list of res.gravity) {
         if (grouped[list.address + "_" + list.type] === undefined) {
           grouped[list.address + "_" + list.type] = [];
@@ -190,13 +193,13 @@ function doSearch() {
 
       ta.append(result);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
     });
 }
 
 // Handle enter key
-$("#domain").on("keypress", function (e) {
+$("#domain").on("keypress", e => {
   if (e.which === 13) {
     // Enter was pressed, and the input has focus
     doSearch();
@@ -204,6 +207,6 @@ $("#domain").on("keypress", function (e) {
 });
 
 // Handle search buttons
-$("button[id='btnSearch']").on("click", function () {
+$("button[id='btnSearch']").on("click", () => {
   doSearch();
 });

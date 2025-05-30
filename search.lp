@@ -19,7 +19,6 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="box-header">
                 <div id="domain-search-block" class="input-group">
                     <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                    <input id="quiet" type="hidden" value="no">
                     <span class="input-group-btn">
                         <button type="button" id="btnSearch" class="btn btn-default">Search</button>
                     </span>
@@ -48,5 +47,5 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <pre id="output" style="width: 100%; height: 100%;" hidden></pre>
 
-<script defer src="<?=pihole.fileversion('scripts/js/search.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/search.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>

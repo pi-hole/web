@@ -5,10 +5,12 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false, apiUrl: false */
+/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
 
-var nextID = 0;
-var lastPID = -1;
+"use strict";
+
+let nextID = 0;
+let lastPID = -1;
 
 // Maximum number of lines to display
 const maxlines = 5000;
@@ -69,6 +71,8 @@ function formatFTL(line, prio) {
   return `<span class="${prioClass}">${utils.escapeHtml(prio)}</span> ${line}`;
 }
 
+let gAutoScrolling;
+
 // Function that asks the API for new data
 function getData() {
   // Only update when spinner is spinning
@@ -77,18 +81,18 @@ function getData() {
     return;
   }
 
-  var GETDict = utils.parseQueryString();
+  const GETDict = utils.parseQueryString();
   if (!("file" in GETDict)) {
     globalThis.location.href += "?file=dnsmasq";
     return;
   }
 
   $.ajax({
-    url: apiUrl + "/logs/" + GETDict.file + "?nextID=" + nextID,
+    url: document.body.dataset.apiurl + "/logs/" + GETDict.file + "?nextID=" + nextID,
     timeout: 5000,
     method: "GET",
   })
-    .done(function (data) {
+    .done(data => {
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
@@ -107,7 +111,7 @@ function getData() {
       // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
-          $("#output").html("<div><i>*** Log file is empty ***</i></div>");
+          $("#output").html("<div><em>*** Log file is empty ***</em></div>");
         }
 
         utils.setTimer(getData, REFRESH_INTERVAL.logs);
@@ -120,7 +124,7 @@ function getData() {
         $("#output").append('<hr class="hr-small">').children(":last").fadeOut(2000);
       }
 
-      data.log.forEach(function (line) {
+      for (const line of data.log) {
         // Escape HTML
         line.message = utils.escapeHtml(line.message);
         // Format line if applicable
@@ -139,10 +143,10 @@ function getData() {
           //$(".left-line:last").fadeOut(2000);
           $("#output").children(":last").hide().fadeIn("fast");
         }
-      });
+      }
 
       // Limit output to <maxlines> lines
-      var lines = $("#output").val().split("\n");
+      const lines = $("#output").val().split("\n");
       if (lines.length > maxlines) {
         lines.splice(0, lines.length - maxlines);
         $("#output").val(lines.join("\n"));
@@ -162,14 +166,14 @@ function getData() {
 
       utils.setTimer(getData, REFRESH_INTERVAL.logs);
     })
-    .fail(function (data) {
+    .fail(data => {
       apiFailure(data);
       utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }
 
-var gAutoScrolling = true;
-$("#output").on("scroll", function () {
+gAutoScrolling = true;
+$("#output").on("scroll", () => {
   // Check if we are at the bottom of the output
   //
   // - $("#output")[0].scrollHeight: This gets the entire height of the content
@@ -185,7 +189,7 @@ $("#output").on("scroll", function () {
   const bottom =
     $("#output")[0].scrollHeight - $("#output").innerHeight() - $("#output").scrollTop();
   // Add a tolerance of four line heights
-  const tolerance = 4 * parseFloat($("#output").css("line-height"));
+  const tolerance = 4 * Number.parseFloat($("#output").css("line-height"));
   if (bottom <= tolerance) {
     // Auto-scrolling is enabled
     gAutoScrolling = true;
@@ -199,7 +203,7 @@ $("#output").on("scroll", function () {
   }
 });
 
-$(function () {
+$(() => {
   getData();
 
   // Clicking on the element with class "fa-spinner" will toggle the play/pause state

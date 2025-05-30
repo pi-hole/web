@@ -289,11 +289,6 @@ td.lookatme {
   text-decoration: underline;
 }
 
-.strike,
-.strike span {
-  text-decoration: line-through !important;
-}
-
 /* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
 .sidebar-menu > li > a > .fab,
 .sidebar-menu > li > a > .far,
@@ -344,7 +339,7 @@ td.lookatme {
 }
 
 .user-panel > .image > img {
-  max-width: 52px;
+  max-width: 60px;
   min-width: 30px;
 }
 
@@ -354,6 +349,7 @@ td.lookatme {
   line-height: 1.05;
   flex: 1 1 auto;
   left: auto;
+  width: 138px;
 }
 
 .user-panel > .info > p {
@@ -913,6 +909,7 @@ body:not([class*="lcars"])
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
   height: auto;
   padding: 15px 15px 5px;
+  font-weight: 600;
 }
 
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
@@ -1254,14 +1251,6 @@ table.dataTable tbody > tr > .selected {
   display: none;
 }
 
-.settings-level-basic {
-  display: none;
-}
-
-.settings-level-expert {
-  display: none;
-}
-
 .main-footer {
   padding-bottom: 0px;
 }
@@ -1290,7 +1279,7 @@ table.dataTable tbody > tr > .selected {
   float: none;
   text-align: center;
   font-size: 100px;
-  font-weight: 500;
+  font-weight: 600;
   padding-right: 20px;
 }
 
@@ -1498,6 +1487,10 @@ table.dataTable tbody > tr > .selected {
 .py-3 {
   padding-bottom: 1rem !important;
   padding-top: 1rem !important;
+}
+
+.d-none {
+  display: none !important;
 }
 
 .password_background {

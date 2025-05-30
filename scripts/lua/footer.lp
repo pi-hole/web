@@ -21,12 +21,12 @@ end
         <!-- /.content -->
     </div>
     <!-- Modal for custom disable time -->
-    <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="customDisableModalLabel">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Custom disable timeout</h4>
+                    <h4 class="modal-title" id="customDisableModalLabel">Custom disable timeout</h4>
                 </div>
                 <div class="modal-body">
                     <div class="input-group">
@@ -52,7 +52,7 @@ end
     <footer class="main-footer">
         <div class="row row-centered text-center">
             <div class="col-xs-12 col-sm-6">
-                <strong><a href="https://pi-hole.net/donate/" rel="noopener" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
+                <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
             </div>
         </div>
 
@@ -66,7 +66,7 @@ end
 
 </div>
 <!-- ./wrapper -->
-<script defer src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 
 <div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-xff="<?=x_forwarded_for?>"></div>
 </body>

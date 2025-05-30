@@ -14,7 +14,7 @@ PageTitle = "Privacy Settings"
 mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
-    <div class="col-md-6 settings-level-basic">
+    <div class="col-md-6">
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-warning">
@@ -34,7 +34,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 settings-level-expert">
+            <div class="col-md-12 settings-level-expert d-none">
                 <div class="box box-warning">
                     <div class="box-header with-border">
                         <h3 class="box-title" data-configkeys="database.DBimport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
@@ -64,7 +64,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6 settings-level-expert">
+    <div class="col-md-6 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
@@ -99,13 +99,13 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-basic save-button-container">
+    <div class="col-lg-12 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
 
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings-privacy.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings-privacy.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

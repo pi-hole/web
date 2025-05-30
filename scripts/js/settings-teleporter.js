@@ -5,24 +5,26 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiUrl: false */
+/* global utils:false */
+
+"use strict";
 
 // Add event listener to import button
-document.getElementById("submit-import").addEventListener("click", function () {
+document.getElementById("submit-import").addEventListener("click", () => {
   importZIP();
 });
 
 // Upload file to Pi-hole
 function importZIP() {
-  var file = document.getElementById("file").files[0];
+  const file = document.getElementById("file").files[0];
   if (file === undefined) {
     alert("Please select a file to import.");
     return;
   }
 
   // Get the selected import options
-  const imports = {},
-    gravity = {};
+  const imports = {};
+  const gravity = {};
   imports.config = document.getElementById("import.config").checked;
   imports.dhcp_leases = document.getElementById("import.dhcp_leases").checked;
   gravity.group = document.getElementById("import.gravity.group").checked;
@@ -37,7 +39,7 @@ function importZIP() {
   const formData = new FormData();
   formData.append("import", JSON.stringify(imports));
   formData.append("file", file);
-  fetch(apiUrl + "/teleporter", {
+  fetch(document.body.dataset.apiurl + "/teleporter", {
     method: "POST",
     body: formData,
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
@@ -56,9 +58,9 @@ function importZIP() {
       } else if ("files" in data) {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
-        var text = "<p>Processed files:</p><ul>";
-        for (var i = 0; i < data.files.length; i++) {
-          text += "<li>" + utils.escapeHtml(data.files[i]) + "</li>";
+        let text = "<p>Processed files:</p><ul>";
+        for (const file of data.files) {
+          text += "<li>" + utils.escapeHtml(file) + "</li>";
         }
 
         text += "</ul>";
@@ -75,17 +77,17 @@ function importZIP() {
 }
 
 // Inspired by https://stackoverflow.com/a/59576416/2087442
-$("#GETTeleporter").on("click", function () {
+$("#GETTeleporter").on("click", () => {
   $.ajax({
-    url: apiUrl + "/teleporter",
+    url: document.body.dataset.apiurl + "/teleporter",
     headers: { "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content") },
     method: "GET",
     xhrFields: {
       responseType: "blob",
     },
-    success: function (data, status, xhr) {
-      var a = document.createElement("a");
-      var url = globalThis.URL.createObjectURL(data);
+    success(data, status, xhr) {
+      const a = document.createElement("a");
+      const url = globalThis.URL.createObjectURL(data);
 
       a.href = url;
       a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/)[1];
@@ -98,7 +100,7 @@ $("#GETTeleporter").on("click", function () {
   });
 });
 
-$(function () {
+$(() => {
   // Show warning if not accessed over HTTPS
   if (location.protocol !== "https:") {
     $("#encryption-warning").show();

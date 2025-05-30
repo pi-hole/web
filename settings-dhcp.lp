@@ -15,7 +15,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <!-- DHCP Settings Box -->
-    <div class="col-md-6 settings-level-basic">
+    <div class="col-md-6">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dhcp.active dhcp.start dhcp.end dhcp.router dhcp.ipv6">DHCP Settings</h3>
@@ -25,7 +25,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-md-12">
                         <div>
                             <input type="checkbox" id="dhcp.active" data-key="dhcp.active"><label for="dhcp.active"><strong>DHCP server enabled</strong></label>
-                            <p class="help-block" id="dhcpnotice" lookatme-text="Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                            <p class="help-block" id="dhcpnotice">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                         </div>
                     </div>
                     <div class="col-xs-12">
@@ -86,7 +86,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-6 settings-level-expert">
+    <div class="col-md-6 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
@@ -165,7 +165,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-md-12 settings-level-expert">
+    <div class="col-md-12 settings-level-expert d-none">
         <div class="box box-warning">
             <div class="box-header with-border">
                 <h3 class="box-title" data-configkeys="dhcp.hosts">Static DHCP configuration</h3>
@@ -198,7 +198,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body">
+                            <div class="box-body" style="display: none;">
                                 <ul>
                                     <li> Addresses allocated like this are not constrained to be in the DHCP range specified above but they must be in the same subnet. For subnets which don't need a pool of dynamically allocated addresses, you can set a one-address range above and specify only static leases here.</li>
                                     <li> It is allowed to use client identifiers (called client DUID in IPv6-land) rather than hardware addresses to identify hosts by prefixing with <code>id:</code>. Thus lines like <code>id:01:02:03:04,.....</code> refer to the host with client identifier <code>01:02:03:04</code>. It is also allowed to specify the client ID as text, like this: <code>id:clientidastext,.....</code></li>
@@ -221,13 +221,13 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
     </div>
-    <div class="col-lg-12 settings-level-basic save-button-container">
+    <div class="col-lg-12 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
-<script defer src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings-dhcp.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
-<script defer src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings-dhcp.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

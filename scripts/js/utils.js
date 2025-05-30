@@ -5,9 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiUrl: false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
-$(function () {
+"use strict";
+
+$(() => {
   // CSRF protection for AJAX requests, this has to be configured globally
   // because we are using the jQuery $.ajax() function directly in some cases
   // Furthermore, has this to be done before any AJAX request is made so that
@@ -19,7 +21,7 @@ $(function () {
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
-  var map = {
+  const map = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
@@ -30,13 +32,11 @@ function escapeHtml(text) {
   // Return early when text is not a string
   if (typeof text !== "string") return text;
 
-  return text.replaceAll(/[&<>"']/g, function (m) {
-    return map[m];
-  });
+  return text.replaceAll(/[&<>"']/g, m => map[m]);
 }
 
 function unescapeHtml(text) {
-  var map = {
+  const map = {
     "&amp;": "&",
     "&lt;": "<",
     "&gt;": ">",
@@ -55,53 +55,33 @@ function unescapeHtml(text) {
 
   return text.replaceAll(
     /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
-    function (m) {
-      return map[m];
-    }
+    m => map[m]
   );
-}
-
-// Helper function for converting Objects to Arrays after sorting the keys
-function objectToArray(obj) {
-  var arr = [];
-  var idx = [];
-  var keys = Object.keys(obj);
-
-  keys.sort(function (a, b) {
-    return a - b;
-  });
-
-  for (var i = 0; i < keys.length; i++) {
-    arr.push(obj[keys[i]]);
-    idx.push(keys[i]);
-  }
-
-  return [idx, arr];
 }
 
 function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-var showAlertBox = null;
+let showAlertBox = null;
 function showAlert(type, icon, title, message, toast) {
   const options = {
-      title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
-      message: escapeHtml(message),
-      icon: icon,
+    title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+    message: escapeHtml(message),
+    icon,
+  };
+  const settings = {
+    type,
+    delay: 5000, // default value
+    mouse_over: "pause",
+    animate: {
+      enter: "animate__animated animate__fadeInDown",
+      exit: "animate__animated animate__fadeOutUp",
     },
-    settings = {
-      type: type,
-      delay: 5000, // default value
-      mouse_over: "pause",
-      animate: {
-        enter: "animate__animated animate__fadeInDown",
-        exit: "animate__animated animate__fadeOutUp",
-      },
-    };
+  };
   switch (type) {
     case "info":
-      options.icon = icon !== null && icon.len > 0 ? icon : "fas fa-clock";
+      options.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
 
       break;
     case "success":
@@ -120,7 +100,7 @@ function showAlert(type, icon, title, message, toast) {
       // If the message is an API object, nicely format the error message
       // Try to parse message as JSON
       try {
-        var data = JSON.parse(message);
+        const data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
           options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
@@ -143,24 +123,28 @@ function showAlert(type, icon, title, message, toast) {
       // Create a new notification for info boxes
       showAlertBox = $.notify(options, settings);
       return showAlertBox;
-    } else if (showAlertBox !== null) {
+    }
+
+    if (showAlertBox !== null) {
       // Update existing notification for other boxes (if available)
       showAlertBox.update(options);
       showAlertBox.update(settings);
       return showAlertBox;
-    } else {
-      // Create a new notification for other boxes if no previous info box exists
-      return $.notify(options, settings);
     }
-  } else if (toast === null) {
+
+    // Create a new notification for other boxes if no previous info box exists
+    return $.notify(options, settings);
+  }
+
+  if (toast === null) {
     // Always create a new toast
     return $.notify(options, settings);
-  } else {
-    // Update existing toast
-    toast.update(options);
-    toast.update(settings);
-    return toast;
   }
+
+  // Update existing toast
+  toast.update(options);
+  toast.update(settings);
+  return toast;
 }
 
 function datetime(date, html, humanReadable) {
@@ -168,8 +152,9 @@ function datetime(date, html, humanReadable) {
     return "Never";
   }
 
-  var format = html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  var timestr = moment.unix(Math.floor(date)).format(format).trim();
+  const format =
+    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+  const timestr = moment.unix(Math.floor(date)).format(format).trim();
   return humanReadable
     ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
     : timestr;
@@ -193,7 +178,7 @@ function enableAll() {
   $("textarea").prop("disabled", false);
 
   // Enable custom input field only if applicable
-  var ip = $("#select") ? $("#select").val() : null;
+  const ip = $("#select") ? $("#select").val() : null;
   if (ip !== null && ip !== "custom") {
     $("#ip-custom").prop("disabled", true);
   }
@@ -201,55 +186,49 @@ function enableAll() {
 
 // Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
 function validateIPv4CIDR(ip) {
-  // One IPv4 element is 8bit: 0 - 256
-  var ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
-  // CIDR for IPv4 is 1 - 32 bit
-  var v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
-  var ipv4validator = new RegExp(
-    "^" + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + "\\." + ipv4elem + v4cidr + "$"
+  // One IPv4 element is 8bit: 0 - 255
+  const ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+
+  // CIDR for IPv4 is 1 - 32 bit (optional)
+  const v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
+
+  // Build the complete IPv4/CIDR validator
+  // Format: xxx.xxx.xxx.xxx[/yy] where each xxx is 0-255 and optional yy is 1-32
+  const ipv4validator = new RegExp(
+    `^${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}${v4cidr}$`
   );
+
   return ipv4validator.test(ip);
 }
 
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
-  var ipv6elem = "[0-9A-Fa-f]{1,4}";
-  // CIDR for IPv6 is 1- 128 bit
-  var v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
-  var ipv6validator = new RegExp(
-    "^(((?:" +
-      ipv6elem +
-      "))*((?::" +
-      ipv6elem +
-      "))*::((?:" +
-      ipv6elem +
-      "))*((?::" +
-      ipv6elem +
-      "))*|((?:" +
-      ipv6elem +
-      "))((?::" +
-      ipv6elem +
-      ")){7})" +
-      v6cidr +
-      "$"
+  const ipv6elem = "[0-9A-Fa-f]{1,4}";
+
+  // CIDR for IPv6 is 1-128 bit (optional)
+  const v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
+
+  const ipv6validator = new RegExp(
+    `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`
   );
+
   return ipv6validator.test(ip);
 }
 
 function validateMAC(mac) {
-  var macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/;
+  const macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/;
   return macvalidator.test(mac);
 }
 
 function validateHostname(name) {
-  var namevalidator = /[^<>;"]/;
+  const namevalidator = /[^<>;"]/;
   return namevalidator.test(name);
 }
 
 // set bootstrap-select defaults
 function setBsSelectDefaults() {
-  var bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
+  const bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
   bsSelectDefaults.noneSelectedText = "none selected";
   bsSelectDefaults.selectedTextFormat = "count > 1";
   bsSelectDefaults.actionsBox = true;
@@ -267,7 +246,7 @@ function setBsSelectDefaults() {
   };
 }
 
-var backupStorage = {};
+const backupStorage = {};
 function stateSaveCallback(itemName, data) {
   if (localStorage === null) {
     backupStorage[itemName] = JSON.stringify(data);
@@ -277,10 +256,10 @@ function stateSaveCallback(itemName, data) {
 }
 
 function stateLoadCallback(itemName) {
-  var data;
+  let data;
   // Receive previous state from client's local storage area
   if (localStorage === null) {
-    var item = backupStorage[itemName];
+    const item = backupStorage[itemName];
     data = item === "undefined" ? null : item;
   } else {
     data = localStorage.getItem(itemName);
@@ -295,9 +274,9 @@ function stateLoadCallback(itemName) {
   data = JSON.parse(data);
 
   // Clear possible filtering settings
-  data.columns.forEach(function (value, index) {
-    data.columns[index].search.search = "";
-  });
+  for (const column of Object.values(data.columns)) {
+    column.search.search = "";
+  }
 
   // Always start on the first page to show most recent queries
   data.start = 0;
@@ -308,41 +287,41 @@ function stateLoadCallback(itemName) {
 }
 
 function addFromQueryLog(domain, list) {
-  var alertModal = $("#alertModal");
-  var alProcessing = alertModal.find(".alProcessing");
-  var alSuccess = alertModal.find(".alSuccess");
-  var alFailure = alertModal.find(".alFailure");
-  var alNetworkErr = alertModal.find(".alFailure #alNetErr");
-  var alCustomErr = alertModal.find(".alFailure #alCustomErr");
-  var alList = "#alList";
-  var alDomain = "#alDomain";
+  const alertModal = $("#alertModal");
+  const alProcessing = alertModal.find(".alProcessing");
+  const alSuccess = alertModal.find(".alSuccess");
+  const alFailure = alertModal.find(".alFailure");
+  const alNetworkErr = alertModal.find(".alFailure #alNetErr");
+  const alCustomErr = alertModal.find(".alFailure #alCustomErr");
+  const alList = "#alList";
+  const alDomain = "#alDomain";
 
   // Exit the function here if the Modal is already shown (multiple running interlock)
   if (alertModal.css("display") !== "none") {
     return;
   }
 
-  var listtype = list === "allow" ? "Allowlist" : "Denylist";
+  const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   alProcessing.children(alDomain).text(domain);
   alProcessing.children(alList).text(listtype);
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", function () {
+  alertModal.one("shown.bs.modal", () => {
     $.ajax({
-      url: apiUrl + "/domains/" + list + "/exact",
+      url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
       method: "post",
       dataType: "json",
       processData: false,
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
-        domain: domain,
+        domain,
         comment: "Added from Query Log",
         type: list,
         kind: "exact",
       }),
-      success: function (response) {
+      success(response) {
         alProcessing.hide();
         if ("domains" in response && response.domains.length > 0) {
           // Success
@@ -351,7 +330,7 @@ function addFromQueryLog(domain, list) {
           alSuccess.fadeIn(1000);
           // Update domains counter in the menu
           updateFtlInfo();
-          setTimeout(function () {
+          setTimeout(() => {
             alertModal.modal("hide");
           }, 2000);
         } else {
@@ -359,17 +338,17 @@ function addFromQueryLog(domain, list) {
           alNetworkErr.hide();
           alCustomErr.html(response.message);
           alFailure.fadeIn(1000);
-          setTimeout(function () {
+          setTimeout(() => {
             alertModal.modal("hide");
-          }, 10000);
+          }, 10_000);
         }
       },
-      error: function () {
+      error() {
         // Network Error
         alProcessing.hide();
         alNetworkErr.show();
         alFailure.fadeIn(1000);
-        setTimeout(function () {
+        setTimeout(() => {
           alertModal.modal("hide");
         }, 8000);
       },
@@ -377,7 +356,7 @@ function addFromQueryLog(domain, list) {
   });
 
   // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", function () {
+  alertModal.one("hidden.bs.modal", () => {
     alProcessing.show();
     alSuccess.add(alFailure).hide();
     alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
@@ -407,18 +386,21 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  var ignoreNonfatal = localStorage
+  const ignoreNonfatal = localStorage
     ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
     : false;
   $.ajax({
-    url: apiUrl + "/info/messages/count" + (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    url:
+      document.body.dataset.apiurl +
+      "/info/messages/count" +
+      (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
     method: "GET",
     dataType: "json",
   })
-    .done(function (data) {
+    .done(data => {
       if (data.count > 0) {
-        var more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
-        var title =
+        const more = '\nAccess "Tools/Pi-hole diagnosis" for further details.';
+        const title =
           data.count > 1
             ? "There are " + data.count + " warnings." + more
             : "There is one warning." + more;
@@ -430,7 +412,7 @@ function checkMessages() {
         $(".warning-count").addClass("hidden");
       }
     })
-    .fail(function (data) {
+    .fail(data => {
       $(".warning-count").addClass("hidden");
       apiFailure(data);
     });
@@ -438,9 +420,9 @@ function checkMessages() {
 
 // Show only the appropriate delete buttons in datatables
 function changeBulkDeleteStates(table) {
-  var allRows = table.rows({ filter: "applied" }).data().length;
-  var pageLength = table.page.len();
-  var selectedRows = table.rows(".selected").data().length;
+  const allRows = table.rows({ filter: "applied" }).data().length;
+  const pageLength = table.page.len();
+  const selectedRows = table.rows(".selected").data().length;
 
   if (selectedRows === 0) {
     // Nothing selected
@@ -465,9 +447,9 @@ function changeBulkDeleteStates(table) {
 
 function doLogout(url) {
   $.ajax({
-    url: apiUrl + "/auth",
+    url: document.body.dataset.apiurl + "/auth",
     method: "DELETE",
-  }).always(function () {
+  }).always(() => {
     globalThis.location = url;
   });
 }
@@ -498,9 +480,9 @@ function htmlPass(data, _type) {
 
 // Show only the appropriate buttons
 function changeTableButtonStates(table) {
-  var allRows = table.rows({ filter: "applied" }).data().length;
-  var pageLength = table.page.len();
-  var selectedRows = table.rows(".selected").data().length;
+  const allRows = table.rows({ filter: "applied" }).data().length;
+  const pageLength = table.page.len();
+  const selectedRows = table.rows(".selected").data().length;
 
   if (selectedRows === 0) {
     // Nothing selected
@@ -524,8 +506,8 @@ function changeTableButtonStates(table) {
 }
 
 function getCSSval(cssclass, cssproperty) {
-  var elem = $("<div class='" + cssclass + "'></div>"),
-    val = elem.appendTo("body").css(cssproperty);
+  const elem = $("<div class='" + cssclass + "'></div>");
+  const val = elem.appendTo("body").css(cssproperty);
   elem.remove();
   return val;
 }
@@ -537,11 +519,9 @@ function parseQueryString() {
 
 // https://stackoverflow.com/q/21647928
 function hexEncode(string) {
-  var hex, i;
-
-  var result = "";
-  for (i = 0; i < string.length; i++) {
-    hex = string.codePointAt(i).toString(16);
+  let result = "";
+  for (let i = 0; i < string.length; i++) {
+    const hex = string.codePointAt(i).toString(16);
     result += ("000" + hex).slice(-4);
   }
 
@@ -550,20 +530,22 @@ function hexEncode(string) {
 
 // https://stackoverflow.com/q/21647928
 function hexDecode(string) {
-  var j;
-  var hexes = string.match(/.{1,4}/g) || [];
-  var back = "";
-  for (j = 0; j < hexes.length; j++) {
-    back += String.fromCodePoint(parseInt(hexes[j], 16));
+  const hexes = string.match(/.{1,4}/g) || [];
+  let back = "";
+  for (const hex of hexes) {
+    back += String.fromCodePoint(Number.parseInt(hex, 16));
   }
 
   return back;
 }
 
-function listAlert(type, items, data) {
+function listsAlert(type, items, data) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
-  if (data.processed === undefined || data.processed.success.length === items.length) {
+  const successLength = data.processed.success.length;
+  const errorsLength = data.processed.errors.length;
+
+  if (data.processed === undefined || successLength === items.length) {
     showAlert(
       "success",
       "fas fa-plus",
@@ -578,54 +560,40 @@ function listAlert(type, items, data) {
   let message = "";
 
   // Show a list of successful items if there are any
-  if (data.processed.success.length > 0) {
+  if (successLength > 0) {
     message +=
-      "Successfully added " +
-      data.processed.success.length +
-      " " +
-      type +
-      (data.processed.success.length !== 1 ? "s" : "") +
-      ":";
+      "Successfully added " + successLength + " " + type + (successLength !== 1 ? "s" : "") + ":";
 
     // Loop over data.processed.success and print "item"
-    for (const item in data.processed.success) {
-      if (Object.prototype.hasOwnProperty.call(data.processed.success, item)) {
-        message += "\n- " + data.processed.success[item].item;
-      }
+    for (const item of Object.values(data.processed.success)) {
+      message += "\n- " + item.item;
     }
   }
 
   // Add a line break if there are both successful and failed items
-  if (data.processed.success.length > 0 && data.processed.errors.length > 0) {
+  if (successLength > 0 && errorsLength > 0) {
     message += "\n\n";
   }
 
   // Show a list of failed items if there are any
-  if (data.processed.errors.length > 0) {
+  if (errorsLength > 0) {
     message +=
-      "Failed to add " +
-      data.processed.errors.length +
-      " " +
-      type +
-      (data.processed.errors.length !== 1 ? "s" : "") +
-      ":\n";
+      "Failed to add " + errorsLength + " " + type + (errorsLength !== 1 ? "s" : "") + ":\n";
 
     // Loop over data.processed.errors and print "item: error"
-    for (const item in data.processed.errors) {
-      if (Object.prototype.hasOwnProperty.call(data.processed.errors, item)) {
-        let error = data.processed.errors[item].error;
-        // Replace some error messages with a more user-friendly text
-        if (error.indexOf("UNIQUE constraint failed") > -1) {
-          error = "Already present";
-        }
-
-        message += "\n- " + data.processed.errors[item].item + ": " + error;
+    for (const errorItem of Object.values(data.processed.errors)) {
+      let error = errorItem.error;
+      // Replace some error messages with a more user-friendly text
+      if (error.includes("UNIQUE constraint failed")) {
+        error = "Already present";
       }
+
+      message += `\n- ${errorItem.item}: ${error}`;
     }
   }
 
   // Show the warning message
-  const total = data.processed.success.length + data.processed.errors.length;
+  const total = successLength + errorsLength;
   const processed = "(" + total + " " + type + (total !== 1 ? "s" : "") + " processed)";
   showAlert(
     "warning",
@@ -640,12 +608,12 @@ let waitMe = null;
 function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
   // Try to ping FTL to see if it finished restarting
   $.ajax({
-    url: apiUrl + "/info/login",
+    url: document.body.dataset.apiurl + "/info/login",
     method: "GET",
     cache: false,
     dataType: "json",
   })
-    .done(function () {
+    .done(() => {
       // FTL is running again, hide loading overlay
       NProgress.done();
       if (reloadAfterTimeout) {
@@ -654,7 +622,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
         waitMe.hideAll();
       }
     })
-    .fail(function () {
+    .fail(() => {
       // FTL is not running yet, try again in 500ms
       setTimeout(loadingOverlayTimeoutCallback, 500, reloadAfterTimeout);
     });
@@ -714,40 +682,39 @@ function setInter(func, interval) {
 
 globalThis.utils = (function () {
   return {
-    escapeHtml: escapeHtml,
-    unescapeHtml: unescapeHtml,
-    objectToArray: objectToArray,
-    padNumber: padNumber,
-    showAlert: showAlert,
-    datetime: datetime,
-    datetimeRelative: datetimeRelative,
-    disableAll: disableAll,
-    enableAll: enableAll,
-    validateIPv4CIDR: validateIPv4CIDR,
-    validateIPv6CIDR: validateIPv6CIDR,
-    setBsSelectDefaults: setBsSelectDefaults,
-    stateSaveCallback: stateSaveCallback,
-    stateLoadCallback: stateLoadCallback,
-    validateMAC: validateMAC,
-    validateHostname: validateHostname,
-    addFromQueryLog: addFromQueryLog,
-    addTD: addTD,
-    toPercent: toPercent,
-    colorBar: colorBar,
-    checkMessages: checkMessages,
-    changeBulkDeleteStates: changeBulkDeleteStates,
-    doLogout: doLogout,
-    renderTimestamp: renderTimestamp,
-    renderTimespan: renderTimespan,
-    htmlPass: htmlPass,
-    changeTableButtonStates: changeTableButtonStates,
-    getCSSval: getCSSval,
-    parseQueryString: parseQueryString,
-    hexEncode: hexEncode,
-    hexDecode: hexDecode,
-    listsAlert: listAlert,
-    loadingOverlay: loadingOverlay,
-    setTimer: setTimer,
-    setInter: setInter,
+    escapeHtml,
+    unescapeHtml,
+    padNumber,
+    showAlert,
+    datetime,
+    datetimeRelative,
+    disableAll,
+    enableAll,
+    validateIPv4CIDR,
+    validateIPv6CIDR,
+    setBsSelectDefaults,
+    stateSaveCallback,
+    stateLoadCallback,
+    validateMAC,
+    validateHostname,
+    addFromQueryLog,
+    addTD,
+    toPercent,
+    colorBar,
+    checkMessages,
+    changeBulkDeleteStates,
+    doLogout,
+    renderTimestamp,
+    renderTimespan,
+    htmlPass,
+    changeTableButtonStates,
+    getCSSval,
+    parseQueryString,
+    hexEncode,
+    hexDecode,
+    listsAlert,
+    loadingOverlay,
+    setTimer,
+    setInter,
   };
 })();

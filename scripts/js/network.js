@@ -5,9 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global utils:false, apiUrl:false, apiFailure:false */
+/* global utils:false, apiFailure:false */
 
-var tableApi;
+"use strict";
+
+let tableApi;
 
 // How many IPs do we show at most per device?
 const MAXIPDISPLAY = 3;
@@ -16,7 +18,7 @@ const DAY_IN_SECONDS = 24 * 60 * 60;
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
     alert("The server took too long to send the data.");
-  } else if (xhr.responseText.indexOf("Connection refused") === -1) {
+  } else if (!xhr.responseText.includes("Connection refused")) {
     alert("An unknown error occurred while loading the data.\n" + xhr.responseText);
   } else {
     alert("An error occurred while loading the data: Connection refused. Is FTL running?");
@@ -32,7 +34,7 @@ function getTimestamp() {
 }
 
 function valueToHex(c) {
-  var hex = Math.round(c).toString(16);
+  const hex = Math.round(c).toString(16);
   return hex.length === 1 ? "0" + hex : hex;
 }
 
@@ -49,7 +51,7 @@ function mixColors(ratio, rgb1, rgb2) {
 }
 
 function parseColor(input) {
-  var match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+  const match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
 
   if (match) {
     return [match[1], match[2], match[3]];
@@ -64,9 +66,9 @@ function deleteNetworkEntry() {
   utils.disableAll();
   utils.showAlert("info", "", "Deleting network table entry...");
   $.ajax({
-    url: apiUrl + "/network/devices/" + id,
+    url: document.body.dataset.apiurl + "/network/devices/" + id,
     method: "DELETE",
-    success: function () {
+    success() {
       utils.enableAll();
       utils.showAlert(
         "success",
@@ -76,7 +78,7 @@ function deleteNetworkEntry() {
       );
       tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
     },
-    error: function (data, exception) {
+    error(data, exception) {
       apiFailure(data);
       utils.enableAll();
       utils.showAlert(
@@ -90,24 +92,23 @@ function deleteNetworkEntry() {
   });
 }
 
-$(function () {
+$(() => {
   tableApi = $("#network-entries").DataTable({
-    rowCallback: function (row, data) {
-      var color;
-      var index;
-      var iconClasses;
-      var lastQuery = parseInt(data.lastQuery, 10);
-      var diff = getTimestamp() - lastQuery;
-      var networkRecent = $(".network-recent").css("background-color");
-      var networkOld = $(".network-old").css("background-color");
-      var networkOlder = $(".network-older").css("background-color");
-      var networkNever = $(".network-never").css("background-color");
+    rowCallback(row, data) {
+      let color;
+      let iconClasses;
+      const lastQuery = Number.parseInt(data.lastQuery, 10);
+      const diff = getTimestamp() - lastQuery;
+      const networkRecent = $(".network-recent").css("background-color");
+      const networkOld = $(".network-old").css("background-color");
+      const networkOlder = $(".network-older").css("background-color");
+      const networkNever = $(".network-never").css("background-color");
 
       if (lastQuery > 0) {
         if (diff <= DAY_IN_SECONDS) {
           // Last query came in within the last 24 hours
           // Color: light-green to light-yellow
-          var ratio = Number(diff) / DAY_IN_SECONDS;
+          const ratio = Number(diff) / DAY_IN_SECONDS;
           color = rgbToHex(mixColors(ratio, parseColor(networkRecent), parseColor(networkOld)));
           iconClasses = "fas fa-check";
         } else {
@@ -129,17 +130,17 @@ $(function () {
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
       if (data.lastQuery === 0) {
-        $("td:eq(4)", row).html("Never");
+        $("td:eq(4)", row).text("Never");
       }
 
       // Set number of queries to localized string (add thousand separators)
-      $("td:eq(5)", row).html(data.numQueries.toLocaleString());
+      $("td:eq(5)", row).text(data.numQueries.toLocaleString());
 
-      var ips = [],
-        iptitles = [];
+      const ips = [];
+      const iptitles = [];
 
       // Sort IPs, IPv4 before IPv6, then alphabetically
-      data.ips.sort(function (a, b) {
+      data.ips.sort((a, b) => {
         if (a.ip.includes(":") && !b.ip.includes(":")) {
           return 1;
         }
@@ -151,19 +152,18 @@ $(function () {
         return a.ip.localeCompare(b.ip);
       });
 
-      for (index = 0; index < data.ips.length; index++) {
-        var ip = data.ips[index],
-          iptext = ip.ip;
+      for (const { ip, name } of data.ips) {
+        let iptext = ip;
 
-        if (ip.name !== null && ip.name.length > 0) {
-          iptext = iptext + " (" + ip.name + ")";
+        if (name !== null && name.length > 0) {
+          iptext = `${iptext} (${name})`;
         }
 
         iptitles.push(iptext);
 
         // Only add IPs to the table if we have not reached the maximum
-        if (index < MAXIPDISPLAY) {
-          ips.push('<a href="queries?client_ip=' + ip.ip + '">' + iptext + "</a>");
+        if (ips.length < MAXIPDISPLAY) {
+          ips.push(`<a href="queries?client_ip=${ip}">${iptext}</a>`);
         }
       }
 
@@ -194,7 +194,7 @@ $(function () {
       // Add delete button
       $(row).attr("data-id", data.id);
       $(row).attr("data-hwaddr", data.hwaddr);
-      var button =
+      const button =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteNetworkEntry_' +
         data.id +
         '">' +
@@ -208,7 +208,7 @@ $(function () {
       "<'row'<'col-sm-12'<'table-responsive'tr>>>" +
       "<'row'<'col-sm-5'i><'col-sm-7'p>>",
     ajax: {
-      url: apiUrl + "/network/devices",
+      url: document.body.dataset.apiurl + "/network/devices",
       type: "GET",
       dataType: "json",
       data: {
@@ -229,7 +229,7 @@ $(function () {
       {
         data: "firstSeen",
         width: "8%",
-        render: function (data, type) {
+        render(data, type) {
           if (type === "display") {
             return utils.datetime(data);
           }
@@ -240,7 +240,7 @@ $(function () {
       {
         data: "lastQuery",
         width: "8%",
-        render: function (data, type) {
+        render(data, type) {
           if (type === "display") {
             return utils.datetime(data);
           }
@@ -249,12 +249,12 @@ $(function () {
         },
       },
       { data: "numQueries", width: "9%", render: $.fn.dataTable.render.text() },
-      { data: "", width: "6%", orderable: false },
-      { data: "", width: "6%", orderable: false },
+      { data: null, width: "6%", orderable: false },
+      { data: null, width: "6%", orderable: false },
       { data: "ips[].name", visible: false, class: "hide" },
     ],
 
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
       // Remove visible dropdown to prevent orphaning
       $("body > .bootstrap-select.dropdown").remove();
@@ -265,10 +265,10 @@ $(function () {
     ],
     stateSave: true,
     stateDuration: 0,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("network_table", data);
     },
-    stateLoadCallback: function () {
+    stateLoadCallback() {
       return utils.stateLoadCallback("network_table");
     },
     columnDefs: [
@@ -284,7 +284,7 @@ $(function () {
     ],
   });
   // Disable autocorrect in the search box
-  var input = document.querySelector("input[type=search]");
+  const input = document.querySelector("input[type=search]");
   input.setAttribute("autocomplete", "off");
   input.setAttribute("autocorrect", "off");
   input.setAttribute("autocapitalize", "off");
