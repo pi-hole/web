@@ -99,7 +99,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             rate-limited clients are short-circuited at the same time.</p>
                         <p>Rate-limiting may be disabled altogether by setting both
                             values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener" target="_blank">our documentation</a>
+                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener noreferrer" target="_blank">our documentation</a>
                             for further details.</p>
                     </div>
                 </div>
@@ -144,7 +144,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     in your router!) they are safe to use.</p>
                             </div>
                         </div>
-                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" rel="noopener" target="_blank">our documentation</a> for further technical details.</p>
+                        <p>See <a href="https://docs.pi-hole.net/ftldns/interfaces/" rel="noopener noreferrer" target="_blank">our documentation</a> for further technical details.</p>
                     </div>
                 </div>
             </div>
@@ -173,7 +173,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <p class="help-block">All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                 which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
                                 with "no such domain" rather than being forwarded upstream. The set
-                                of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303">RFC6303</a>.</p>
+                                of prefixes affected is the list given in <a href="https://tools.ietf.org/html/rfc6303" rel="noopener noreferrer" target="_blank">RFC6303</a>.</p>
                                 <p><strong>Important:</strong><br>Enabling these two options may increase your privacy,
                                 but may also prevent you from being able to access local hostnames if the Pi-hole is not used as DHCP server.
                                 Make sure you have set up conditional forwarding in this case.</p>
@@ -189,7 +189,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 Use an upstream DNS server which supports DNSSEC when activating DNSSEC. Note that
                                 the size of your log might increase significantly
                                 when enabling DNSSEC. A DNSSEC resolver test can be found
-                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener" target="_blank">here</a>.</p>
+                                <a href="https://dnssec.vs.uni-due.de/" rel="noopener noreferrer" target="_blank">here</a>.</p>
                         </div>
                     </div>
                 </div>
@@ -219,7 +219,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
                             Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
                             Feel free to reach out to us on our
-                            <a href="https://discourse.pi-hole.net" rel="noopener" target="_blank">Discourse forum</a>
+                            <a href="https://discourse.pi-hole.net" rel="noopener noreferrer" target="_blank">Discourse forum</a>
                             in case you need any assistance setting up local host name resolution for your particular system.</p>
                         <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
                             devices ending in your local domain name will not leave your network, however, this is optional.
