@@ -37,6 +37,8 @@ function formatUptime(uptimeSeconds) {
 
 function piholeChanged(blocking, timer = null) {
   const status = document.getElementById("status");
+  const statusIcon = status.querySelector("i");
+  const statusText = document.getElementById("status-text");
   const enableElement = document.getElementById("pihole-enable");
   const disableElement = document.getElementById("pihole-disable");
   const enableTimer = document.getElementById("enableTimer");
@@ -48,7 +50,10 @@ function piholeChanged(blocking, timer = null) {
 
   switch (blocking) {
     case "enabled": {
-      status.innerHTML = "<i class='fa fa-circle fa-fw text-green-light mr-2'></i>Active";
+      statusIcon.classList.replace("fa-triangle-exclamation", "fa-circle");
+      statusIcon.classList.replace("text-red", "text-green-light");
+      status.classList.remove("text-red");
+      statusText.textContent = "Active";
       enableElement.classList.add("d-none");
       disableElement.classList.remove("d-none", "active");
 
@@ -56,7 +61,10 @@ function piholeChanged(blocking, timer = null) {
     }
 
     case "disabled": {
-      status.innerHTML = "<i class='fa fa-circle fa-fw text-red mr-2'></i>Blocking disabled";
+      statusIcon.classList.replace("fa-triangle-exclamation", "fa-circle");
+      statusIcon.classList.replace("text-green-light", "text-red");
+      status.classList.remove("text-red");
+      statusText.textContent = "Blocking disabled";
       enableElement.classList.remove("d-none");
       disableElement.classList.add("d-none");
 
@@ -64,8 +72,10 @@ function piholeChanged(blocking, timer = null) {
     }
 
     case "failure": {
-      status.innerHTML =
-        "<i class='fa-solid fa-triangle-exclamation fa-fw text-red mr-2'></i><span class='text-red'>DNS server failure<span>";
+      statusIcon.classList.replace("fa-circle", "fa-triangle-exclamation");
+      statusIcon.classList.replace("text-green-light", "text-red");
+      status.classList.add("text-red");
+      statusText.textContent = "DNS server failure";
       enableElement.classList.add("d-none");
       disableElement.classList.add("d-none");
 
@@ -73,7 +83,10 @@ function piholeChanged(blocking, timer = null) {
     }
 
     default: {
-      status.innerHTML = "<i class='fa fa-circle fa-fw text-red mr-2'></i>Status unknown";
+      statusIcon.classList.replace("fa-triangle-exclamation", "fa-circle");
+      statusIcon.classList.replace("text-green-light", "text-red");
+      status.classList.remove("text-red");
+      statusText.textContent = "Status unknown";
       enableElement.classList.add("d-none");
       disableElement.classList.add("d-none");
     }
@@ -213,7 +226,9 @@ function updateQueryFrequency(frequency) {
   const freqFormatted = utils.formatNumber(rate, fractionDigits);
 
   const queryFreqElem = document.getElementById("query_frequency");
-  queryFreqElem.innerHTML = `<i class="fa fa-fw fa-gauge-high text-green-light mr-2"></i>${freqFormatted}&thinsp;${unit}`;
+  const queryFreqTextElem = document.getElementById("query_frequency_text");
+
+  queryFreqTextElem.textContent = `${freqFormatted} ${unit}`;
   queryFreqElem.title = isHighFrequency ? "Queries per second" : "Queries per minute";
 }
 
@@ -289,7 +304,12 @@ function updateGeneralSystemInfo(system) {
   const swapUsage = system.memory.swap.total > 0 ? utils.toPercent(percentSwap, 1) : "N/A";
   const { value, unit } = formatMemorySize(system.memory.ram.total);
 
-  memoryEl.innerHTML = `<i class="fa fa-fw fa-memory ${ramColor} mr-2"></i>Memory usage: ${utils.toPercent(percentRAM, 1)}`;
+  const memoryIconEl = document.getElementById("memory_icon");
+  const memoryValueEl = document.getElementById("memory_value");
+
+  memoryIconEl.classList.replace("text-green-light", ramColor);
+  memoryValueEl.textContent = utils.toPercent(percentRAM, 1);
+
   memoryEl.title = `Total memory: ${value} ${unit}, Swap usage: ${swapUsage}`;
 
   const cores = system.cpu.nprocs;
@@ -298,9 +318,12 @@ function updateGeneralSystemInfo(system) {
   const loadColor = isHighLoad ? "text-red" : "text-green-light";
   const loadWarning = isHighLoad ? " (load is higher than the number of cores)" : "";
 
-  cpuEl.innerHTML =
-    `<i class="fa fa-fw fa-microchip ${loadColor} mr-2"></i>Load: ` +
-    `${utils.formatNumber(load1, 2)} / ${utils.formatNumber(load5, 2)} / ${utils.formatNumber(load15, 2)}`;
+  const cpuIconEl = document.getElementById("cpu_icon");
+  const cpuLoadsEl = document.getElementById("cpu_load");
+
+  cpuIconEl.classList.replace("text-green-light", loadColor);
+  cpuLoadsEl.textContent = `${utils.formatNumber(load1, 2)} / ${utils.formatNumber(load5, 2)} / ${utils.formatNumber(load15, 2)}`;
+
   cpuEl.title =
     "Load averages for the past 1, 5, and 15 minutes\non a system with " +
     `${cores} ${utils.pluralize(cores, "core")} running ${system.procs} ` +

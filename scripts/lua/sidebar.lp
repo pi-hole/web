@@ -17,10 +17,22 @@
                 </div>
                 <div class="pull-left info">
                     <p>Status</p>
-                    <span id="status"></span><br>
-                    <span id="query_frequency"></span><br>
-                    <span id="cpu"></span><br>
-                    <span id="memory"></span>
+                    <span id="status">
+                        <i class="fa fa-circle fa-fw text-green-light"></i>
+                        <span id="status-text">---</span>
+                    </span><br>
+                    <span id="query_frequency">
+                        <i class="fa fa-fw fa-gauge-high text-green-light"></i>
+                        <span id="query_frequency_text">---</span>
+                    </span><br>
+                    <span id="cpu">
+                        <i id="cpu_icon" class="fa fa-fw fa-microchip text-green-light"></i>
+                        Load: <span id="cpu_load">---</span>
+                    </span><br>
+                    <span id="memory">
+                        <i id="memory_icon" class="fa fa-fw fa-memory text-green-light"></i>
+                        Memory usage: <span id="memory_value">---</span>
+                    </span>
                 </div>
             </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
