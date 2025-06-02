@@ -54,12 +54,14 @@ mg.include('header.lp','r')
             </button>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li<? if string.len(hostname) == 0 then ?> class="hidden"<? end ?>>
-                        <p class="navbar-text">
-                            <span class="hidden-xs">hostname:</span>
-                            <code><?=hostname?></code>
-                        </p>
-                    </li>
+                    <? if string.len(hostname) > 0 then ?>
+                        <li>
+                            <p class="navbar-text">
+                                <span class="hidden-xs">hostname:</span>
+                                <code><?=hostname?></code>
+                            </p>
+                        </li>
+                    <? end ?>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-bars"></i>
