@@ -364,7 +364,7 @@ function updateSystemInfo() {
             ? " (load is higher than the number of cores)"
             : "")
       );
-      $("#sysinfo-cpu").html(
+      $("#sysinfo-cpu").text(
         system.cpu["%cpu"].toFixed(1) +
           "% on " +
           system.cpu.nprocs +
