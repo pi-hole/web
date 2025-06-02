@@ -61,8 +61,7 @@ mg.include('header.lp','r')
                     <? if string.len(hostname) > 0 then ?>
                         <li>
                             <p class="navbar-text">
-                                <span class="hidden-xs">hostname:</span>
-                                <code><?=hostname?></code>
+                                <code data-toggle="tooltip" data-placement="auto" title="Hostname"><?=hostname?></code>
                             </p>
                         </li>
                     <? end ?>

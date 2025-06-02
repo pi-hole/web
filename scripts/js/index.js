@@ -786,9 +786,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTopLists();
   });
 
-  // Initialize Bootstrap tooltips
-  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
-
   // On click of the "Reset zoom" buttons, the closest chart to the button is reset
   for (const button of document.querySelectorAll(".zoom-reset")) {
     addZoomResetListener(button);
@@ -801,6 +798,4 @@ window.addEventListener("resize", () => {
   for (const chartJsTooltip of chartJsTooltips) {
     chartJsTooltip.remove();
   }
-
-  $('[data-toggle="tooltip"]').tooltip("hide");
 });

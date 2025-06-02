@@ -668,6 +668,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initSettingsLevel();
   addAdvancedInfo();
+
+  // Initialize Bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
+});
+
+window.addEventListener("resize", () => {
+  $('[data-toggle="tooltip"]').tooltip("hide");
 });
 
 // Install custom AJAX error handler for DataTables if $.fn.dataTable is available

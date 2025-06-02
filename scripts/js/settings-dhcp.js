@@ -205,12 +205,4 @@ function processDHCPConfig() {
 document.addEventListener("DOMContentLoaded", () => {
   processDHCPConfig();
   utils.disableAutocorrect();
-
-  // DHCP leases tooltips
-  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
-});
-
-// Hide Bootstrap's tooltips on window resize
-window.addEventListener("resize", () => {
-  $('[data-toggle="tooltip"]').tooltip("hide");
 });
