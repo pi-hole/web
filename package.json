@@ -57,7 +57,7 @@
     "postcss": "^8.5.4",
     "postcss-cli": "^11.0.1",
     "prettier": "^3.5.3",
-    "xo": "^0.60.0"
+    "xo": "^1.0.5"
   },
   "browserslist": [
     ">= 0.5%",
