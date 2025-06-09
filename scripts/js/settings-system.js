@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global Chart:false, THEME_COLORS:false, ChartDeferred:false, utils:false */
+/* global Chart:false, ChartDeferred:false, utils:false */
 
 "use strict";
 
@@ -52,14 +52,16 @@ function updateCachePie(data) {
   for (const [item, value] of Object.entries(chartData)) {
     if (value.valid > 0) {
       values.push((100 * value.valid) / cacheSize);
-      colors.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
+      colors.push(
+        item !== "empty" ? utils.THEME_COLORS[i++ % utils.THEME_COLORS.length] : "#80808040"
+      );
       labels.push(item);
     }
 
     if (value.stale > 0) {
       // There are no stale empty entries
       values.push((100 * value.stale) / cacheSize);
-      colors.push(THEME_COLORS[i++ % THEME_COLORS.length]);
+      colors.push(utils.THEME_COLORS[i++ % utils.THEME_COLORS.length]);
       labels.push(`${item} (stale)`);
     }
   }

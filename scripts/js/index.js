@@ -6,7 +6,7 @@
  *  Please see LICENSE file for your rights under this license. */
 
 /*
-  global utils:false, Chart:false, THEME_COLORS:false, customTooltips:false,
+  global utils:false, Chart:false, customTooltips:false,
   ChartDeferred:false, updateQueryFrequency:false
 */
 
@@ -151,7 +151,8 @@ const processors = {
     const datasets = clientLabels.map((label, i) => {
       // If we ran out of colors, make a random one
       const randomHexColor = `#${(0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16).substr(1, 6)}`;
-      const backgroundColor = i < THEME_COLORS.length ? THEME_COLORS[i] : randomHexColor;
+      const backgroundColor =
+        i < utils.THEME_COLORS.length ? utils.THEME_COLORS[i] : randomHexColor;
 
       return {
         data: [],
@@ -193,7 +194,7 @@ const processors = {
     for (const [i, [item, value]] of Object.entries(data.types).entries()) {
       if (value > 0) {
         values.push((100 * value) / sum);
-        colors.push(THEME_COLORS[i % THEME_COLORS.length]);
+        colors.push(utils.THEME_COLORS[i % utils.THEME_COLORS.length]);
         labels.push(item);
       }
     }
@@ -232,7 +233,7 @@ const processors = {
       globalThis.upstreams[label] = item.ip + portSuffix;
 
       values.push((100 * item.count) / sum);
-      colors.push(THEME_COLORS[i % THEME_COLORS.length]);
+      colors.push(utils.THEME_COLORS[i % utils.THEME_COLORS.length]);
       labels.push(label);
     }
 

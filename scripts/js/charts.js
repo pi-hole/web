@@ -9,25 +9,6 @@
 
 "use strict";
 
-globalThis.THEME_COLORS = [
-  "#f56954",
-  "#3c8dbc",
-  "#00a65a",
-  "#00c0ef",
-  "#f39c12",
-  "#0073b7",
-  "#001f3f",
-  "#39cccc",
-  "#3d9970",
-  "#01ff70",
-  "#ff851b",
-  "#f012be",
-  "#8e24aa",
-  "#d81b60",
-  "#222222",
-  "#d2d6de",
-];
-
 globalThis.htmlLegendPlugin = {
   id: "htmlLegend",
   afterUpdate(chart, args, options) {

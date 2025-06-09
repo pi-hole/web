@@ -41,6 +41,25 @@ const REFRESH_INTERVAL = {
   clients: 600_000, // 10 min (dashboard)
 };
 
+const THEME_COLORS = [
+  "#f56954",
+  "#3c8dbc",
+  "#00a65a",
+  "#00c0ef",
+  "#f39c12",
+  "#0073b7",
+  "#001f3f",
+  "#39cccc",
+  "#3d9970",
+  "#01ff70",
+  "#ff851b",
+  "#f012be",
+  "#8e24aa",
+  "#d81b60",
+  "#222222",
+  "#d2d6de",
+];
+
 /**
  * A wrapper around the fetch API with CSRF token handling
  * @param {string} url - The URL to fetch from
@@ -771,6 +790,7 @@ function isEmptyObject(obj) {
 globalThis.utils = (function () {
   return {
     REFRESH_INTERVAL,
+    THEME_COLORS,
     escapeHtml,
     unescapeHtml,
     showAlert,
