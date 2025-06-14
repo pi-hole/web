@@ -94,6 +94,16 @@ function fillDNSupstreams(value, servers) {
   // Initialize textfield
   updateDNSserversTextfield(value.value, customServers);
 
+  // Expand the box if there are custom servers
+  // Not using the AdminLTE API so that the expansion is not animated
+  // Otherwise, we could use `$(customBox).boxWidget("expand")`
+  if (customServers > 0) {
+    const customBox = document.getElementById("custom-servers-box");
+    customBox.classList.remove("collapsed-box");
+    customBox.querySelector(".btn-box-tool > i").classList.replace("fa-plus", "fa-minus");
+    customBox.querySelector(".box-body").style = "";
+  }
+
   // Hide the loading animation
   $("#dns-upstreams-overlay").hide();
 
