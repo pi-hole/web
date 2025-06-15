@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
 *  Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
