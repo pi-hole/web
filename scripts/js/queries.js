@@ -489,6 +489,14 @@ document.addEventListener("DOMContentLoaded", () => {
       dataFilter(d) {
         const json = JSON.parse(d);
         cursor = json.cursor; // Extract cursor from original data
+
+        // Check if all domains are "hidden" to determine if action column should be shown
+        const areDomainsHidden =
+          Array.isArray(json.queries) && json.queries.every(query => query.domain === "hidden");
+
+        // Hide action buttons column when there are hidden domains, otherwise show it
+        table?.column(6).visible(!areDomainsHidden);
+
         if (liveMode) {
           utils.setTimer(liveUpdate, utils.REFRESH_INTERVAL.query_log);
         }
@@ -520,7 +528,19 @@ document.addEventListener("DOMContentLoaded", () => {
       { data: "domain", width: "45%" },
       { data: "client.ip", width: "29%", type: "ip-address" },
       { data: "reply.time", width: "4%", render: formatReplyTime, searchable: false },
-      { data: null, width: "10%", sortable: false, searchable: false },
+    ],
+    columnDefs: [
+      {
+        // Add action buttons column for rows with domain !== "hidden"
+        // This column will be visible by default and hidden if there are any hidden domains
+        targets: 6,
+        data: null,
+        width: "10%",
+        sortable: false,
+        searchable: false,
+        visible: true, // Visible by default
+        defaultContent: "",
+      },
     ],
     lengthMenu: [
       [10, 25, 50, 100, 500, 1000],
@@ -573,7 +593,8 @@ document.addEventListener("DOMContentLoaded", () => {
         tds[5].innerHTML = '<i class="fa fa-times"></i>';
       }
 
-      if (queryStatus.buttonHtml !== false) {
+      // Add button HTML only if the domain is not "hidden" and we have buttons to show
+      if (queryStatus.buttonHtml !== false && data.domain !== "hidden" && tds.length > 6) {
         tds[6].innerHTML = queryStatus.buttonHtml;
       }
     },
