@@ -734,9 +734,6 @@ function addAdvancedInfo() {
   advancedInfoTarget.append(
     "Render time: " + (totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3)) + " ms"
   );
-
-  // Show advanced info
-  advancedInfoTarget.show();
 }
 
 $(() => {

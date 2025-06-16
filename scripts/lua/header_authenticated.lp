@@ -73,7 +73,7 @@ mg.include('header.lp','r')
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body" id="advanced-info" style="display:none;"></li>
+                            <li class="user-body" id="advanced-info"></li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener noreferrer" target="_blank">
