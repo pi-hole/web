@@ -345,7 +345,7 @@ function formatInfo(data) {
   if (dnssec.color !== "") {
     dnssecInfo =
       divStart +
-      'DNSSEC status:&nbsp&nbsp;<strong><span class="' +
+      'DNSSEC status:&nbsp;&nbsp;<strong><span class="' +
       dnssec.color +
       '">' +
       dnssec.text +
@@ -362,7 +362,7 @@ function formatInfo(data) {
   let replyInfo = "";
   replyInfo =
     data.reply.type !== "UNKNOWN"
-      ? divStart + "Reply:&nbsp&nbsp;" + data.reply.type + "</div>"
+      ? divStart + "Reply:&nbsp;&nbsp;" + data.reply.type + "</div>"
       : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
 
   // Show extended DNS error if applicable

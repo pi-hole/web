@@ -561,7 +561,7 @@ function updateVersionInfo() {
               v.name +
               "</strong> " +
               localVersion +
-              '&nbsp&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
+              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
               v.url +
               '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
           );
