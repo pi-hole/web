@@ -13,7 +13,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.min')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/chartjs-adapter-moment/chartjs-adapter-moment.js')?>"></script>
