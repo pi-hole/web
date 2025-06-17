@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global Chart:false, ChartDeferred:false, utils:false */
+/* global utils, Chart, ChartDeferred */
 
 "use strict";
 

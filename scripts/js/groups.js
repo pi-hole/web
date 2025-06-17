@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, updateFtlInfo:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
+/* global utils, updateFtlInfo, processGroupResult, delGroupItems, handleTableOrderChange */
 
 "use strict";
 

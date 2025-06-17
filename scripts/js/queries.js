@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, updateFtlInfo:false */
+/* global utils, moment, updateFtlInfo */
 
 "use strict";
 

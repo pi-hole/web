@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, groups:false, updateFtlInfo:false, getGroups:false, processGroupResult:false, delGroupItems:false, handleTableOrderChange:false */
+/* global utils, groups, updateFtlInfo, getGroups, processGroupResult, delGroupItems, handleTableOrderChange */
 /* exported initTable */
 
 "use strict";

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Precord see LICENSE file for your rights under this license. */
 
-/* global utils: false, setConfigValues: false */
+/* global utils, setConfigValues */
 
 "use strict";
 

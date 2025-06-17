@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, initTable:false, updateFtlInfo:false */
+/* global utils, initTable, updateFtlInfo */
 
 "use strict";
 

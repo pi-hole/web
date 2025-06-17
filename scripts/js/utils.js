@@ -5,10 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/*
-  global moment:false, Chart:false, htmlLegendPlugin:false, customTooltips:false,
-  doughnutTooltip:false, NProgress:false, WaitMe:false
-*/
+/* global moment, Chart, htmlLegendPlugin, customTooltips, doughnutTooltip, NProgress, WaitMe */
 
 "use strict";
 
