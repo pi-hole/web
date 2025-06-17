@@ -109,12 +109,6 @@ function countDown() {
 }
 
 function checkBlocking() {
-  // Skip if page is hidden
-  if (document.hidden) {
-    utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
-    return;
-  }
-
   $.ajax({
     url: document.body.dataset.apiurl + "/dns/blocking",
     method: "GET",
