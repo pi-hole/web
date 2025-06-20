@@ -159,19 +159,6 @@ function piholeChange(action, duration) {
     });
 }
 
-function testCookies() {
-  if (navigator.cookieEnabled) return true;
-
-  // set and read cookie
-  document.cookie = "cookietest=1";
-  const ret = document.cookie.includes("cookietest=");
-
-  // delete cookie
-  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
-
-  return ret;
-}
-
 function applyCheckboxRadioStyle() {
   // Get all radio/checkboxes for theming...
   const inputs = document.querySelectorAll("input[type='radio'], input[type='checkbox']");
@@ -639,8 +626,7 @@ function addAdvancedInfo() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const isLoginPage = document.body.classList.contains("page-login");
-  if (!isLoginPage) updateInfo();
+  updateInfo();
 
   const enableTimer = document.getElementById("enableTimer");
   if (enableTimer) {
@@ -651,20 +637,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const cookieInfoElement = document.getElementById("cookieInfo");
-  if (!testCookies() && cookieInfoElement) {
-    cookieInfoElement.classList.remove("d-none");
-  }
-
   // Apply icheckbox/iradio style
   applyCheckboxRadioStyle();
 
-  if (!isLoginPage) {
-    // Run check immediately after page loading ...
-    utils.checkMessages();
-    // ... and then periodically
-    utils.setInter(utils.checkMessages, utils.REFRESH_INTERVAL.messages);
-  }
+  // Run check immediately after page loading ...
+  utils.checkMessages();
+  // ... and then periodically
+  utils.setInter(utils.checkMessages, utils.REFRESH_INTERVAL.messages);
 
   initSettingsLevel();
   addAdvancedInfo();

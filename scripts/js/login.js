@@ -9,6 +9,19 @@
 
 "use strict";
 
+function testCookies() {
+  if (navigator.cookieEnabled) return true;
+
+  // set and read cookie
+  document.cookie = "cookietest=1";
+  const ret = document.cookie.includes("cookietest=");
+
+  // delete cookie
+  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+  return ret;
+}
+
 function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to dashboard
@@ -154,6 +167,11 @@ function showDNSfailure() {
 }
 
 $(() => {
+  const cookieInfoElement = document.getElementById("cookieInfo");
+  if (!testCookies() && cookieInfoElement) {
+    cookieInfoElement.classList.remove("d-none");
+  }
+
   // Check if we need to login at all
   $.ajax({
     url: `${document.body.dataset.apiurl}/auth`,
