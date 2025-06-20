@@ -13,7 +13,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 PageTitle = "All Settings"
 mg.include('scripts/lua/settings_header.lp','r')
 ?>
-<div class="row settings-level-expert d-none" id="advanced-content">
+<div class="row" id="advanced-content">
     <div class="overlay" id="advanced-overlay">
         <i class="fa fa-sync fa-spin"></i>
     </div>
@@ -28,7 +28,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         <!-- dynamically filled with content -->
     </div>
 
-    <div class="col-sm-12 settings-level-expert d-none save-button-container">
+    <div class="col-sm-12 save-button-container">
         <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
     </div>
 </div>
