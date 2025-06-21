@@ -88,7 +88,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/source-sans-pro/source-sans-pro.css')?>">
 <? end ?>
 
-<? if theme.dark then ?>
+<? if theme.dark == true then ?>
     <style>
         html { background-color: #000; }
     </style>
@@ -102,12 +102,12 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
 
-<? if startsWith(scriptname, 'groups') then
+<? if startsWith(scriptname, 'groups') == true then
     -- Group management styles
 ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
 <? end ?>
-<? if is_authenticated then ?>
+<? if is_authenticated == true then ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/datatables.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.css')?>">

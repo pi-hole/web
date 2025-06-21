@@ -156,7 +156,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<? if pihole.boxedlayout() then tablelayout = 'col-md-6' else  tablelayout = 'col-md-6 col-lg-6' end ?>
+<? if pihole.boxedlayout() == true then tablelayout = 'col-md-6' else  tablelayout = 'col-md-6 col-lg-6' end ?>
 <div class="row">
     <div class="<?=tablelayout?>">
         <div class="box" id="domain-frequency">

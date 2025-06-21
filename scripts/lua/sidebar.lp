@@ -132,7 +132,7 @@
                 </li>
                 <li class="header text-uppercase">System</li>
                 <!-- Settings -->
-                <li class="menu-system treeview<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
+                <li class="menu-system treeview<? if startsWith(scriptname, 'settings/') == true then ?> active<? end ?>">
                     <a href="<?=webhome?>#">
                         <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
                         <span class="pull-right-container">
