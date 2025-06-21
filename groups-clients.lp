@@ -46,7 +46,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="row">
                     <div class="col-md-12">
                         <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>.
-                        Multiple clients can be added by separating each client with a space or comma. Clients may be described either by their
+                        Multiple clients can be added by separating each client with a space or comma. Clients may be described either by their</p>
                         <ol>
                             <li>IP addresses (IPv4 and IPv6 are supported),</li>
                             <li>IP subnets (CIDR notation, like <code>192.168.2.0/24</code>), their</li>
@@ -54,9 +54,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <li>hostnames (like <code>localhost</code>), or by the</li>
                             <li>interface they are connected to (prefaced with a colon, like <code>:eth0</code>).</li>
                         </ol>
-                        The first match (from top to down) wins. Note that client recognition by host name or interface recognition as
-                        the two latter may only be available after some time. Furthermore, MAC address recognition only works for devices at most one networking hop away from your Pi-hole.
-                        </p>
+                        <p>The first match (from top to down) wins. Note that client recognition by host name or interface recognition as
+                        the two latter may only be available after some time. Furthermore, MAC address recognition only works for devices at most one networking hop away from your Pi-hole.</p>
                     </div>
                 </div>
             </div>
