@@ -60,7 +60,20 @@ end
 
         <div class="row row-centered text-center mt-3 version-info">
             <div class="col-xs-12 col-sm-12 col-md-10">
-                <ul class="list-inline" id="versions"></ul>
+                <ul class="list-inline version-items">
+                    <li class="d-none" data-component="docker">
+                        <strong>Docker Tag</strong> <span class="version"></span>
+                    </li>
+                    <li class="d-none" data-component="core">
+                        <strong>Core</strong> <span class="version"></span>
+                    </li>
+                    <li class="d-none" data-component="ftl">
+                        <strong>FTL</strong> <span class="version"></span>
+                    </li>
+                    <li class="d-none" data-component="web">
+                        <strong>Web interface</strong> <span class="version"></span>
+                    </li>
+                </ul>
                 <p id="update-hint" class="d-none my-3"></p>
             </div>
         </div>

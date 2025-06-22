@@ -391,24 +391,22 @@ function versionCompare(v1, v2) {
 
 function updateVersionInfo() {
   utils.fetchFactory(`${document.body.dataset.apiurl}/info/version`).then(({ version }) => {
-    const versionsEl = document.getElementById("versions");
+    const versionInfoEl = document.querySelector(".version-info");
     const updateHintEl = document.getElementById("update-hint");
-    versionsEl.innerHTML = "";
+
     updateHintEl.innerHTML = "";
     let updateAvailable = false;
     let isDockerUpdateAvailable = false;
 
-    const versions = [
-      {
-        name: "Docker Tag",
+    const versions = {
+      docker: {
         local: version.docker.local,
         remote: version.docker.remote,
         branch: null,
         hash: null,
         url: "https://github.com/pi-hole/docker-pi-hole/releases",
       },
-      {
-        name: "Core",
+      core: {
         local: version.core.local.version || "N/A",
         remote: version.core.remote.version,
         branch: version.core.local.branch,
@@ -416,8 +414,7 @@ function updateVersionInfo() {
         hash_remote: version.core.remote.hash,
         url: "https://github.com/pi-hole/pi-hole/releases",
       },
-      {
-        name: "FTL",
+      ftl: {
         local: version.ftl.local.version || "N/A",
         remote: version.ftl.remote.version,
         branch: version.ftl.local.branch,
@@ -425,8 +422,7 @@ function updateVersionInfo() {
         hash_remote: version.ftl.remote.hash,
         url: "https://github.com/pi-hole/FTL/releases",
       },
-      {
-        name: "Web interface",
+      web: {
         local: version.web.local.version || "N/A",
         remote: version.web.remote.version,
         branch: version.web.local.branch,
@@ -434,10 +430,13 @@ function updateVersionInfo() {
         hash_remote: version.web.remote.hash,
         url: "https://github.com/pi-hole/web/releases",
       },
-    ];
+    };
 
-    for (const v of versions) {
+    for (const [name, v] of Object.entries(versions)) {
       if (v.local === null) continue;
+
+      const versionItem = versionInfoEl.querySelector(`li[data-component="${name}"]`);
+      if (!versionItem) continue;
 
       // reset update status for each component
       let updateComponentAvailable = false;
@@ -462,24 +461,29 @@ function updateVersionInfo() {
         }
       }
 
-      if (v.name === "Docker Tag") {
+      if (name === "docker") {
         if (versionCompare(v.local, v.remote) === -1) {
           // Display update information for the docker tag
           updateComponentAvailable = true;
           isDockerUpdateAvailable = true;
         } else {
           // Display the link for the current tag
-          localVersion = `<a href="${url}/${localVersion}" rel="noopener noreferrer" target="_blank">${localVersion}</a>`;
+          localVersion = `<a href="${url}/${v.local}" rel="noopener noreferrer" target="_blank">${v.local}</a>`;
         }
       }
 
       // Display update information of individual components only if we are not running in a Docker container
       const showUpdate =
-        (version.docker.local === null || v.name === "Docker Tag") && updateComponentAvailable;
+        (version.docker.local === null || name === "docker") && updateComponentAvailable;
 
-      versionsEl.innerHTML += showUpdate
-        ? `<li><strong>${v.name}</strong> ${localVersion} &middot; <a class="lookatme" data-lookatme-text="Update available!" href="${url}" rel="noopener noreferrer" target="_blank">Update available!</a></li>`
-        : `<li><strong>${v.name}</strong> ${localVersion}</li>`;
+      const contentHTML = showUpdate
+        ? `${localVersion} &middot; <a class="lookatme" data-lookatme-text="Update available!" href="${url}" rel="noopener noreferrer" target="_blank">Update available!</a>`
+        : localVersion;
+
+      const versionEl = versionItem.querySelector(".version");
+      versionEl.innerHTML = contentHTML;
+
+      versionItem.classList.remove("d-none");
 
       // if at least one component can be updated, display the update-hint footer
       updateAvailable ||= showUpdate;
@@ -490,6 +494,8 @@ function updateVersionInfo() {
       updateHintEl.innerHTML = isDockerUpdateAvailable
         ? 'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
         : 'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.';
+    } else {
+      updateHintEl.classList.add("d-none");
     }
 
     clearTimeout(versionTimer);
