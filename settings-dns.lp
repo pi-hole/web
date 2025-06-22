@@ -98,9 +98,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             per-client basis. Other clients can continue to use FTL while
                             rate-limited clients are short-circuited at the same time.</p>
                         <p>Rate-limiting may be disabled altogether by setting both
-                            values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener noreferrer" target="_blank">our documentation</a>
-                            for further details.</p>
+                            values to zero.</p>
                     </div>
                 </div>
             </div>
