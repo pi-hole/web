@@ -27,7 +27,7 @@
             <ul class="sidebar-menu" data-widget="tree">
                 <li class="header text-uppercase">Main</li>
                 <!-- Home Page -->
-                <li class="menu-main<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
+                <li class="menu-main<? if scriptname == 'index' then ?> active<? end ?>">
                     <a href="<?=webhome?>">
                         <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
                     </a>

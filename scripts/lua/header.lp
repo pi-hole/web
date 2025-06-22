@@ -16,8 +16,8 @@ theme = pihole.webtheme()
 -- Get name of script by matching whatever is after the last "/" in the URI
 scriptname = mg.script_name:match(".*/(.*).lp$"):gsub("-", "/")
 
--- Fall back to "index.lp" if no match is found (e.g. when accessing the root)
-if scriptname == nil or string.len(scriptname) == 0 then scriptname = "index.lp" end
+-- Fall back to "index" if no match is found (e.g. when accessing the root)
+if scriptname == nil or string.len(scriptname) == 0 then scriptname = "index" end
 
 -- Boolean check if string starts with a given prefix
 function startsWith(text, prefix)
