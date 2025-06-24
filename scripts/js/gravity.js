@@ -88,17 +88,25 @@ function parseLines(ta, str) {
     // Track the number of opening spans
     let spanCount = 0;
 
+    // Mapping of ANSI escape codes to their corresponding CSS class names.
+    const ansiMappings = {
+      "\[1m": "text-bold", //COL_BOLD
+      "\[90m": "log-gray", //COL_GRAY
+      "\[91m": "log-red", //COL_RED
+      "\[32m": "log-green", //COL_GREEN
+      "\[33m": "log-yellow", //COL_YELLOW
+      "\[94m": "log-blue", //COL_BLUE
+      "\[95m": "log-purple", //COL_PURPLE
+      "\[96m": "log-cyan" //COL_CYAN
+    };
+
     // Replace ANSI escape codes with HTML tags and count opening spans
-    /* eslint-disable prettier/prettier */
-    line = line.replaceAll("[1m", () => { spanCount++; return '<span class="text-bold">'; }); //COL_BOLD
-    line = line.replaceAll("[90m", () => { spanCount++; return '<span class="log-gray">'; }); //COL_GRAY
-    line = line.replaceAll("[91m", () => { spanCount++; return '<span class="log-red">'; }); //COL_RED
-    line = line.replaceAll("[32m", () => { spanCount++; return '<span class="log-green">'; }); //COL_GREEN
-    line = line.replaceAll("[33m", () => { spanCount++; return '<span class="log-yellow">'; }); //COL_YELLOW
-    line = line.replaceAll("[94m", () => { spanCount++; return '<span class="log-blue">'; }); //COL_BLUE
-    line = line.replaceAll("[95m", () => { spanCount++; return '<span class="log-purple">'; }); //COL_PURPLE
-    line = line.replaceAll("[96m", () => { spanCount++; return '<span class="log-cyan">'; }); //COL_CYAN
-    /* eslint-enable prettier/prettier */
+    for (const [ansiCode, cssClass] of Object.entries(ansiMappings)) {
+      line = line.replaceAll(ansiCode, () => {
+        spanCount++;
+        return `<span class="${cssClass}">`;
+      });
+    }
 
     // Replace [0m with the appropriate number of closing spans
     line = line.replaceAll("[0m", "</span>".repeat(spanCount)); //COL_NC
