@@ -82,8 +82,12 @@ function parseLines(ta, str) {
       line = line.replaceAll("\r[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
-      ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
+      ta.html(ta.html().substring(0, ta.html().lastIndexOf("\n")));
     }
+
+    // Add some color to the text
+    line = line.replaceAll("[✓]", '[<span class="log-green">✓</span>]');
+    line = line.replaceAll("[✗]", '[<span class="log-red">✗</span>]');
 
     // Append the new text to the end of the output
     ta.append(line);
