@@ -89,6 +89,7 @@ function parseLines(ta, str) {
     let spanCount = 0;
 
     // Replace ANSI escape codes with HTML tags and count opening spans
+    /* eslint-disable prettier/prettier */
     line = line.replaceAll("[1m", () => { spanCount++; return '<span class="text-bold">'; }); //COL_BOLD
     line = line.replaceAll("[90m", () => { spanCount++; return '<span class="log-gray">'; }); //COL_GRAY
     line = line.replaceAll("[91m", () => { spanCount++; return '<span class="log-red">'; }); //COL_RED
@@ -97,6 +98,7 @@ function parseLines(ta, str) {
     line = line.replaceAll("[94m", () => { spanCount++; return '<span class="log-blue">'; }); //COL_BLUE
     line = line.replaceAll("[95m", () => { spanCount++; return '<span class="log-purple">'; }); //COL_PURPLE
     line = line.replaceAll("[96m", () => { spanCount++; return '<span class="log-cyan">'; }); //COL_CYAN
+    /* eslint-enable prettier/prettier */
 
     // Replace [0m with the appropriate number of closing spans
     line = line.replaceAll("[0m", "</span>".repeat(spanCount)); //COL_NC
