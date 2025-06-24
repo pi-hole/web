@@ -85,9 +85,16 @@ function parseLines(ta, str) {
       ta.html(ta.html().substring(0, ta.html().lastIndexOf("\n")));
     }
 
-    // Add some color to the text
-    line = line.replaceAll("[✓]", '[<span class="log-green">✓</span>]');
-    line = line.replaceAll("[✗]", '[<span class="log-red">✗</span>]');
+    // Replace ANSI escape codes with HTML tags
+    line = line.replaceAll("[0m", "</span>"); //COL_NC
+    line = line.replaceAll("[1m", '<span class="text-bold">'); //COL_BOLD
+    line = line.replaceAll("[90m", '<span class="log-gray">'); //COL_GRAY
+    line = line.replaceAll("[91m", '<span class="log-red">'); //COL_RED
+    line = line.replaceAll("[32m", '<span class="log-green">'); //COL_GREEN
+    line = line.replaceAll("[33m", '<span class="log-yellow">'); //COL_YELLOW
+    line = line.replaceAll("[94m", '<span class="log-blue">'); //COL_BLUE
+    line = line.replaceAll("[95m", '<span class="log-purple">'); //COL_PURPLE
+    line = line.replaceAll("[96m", '<span class="log-cyan">'); //COL_CYAN
 
     // Append the new text to the end of the output
     ta.append(line);
