@@ -85,16 +85,21 @@ function parseLines(ta, str) {
       ta.html(ta.html().substring(0, ta.html().lastIndexOf("\n")));
     }
 
-    // Replace ANSI escape codes with HTML tags
-    line = line.replaceAll("[0m", "</span>"); //COL_NC
-    line = line.replaceAll("[1m", '<span class="text-bold">'); //COL_BOLD
-    line = line.replaceAll("[90m", '<span class="log-gray">'); //COL_GRAY
-    line = line.replaceAll("[91m", '<span class="log-red">'); //COL_RED
-    line = line.replaceAll("[32m", '<span class="log-green">'); //COL_GREEN
-    line = line.replaceAll("[33m", '<span class="log-yellow">'); //COL_YELLOW
-    line = line.replaceAll("[94m", '<span class="log-blue">'); //COL_BLUE
-    line = line.replaceAll("[95m", '<span class="log-purple">'); //COL_PURPLE
-    line = line.replaceAll("[96m", '<span class="log-cyan">'); //COL_CYAN
+    // Track the number of opening spans
+    let spanCount = 0;
+
+    // Replace ANSI escape codes with HTML tags and count opening spans
+    line = line.replaceAll("[1m", () => { spanCount++; return '<span class="text-bold">'; }); //COL_BOLD
+    line = line.replaceAll("[90m", () => { spanCount++; return '<span class="log-gray">'; }); //COL_GRAY
+    line = line.replaceAll("[91m", () => { spanCount++; return '<span class="log-red">'; }); //COL_RED
+    line = line.replaceAll("[32m", () => { spanCount++; return '<span class="log-green">'; }); //COL_GREEN
+    line = line.replaceAll("[33m", () => { spanCount++; return '<span class="log-yellow">'; }); //COL_YELLOW
+    line = line.replaceAll("[94m", () => { spanCount++; return '<span class="log-blue">'; }); //COL_BLUE
+    line = line.replaceAll("[95m", () => { spanCount++; return '<span class="log-purple">'; }); //COL_PURPLE
+    line = line.replaceAll("[96m", () => { spanCount++; return '<span class="log-cyan">'; }); //COL_CYAN
+
+    // Replace [0m with the appropriate number of closing spans
+    line = line.replaceAll("[0m", "</span>".repeat(spanCount)); //COL_NC
 
     // Append the new text to the end of the output
     ta.append(line);
