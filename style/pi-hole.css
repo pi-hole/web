@@ -270,6 +270,7 @@ td.lookatme {
 }
 
 .chart-legend li {
+  cursor: default;
   position: relative;
   line-height: 1;
   margin: 0 0 8px;
@@ -302,6 +303,10 @@ td.lookatme {
 
 .chart-legend li a.legend-label-text.clickable:hover {
   text-decoration: underline;
+}
+
+.chart-legend li a.legend-label-text.clickable {
+  cursor: pointer; /* Pointer cursor only for clickable items */
 }
 
 /* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */

@@ -67,6 +67,7 @@ globalThis.htmlLegendPlugin = {
       const boxSpan = document.createElement("span");
       boxSpan.title = "Toggle visibility";
       boxSpan.style.color = item.fillStyle;
+      boxSpan.style.cursor = "pointer";
       boxSpan.innerHTML = `<i class="colorBoxWrapper fa ${item.hidden ? "fa-square" : "fa-check-square"}"></i>`;
 
       boxSpan.addEventListener("click", () => {
@@ -92,6 +93,7 @@ globalThis.htmlLegendPlugin = {
         // Text (link to query log page)
         link.title = `List ${item.text} queries`;
         link.className = "legend-label-text clickable";
+
         if (isQueryTypeChart) {
           link.href = `queries?type=${item.text}`;
         } else if (isForwardDestinationChart) {
@@ -99,6 +101,7 @@ globalThis.htmlLegendPlugin = {
           link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
         }
       } else {
+        // no clickable links in other charts
         link.className = "legend-label-text";
       }
 
