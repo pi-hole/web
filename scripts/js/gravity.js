@@ -82,8 +82,47 @@ function parseLines(ta, str) {
       line = line.replaceAll("\r[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
-      ta.text(ta.text().substring(0, ta.text().lastIndexOf("\n")));
+      ta.html(ta.html().substring(0, ta.html().lastIndexOf("\n")));
     }
+
+    // Track the number of opening spans
+    let spanCount = 0;
+
+    // Mapping of ANSI escape codes to their corresponding CSS class names.
+    const ansiMappings = {
+      "\u001B[1m": "text-bold", //COL_BOLD
+      "\u001B[90m": "log-gray", //COL_GRAY
+      "\u001B[91m": "log-red", //COL_RED
+      "\u001B[32m": "log-green", //COL_GREEN
+      "\u001B[33m": "log-yellow", //COL_YELLOW
+      "\u001B[94m": "log-blue", //COL_BLUE
+      "\u001B[95m": "log-purple", //COL_PURPLE
+      "\u001B[96m": "log-cyan", //COL_CYAN
+    };
+
+    // Create a regex that matches all ANSI codes (including reset)
+    /* eslint-disable-next-line no-control-regex */
+    const ansiRegex = /(\u001B\[(?:1|90|91|32|33|94|95|96|0)m)/g;
+
+    // Process the line sequentially, replacing ANSI codes with their corresponding HTML spans
+    // we use a counter to keep track of how many spans are open and close the correct number of spans when we encounter a reset code
+    /* eslint-disable-next-line unicorn/prefer-string-replace-all */
+    line = line.replace(ansiRegex, match => {
+      if (match === "\u001B[0m") {
+        // Reset/close all open spans
+        const closingTags = "</span>".repeat(spanCount);
+        spanCount = 0;
+        return closingTags;
+      }
+
+      if (ansiMappings[match]) {
+        // Opening span
+        spanCount++;
+        return `<span class="${ansiMappings[match]}">`;
+      }
+
+      return match; // Return unchanged if not recognized
+    });
 
     // Append the new text to the end of the output
     ta.append(line);
