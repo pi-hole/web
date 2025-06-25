@@ -300,7 +300,7 @@ td.lookatme {
   word-break: break-word;
 }
 
-.chart-legend li a.legend-label-text:hover {
+.chart-legend li a.legend-label-text.clickable:hover {
   text-decoration: underline;
 }
 

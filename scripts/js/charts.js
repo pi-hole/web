@@ -91,17 +91,18 @@ globalThis.htmlLegendPlugin = {
       if (isQueryTypeChart || isForwardDestinationChart) {
         // Text (link to query log page)
         link.title = `List ${item.text} queries`;
-
+        link.className = "legend-label-text clickable";
         if (isQueryTypeChart) {
           link.href = `queries?type=${item.text}`;
         } else if (isForwardDestinationChart) {
           // Encode the forward destination as it may contain an "#" character
           link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
         }
+      } else {
+        link.className = "legend-label-text";
       }
 
       link.style.textDecoration = item.hidden ? "line-through" : "";
-      link.className = "legend-label-text";
       link.textContent = item.text;
 
       li.append(boxSpan, link);
