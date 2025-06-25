@@ -134,7 +134,7 @@ function setMetrics(data, prefix) {
       cacheData[val.name] = val.count;
     } else if (typeof val === "object") {
       setMetrics(val, prefix + key + "-");
-    } else if (prefix === "sysinfo-dns-replies-") {
+    } else if (prefix === "sysinfo-dns-replies-" && data.sum !== 0) {
       // Compute and display percentage of DNS replies in addition to the absolute value
       const lval = val.toLocaleString();
       const percent = (100 * val) / data.sum;
