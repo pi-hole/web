@@ -474,10 +474,6 @@ function renderTimespan(data, type) {
   return data;
 }
 
-function htmlPass(data, _type) {
-  return data;
-}
-
 // Show only the appropriate buttons
 function changeTableButtonStates(table) {
   const allRows = table.rows({ filter: "applied" }).data().length;
@@ -706,7 +702,6 @@ globalThis.utils = (function () {
     doLogout,
     renderTimestamp,
     renderTimespan,
-    htmlPass,
     changeTableButtonStates,
     getCSSval,
     parseQueryString,
