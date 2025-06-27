@@ -28,16 +28,13 @@ const filters = [
   "reply",
   "dnssec",
 ];
-var doDNSSEC = false;
+let doDNSSEC = false;
 
 // Check if pihole is validiting DNSSEC
 function getDnssecConfig() {
-  $.getJSON(
-    document.body.dataset.apiurl + "/config/dns/dnssec",
-    function(data) {
-      doDNSSEC = data.config.dns.dnssec;
-    }
-  );
+  $.getJSON(document.body.dataset.apiurl + "/config/dns/dnssec", data => {
+    doDNSSEC = data.config.dns.dnssec;
+  });
 }
 
 function initDateRangePicker() {
