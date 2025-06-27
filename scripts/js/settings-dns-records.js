@@ -145,11 +145,6 @@ function populateDataTable(endpoint) {
   });
 }
 
-$(() => {
-  populateDataTable("hosts");
-  populateDataTable("cnameRecords");
-});
-
 function deleteRecord() {
   if ($(this).attr("data-type") === "hosts") delHosts($(this).attr("data-tag"));
   else delCNAME($(this).attr("data-tag"));
@@ -215,6 +210,9 @@ function delCNAME(elem) {
 }
 
 $(() => {
+  populateDataTable("hosts");
+  populateDataTable("cnameRecords");
+
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
     const elem = $("#Hip").val() + " " + $("#Hdomain").val();
