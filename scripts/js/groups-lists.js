@@ -247,7 +247,7 @@ function initTable() {
           '<a id="address_' +
             dataId +
             '" class="breakall" href="' +
-            encodeURI(data.address) +
+            utils.safeEncodeURI(data.address) +
             '" target="_blank" rel="noopener noreferrer">' +
             utils.escapeHtml(data.address) +
             "</a>"

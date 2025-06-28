@@ -535,6 +535,19 @@ function hexDecode(string) {
   return back;
 }
 
+function safeEncodeURI(uri) {
+  try {
+    const decoded = decodeURI(uri);
+    // If the decoded and re-encoded uri results in the same string then it's already encoded
+    if (encodeURI(decoded) === uri) return uri;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(`Error decoding URI: ${error}`);
+  }
+
+  return encodeURI(uri);
+}
+
 function listsAlert(type, items, data) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
@@ -731,6 +744,7 @@ globalThis.utils = (function () {
     parseQueryString,
     hexEncode,
     hexDecode,
+    safeEncodeURI,
     listsAlert,
     loadingOverlay,
     setTimer,
