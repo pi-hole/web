@@ -29,12 +29,11 @@ const REFRESH_INTERVAL = {
   clients: 600_000, // 10 min (dashboard)
 };
 
-function secondsTimeSpanToHMS(s) {
-  const h = Math.floor(s / 3600); //Get whole hours
-  s -= h * 3600;
-  const m = Math.floor(s / 60); //Get remaining minutes
-  s -= m * 60;
-  return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); //zero padding on minutes and seconds
+function secondsTimeSpanToHMS(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 function piholeChanged(blocking, timer = null) {
