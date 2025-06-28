@@ -100,10 +100,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" id="add_deny">Add to denied domains</button>
+                        <button type="button" class="btn btn-danger" id="add_deny">Add to denied domains</button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary" id="add_allow">Add to allowed domains</button>
+                        <button type="button" class="btn btn-success" id="add_allow">Add to allowed domains</button>
                     </div>
                 </div>
             </div>
