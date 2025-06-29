@@ -64,12 +64,9 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     // Only show the forgot password box if the error is NOT caused by an
     // invalid TOTP token and this is no error response (= password is wrong)
     if (!isErrorResponse && !isInvalidTOTP) {
-      $("#forgot-pw-box")
-        .removeClass("box-info")
-        .removeClass("collapsed-box")
-        .addClass("box-danger");
-      $("#forgot-pw-box .box-body").show();
-      $("#forgot-pw-toggle-icon").removeClass("fa-plus").addClass("fa-minus");
+      const forgotPwBox = document.getElementById("forgot-pw-box");
+      forgotPwBox.classList.replace("box-info", "box-danger");
+      utils.toggleBoxCollapse(forgotPwBox, true);
     }
 
     return;
@@ -85,9 +82,9 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
   }
 
   $("#invalid2fa-box").addClass("hidden");
-  $("#forgot-pw-box").addClass("box-info").addClass("collapsed-box").removeClass("box-danger");
-  $("#forgot-pw-box .box-body").hide();
-  $("#forgot-pw-toggle-icon").removeClass("fa-minus").addClass("fa-plus");
+  const forgotPwBox = document.getElementById("forgot-pw-box");
+  forgotPwBox.classList.replace("box-danger", "box-info");
+  utils.toggleBoxCollapse(forgotPwBox, false);
 }
 
 function doLogin(password) {

@@ -676,6 +676,30 @@ function setInter(func, interval) {
   globalThis.setTimeout(setInter, interval, func, interval);
 }
 
+/**
+ * Toggle or set the collapse state of a box element
+ * @param {HTMLElement} box - The box element
+ * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
+ */
+// Not using the AdminLTE API so that the expansion is not animated
+// Otherwise, we could use `$(customBox).boxWidget("expand")`
+function toggleBoxCollapse(box, expand = true) {
+  if (!box) return;
+
+  const icon = box.querySelector(".btn-box-tool > i");
+  const body = box.querySelector(".box-body");
+
+  if (expand) {
+    box.classList.remove("collapsed-box");
+    if (icon) icon.classList.replace("fa-plus", "fa-minus");
+    if (body) body.style = "";
+  } else {
+    box.classList.add("collapsed-box");
+    if (icon) icon.classList.replace("fa-minus", "fa-plus");
+    if (body) body.style.display = "none";
+  }
+}
+
 globalThis.utils = (function () {
   return {
     escapeHtml,
@@ -711,5 +735,6 @@ globalThis.utils = (function () {
     loadingOverlay,
     setTimer,
     setInter,
+    toggleBoxCollapse,
   };
 })();

@@ -36,7 +36,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                     </div>
                     <div class="col-sm-12">
-                        <div class="box collapsed-box">
+                        <div class="box collapsed-box" id="custom-servers-box">
                             <div class="box-header with-border pointer" data-widget="collapse">
                                 <h3 class="box-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
                                 <div class="box-tools pull-right">
