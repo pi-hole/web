@@ -11,7 +11,7 @@
 
 const domainInputField = document.getElementById("domain");
 const maxResultsInputField = document.getElementById("number");
-const searchButton = document.getElementById("btnSearch");
+const searchForm = document.getElementById("searchForm");
 
 document.addEventListener("DOMContentLoaded", () => {
   const queryParams = utils.parseQueryString();
@@ -170,14 +170,8 @@ function generateNoteMessage({ results }, maxResults) {
   );
 }
 
-// Handle enter key
-domainInputField.addEventListener("keypress", event => {
-  if (event.key === "Enter") {
-    doSearch();
-  }
-});
-
-// Handle search button click
-searchButton.addEventListener("click", () => {
+// Handle form submission
+searchForm.addEventListener("submit", event => {
+  event.preventDefault();
   doSearch();
 });
