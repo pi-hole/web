@@ -267,7 +267,7 @@ $(".confirm-flusharp").confirm({
   title: "Confirmation required",
   confirm() {
     $.ajax({
-      url: document.body.dataset.apiurl + "/action/flush/arp",
+      url: document.body.dataset.apiurl + "/action/flush/network",
       type: "POST",
     }).fail(data => {
       apiFailure(data);
