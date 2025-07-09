@@ -156,8 +156,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <div>
                             <input type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
-                            <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
-                            <p class="help-block">Tells Pi-hole to never forward A or AAAA queries for plain
+                            <label for="dns.domainNeeded"><strong>Never forward non-FQDN queries</strong></label>
+                            <p class="help-block">Tells Pi-hole to never forward queries for plain
                                 names, without dots or domain parts, to upstream nameservers. If
                                 the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
                                 answer is returned.<br>
