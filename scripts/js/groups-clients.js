@@ -92,7 +92,6 @@ $(() => {
   });
 });
 
-// eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#clientsTable").DataTable({
     processing: true,

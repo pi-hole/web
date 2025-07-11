@@ -38,6 +38,7 @@ $.extend($.fn.dataTableExt.oSort, {
       cidr = m[3].split("/");
       if (cidr.length === 2) {
         m.pop();
+        // eslint-disable-next-line unicorn/prefer-spread
         m = m.concat(cidr);
       }
 
