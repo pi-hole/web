@@ -439,7 +439,7 @@ function initTable() {
   });
 
   table.on("init select deselect", () => {
-    utils.changeBulkDeleteStates(table);
+    utils.changeTableButtonStates(table);
   });
 
   table.on("order.dt", () => {

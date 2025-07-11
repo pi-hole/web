@@ -207,7 +207,7 @@ $(() => {
       table.rows(0).deselect();
     }
 
-    utils.changeBulkDeleteStates(table);
+    utils.changeTableButtonStates(table);
   });
 
   table.on("order.dt", () => {
