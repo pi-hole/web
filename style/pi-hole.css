@@ -1576,3 +1576,14 @@ textarea.field-sizing-content {
   line-height: 0.5em;
   font-size: 1.7em;
 }
+
+.hidden-entry {
+  opacity: 0;
+}
+.fade-2s {
+  animation: fadeOut 2s forwards;
+}
+.fade-in-transition {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
