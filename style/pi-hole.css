@@ -261,15 +261,27 @@ td.lookatme {
   align-self: center;
 }
 
+.chart-legend ul {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
 .chart-legend li {
-  cursor: pointer;
   position: relative;
   line-height: 1;
   margin: 0 0 8px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
 }
 
 .chart-legend li span {
+  cursor: pointer;
   display: inline-block;
+  margin: 0 10px;
 }
 
 .colorBoxWrapper {
@@ -281,11 +293,14 @@ td.lookatme {
 }
 
 .chart-legend li .legend-label-text {
+  color: inherit;
+  margin: 0;
+  padding: 0;
   line-height: 1;
   word-break: break-word;
 }
 
-.chart-legend li .legend-label-text:hover {
+.chart-legend li a.legend-label-text:hover {
   text-decoration: underline;
 }
 
