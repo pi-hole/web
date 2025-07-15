@@ -74,20 +74,23 @@ $(() => {
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.ip);
-      const button =
-        '<button type="button" class="btn btn-danger btn-xs" id="deleteLease_' +
-        data.ip +
-        '" data-del-ip="' +
-        data.ip +
-        '" title="Delete lease" data-toggle="tooltip"><span class="far fa-trash-alt"></span></button>' +
-        ' <button type="button" class="btn btn-secondary btn-xs copy-to-static" data-hwaddr="' +
-        (data.hwaddr || "") +
-        '" data-ip="' +
-        (data.ip || "") +
-        '" data-hostname="' +
-        (data.name || "") +
-        '" title="Copy to static leases" data-toggle="tooltip"><i class="fa fa-fw fa-copy"></i></button>';
-      $("td:eq(6)", row).html(button);
+      // Create buttons without data-* attributes in HTML
+      const $deleteBtn = $(
+        '<button type="button" class="btn btn-danger btn-xs"><span class="far fa-trash-alt"></span></button>'
+      )
+        .attr("id", "deleteLease_" + data.ip)
+        .attr("data-del-ip", data.ip)
+        .attr("title", "Delete lease")
+        .attr("data-toggle", "tooltip");
+      const $copyBtn = $(
+        '<button type="button" class="btn btn-secondary btn-xs copy-to-static"><i class="fa fa-fw fa-copy"></i></button>'
+      )
+        .attr("title", "Copy to static leases")
+        .attr("data-toggle", "tooltip")
+        .data("hwaddr", data.hwaddr || "")
+        .data("ip", data.ip || "")
+        .data("hostname", data.name || "");
+      $("td:eq(6)", row).empty().append($deleteBtn, " ", $copyBtn);
     },
     select: {
       style: "multi",
@@ -367,24 +370,39 @@ function renderStaticDHCPTable() {
       continue;
     }
 
-    const tr = $(
-      "<tr>" +
-        '<td contenteditable="true" class="static-hwaddr"></td>' +
-        '<td contenteditable="true" class="static-ipaddr"></td>' +
-        '<td contenteditable="true" class="static-hostname"></td>' +
-        "<td>" +
-        '<button type="button" class="btn btn-success btn-xs save-static-row" data-row="' +
-        idx +
-        '" title="Save changes to this line" data-toggle="tooltip"><i class="fa fa-fw fa-floppy-disk"></i></button> ' +
-        '<button type="button" class="btn btn-danger btn-xs delete-static-row" data-row="' +
-        idx +
-        '" title="Delete this line" data-toggle="tooltip"><i class="fa fa-fw fa-trash"></i></button> ' +
-        '<button type="button" class="btn btn-primary btn-xs add-static-row" data-row="' +
-        idx +
-        '" title="Add new line after this" data-toggle="tooltip"><i class="fa fa-fw fa-plus"></i></button>' +
-        "</td>" +
-        "</tr>"
-    );
+    const tr = $("<tr>")
+      .append($('<td contenteditable="true" class="static-hwaddr"></td>'))
+      .append($('<td contenteditable="true" class="static-ipaddr"></td>'))
+      .append($('<td contenteditable="true" class="static-hostname"></td>'))
+      .append(
+        $("<td></td>")
+          .append(
+            $(
+              '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-floppy-disk"></i></button>'
+            )
+              .attr("data-row", idx)
+              .attr("title", "Save changes to this line")
+              .attr("data-toggle", "tooltip")
+          )
+          .append(" ")
+          .append(
+            $(
+              '<button type="button" class="btn btn-danger btn-xs delete-static-row"><i class="fa fa-fw fa-trash"></i></button>'
+            )
+              .attr("data-row", idx)
+              .attr("title", "Delete this line")
+              .attr("data-toggle", "tooltip")
+          )
+          .append(" ")
+          .append(
+            $(
+              '<button type="button" class="btn btn-primary btn-xs add-static-row"><i class="fa fa-fw fa-plus"></i></button>'
+            )
+              .attr("data-row", idx)
+              .attr("title", "Add new line after this")
+              .attr("data-toggle", "tooltip")
+          )
+      );
     // Set cell values, with placeholder for empty hwaddr
     tr.find(".static-hwaddr").text(parsed.hwaddr);
     tr.find(".static-ipaddr").text(parsed.ipaddr);
