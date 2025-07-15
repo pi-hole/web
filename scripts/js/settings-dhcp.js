@@ -212,6 +212,8 @@ function delLease(ip) {
 
 function fillDHCPhosts(data) {
   $("#dhcp-hosts").val(data.value.join("\n"));
+  // Trigger input to update the table
+  $("#dhcp-hosts").trigger("input");
 }
 
 function processDHCPConfig() {
@@ -227,6 +229,187 @@ function processDHCPConfig() {
     });
 }
 
+function parseStaticDHCPLine(line) {
+  // Accepts: [hwaddr][,ipaddr][,hostname] (all optional, comma-separated, no advanced tokens)
+  // Returns null if advanced/invalid, or {hwaddr, ipaddr, hostname}
+
+  // If the line is empty, return an object with empty fields
+  if (!line.trim())
+    return {
+      hwaddr: "",
+      ipaddr: "",
+      hostname: "",
+    };
+
+  // Advanced if contains id:, set:, tag:, ignore, [ or ]
+  if (/id:|set:|tag:|ignore|\[|]|lease_time|,\s*,/.test(line)) return "advanced";
+
+  // Split the line by commas and trim whitespace
+  const parts = line.split(",").map(s => s.trim());
+
+  // If there are more than 3 parts, it's considered advanced
+  if (parts.length > 3) return "advanced";
+
+  // Check if first part is a valid MAC address
+  const macRegex = /^(?:[\da-f]{2}:){5}[\da-f]{2}$/i;
+  const haveMAC = parts.length > 0 && macRegex.test(parts[0]);
+  const hwaddr = haveMAC ? parts[0] : "";
+  // Check if the first or second part is a valid IP address
+  const ipRegex = /^(?:\d{1,3}\.){3}\d{1,3}$/;
+  let ipaddr = "";
+  if (ipRegex.test(parts[0])) ipaddr = parts[0];
+  else if (parts.length > 1 && ipRegex.test(parts[1])) ipaddr = parts[1];
+  const haveIP = ipaddr.length > 0;
+  // Check if the second or third part is a valid hostname
+  let hostname = "";
+  if (parts.length > 2 && parts[2].length > 0) hostname = parts[2];
+  else if (parts.length > 1 && parts[1].length > 0 && (!haveIP || !haveMAC)) hostname = parts[1];
+
+  return {
+    hwaddr,
+    ipaddr,
+    hostname,
+  };
+}
+
+function updateTextareaFromTable() {
+  const lines = [];
+  $("#StaticDHCPTable tbody tr").each(function () {
+    const row = $(this);
+    // Skip advanced pseudo-rows
+    if (row.hasClass("table-warning")) {
+      lines.push(row.data("original-line") || "");
+      return;
+    }
+
+    const hwaddr = row.find(".static-hwaddr").text().trim();
+    const ipaddr = row.find(".static-ipaddr").text().trim();
+    const hostname = row.find(".static-hostname").text().trim();
+    // Only add if at least one field is non-empty
+    if (hwaddr || ipaddr || hostname) {
+      lines.push([hwaddr, ipaddr, hostname].filter(Boolean).join(","));
+    }
+  });
+  $("#dhcp-hosts").val(lines.join("\n")).trigger("input");
+}
+
+// Save button for each row updates only that line in the textarea
+$(document).on("click", ".save-static-row", function () {
+  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const row = $(this).closest("tr");
+  const hwaddr = row.find(".static-hwaddr").text().trim();
+  const ipaddr = row.find(".static-ipaddr").text().trim();
+  const hostname = row.find(".static-hostname").text().trim();
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  // Only update if at least one field is non-empty
+  lines[rowIdx] =
+    hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
+  $("#dhcp-hosts").val(lines.join("\n"));
+  // Optionally, re-render the table to reflect changes
+  renderStaticDHCPTable();
+});
+
+// Delete button for each row removes that line from the textarea and updates the table
+$(document).on("click", ".delete-static-row", function () {
+  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  lines.splice(rowIdx, 1);
+  $("#dhcp-hosts").val(lines.join("\n"));
+  renderStaticDHCPTable();
+});
+
+// Add button for each row inserts a new empty line after this row
+$(document).on("click", ".add-static-row", function () {
+  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  lines.splice(rowIdx + 1, 0, "");
+  $("#dhcp-hosts").val(lines.join("\n"));
+  renderStaticDHCPTable();
+  // Focus the new row after render
+  setTimeout(() => {
+    $("#StaticDHCPTable tbody tr")
+      .eq(rowIdx + 1)
+      .find("td:first")
+      .focus();
+  }, 10);
+});
+
+// Update table on load and whenever textarea changes
 $(() => {
   processDHCPConfig();
+  renderStaticDHCPTable();
+  $("#dhcp-hosts").on("input", renderStaticDHCPTable);
 });
+
+// When editing a cell, disable all action buttons except the save button in the current row
+$(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function () {
+  const row = $(this).closest("tr");
+  // Disable all action buttons in all rows
+  $(
+    "#StaticDHCPTable .save-static-row, #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
+  ).prop("disabled", true);
+  // Enable only the save button in the current row
+  row.find(".save-static-row").prop("disabled", false);
+  // Show a hint below the current row if not already present
+  if (!row.next().hasClass("edit-hint-row")) {
+    row.next(".edit-hint-row").remove(); // Remove any existing hint
+    row.after(
+      '<tr class="edit-hint-row"><td colspan="4" class="text-info" style="font-style:italic;">Please save this line before editing another or leaving the page, otherwise your changes will be lost.</td></tr>'
+    );
+  }
+});
+// On save, re-enable all buttons and remove the hint
+$(document).on("click", ".save-static-row", function () {
+  $(
+    "#StaticDHCPTable .save-static-row, #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
+  ).prop("disabled", false);
+  $(".edit-hint-row").remove();
+});
+// On table redraw, ensure all buttons are enabled and hints are removed
+function renderStaticDHCPTable() {
+  const tbody = $("#StaticDHCPTable tbody");
+  tbody.empty();
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  let rowCount = 0;
+  for (const [idx, line] of lines.entries()) {
+    const parsed = parseStaticDHCPLine(line);
+    if (parsed === "advanced") {
+      const tr = $(
+        '<tr class="table-warning"><td colspan="4" style="font-style:italic;color:#888;">Advanced settings present in line ' +
+          (idx + 1) +
+          "</td></tr>"
+      );
+      tr.data("original-line", line);
+      tbody.append(tr);
+      continue;
+    }
+
+    rowCount++;
+    const tr = $(
+      "<tr>" +
+        '<td contenteditable="true" class="static-hwaddr"></td>' +
+        '<td contenteditable="true" class="static-ipaddr"></td>' +
+        '<td contenteditable="true" class="static-hostname"></td>' +
+        "<td>" +
+        '<button type="button" class="btn btn-success btn-xs save-static-row" data-row="' +
+        idx +
+        '"><i class="fa fa-fw fa-floppy-disk"></i></button> ' +
+        '<button type="button" class="btn btn-danger btn-xs delete-static-row" data-row="' +
+        idx +
+        '"><i class="fa fa-fw fa-trash"></i></button> ' +
+        '<button type="button" class="btn btn-primary btn-xs add-static-row" data-row="' +
+        idx +
+        '"><i class="fa fa-fw fa-plus"></i></button>' +
+        "</td>" +
+        "</tr>"
+    );
+    // Set cell values, with placeholder for empty hwaddr
+    tr.find(".static-hwaddr").text(parsed.hwaddr);
+    tr.find(".static-ipaddr").text(parsed.ipaddr);
+    tr.find(".static-hostname").text(parsed.hostname);
+    tbody.append(tr);
+  }
+
+  tbody.find(".save-static-row, .delete-static-row, .add-static-row").prop("disabled", false);
+  tbody.find(".edit-hint-row").remove();
+}
