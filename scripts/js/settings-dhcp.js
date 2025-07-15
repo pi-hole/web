@@ -79,14 +79,14 @@ $(() => {
         data.ip +
         '" data-del-ip="' +
         data.ip +
-        '"><span class="far fa-trash-alt"></span></button>' +
+        '" title="Delete lease" data-toggle="tooltip"><span class="far fa-trash-alt"></span></button>' +
         ' <button type="button" class="btn btn-secondary btn-xs copy-to-static" data-hwaddr="' +
         (data.hwaddr || "") +
         '" data-ip="' +
         (data.ip || "") +
         '" data-hostname="' +
         (data.name || "") +
-        '"><i class="fa fa-fw fa-copy"></i></button>';
+        '" title="Copy to static leases" data-toggle="tooltip"><i class="fa fa-fw fa-copy"></i></button>';
       $("td:eq(6)", row).html(button);
     },
     select: {
@@ -398,13 +398,13 @@ function renderStaticDHCPTable() {
         "<td>" +
         '<button type="button" class="btn btn-success btn-xs save-static-row" data-row="' +
         idx +
-        '"><i class="fa fa-fw fa-floppy-disk"></i></button> ' +
+        '" title="Save changes to this line" data-toggle="tooltip"><i class="fa fa-fw fa-floppy-disk"></i></button> ' +
         '<button type="button" class="btn btn-danger btn-xs delete-static-row" data-row="' +
         idx +
-        '"><i class="fa fa-fw fa-trash"></i></button> ' +
+        '" title="Delete this line" data-toggle="tooltip"><i class="fa fa-fw fa-trash"></i></button> ' +
         '<button type="button" class="btn btn-primary btn-xs add-static-row" data-row="' +
         idx +
-        '"><i class="fa fa-fw fa-plus"></i></button>' +
+        '" title="Add new line after this" data-toggle="tooltip"><i class="fa fa-fw fa-plus"></i></button>' +
         "</td>" +
         "</tr>"
     );
