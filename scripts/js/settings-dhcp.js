@@ -259,7 +259,7 @@ function parseStaticDHCPLine(line) {
   if (parts.length > 3) return "advanced";
 
   // Check if first part is a valid MAC address
-  const macRegex = /^(?:[\da-f]{2}:){5}[\da-f]{2}$/i;
+  const macRegex = /^(?:[\da-f]{2}[:-]){5}[\da-f]{2}$/i;
   const haveMAC = parts.length > 0 && macRegex.test(parts[0]);
   const hwaddr = haveMAC ? parts[0] : "";
   // Check if the first or second part is a valid IP address
