@@ -277,27 +277,6 @@ function parseStaticDHCPLine(line) {
   };
 }
 
-function updateTextareaFromTable() {
-  const lines = [];
-  $("#StaticDHCPTable tbody tr").each(function () {
-    const row = $(this);
-    // Skip advanced pseudo-rows
-    if (row.hasClass("table-warning")) {
-      lines.push(row.data("original-line") || "");
-      return;
-    }
-
-    const hwaddr = row.find(".static-hwaddr").text().trim();
-    const ipaddr = row.find(".static-ipaddr").text().trim();
-    const hostname = row.find(".static-hostname").text().trim();
-    // Only add if at least one field is non-empty
-    if (hwaddr || ipaddr || hostname) {
-      lines.push([hwaddr, ipaddr, hostname].filter(Boolean).join(","));
-    }
-  });
-  $("#dhcp-hosts").val(lines.join("\n")).trigger("input");
-}
-
 // Save button for each row updates only that line in the textarea
 $(document).on("click", ".save-static-row", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
@@ -375,7 +354,6 @@ function renderStaticDHCPTable() {
   const tbody = $("#StaticDHCPTable tbody");
   tbody.empty();
   const lines = $("#dhcp-hosts").val().split(/\r?\n/);
-  let rowCount = 0;
   for (const [idx, line] of lines.entries()) {
     const parsed = parseStaticDHCPLine(line);
     if (parsed === "advanced") {
@@ -389,7 +367,6 @@ function renderStaticDHCPTable() {
       continue;
     }
 
-    rowCount++;
     const tr = $(
       "<tr>" +
         '<td contenteditable="true" class="static-hwaddr"></td>' +
