@@ -249,8 +249,8 @@ function parseStaticDHCPLine(line) {
       hostname: "",
     };
 
-  // Advanced if contains id:, set:, tag:, ignore, [ or ]
-  if (/id:|set:|tag:|ignore|\[|]|lease_time|,\s*,/.test(line)) return "advanced";
+  // Advanced if contains id:, set:, tag:, ignore
+  if (/id:|set:|tag:|ignore|lease_time|,\s*,/.test(line)) return "advanced";
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
@@ -262,12 +262,18 @@ function parseStaticDHCPLine(line) {
   const macRegex = /^(?:[\da-f]{2}[:-]){5}[\da-f]{2}$/i;
   const haveMAC = parts.length > 0 && macRegex.test(parts[0]);
   const hwaddr = haveMAC ? parts[0] : "";
-  // Check if the first or second part is a valid IP address
-  const ipRegex = /^(?:\d{1,3}\.){3}\d{1,3}$/;
-  let ipaddr = "";
-  if (ipRegex.test(parts[0])) ipaddr = parts[0];
-  else if (parts.length > 1 && ipRegex.test(parts[1])) ipaddr = parts[1];
+
+  // Check if the first or second part is a valid IPv4 or IPv6 address
+  const hasSquareBrackets0 = parts[0][0] === "[" && parts[0].at(-1) === "]";
+  const ipv60 = hasSquareBrackets0 ? parts[0].slice(1, -1) : parts[0];
+  const hasSquareBrackets1 = parts.length > 1 && parts[1][0] === "[" && parts[1].at(-1) === "]";
+  const ipv61 = hasSquareBrackets1 ? parts[1].slice(1, -1) : parts.length > 1 ? parts[1] : "";
+  const firstIsValidIP = utils.validateIPv4(parts[0]) || utils.validateIPv6(ipv60);
+  const secondIsValidIP =
+    parts.length > 1 && (utils.validateIPv4(parts[1]) || utils.validateIPv6(ipv61));
+  const ipaddr = firstIsValidIP ? parts[0] : secondIsValidIP ? parts[1] : "";
   const haveIP = ipaddr.length > 0;
+
   // Check if the second or third part is a valid hostname
   let hostname = "";
   if (parts.length > 2 && parts[2].length > 0) hostname = parts[2];

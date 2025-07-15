@@ -196,7 +196,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <textarea class="form-control field-sizing-content mb-4" id="dhcp-hosts" data-key="dhcp.hosts" style="resize: vertical;"></textarea>
                         <p>Each entry should be on a separate line, and should be of the form:</p>
                         <pre>[&lt;hwaddr&gt;][,id:&lt;client_id&gt;|*][,set:&lt;tag&gt;][,tag:&lt;tag&gt;][,&lt;ipaddr&gt;][,&lt;hostname&gt;][,&lt;lease_time&gt;][,ignore]</pre>
-                        <p>Only one entry per MAC address is allowed.</p>
+                        <p>Only one entry per MAC address is allowed. IPv6 addresses must be enclosed in square brackets like <code>[2001:db8::1]</code>.</p>
                     </div>
                     <div class="col-xs-12 col-md-6">
                         <p>Examples:</p>

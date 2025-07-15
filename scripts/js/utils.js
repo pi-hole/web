@@ -201,6 +201,13 @@ function validateIPv4CIDR(ip) {
   return ipv4validator.test(ip);
 }
 
+function validateIPv4(ip) {
+  // Add pseudo-CIDR to the IPv4
+  const ipv4WithCIDR = ip.includes("/") ? ip : ip + "/32";
+  // Validate the IPv4/CIDR
+  return validateIPv4CIDR(ipv4WithCIDR);
+}
+
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
@@ -214,6 +221,13 @@ function validateIPv6CIDR(ip) {
   );
 
   return ipv6validator.test(ip);
+}
+
+function validateIPv6(ip) {
+  // Add pseudo-CIDR to the IPv6
+  const ipv6WithCIDR = ip.includes("/") ? ip : ip + "/128";
+  // Validate the IPv6/CIDR
+  return validateIPv6CIDR(ipv6WithCIDR);
 }
 
 function validateMAC(mac) {
@@ -682,7 +696,9 @@ globalThis.utils = (function () {
     disableAll,
     enableAll,
     validateIPv4CIDR,
+    validateIPv4,
     validateIPv6CIDR,
+    validateIPv6,
     setBsSelectDefaults,
     stateSaveCallback,
     stateLoadCallback,
