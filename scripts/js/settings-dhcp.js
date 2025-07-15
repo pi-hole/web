@@ -79,9 +79,14 @@ $(() => {
         data.ip +
         '" data-del-ip="' +
         data.ip +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
+        '"><span class="far fa-trash-alt"></span></button>' +
+        ' <button type="button" class="btn btn-secondary btn-xs copy-to-static" data-hwaddr="' +
+        (data.hwaddr || "") +
+        '" data-ip="' +
+        (data.ip || "") +
+        '" data-hostname="' +
+        (data.name || "") +
+        '"><i class="fa fa-fw fa-copy"></i></button>';
       $("td:eq(6)", row).html(button);
     },
     select: {
@@ -413,3 +418,14 @@ function renderStaticDHCPTable() {
   tbody.find(".save-static-row, .delete-static-row, .add-static-row").prop("disabled", false);
   tbody.find(".edit-hint-row").remove();
 }
+
+// Copy button for each lease row copies the lease as a new static lease line
+$(document).on("click", ".copy-to-static", function () {
+  const hwaddr = $(this).data("hwaddr") || "";
+  const ip = $(this).data("ip") || "";
+  const hostname = $(this).data("hostname") || "";
+  const line = [hwaddr, ip, hostname].filter(Boolean).join(",");
+  const textarea = $("#dhcp-hosts");
+  const val = textarea.val();
+  textarea.val(val ? val + "\n" + line : line).trigger("input");
+});
