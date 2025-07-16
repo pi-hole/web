@@ -234,23 +234,20 @@ function initTable() {
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
-        $("td:eq(3)", row).html(
-          '<code id="address_' +
-            dataId +
-            '" class="breakall">' +
-            utils.escapeHtml(data.address) +
-            "</code>"
-        );
+        const codeElem = document.createElement("code");
+        codeElem.id = "address_" + dataId;
+        codeElem.className = "breakall";
+        codeElem.textContent = data.address;
+        $("td:eq(3)", row).empty().append(codeElem);
       } else {
-        $("td:eq(3)", row).html(
-          '<a id="address_' +
-            dataId +
-            '" class="breakall" href="' +
-            encodeURI(data.address) +
-            '" target="_blank" rel="noopener noreferrer">' +
-            utils.escapeHtml(data.address) +
-            "</a>"
-        );
+        const aElem = document.createElement("a");
+        aElem.id = "address_" + dataId;
+        aElem.className = "breakall";
+        aElem.href = data.address;
+        aElem.target = "_blank";
+        aElem.rel = "noopener noreferrer";
+        aElem.textContent = data.address;
+        $("td:eq(3)", row).empty().append(aElem);
       }
 
       $("td:eq(4)", row).html(
