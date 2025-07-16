@@ -430,3 +430,25 @@ $(document).on("click", ".copy-to-static", function () {
   const val = textarea.val();
   textarea.val(val ? val + "\n" + line : line).trigger("input");
 });
+
+// Add line numbers to the textarea for static DHCP hosts
+document.addEventListener("DOMContentLoaded", function () {
+  const textarea = document.getElementById("dhcp-hosts");
+  const linesElem = document.getElementById("dhcp-hosts-lines");
+  function updateLineNumbers() {
+    const lines = textarea.value.split("\n").length || 1;
+    linesElem.innerHTML = Array.from({ length: lines }, function (_, i) {
+      return i + 1;
+    }).join("<br>");
+  }
+
+  function syncScroll() {
+    linesElem.scrollTop = textarea.scrollTop;
+  }
+
+  if (textarea && linesElem) {
+    textarea.addEventListener("input", updateLineNumbers);
+    textarea.addEventListener("scroll", syncScroll);
+    updateLineNumbers();
+  }
+});
