@@ -239,7 +239,7 @@ $(() => {
 
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
-    let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
+    let elem = $("#Cdomain").val().trim() + "," + $("#Ctarget").val().trim();
     const ttlVal = Number.parseInt($("#Cttl").val(), 10);
     // TODO Fix eslint
     // eslint-disable-next-line unicorn/prefer-number-properties
