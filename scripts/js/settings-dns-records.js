@@ -215,7 +215,7 @@ $(() => {
 
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
-    const elem = $("#Hip").val() + " " + $("#Hdomain").val();
+    const elem = $("#Hip").val().trim() + " " + $("#Hdomain").val().trim();
     const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
