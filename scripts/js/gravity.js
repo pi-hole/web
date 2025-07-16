@@ -138,7 +138,7 @@ function parseLines(outputElement, text) {
     });
 
     // Append the new text to the end of the output
-    outputElement.append(line);
+    outputElement.innerHTML += line;
   }
 }
 
