@@ -98,6 +98,7 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/material-icons/material-icons.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
