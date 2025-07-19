@@ -92,7 +92,7 @@ function parseLines(outputElement, text) {
     if (line[0] === "\r") {
       // This line starts with the "OVER" sequence. Replace them with "\n" before print
       // we also escape HTML to prevent XSS attacks
-      line = utils.escapeHtml(line.replaceAll("\r[K", "\n").replaceAll("\r", "\n"));
+      line = utils.escapeHtml(line.replaceAll("\r\u001B[K", "\n").replaceAll("\r", "\n"));
 
       // Last line from the textarea will be overwritten, so we remove it
       const lastLineIndex = outputElement.innerHTML.lastIndexOf("\n");
