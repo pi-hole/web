@@ -116,7 +116,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-sm-12">
                         <div>
                             <input type="checkbox" id="dhcp.multiDNS" data-key="dhcp.multiDNS" class="DHCPgroup">&nbsp;<label for="dhcp.multiDNS"><strong>Advertise DNS server multiple times</strong></label>
-                            <p class="help-block">Advertise DNS server multiple times to clients. Some devices will add their own proprietary DNS servers to the list of DNS servers, which can cause issues with Pi-hole. This option will advertise the Pi-hole DNS server multiple times to clients, which should prevent this from happening.</p>
+                            <p class="help-block">Advertise DNS server multiple times to clients. Some devices will add their own proprietary DNS servers to the list of DNS servers, which can cause issues with Pi-hole. This option will advertise the Pi-hole DNS server multiple times to clients, which should prevent this from happening. This is not compatible with adding dhcp-option=6,... in dnsmasq_lines in /etc/pihole/config.toml or /etc/dnsmasq.d/</p>
                         </div>
                     </div>
                     <div class="col-sm-12">
