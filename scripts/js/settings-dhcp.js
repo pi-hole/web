@@ -293,6 +293,20 @@ $(document).on("click", ".save-static-row", function () {
   const hwaddr = row.find(".static-hwaddr").text().trim();
   const ipaddr = row.find(".static-ipaddr").text().trim();
   const hostname = row.find(".static-hostname").text().trim();
+
+  // Validate MAC and IP before saving
+  const macValid = !hwaddr || utils.validateMAC(hwaddr);
+  const ipValid = !ipaddr || utils.validateIPv4(ipaddr) || utils.validateIPv6(ipaddr);
+  if (!macValid || !ipValid) {
+    utils.showAlert(
+      "error",
+      "fa-times",
+      "Cannot save: Invalid MAC or IP address",
+      "Please correct the highlighted fields before saving."
+    );
+    return;
+  }
+
   const lines = $("#dhcp-hosts").val().split(/\r?\n/);
   // Only update if at least one field is non-empty
   lines[rowIdx] =
