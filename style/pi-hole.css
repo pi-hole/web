@@ -1612,3 +1612,13 @@ textarea.field-sizing-content {
   opacity: 0;
   transition: opacity 200ms ease-in-out;
 }
+
+#StaticDHCPTable td.table-danger {
+  background-color: #ff000022 !important;
+  color: #fff !important;
+}
+
+#StaticDHCPTable td.table-success {
+  background-color: #74c70022 !important;
+  color: #fff !important;
+}

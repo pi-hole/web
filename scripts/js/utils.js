@@ -231,13 +231,15 @@ function validateIPv6(ip) {
 }
 
 function validateMAC(mac) {
-  const macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/;
-  return macvalidator.test(mac);
+  // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
+  // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
+  const macvalidator = /^([\da-f]{2}[:-]){5}([\da-f]{2})$/i;
+  return macvalidator.test(mac.trim());
 }
 
 function validateHostname(name) {
   const namevalidator = /[^<>;"]/;
-  return namevalidator.test(name);
+  return namevalidator.test(name.trim());
 }
 
 // set bootstrap-select defaults

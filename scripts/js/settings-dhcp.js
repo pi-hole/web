@@ -259,9 +259,8 @@ function parseStaticDHCPLine(line) {
   if (parts.length > 3) return "advanced";
 
   // Check if first part is a valid MAC address
-  const macRegex = /^(?:[\da-f]{2}[:-]){5}[\da-f]{2}$/i;
-  const haveMAC = parts.length > 0 && macRegex.test(parts[0]);
-  const hwaddr = haveMAC ? parts[0] : "";
+  const haveMAC = parts.length > 0 && utils.validateMAC(parts[0]);
+  const hwaddr = haveMAC ? parts[0].trim() : "";
 
   // Check if the first or second part is a valid IPv4 or IPv6 address
   const hasSquareBrackets0 = parts[0][0] === "[" && parts[0].at(-1) === "]";
@@ -271,13 +270,14 @@ function parseStaticDHCPLine(line) {
   const firstIsValidIP = utils.validateIPv4(parts[0]) || utils.validateIPv6(ipv60);
   const secondIsValidIP =
     parts.length > 1 && (utils.validateIPv4(parts[1]) || utils.validateIPv6(ipv61));
-  const ipaddr = firstIsValidIP ? parts[0] : secondIsValidIP ? parts[1] : "";
+  const ipaddr = firstIsValidIP ? parts[0].trim() : secondIsValidIP ? parts[1].trim() : "";
   const haveIP = ipaddr.length > 0;
 
   // Check if the second or third part is a valid hostname
   let hostname = "";
-  if (parts.length > 2 && parts[2].length > 0) hostname = parts[2];
-  else if (parts.length > 1 && parts[1].length > 0 && (!haveIP || !haveMAC)) hostname = parts[1];
+  if (parts.length > 2 && parts[2].length > 0) hostname = parts[2].trim();
+  else if (parts.length > 1 && parts[1].length > 0 && (!haveIP || !haveMAC))
+    hostname = parts[1].trim();
 
   return {
     hwaddr,
@@ -450,5 +450,31 @@ document.addEventListener("DOMContentLoaded", function () {
     textarea.addEventListener("input", updateLineNumbers);
     textarea.addEventListener("scroll", syncScroll);
     updateLineNumbers();
+  }
+});
+
+$(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function () {
+  const val = $(this).text().trim();
+  if (val && !utils.validateMAC(val)) {
+    $(this).addClass("table-danger");
+    $(this).removeClass("table-success");
+    $(this).attr("title", "Invalid MAC address format");
+  } else {
+    $(this).addClass("table-success");
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+  }
+});
+
+$(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function () {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
+    $(this).addClass("table-danger");
+    $(this).removeClass("table-success");
+    $(this).attr("title", "Invalid IP address format");
+  } else {
+    $(this).addClass("table-success");
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
   }
 });
