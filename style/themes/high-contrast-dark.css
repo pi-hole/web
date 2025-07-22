@@ -911,9 +911,12 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 
 /* Tables and Datatables */
+#StaticDHCPTable .table-danger,
 .blocked-row td {
   background-color: rgba(56, 0, 40, 0.35);
 }
+
+#StaticDHCPTable .table-success,
 .allowed-row td {
   background-color: rgba(0, 64, 64, 0.35);
 }
