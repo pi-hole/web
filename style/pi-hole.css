@@ -1614,11 +1614,11 @@ textarea.field-sizing-content {
 }
 
 #StaticDHCPTable td.table-danger {
-  background-color: #ff000022 !important;
+  background-color: #700000 !important;
   color: #fff !important;
 }
 
 #StaticDHCPTable td.table-success {
-  background-color: #74c70022 !important;
+  background-color: #599900 !important;
   color: #fff !important;
 }
