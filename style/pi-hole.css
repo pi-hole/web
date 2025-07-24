@@ -1597,6 +1597,8 @@ textarea.no-wrap {
 }
 
 div.line-numbers {
+  -webkit-user-select: none;
+  -moz-user-select: none;
   user-select: none;
   text-align: right;
   color: #aaa;
@@ -1640,11 +1642,11 @@ div.dhcp-hosts-wrapper {
 }
 
 #StaticDHCPTable td.table-danger {
-  background-color: #700000 !important;
-  color: #fff !important;
+  background-color: #700000;
+  color: #fff;
 }
 
 #StaticDHCPTable td.table-success {
-  background-color: #599900 !important;
-  color: #fff !important;
+  background-color: #599900;
+  color: #fff;
 }
