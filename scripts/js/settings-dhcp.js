@@ -255,8 +255,8 @@ function parseStaticDHCPLine(line) {
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
 
-  // If there are more than 3 parts, it's considered advanced
-  if (parts.length > 3) return "advanced";
+  // If there are more than 3 parts or less than 2, it's considered advanced
+  if (parts.length > 3 || parts.length < 2) return "advanced";
 
   // Check if first part is a valid MAC address
   const haveMAC = parts.length > 0 && utils.validateMAC(parts[0]);
@@ -449,11 +449,31 @@ $(document).on("click", ".copy-to-static", function () {
 document.addEventListener("DOMContentLoaded", function () {
   const textarea = document.getElementById("dhcp-hosts");
   const linesElem = document.getElementById("dhcp-hosts-lines");
-  function updateLineNumbers() {
+  let lastLineCount = 0;
+
+  function updateLineNumbers(force) {
+    if (!textarea || !linesElem) return;
     const lines = textarea.value.split("\n").length || 1;
-    linesElem.innerHTML = Array.from({ length: lines }, function (_, i) {
-      return i + 1;
-    }).join("<br>");
+    if (!force && lines === lastLineCount) return;
+    lastLineCount = lines;
+    let html = "";
+    for (let i = 1; i <= lines; i++) html += i + "<br>";
+    linesElem.innerHTML = html;
+    // Apply the same styles to the lines element as the textarea
+    for (const property of [
+      "fontFamily",
+      "fontSize",
+      "fontWeight",
+      "letterSpacing",
+      "lineHeight",
+      "padding",
+      "height",
+    ]) {
+      linesElem.style[property] = globalThis.getComputedStyle(textarea)[property];
+    }
+
+    // Match height and scroll
+    linesElem.style.height = textarea.offsetHeight > 0 ? textarea.offsetHeight + "px" : "auto";
   }
 
   function syncScroll() {
@@ -461,9 +481,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   if (textarea && linesElem) {
-    textarea.addEventListener("input", updateLineNumbers);
+    textarea.addEventListener("input", function () {
+      updateLineNumbers(false);
+    });
     textarea.addEventListener("scroll", syncScroll);
-    updateLineNumbers();
+    window.addEventListener("resize", function () {
+      updateLineNumbers(true);
+    });
+    updateLineNumbers(true);
+    syncScroll();
   }
 });
 

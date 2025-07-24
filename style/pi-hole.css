@@ -1589,6 +1589,32 @@ textarea.field-sizing-content {
   field-sizing: content;
 }
 
+textarea.no-wrap {
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: auto;
+  resize: none;
+}
+
+div.line-numbers {
+  user-select: none;
+  text-align: right;
+  color: #aaa;
+  border-right: 1px solid #ddd;
+  padding: 8px 4px 8px 0;
+  font-family: monospace;
+  font-size: 13px;
+  min-width: 2em;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+div.dhcp-hosts-wrapper {
+  position: relative;
+  display: flex;
+  gap: 0.5em;
+}
+
 /* Used in interfaces page */
 .list-group-item {
   background: transparent;

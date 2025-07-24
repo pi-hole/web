@@ -193,9 +193,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                         <p>Specify per host parameters for the DHCP server. This allows a machine with a particular hardware address to be always allocated the same hostname, IP address and lease time. A hostname specified like this overrides any supplied by the DHCP client on the machine. It is also allowable to omit the hardware address and include the hostname, in which case the IP address and lease times will apply to any machine claiming that name.</p>
-                        <div class="dhcp-hosts-wrapper mb-4" style="position:relative; display:flex;">
-                            <div id="dhcp-hosts-lines" aria-hidden="true" style="user-select:none; text-align:right; color:#aaa; border-right:1px solid #ddd; padding:8px 4px 8px 0; font-family:monospace; font-size:13px; min-width:2em;"></div>
-                            <textarea class="form-control field-sizing-content" id="dhcp-hosts" data-key="dhcp.hosts" style="resize: vertical; font-family:monospace; font-size:13px; width:100%;"></textarea>
+                        <div class="dhcp-hosts-wrapper mb-4">
+                            <div id="dhcp-hosts-lines" class="line-numbers" aria-hidden="true"></div>
+                            <textarea class="form-control no-wrap" id="dhcp-hosts" data-key="dhcp.hosts" wrap="off"></textarea>
                         </div>
                         <p>Each entry should be on a separate line, and should be of the form:</p>
                         <pre>[&lt;hwaddr&gt;][,id:&lt;client_id&gt;|*][,set:&lt;tag&gt;][,tag:&lt;tag&gt;][,&lt;ipaddr&gt;][,&lt;hostname&gt;][,&lt;lease_time&gt;][,ignore]</pre>
