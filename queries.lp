@@ -138,7 +138,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix">
-                <span class="pull-left">* These input fields allow manual input as well. Use <code>*</code> for wildcard search.</span>
+                <span class="pull-left">* These input fields allow manual input as well. Use <code>*</code> for wildcard search. The underscore <code>_</code> can be used as a single-character wildcard. If you want to search for an underscore character, escape it like <code>\_</code>.</span>
                 <span class="pull-right">Click "Refresh" below to apply.</span>
             </div>
             <!-- /.box -->
