@@ -64,6 +64,7 @@ $(() => {
     ],
     drawCallback() {
       $('button[id^="deleteLease_"]').on("click", deleteLease);
+      $('button[id^="copyLease_"]').on("click", copyLease);
 
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
@@ -74,15 +75,23 @@ $(() => {
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.ip);
-      const button =
+      const copyButton =
+        '<button type="button" class="btn btn-default btn-xs" id="copyLease_"' +
+        'data-hwaddr="' +
+        data.hwaddr +
+        '" data-ip="' +
+        data.ip +
+        '" data-name="' +
+        data.name +
+        '" title="Copy as static DHCP lease">' +
+        '<span class="far fa-copy"></span></button>';
+      const deleteButton =
         '<button type="button" class="btn btn-danger btn-xs" id="deleteLease_' +
         data.ip +
         '" data-del-ip="' +
         data.ip +
-        '">' +
-        '<span class="far fa-trash-alt"></span>' +
-        "</button>";
-      $("td:eq(6)", row).html(button);
+        '"><span class="far fa-trash-alt"></span></button>';
+      $("td:eq(6)", row).html(copyButton + "&nbsp;" + deleteButton);
     },
     select: {
       style: "multi",
@@ -158,6 +167,33 @@ $(() => {
     utils.changeTableButtonStates(dhcpLeaesTable);
   });
 });
+
+function copyLease() {
+  const button = $(this);
+  const hwaddr = button.data("hwaddr");
+  const ip = button.data("ip");
+  const name = button.data("name");
+
+  // Handle cases where name is not available
+  const hostname = name === "*" || name === null ? "" : name;
+
+  const textToCopy = `${hwaddr},${ip},${hostname}`;
+
+  navigator.clipboard
+    .writeText(textToCopy)
+    .then(() => {
+      utils.showAlert("success", "far fa-copy", "Copied to clipboard!", textToCopy);
+    })
+    .catch(error => {
+      console.error("Could not copy text:", error); // eslint-disable-line no-console
+      utils.showAlert(
+        "error",
+        "",
+        "Failed to copy to clipboard",
+        "See browser console for details"
+      );
+    });
+}
 
 function deleteLease() {
   // Passes the button data-del-id attribute as IP
