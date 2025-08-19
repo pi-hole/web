@@ -192,11 +192,15 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <p>2. Enter the 2FA code from your app below to confirm that you have set up 2FA correctly.</p>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                        <div id="totp_div" class="has-feedback has-error">
-                            <div class="pwd-field form-group">
-                                <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
+                        <div id="totp_div">
+                            <div class="pwd-field form-group has-error">
+                                <div class="input-group">
+                                    <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
+                                    <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verfication code">
+                                        <i class="fa fa-clock-rotate-left form-control-feedback"></i>
+                                    </div>
+                                </div>
                             </div>
-                            <i class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></i>
                         </div>
                     </div>
                 </div>

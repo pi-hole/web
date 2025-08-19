@@ -575,7 +575,7 @@ td.details-control {
 }
 
 .form-control-feedback {
-  right: 0.5em;
+  right: 1em;
   width: 16px;
   height: 100%;
 }
@@ -1134,6 +1134,10 @@ table.dataTable tbody > tr > .selected {
 
 .totp_token::placeholder {
   opacity: 0.1;
+}
+
+.totp_token + .input-group-addon {
+  padding: 0 1.5em;
 }
 
 .save-button-container {
