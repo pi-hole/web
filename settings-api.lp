@@ -196,7 +196,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <div class="pwd-field form-group has-error">
                                 <div class="input-group">
                                     <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
-                                    <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verfication code">
+                                    <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verification code">
                                         <i class="fa fa-clock-rotate-left form-control-feedback"></i>
                                     </div>
                                 </div>
