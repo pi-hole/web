@@ -574,12 +574,6 @@ td.details-control {
   border: none;
 }
 
-.form-control-feedback {
-  right: 1em;
-  width: 16px;
-  height: 100%;
-}
-
 .loginpage-logo {
   margin: 0 0 10px;
 }
@@ -1134,10 +1128,6 @@ table.dataTable tbody > tr > .selected {
 
 .totp_token::placeholder {
   opacity: 0.1;
-}
-
-.totp_token + .input-group-addon {
-  padding: 0 1.5em;
 }
 
 .save-button-container {
