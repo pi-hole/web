@@ -561,7 +561,10 @@ $(() => {
       utils.stateSaveCallback("query_log_table", data);
     },
     stateLoadCallback() {
-      return utils.stateLoadCallback("query_log_table");
+      const state = utils.stateLoadCallback("query_log_table");
+      // Default to 25 entries if "All" was previously selected
+      if (state) state.length = state.length === -1 ? 25 : state.length;
+      return state;
     },
     rowCallback(row, data) {
       const querystatus = parseQueryStatus(data);
