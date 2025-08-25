@@ -594,12 +594,6 @@ td.details-control {
   border: none;
 }
 
-.form-control-feedback {
-  right: 0.5em;
-  width: 16px;
-  height: 100%;
-}
-
 .loginpage-logo {
   margin: 0 0 10px;
 }
