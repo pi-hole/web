@@ -28,6 +28,14 @@ const filters = [
   "reply",
   "dnssec",
 ];
+let doDNSSEC = false;
+
+// Check if pihole is validiting DNSSEC
+function getDnssecConfig() {
+  $.getJSON(document.body.dataset.apiurl + "/config/dns/dnssec", data => {
+    doDNSSEC = data.config.dns.dnssec;
+  });
+}
 
 function initDateRangePicker() {
   $("#querytime").daterangepicker(
@@ -480,6 +488,9 @@ function liveUpdate() {
 }
 
 $(() => {
+  // Do we want to show DNSSEC icons?
+  getDnssecConfig();
+
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 
@@ -568,7 +579,6 @@ $(() => {
     },
     rowCallback(row, data) {
       const querystatus = parseQueryStatus(data);
-      const dnssec = parseDNSSEC(data);
 
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
@@ -592,14 +602,17 @@ $(() => {
 
       // Prefix colored DNSSEC icon to domain text
       let dnssecIcon = "";
-      dnssecIcon =
-        '<i class="mr-2 fa fa-fw ' +
-        dnssec.icon +
-        " " +
-        dnssec.color +
-        '" title="DNSSEC: ' +
-        dnssec.text +
-        '"></i>';
+      if (doDNSSEC === true) {
+        const dnssec = parseDNSSEC(data);
+        dnssecIcon =
+          '<i class="mr-2 fa fa-fw ' +
+          dnssec.icon +
+          " " +
+          dnssec.color +
+          '" title="DNSSEC: ' +
+          dnssec.text +
+          '"></i>';
+      }
 
       // Escape HTML in domain
       domain = dnssecIcon + utils.escapeHtml(domain);
