@@ -233,6 +233,10 @@ function positionTooltip(tooltipEl, tooltip, context) {
   const arrowMinIndent = 2 * tooltip.options.cornerRadius;
   const arrowSize = 5;
 
+  // Check if this is a queryOverTimeChart or clientsChart - these should stick to x-axis
+  const canvasId = context.chart.canvas.id;
+  const isTimelineChart = canvasId === "queryOverTimeChart" || canvasId === "clientsChart";
+
   let tooltipX = offsetX + caretX;
   let arrowX;
 
@@ -289,27 +293,37 @@ function positionTooltip(tooltipEl, tooltip, context) {
     arrowX = offsetX + caretX - tooltipX;
   }
 
-  let tooltipY = offsetY + caretY;
+  let tooltipY;
 
-  // Compute Y position
-  switch (tooltip.yAlign) {
-    case "top": {
-      tooltipY += arrowSize + caretPadding;
-      break;
-    }
+  if (isTimelineChart) {
+    // For timeline charts, always position tooltip below the chart with caret pointing to x-axis
+    const chartArea = context.chart.chartArea;
+    const canvasBottom = chartArea.bottom;
+    tooltipY = offsetY + canvasBottom + arrowSize + caretPadding;
 
-    case "center": {
-      tooltipY -= tooltipHeight / 2;
-      if (tooltip.xAlign === "left") tooltipX += arrowSize;
-      if (tooltip.xAlign === "right") tooltipX -= arrowSize;
-      break;
-    }
+    // Ensure the arrow points to the correct X position
+    arrowX = tooltip.caretX - (tooltipX - offsetX);
+  } else {
+    tooltipY = offsetY + caretY;
+    switch (tooltip.yAlign) {
+      case "top": {
+        tooltipY += arrowSize + caretPadding;
+        break;
+      }
 
-    case "bottom": {
-      tooltipY -= tooltipHeight + arrowSize + caretPadding;
-      break;
+      case "center": {
+        tooltipY -= tooltipHeight / 2;
+        if (tooltip.xAlign === "left") tooltipX += arrowSize;
+        if (tooltip.xAlign === "right") tooltipX -= arrowSize;
+        break;
+      }
+
+      case "bottom": {
+        tooltipY -= tooltipHeight + arrowSize + caretPadding;
+        break;
+      }
+      // No default
     }
-    // No default
   }
 
   // Position tooltip and display

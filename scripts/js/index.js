@@ -639,9 +639,11 @@ $(() => {
           display: false,
         },
         tooltip: {
-          enabled: true,
+          // Disable the on-canvas tooltip
+          enabled: false,
           intersect: false,
-          yAlign: "bottom",
+          external: customTooltips,
+          yAlign: "top",
           itemSort(a, b) {
             return b.datasetIndex - a.datasetIndex;
           },
