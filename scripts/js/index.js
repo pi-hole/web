@@ -658,7 +658,7 @@ $(() => {
               return "Queries from " + from + " to " + to;
             },
             label(tooltipLabel) {
-              return labelWithPercentage(tooltipLabel);
+              return labelWithPercentage(tooltipLabel, true);
             },
           },
         },
