@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams:false */
+/* global upstreamIPs:false */
 
 "use strict";
 
@@ -98,7 +98,7 @@ globalThis.htmlLegendPlugin = {
           link.href = `queries?type=${item.text}`;
         } else {
           // Encode the forward destination as it may contain an "#" character
-          link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
+          link.href = `queries?upstream=${encodeURIComponent(upstreamIPs[item.index])}`;
         }
       } else {
         // no clickable links in other charts
