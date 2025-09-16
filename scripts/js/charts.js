@@ -96,7 +96,7 @@ globalThis.htmlLegendPlugin = {
 
         if (isQueryTypeChart) {
           link.href = `queries?type=${item.text}`;
-        } else if (isForwardDestinationChart) {
+        } else {
           // Encode the forward destination as it may contain an "#" character
           link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
         }
