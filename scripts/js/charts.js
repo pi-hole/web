@@ -99,6 +99,12 @@ globalThis.htmlLegendPlugin = {
         } else {
           // Encode the forward destination as it may contain an "#" character
           link.href = `queries?upstream=${encodeURIComponent(upstreamIPs[item.index])}`;
+
+          // If server name and IP are different, replace the title tooltip
+          // including the upstream IP to the text
+          if (item.text !== upstreamIPs[item.index]) {
+            link.title = `List ${item.text} (${upstreamIPs[item.index]}) queries`;
+          }
         }
       } else {
         // no clickable links in other charts
