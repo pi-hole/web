@@ -100,10 +100,14 @@ globalThis.htmlLegendPlugin = {
           // Encode the forward destination as it may contain an "#" character
           link.href = `queries?upstream=${encodeURIComponent(upstreamIPs[item.index])}`;
 
-          // If server name and IP are different, replace the title tooltip
-          // including the upstream IP to the text
+          // If server name and IP are different:
           if (item.text !== upstreamIPs[item.index]) {
+            // replace the title tooltip to include the upstream IP to the text ...
             link.title = `List ${item.text} (${upstreamIPs[item.index]}) queries`;
+
+            // ... and include the server name (without port) to the querystring, to match
+            // the text used on the SELECT element (sent by suggestions API endpoint)
+            link.href += ` (${item.text.split("#")[0]})`;
           }
         }
       } else {
