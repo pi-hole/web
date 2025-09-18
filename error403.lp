@@ -9,6 +9,7 @@
 
 mg.include('scripts/lua/header.lp','r')
 ?>
+</head>
 <body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(mg.request_info.request_uri)?>">
     <div class="box login-box">
         <section style="padding: 15px;">
