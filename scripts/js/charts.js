@@ -63,6 +63,23 @@ globalThis.htmlLegendPlugin = {
     for (const item of items) {
       const li = document.createElement("li");
 
+      // Select the corresponding "slice" of the chart when the mouse is over a legend item
+      li.addEventListener("mouseover", () => {
+        chart.setActiveElements([
+          {
+            datasetIndex: 0,
+            index: item.index,
+          },
+        ]);
+        chart.update();
+      });
+
+      // Deselect all "slices"
+      li.addEventListener("mouseout", () => {
+        chart.setActiveElements([]);
+        chart.update();
+      });
+
       // Color checkbox (toggle visibility)
       const boxSpan = document.createElement("span");
       boxSpan.title = "Toggle visibility";
