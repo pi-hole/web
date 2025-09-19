@@ -890,6 +890,8 @@ $(() => {
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
+            hoverBorderColor: $(".box").css("background-color"),
+            hoverOffset: 10,
           },
         },
         plugins: {
@@ -914,6 +916,9 @@ $(() => {
         animation: {
           duration: 750,
         },
+        layout: {
+          padding: 10,
+        },
       },
     });
 
@@ -936,6 +941,8 @@ $(() => {
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
+            hoverBorderColor: $(".box").css("background-color"),
+            hoverOffset: 10,
           },
         },
         plugins: {
@@ -959,6 +966,9 @@ $(() => {
         },
         animation: {
           duration: 750,
+        },
+        layout: {
+          padding: 10,
         },
       },
     });
