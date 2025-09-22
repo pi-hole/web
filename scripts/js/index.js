@@ -226,7 +226,7 @@ function updateClientsOverTime() {
     });
 }
 
-const upstreams = {};
+const upstreamIPs = [];
 function updateForwardDestinationsPie() {
   $.getJSON(document.body.dataset.apiurl + "/stats/upstreams", data => {
     const v = [];
@@ -248,11 +248,8 @@ function updateForwardDestinationsPie() {
         label += "#" + item.port;
       }
 
-      // Store upstreams for generating links to the Query Log
-      upstreams[label] = item.ip;
-      if (item.port > 0) {
-        upstreams[label] += "#" + item.port;
-      }
+      // Store upstreams IPs for generating links to the Query Log
+      upstreamIPs.push(item.port > 0 ? item.ip + "#" + item.port : item.ip);
 
       const percent = (100 * item.count) / sum;
       values.push([label, percent, THEME_COLORS[i++ % THEME_COLORS.length]]);
@@ -893,6 +890,8 @@ $(() => {
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
+            hoverBorderColor: $(".box").css("background-color"),
+            hoverOffset: 10,
           },
         },
         plugins: {
@@ -917,6 +916,9 @@ $(() => {
         animation: {
           duration: 750,
         },
+        layout: {
+          padding: 10,
+        },
       },
     });
 
@@ -939,6 +941,8 @@ $(() => {
         elements: {
           arc: {
             borderColor: $(".box").css("background-color"),
+            hoverBorderColor: $(".box").css("background-color"),
+            hoverOffset: 10,
           },
         },
         plugins: {
@@ -962,6 +966,9 @@ $(() => {
         },
         animation: {
           duration: 750,
+        },
+        layout: {
+          padding: 10,
         },
       },
     });

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams:false */
+/* global upstreamIPs:false */
 
 "use strict";
 
@@ -63,6 +63,23 @@ globalThis.htmlLegendPlugin = {
     for (const item of items) {
       const li = document.createElement("li");
 
+      // Select the corresponding "slice" of the chart when the mouse is over a legend item
+      li.addEventListener("mouseover", () => {
+        chart.setActiveElements([
+          {
+            datasetIndex: 0,
+            index: item.index,
+          },
+        ]);
+        chart.update();
+      });
+
+      // Deselect all "slices"
+      li.addEventListener("mouseout", () => {
+        chart.setActiveElements([]);
+        chart.update();
+      });
+
       // Color checkbox (toggle visibility)
       const boxSpan = document.createElement("span");
       boxSpan.title = "Toggle visibility";
@@ -96,9 +113,19 @@ globalThis.htmlLegendPlugin = {
 
         if (isQueryTypeChart) {
           link.href = `queries?type=${item.text}`;
-        } else if (isForwardDestinationChart) {
+        } else {
           // Encode the forward destination as it may contain an "#" character
-          link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
+          link.href = `queries?upstream=${encodeURIComponent(upstreamIPs[item.index])}`;
+
+          // If server name and IP are different:
+          if (item.text !== upstreamIPs[item.index]) {
+            // replace the title tooltip to include the upstream IP to the text ...
+            link.title = `List ${item.text} (${upstreamIPs[item.index]}) queries`;
+
+            // ... and include the server name (without port) to the querystring, to match
+            // the text used on the SELECT element (sent by suggestions API endpoint)
+            link.href += ` (${item.text.split("#")[0]})`;
+          }
         }
       } else {
         // no clickable links in other charts
