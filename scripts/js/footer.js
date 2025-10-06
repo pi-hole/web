@@ -261,8 +261,6 @@ function updateFtlInfo() {
             " regex filters are enabled"
         );
       updateQueryFrequency(intl, ftl.query_frequency);
-      $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
-      $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-pid-ftl").text(ftl.pid);
       const startdate = moment()
         .subtract(ftl.uptime, "milliseconds")
@@ -367,6 +365,9 @@ function updateSystemInfo() {
           system.procs +
           " processes"
       );
+
+      $("#sysinfo-cpu-ftl").text("(" + system.ftl["%cpu"].toFixed(1) + "% used by FTL)");
+      $("#sysinfo-ram-ftl").text("(" + system.ftl["%mem"].toFixed(1) + "% used by FTL)");
 
       const startdate = moment()
         .subtract(system.uptime, "seconds")
