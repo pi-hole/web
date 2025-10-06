@@ -344,15 +344,17 @@ function updateSystemInfo() {
       );
       $("#cpu").prop(
         "title",
-        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
+        "CPU usage: " +
+          system.cpu["%cpu"].toFixed(1) +
+          "%\nLoad averages for the past 1, 5, and 15 minutes\non a system with " +
           system.cpu.nprocs +
           " core" +
           (system.cpu.nprocs > 1 ? "s" : "") +
           " running " +
           system.procs +
-          " processes " +
+          " processes" +
           (system.cpu.load.raw[0] > system.cpu.nprocs
-            ? " (load is higher than the number of cores)"
+            ? "\n(load is higher than the number of cores)"
             : "")
       );
       $("#sysinfo-cpu").text(
