@@ -261,8 +261,6 @@ function updateFtlInfo() {
             " regex filters are enabled"
         );
       updateQueryFrequency(intl, ftl.query_frequency);
-      $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
-      $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-pid-ftl").text(ftl.pid);
       const startdate = moment()
         .subtract(ftl.uptime, "milliseconds")
@@ -346,15 +344,17 @@ function updateSystemInfo() {
       );
       $("#cpu").prop(
         "title",
-        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
+        "CPU usage: " +
+          system.cpu["%cpu"].toFixed(1) +
+          "%\nLoad averages for the past 1, 5, and 15 minutes\non a system with " +
           system.cpu.nprocs +
           " core" +
           (system.cpu.nprocs > 1 ? "s" : "") +
           " running " +
           system.procs +
-          " processes " +
+          " processes" +
           (system.cpu.load.raw[0] > system.cpu.nprocs
-            ? " (load is higher than the number of cores)"
+            ? "\n(load is higher than the number of cores)"
             : "")
       );
       $("#sysinfo-cpu").text(
@@ -367,6 +367,9 @@ function updateSystemInfo() {
           system.procs +
           " processes"
       );
+
+      $("#sysinfo-cpu-ftl").text("(" + system.ftl["%cpu"].toFixed(1) + "% used by FTL)");
+      $("#sysinfo-ram-ftl").text("(" + system.ftl["%mem"].toFixed(1) + "% used by FTL)");
 
       const startdate = moment()
         .subtract(system.uptime, "seconds")
