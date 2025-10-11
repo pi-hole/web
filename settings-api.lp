@@ -180,7 +180,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <h4 class="modal-title">Enable two-factor authentication</h4>
             </div>
             <div class="modal-body">
-                <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or BitWarden, etc. to get 2FA codes when prompted during login.</p>
+                <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or Bitwarden, etc. to get 2FA codes when prompted during login.</p>
                 <p>1. Scan the QR code below with your app or enter the secret manually.</p>
                 <div class="text-center">
                     <i id="qrcode-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
