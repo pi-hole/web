@@ -89,10 +89,11 @@ function parseLines(outputElement, text) {
   const lines = text.split(/(?=\r)/g);
 
   for (let line of lines) {
+    // Escape HTML to prevent XSS attacks (both in adlist URL and non-domain entries)
+    line = utils.escapeHtml(line);
     if (line[0] === "\r") {
       // This line starts with the "OVER" sequence. Replace them with "\n" before print
-      // we also escape HTML to prevent XSS attacks
-      line = utils.escapeHtml(line.replaceAll("\r\u001B[K", "\n").replaceAll("\r", "\n"));
+      line = line.replaceAll("\r\u001B[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
       const lastLineIndex = outputElement.innerHTML.lastIndexOf("\n");
