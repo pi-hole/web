@@ -17,7 +17,7 @@ mg.include('scripts/lua/header.lp','r')
                 <div class="error-content">
                     <h3><i class="fa fa-times-circle text-danger"></i> Oops! Access denied.</h3>
                     <p>
-                        You don't have permission to access <code><?=mg.request_info.request_uri?></code> on this server.<br>
+                        You don't have permission to access this URL.<br>
                         Did you mean to go to <a href="<?=pihole.webhome()?>">your Pi-hole's dashboard</a> instead?
                     </p>
             </div>
