@@ -386,14 +386,8 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  const ignoreNonfatal = localStorage
-    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
-    : false;
   $.ajax({
-    url:
-      document.body.dataset.apiurl +
-      "/info/messages/count" +
-      (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    url: document.body.dataset.apiurl + "/info/messages/count",
     method: "GET",
     dataType: "json",
   })
