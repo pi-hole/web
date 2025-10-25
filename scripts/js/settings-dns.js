@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
 
 "use strict";
 
@@ -93,6 +93,12 @@ function fillDNSupstreams(value, servers) {
 
   // Initialize textfield
   updateDNSserversTextfield(value.value, customServers);
+
+  // Expand the box if there are custom servers
+  if (customServers > 0) {
+    const customBox = document.getElementById("custom-servers-box");
+    utils.toggleBoxCollapse(customBox, true);
+  }
 
   // Hide the loading animation
   $("#dns-upstreams-overlay").hide();

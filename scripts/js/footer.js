@@ -29,12 +29,11 @@ const REFRESH_INTERVAL = {
   clients: 600_000, // 10 min (dashboard)
 };
 
-function secondsTimeSpanToHMS(s) {
-  const h = Math.floor(s / 3600); //Get whole hours
-  s -= h * 3600;
-  const m = Math.floor(s / 60); //Get remaining minutes
-  s -= m * 60;
-  return h + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s); //zero padding on minutes and seconds
+function secondsTimeSpanToHMS(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 function piholeChanged(blocking, timer = null) {
@@ -109,12 +108,6 @@ function countDown() {
 }
 
 function checkBlocking() {
-  // Skip if page is hidden
-  if (document.hidden) {
-    utils.setTimer(checkBlocking, REFRESH_INTERVAL.blocking);
-    return;
-  }
-
   $.ajax({
     url: document.body.dataset.apiurl + "/dns/blocking",
     method: "GET",
@@ -248,28 +241,26 @@ function updateFtlInfo() {
       $("#num_lists").text(intl.format(database.lists));
       $("#num_gravity").text(intl.format(database.gravity));
       $("#num_allowed")
-        .text(intl.format(database.domains.allowed + database.regex.allowed))
+        .text(intl.format(database.domains.allowed.enabled + database.regex.allowed.enabled))
         .attr(
           "title",
           "Allowed: " +
-            intl.format(database.domains.allowed) +
+            intl.format(database.domains.allowed.enabled) +
             " exact domains and " +
-            intl.format(database.regex.allowed) +
+            intl.format(database.regex.allowed.enabled) +
             " regex filters are enabled"
         );
       $("#num_denied")
-        .text(intl.format(database.domains.denied + database.regex.denied))
+        .text(intl.format(database.domains.denied.enabled + database.regex.denied.enabled))
         .attr(
           "title",
           "Denied: " +
-            intl.format(database.domains.denied) +
+            intl.format(database.domains.denied.enabled) +
             " exact domains and " +
-            intl.format(database.regex.denied) +
+            intl.format(database.regex.denied.enabled) +
             " regex filters are enabled"
         );
       updateQueryFrequency(intl, ftl.query_frequency);
-      $("#sysinfo-cpu-ftl").text("(" + ftl["%cpu"].toFixed(1) + "% used by FTL)");
-      $("#sysinfo-ram-ftl").text("(" + ftl["%mem"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-pid-ftl").text(ftl.pid);
       const startdate = moment()
         .subtract(ftl.uptime, "milliseconds")
@@ -353,18 +344,20 @@ function updateSystemInfo() {
       );
       $("#cpu").prop(
         "title",
-        "Load averages for the past 1, 5, and 15 minutes\non a system with " +
+        "CPU usage: " +
+          system.cpu["%cpu"].toFixed(1) +
+          "%\nLoad averages for the past 1, 5, and 15 minutes\non a system with " +
           system.cpu.nprocs +
           " core" +
           (system.cpu.nprocs > 1 ? "s" : "") +
           " running " +
           system.procs +
-          " processes " +
+          " processes" +
           (system.cpu.load.raw[0] > system.cpu.nprocs
-            ? " (load is higher than the number of cores)"
+            ? "\n(load is higher than the number of cores)"
             : "")
       );
-      $("#sysinfo-cpu").html(
+      $("#sysinfo-cpu").text(
         system.cpu["%cpu"].toFixed(1) +
           "% on " +
           system.cpu.nprocs +
@@ -374,6 +367,9 @@ function updateSystemInfo() {
           system.procs +
           " processes"
       );
+
+      $("#sysinfo-cpu-ftl").text("(" + system.ftl["%cpu"].toFixed(1) + "% used by FTL)");
+      $("#sysinfo-ram-ftl").text("(" + system.ftl["%mem"].toFixed(1) + "% used by FTL)");
 
       const startdate = moment()
         .subtract(system.uptime, "seconds")
@@ -561,7 +557,7 @@ function updateVersionInfo() {
               v.name +
               "</strong> " +
               localVersion +
-              '&nbsp&middot; <a class="lookatme" lookatme-text="Update available!" href="' +
+              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
               v.url +
               '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
           );
@@ -734,9 +730,6 @@ function addAdvancedInfo() {
   advancedInfoTarget.append(
     "Render time: " + (totaltime > 0.5 ? totaltime.toFixed(1) : totaltime.toFixed(3)) + " ms"
   );
-
-  // Show advanced info
-  advancedInfoTarget.show();
 }
 
 $(() => {

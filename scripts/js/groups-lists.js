@@ -170,7 +170,6 @@ function setTypeIcon(type) {
   return `<i class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></i> `;
 }
 
-// eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#listsTable").DataTable({
     processing: true,
@@ -235,23 +234,20 @@ function initTable() {
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
-        $("td:eq(3)", row).html(
-          '<code id="address_' +
-            dataId +
-            '" class="breakall">' +
-            utils.escapeHtml(data.address) +
-            "</code>"
-        );
+        const codeElem = document.createElement("code");
+        codeElem.id = "address_" + dataId;
+        codeElem.className = "breakall";
+        codeElem.textContent = data.address;
+        $("td:eq(3)", row).empty().append(codeElem);
       } else {
-        $("td:eq(3)", row).html(
-          '<a id="address_' +
-            dataId +
-            '" class="breakall" href="' +
-            encodeURI(data.address) +
-            '" target="_blank" rel="noopener noreferrer">' +
-            utils.escapeHtml(data.address) +
-            "</a>"
-        );
+        const aElem = document.createElement("a");
+        aElem.id = "address_" + dataId;
+        aElem.className = "breakall";
+        aElem.href = data.address;
+        aElem.target = "_blank";
+        aElem.rel = "noopener noreferrer";
+        aElem.textContent = data.address;
+        $("td:eq(3)", row).empty().append(aElem);
       }
 
       $("td:eq(4)", row).html(
@@ -440,7 +436,7 @@ function initTable() {
   });
 
   table.on("init select deselect", () => {
-    utils.changeBulkDeleteStates(table);
+    utils.changeTableButtonStates(table);
   });
 
   table.on("order.dt", () => {
@@ -519,12 +515,12 @@ function addList(event) {
   }
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/lists",
+    url: document.body.dataset.apiurl + "/lists?type=" + encodeURIComponent(type),
     method: "post",
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ address: addresses, comment, type, groups: group }),
+    data: JSON.stringify({ address: addresses, comment, groups: group }),
     success(data) {
       utils.enableAll();
       utils.listsAlert(type + "list", addresses, data);

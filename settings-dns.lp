@@ -36,7 +36,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                     </div>
                     <div class="col-sm-12">
-                        <div class="box collapsed-box">
+                        <div class="box collapsed-box" id="custom-servers-box">
                             <div class="box-header with-border pointer" data-widget="collapse">
                                 <h3 class="box-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
                                 <div class="box-tools pull-right">
@@ -59,7 +59,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
+                <h3 class="box-title" data-configkeys="dns.domain.name dns.expandHosts">DNS domain settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -68,7 +68,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Domain</div>
-                                <input type="text" class="form-control" id="dns.domain" data-key="dns.domain" value="">
+                                <input type="text" class="form-control" id="dns.domain.name" data-key="dns.domain.name" value="">
                             </div>
                         </div>
                         <p>The DNS domains for your Pi-hole. This DNS domain is purely local. FTL may answer queries from its local cache and configuration but *never* forwards any requests upstream *unless* you have configured a dns.revServer exactly for this domain. If no domain is specified and you are using Pi-hole's DHCP server, then any hostnames with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
@@ -98,9 +98,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             per-client basis. Other clients can continue to use FTL while
                             rate-limited clients are short-circuited at the same time.</p>
                         <p>Rate-limiting may be disabled altogether by setting both
-                            values to zero. See
-                            <a href="https://docs.pi-hole.net/ftldns/configfile/#rate_limit" rel="noopener noreferrer" target="_blank">our documentation</a>
-                            for further details.</p>
+                            values to zero.</p>
                     </div>
                 </div>
             </div>
@@ -119,7 +117,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 <h4>Recommended setting</h4>
                                 <div>
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
-                                    <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong>
+                                    <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong></label>
                                     <p class="help-block">Allows only queries from devices that are at most one hop away (local devices)</p>
                                 </div>
                             </div>
@@ -158,8 +156,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <div>
                             <input type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
-                            <label for="dns.domainNeeded"><strong>Never forward non-FQDN <code>A</code> and <code>AAAA</code> queries</strong></label>
-                            <p class="help-block">Tells Pi-hole to never forward A or AAAA queries for plain
+                            <label for="dns.domainNeeded"><strong>Never forward non-FQDN queries</strong></label>
+                            <p class="help-block">Tells Pi-hole to never forward queries for plain
                                 names, without dots or domain parts, to upstream nameservers. If
                                 the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
                                 answer is returned.<br>

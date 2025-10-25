@@ -75,9 +75,9 @@ td.lookatme {
 .lookatme:after {
   color: #e33100;
   text-shadow: 0 0 5px #e33100;
-  /* in the html, the lookatme-text attribute must */
+  /* in the html, the data-lookatme-text attribute must */
   /* contain the same text as the .lookatme element */
-  content: attr(lookatme-text);
+  content: attr(data-lookatme-text);
   padding: inherit;
   position: absolute;
   inset: 0;
@@ -261,15 +261,28 @@ td.lookatme {
   align-self: center;
 }
 
+.chart-legend ul {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
 .chart-legend li {
-  cursor: pointer;
+  cursor: default;
   position: relative;
   line-height: 1;
   margin: 0 0 8px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
 }
 
 .chart-legend li span {
+  cursor: pointer;
   display: inline-block;
+  margin: 0 10px;
 }
 
 .colorBoxWrapper {
@@ -281,12 +294,19 @@ td.lookatme {
 }
 
 .chart-legend li .legend-label-text {
+  color: inherit;
+  margin: 0;
+  padding: 0;
   line-height: 1;
   word-break: break-word;
 }
 
-.chart-legend li .legend-label-text:hover {
+.chart-legend li a.legend-label-text.clickable:hover {
   text-decoration: underline;
+}
+
+.chart-legend li a.legend-label-text.clickable {
+  cursor: pointer; /* Pointer cursor only for clickable items */
 }
 
 /* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
@@ -572,12 +592,6 @@ td.details-control {
   flex: 0 1 auto;
   align-self: center;
   border: none;
-}
-
-.form-control-feedback {
-  right: 0.5em;
-  width: 16px;
-  height: 100%;
 }
 
 .loginpage-logo {
@@ -1046,6 +1060,8 @@ table.dataTable tbody > tr > .selected {
   margin: 5px 0;
   min-height: 36px;
   padding: 4px 8px;
+  width: 100%;
+  height: 100%;
 }
 
 #output.pre-taillog {
@@ -1575,4 +1591,25 @@ textarea.field-sizing-content {
 .child-interface-icon {
   line-height: 0.5em;
   font-size: 1.7em;
+}
+
+.hidden-entry {
+  opacity: 0;
+}
+.fade-2s {
+  animation: fadeOut 2s forwards;
+}
+.fade-in-transition {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+/* Used in query log page */
+td.dnssec {
+  padding-inline-start: 2.25em !important;
+  text-indent: -1.25em;
+}
+td.dnssec i {
+  text-indent: 0;
+  margin-left: -0.5rem;
 }

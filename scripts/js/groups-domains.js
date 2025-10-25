@@ -99,7 +99,6 @@ function hideSuggestDomains() {
   $("#suggest_domains").slideUp("fast");
 }
 
-// eslint-disable-next-line no-unused-vars
 function initTable() {
   table = $("#domainsTable").DataTable({
     processing: true,
@@ -398,7 +397,7 @@ function initTable() {
   }
 
   table.on("init select deselect", () => {
-    utils.changeBulkDeleteStates(table);
+    utils.changeTableButtonStates(table);
   });
 
   table.on("order.dt", () => {

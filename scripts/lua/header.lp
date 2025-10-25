@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
 *  Pi-hole: A black hole for Internet advertisements
 *  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
@@ -96,27 +96,25 @@ is_authenticated = mg.request_info.is_authenticated
 
     <!-- Common styles -->
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/icheck/icheck-bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
-<? if startsWith(scriptname, 'groups') then
-    -- Group management styles
-?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
-<? end ?>
 <? if is_authenticated then ?>
+    <? if startsWith(scriptname, 'groups') then ?>
+        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
+    <? end ?>
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/icheck/icheck-bootstrap.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/datatables.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
-<? end ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe-js/waitMe.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
+<? end ?>
 
     <!-- Theme styles (<?= theme.name ?>) -->
     <link rel="stylesheet" href="<?=pihole.fileversion('style/pi-hole.css')?>">
@@ -133,7 +131,5 @@ is_authenticated = mg.request_info.is_authenticated
     <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>

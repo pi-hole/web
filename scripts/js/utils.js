@@ -418,33 +418,6 @@ function checkMessages() {
     });
 }
 
-// Show only the appropriate delete buttons in datatables
-function changeBulkDeleteStates(table) {
-  const allRows = table.rows({ filter: "applied" }).data().length;
-  const pageLength = table.page.len();
-  const selectedRows = table.rows(".selected").data().length;
-
-  if (selectedRows === 0) {
-    // Nothing selected
-    $(".selectAll").removeClass("hidden");
-    $(".selectMore").addClass("hidden");
-    $(".removeAll").addClass("hidden");
-    $(".deleteSelected").addClass("hidden");
-  } else if (selectedRows >= pageLength || selectedRows === allRows) {
-    // Whole page is selected (or all available messages were selected)
-    $(".selectAll").addClass("hidden");
-    $(".selectMore").addClass("hidden");
-    $(".removeAll").removeClass("hidden");
-    $(".deleteSelected").removeClass("hidden");
-  } else {
-    // Some rows are selected, but not all
-    $(".selectAll").addClass("hidden");
-    $(".selectMore").removeClass("hidden");
-    $(".removeAll").addClass("hidden");
-    $(".deleteSelected").removeClass("hidden");
-  }
-}
-
 function doLogout(url) {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
@@ -474,34 +447,35 @@ function renderTimespan(data, type) {
   return data;
 }
 
-function htmlPass(data, _type) {
-  return data;
-}
-
-// Show only the appropriate buttons
+// Show only the appropriate delete buttons in datatables
 function changeTableButtonStates(table) {
+  const selectAllElements = document.querySelectorAll(".selectAll");
+  const selectMoreElements = document.querySelectorAll(".selectMore");
+  const removeAllElements = document.querySelectorAll(".removeAll");
+  const deleteSelectedElements = document.querySelectorAll(".deleteSelected");
+
   const allRows = table.rows({ filter: "applied" }).data().length;
   const pageLength = table.page.len();
   const selectedRows = table.rows(".selected").data().length;
 
   if (selectedRows === 0) {
     // Nothing selected
-    $(".selectAll").removeClass("hidden");
-    $(".selectMore").addClass("hidden");
-    $(".removeAll").addClass("hidden");
-    $(".deleteSelected").addClass("hidden");
+    for (const el of selectAllElements) el.classList.remove("hidden");
+    for (const el of selectMoreElements) el.classList.add("hidden");
+    for (const el of removeAllElements) el.classList.add("hidden");
+    for (const el of deleteSelectedElements) el.classList.add("hidden");
   } else if (selectedRows >= pageLength || selectedRows === allRows) {
     // Whole page is selected (or all available messages were selected)
-    $(".selectAll").addClass("hidden");
-    $(".selectMore").addClass("hidden");
-    $(".removeAll").removeClass("hidden");
-    $(".deleteSelected").removeClass("hidden");
+    for (const el of selectAllElements) el.classList.add("hidden");
+    for (const el of selectMoreElements) el.classList.add("hidden");
+    for (const el of removeAllElements) el.classList.remove("hidden");
+    for (const el of deleteSelectedElements) el.classList.remove("hidden");
   } else {
     // Some rows are selected, but not all
-    $(".selectAll").addClass("hidden");
-    $(".selectMore").removeClass("hidden");
-    $(".removeAll").addClass("hidden");
-    $(".deleteSelected").removeClass("hidden");
+    for (const el of selectAllElements) el.classList.add("hidden");
+    for (const el of selectMoreElements) el.classList.remove("hidden");
+    for (const el of removeAllElements) el.classList.add("hidden");
+    for (const el of deleteSelectedElements) el.classList.remove("hidden");
   }
 }
 
@@ -517,26 +491,19 @@ function parseQueryString() {
   return Object.fromEntries(params.entries());
 }
 
-// https://stackoverflow.com/q/21647928
-function hexEncode(string) {
-  let result = "";
-  for (let i = 0; i < string.length; i++) {
-    const hex = string.codePointAt(i).toString(16);
-    result += ("000" + hex).slice(-4);
-  }
+function hexEncode(text) {
+  if (typeof text !== "string" || text.length === 0) return "";
 
-  return result;
+  return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
 }
 
-// https://stackoverflow.com/q/21647928
-function hexDecode(string) {
-  const hexes = string.match(/.{1,4}/g) || [];
-  let back = "";
-  for (const hex of hexes) {
-    back += String.fromCodePoint(Number.parseInt(hex, 16));
-  }
+function hexDecode(text) {
+  if (typeof text !== "string" || text.length === 0) return "";
 
-  return back;
+  const hexes = text.match(/.{1,4}/g);
+  if (!hexes || hexes.length === 0) return "";
+
+  return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
 
 function listsAlert(type, items, data) {
@@ -680,6 +647,30 @@ function setInter(func, interval) {
   globalThis.setTimeout(setInter, interval, func, interval);
 }
 
+/**
+ * Toggle or set the collapse state of a box element
+ * @param {HTMLElement} box - The box element
+ * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
+ */
+// Not using the AdminLTE API so that the expansion is not animated
+// Otherwise, we could use `$(customBox).boxWidget("expand")`
+function toggleBoxCollapse(box, expand = true) {
+  if (!box) return;
+
+  const icon = box.querySelector(".btn-box-tool > i");
+  const body = box.querySelector(".box-body");
+
+  if (expand) {
+    box.classList.remove("collapsed-box");
+    if (icon) icon.classList.replace("fa-plus", "fa-minus");
+    if (body) body.style = "";
+  } else {
+    box.classList.add("collapsed-box");
+    if (icon) icon.classList.replace("fa-minus", "fa-plus");
+    if (body) body.style.display = "none";
+  }
+}
+
 globalThis.utils = (function () {
   return {
     escapeHtml,
@@ -702,11 +693,9 @@ globalThis.utils = (function () {
     toPercent,
     colorBar,
     checkMessages,
-    changeBulkDeleteStates,
     doLogout,
     renderTimestamp,
     renderTimespan,
-    htmlPass,
     changeTableButtonStates,
     getCSSval,
     parseQueryString,
@@ -716,5 +705,6 @@ globalThis.utils = (function () {
     loadingOverlay,
     setTimer,
     setInter,
+    toggleBoxCollapse,
   };
 })();

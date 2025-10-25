@@ -5,12 +5,11 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams:false */
+/* global upstreamIPs:false */
 
 "use strict";
 
-// eslint-disable-next-line no-unused-vars
-const THEME_COLORS = [
+globalThis.THEME_COLORS = [
   "#f56954",
   "#3c8dbc",
   "#00a65a",
@@ -29,30 +28,32 @@ const THEME_COLORS = [
   "#d2d6de",
 ];
 
-// eslint-disable-next-line no-unused-vars
-const htmlLegendPlugin = {
+globalThis.htmlLegendPlugin = {
   id: "htmlLegend",
   afterUpdate(chart, args, options) {
-    const ul = getOrCreateLegendList(chart, options.containerID);
-
     // Use the built-in legendItems generator
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
     // Exit early if the legend has the same items as last time
-    if (
+    const isLegendUnchanged =
       options.lastLegendItems &&
       items.length === options.lastLegendItems.length &&
-      items.every((item, i) => item.text === options.lastLegendItems[i].text) &&
-      items.every((item, i) => item.hidden === options.lastLegendItems[i].hidden)
-    ) {
-      return;
-    }
+      items.every(
+        (item, i) =>
+          item.text === options.lastLegendItems[i].text &&
+          item.hidden === options.lastLegendItems[i].hidden
+      );
+
+    if (isLegendUnchanged) return;
+
     // else: Update the HTML legend if it is different from last time or if it
     // did not exist
 
     // Save the legend items so we can check against them next time to see if we
     // need to update the legend
     options.lastLegendItems = items;
+
+    const ul = getOrCreateLegendList(options.containerID);
 
     // Remove old legend items
     while (ul.firstChild) {
@@ -61,89 +62,89 @@ const htmlLegendPlugin = {
 
     for (const item of items) {
       const li = document.createElement("li");
-      li.style.alignItems = "center";
-      li.style.cursor = "pointer";
-      li.style.display = "flex";
-      li.style.flexDirection = "row";
+
+      // Select the corresponding "slice" of the chart when the mouse is over a legend item
+      li.addEventListener("mouseover", () => {
+        chart.setActiveElements([
+          {
+            datasetIndex: 0,
+            index: item.index,
+          },
+        ]);
+        chart.update();
+      });
+
+      // Deselect all "slices"
+      li.addEventListener("mouseout", () => {
+        chart.setActiveElements([]);
+        chart.update();
+      });
 
       // Color checkbox (toggle visibility)
       const boxSpan = document.createElement("span");
       boxSpan.title = "Toggle visibility";
       boxSpan.style.color = item.fillStyle;
-      boxSpan.style.display = "inline-block";
-      boxSpan.style.margin = "0 10px";
-      boxSpan.innerHTML = item.hidden
-        ? '<i class="colorBoxWrapper fa fa-square"></i>'
-        : '<i class="colorBoxWrapper fa fa-check-square"></i>';
+      boxSpan.style.cursor = "pointer";
+      boxSpan.innerHTML = `<i class="colorBoxWrapper fa ${item.hidden ? "fa-square" : "fa-check-square"}"></i>`;
 
       boxSpan.addEventListener("click", () => {
         const { type } = chart.config;
+        const isPieOrDoughnut = type === "pie" || type === "doughnut";
 
-        if (type === "pie" || type === "doughnut") {
+        if (isPieOrDoughnut) {
           // Pie and doughnut charts only have a single dataset and visibility is per item
           chart.toggleDataVisibility(item.index);
         } else {
-          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+          const isVisible = chart.isDatasetVisible(item.datasetIndex);
+          chart.setDatasetVisibility(item.datasetIndex, !isVisible);
         }
 
         chart.update();
       });
 
-      const textLink = document.createElement("p");
-      if (
-        chart.canvas.id === "queryTypePieChart" ||
-        chart.canvas.id === "forwardDestinationPieChart"
-      ) {
-        // Text (link to query log page)
-        textLink.title = "List " + item.text + " queries";
+      const link = document.createElement("a");
+      const isQueryTypeChart = chart.canvas.id === "queryTypePieChart";
+      const isForwardDestinationChart = chart.canvas.id === "forwardDestinationPieChart";
 
-        textLink.addEventListener("click", () => {
-          if (chart.canvas.id === "queryTypePieChart") {
-            globalThis.location.href = "queries?type=" + item.text;
-          } else if (chart.canvas.id === "forwardDestinationPieChart") {
-            // Encode the forward destination as it may contain an "#" character
-            const upstream = encodeURIComponent(upstreams[item.text]);
-            globalThis.location.href = "queries?upstream=" + upstream;
+      if (isQueryTypeChart || isForwardDestinationChart) {
+        // Text (link to query log page)
+        link.title = `List ${item.text} queries`;
+        link.className = "legend-label-text clickable";
+
+        if (isQueryTypeChart) {
+          link.href = `queries?type=${item.text}`;
+        } else {
+          // Encode the forward destination as it may contain an "#" character
+          link.href = `queries?upstream=${encodeURIComponent(upstreamIPs[item.index])}`;
+
+          // If server name and IP are different:
+          if (item.text !== upstreamIPs[item.index]) {
+            // replace the title tooltip to include the upstream IP to the text ...
+            link.title = `List ${item.text} (${upstreamIPs[item.index]}) queries`;
+
+            // ... and include the server name (without port) to the querystring, to match
+            // the text used on the SELECT element (sent by suggestions API endpoint)
+            link.href += ` (${item.text.split("#")[0]})`;
           }
-        });
+        }
+      } else {
+        // no clickable links in other charts
+        link.className = "legend-label-text";
       }
 
-      textLink.style.margin = 0;
-      textLink.style.padding = 0;
-      textLink.style.textDecoration = item.hidden ? "line-through" : "";
-      textLink.className = "legend-label-text";
-      textLink.textContent = item.text;
+      link.style.textDecoration = item.hidden ? "line-through" : "";
+      link.textContent = item.text;
 
-      li.append(boxSpan, textLink);
+      li.append(boxSpan, link);
       ul.append(li);
     }
   },
 };
 
-// eslint-disable-next-line no-unused-vars
-const customTooltips = function (context) {
+globalThis.customTooltips = context => {
   const tooltip = context.tooltip;
-  let tooltipEl = document.getElementById(this.chart.canvas.id + "-customTooltip");
-  if (!tooltipEl) {
-    // Create Tooltip Element once per chart
-    tooltipEl = document.createElement("div");
-    tooltipEl.id = this.chart.canvas.id + "-customTooltip";
-    tooltipEl.classList.add("chartjs-tooltip");
-    tooltipEl.innerHTML = "<div class='arrow'></div> <table></table>";
-    // avoid browser's font-zoom since we know that <body>'s
-    // font-size was set to 14px by bootstrap's css
-    const fontZoom = Number.parseFloat($("body").css("font-size")) / 14;
-    // set styles and font
-    tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
-    tooltipEl.style.borderRadius = tooltip.options.cornerRadius + "px";
-    tooltipEl.style.font = tooltip.options.bodyFont.string;
-    tooltipEl.style.fontFamily = tooltip.options.bodyFont.family;
-    tooltipEl.style.fontSize = tooltip.options.bodyFont.size / fontZoom + "px";
-    tooltipEl.style.fontStyle = tooltip.options.bodyFont.style;
-    // append Tooltip next to canvas-containing box
-    tooltipEl.ancestor = this.chart.canvas.closest(".box[id]").parentNode;
-    tooltipEl.ancestor.append(tooltipEl);
-  }
+  const canvasId = context.chart.canvas.id;
+  const tooltipEl = getOrCreateTooltipElement(canvasId, tooltip.options, context);
 
   // Hide if no tooltip
   if (tooltip.opacity === 0) {
@@ -152,169 +153,231 @@ const customTooltips = function (context) {
   }
 
   // Set caret position
-  tooltipEl.classList.remove("left", "right", "center", "top", "bottom");
-  tooltipEl.classList.add(tooltip.xAlign, tooltip.yAlign);
+  setTooltipCaretPosition(tooltipEl, tooltip);
 
-  // Set Text
+  // Set tooltip content
   if (tooltip.body) {
-    const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(bodyItem => bodyItem.lines);
-    let innerHtml = "<thead>";
-
-    for (const title of titleLines) {
-      innerHtml += "<tr><th>" + title + "</th></tr>";
-    }
-
-    innerHtml += "</thead><tbody>";
-    let printed = 0;
-
-    const devicePixel = (1 / window.devicePixelRatio).toFixed(1);
-    for (const [i, body] of bodyLines.entries()) {
-      const labelColors = tooltip.labelColors[i];
-      let style = "background-color: " + labelColors.backgroundColor;
-      style += "; outline: 1px solid " + labelColors.backgroundColor;
-      style += "; border: " + devicePixel + "px solid #fff";
-      const span = "<span class='chartjs-tooltip-key' style='" + style + "'></span>";
-
-      const num = body[0].split(": ");
-      // do not display entries with value of 0 (in bar chart),
-      // but pass through entries with "0.0% (in pie charts)
-      if (num[1] !== "0") {
-        innerHtml += "<tr><td>" + span + body + "</td></tr>";
-        printed++;
-      }
-    }
-
-    if (printed < 1) {
-      innerHtml += "<tr><td>No activity recorded</td></tr>";
-    }
-
-    innerHtml += "</tbody>";
-
-    const tableRoot = tooltipEl.querySelector("table");
-    tableRoot.innerHTML = innerHtml;
+    setTooltipContent(tooltipEl, tooltip);
   }
 
-  const canvasPos = this.chart.canvas.getBoundingClientRect();
+  // Position tooltip
+  positionTooltip(tooltipEl, tooltip, context);
+
+  // Make tooltip visible
+  tooltipEl.style.opacity = 1;
+};
+
+function getOrCreateTooltipElement(canvasId, options, context) {
+  let tooltipEl = document.getElementById(`${canvasId}-customTooltip`);
+  if (tooltipEl) return tooltipEl;
+
+  // Create Tooltip Element once per chart
+  tooltipEl = document.createElement("div");
+  tooltipEl.id = `${canvasId}-customTooltip`;
+  tooltipEl.className = "chartjs-tooltip";
+  tooltipEl.innerHTML = '<div class="arrow"></div> <table></table>';
+
+  // Avoid browser's font-zoom since we know that <body>'s
+  // font-size was set to 14px by Bootstrap's CSS
+  const fontZoom = Number.parseFloat(getComputedStyle(document.body).fontSize) / 14;
+
+  // Set styles and font
+  tooltipEl.style.cssText = `
+    padding: ${options.padding}px ${options.padding}px;
+    border-radius: ${options.cornerRadius}px;
+    font: ${options.bodyFont.string};
+    font-family: ${options.bodyFont.family};
+    font-size: ${options.bodyFont.size / fontZoom}px;
+    font-style: ${options.bodyFont.style};
+  `;
+
+  // Append Tooltip next to canvas-containing box
+  tooltipEl.ancestor = context.chart.canvas.closest(".box[id]").parentNode;
+  tooltipEl.ancestor.append(tooltipEl);
+
+  return tooltipEl;
+}
+
+function setTooltipCaretPosition(tooltipEl, tooltip) {
+  tooltipEl.classList.remove("left", "right", "center", "top", "bottom");
+  tooltipEl.classList.add(tooltip.xAlign, tooltip.yAlign);
+}
+
+function setTooltipContent(tooltipEl, tooltip) {
+  const bodyLines = tooltip.body.map(bodyItem => bodyItem.lines);
+  if (bodyLines.length === 0) return;
+
+  const titleLines = tooltip.title || [];
+  let tooltipHtml = "<thead>";
+
+  for (const title of titleLines) {
+    tooltipHtml += `<tr><th>${title}</th></tr>`;
+  }
+
+  tooltipHtml += "</thead><tbody>";
+
+  const devicePixel = (1 / window.devicePixelRatio).toFixed(1);
+  let printed = 0;
+
+  for (const [i, body] of bodyLines.entries()) {
+    const labelColors = tooltip.labelColors[i];
+    const style =
+      `background-color: ${labelColors.backgroundColor}; ` +
+      `outline: 1px solid ${labelColors.backgroundColor}; ` +
+      `border: ${devicePixel}px solid #fff`;
+    const span = `<span class="chartjs-tooltip-key" style="${style}"></span>`;
+
+    const num = body[0].split(": ");
+    // Do not display entries with value of 0 in bar chart,
+    // but pass through entries with "0.0%" (in pie charts)
+    if (num[1] !== "0") {
+      tooltipHtml += `<tr><td>${span}${body}</td></tr>`;
+      printed++;
+    }
+  }
+
+  if (printed < 1) {
+    tooltipHtml += "<tr><td>No activity recorded</td></tr>";
+  }
+
+  tooltipHtml += "</tbody>";
+
+  const tableRoot = tooltipEl.querySelector("table");
+  tableRoot.innerHTML = tooltipHtml;
+}
+
+function positionTooltip(tooltipEl, tooltip, context) {
+  if (tooltip.opacity === 0 || tooltipEl.style.opacity === 0) return;
+
+  const canvasPos = context.chart.canvas.getBoundingClientRect();
   const boxPos = tooltipEl.ancestor.getBoundingClientRect();
   const offsetX = canvasPos.left - boxPos.left;
   const offsetY = canvasPos.top - boxPos.top;
   const tooltipWidth = tooltipEl.offsetWidth;
   const tooltipHeight = tooltipEl.offsetHeight;
-  const caretX = tooltip.caretX;
-  const caretY = tooltip.caretY;
-  const caretPadding = tooltip.options.caretPadding;
-  let tooltipX;
-  let tooltipY;
-  let arrowX;
+  const { caretX, caretY } = tooltip;
+  const { caretPadding } = tooltip.options;
   const arrowMinIndent = 2 * tooltip.options.cornerRadius;
   const arrowSize = 5;
 
+  // Check if this is a queryOverTimeChart or clientsChart - these should stick to x-axis
+  const canvasId = context.chart.canvas.id;
+  const isTimelineChart = canvasId === "queryOverTimeChart" || canvasId === "clientsChart";
+
+  let tooltipX = offsetX + caretX;
+  let arrowX;
+
   // Compute X position
-  if ($(document).width() > 2 * tooltip.width || tooltip.xAlign !== "center") {
-    // If the viewport is wide enough, let the tooltip follow the caret position
-    tooltipX = offsetX + caretX;
-    if (tooltip.yAlign === "top" || tooltip.yAlign === "bottom") {
-      switch (tooltip.xAlign) {
-        case "center": {
-          // set a minimal X position to 5px to prevent
-          // the tooltip to stick out left of the viewport
-          const minX = 5;
-          if (2 * tooltipX < tooltipWidth + minX) {
-            arrowX = tooltipX - minX;
-            tooltipX = minX;
-          } else {
-            tooltipX -= tooltipWidth / 2;
-          }
-
-          break;
-        }
-
-        case "left":
-          tooltipX -= arrowMinIndent;
-          arrowX = arrowMinIndent;
-          break;
-        case "right":
-          tooltipX -= tooltipWidth - arrowMinIndent;
-          arrowX = tooltipWidth - arrowMinIndent;
-          break;
-        default:
-          break;
+  if (tooltip.yAlign === "top" || tooltip.yAlign === "bottom") {
+    switch (tooltip.xAlign) {
+      case "center": {
+        // Set a minimal X position to 5px to prevent
+        // the tooltip to stick out left of the viewport
+        const minX = 5;
+        tooltipX = Math.max(minX, tooltipX - tooltipWidth / 2);
+        arrowX = tooltip.caretX - (tooltipX - offsetX);
+        break;
       }
-    } else if (tooltip.yAlign === "center") {
-      switch (tooltip.xAlign) {
-        case "left":
-          tooltipX += caretPadding;
-          break;
-        case "right":
-          tooltipX -= tooltipWidth - caretPadding;
-          break;
-        case "center":
-          tooltipX -= tooltipWidth / 2;
-          break;
-        default:
-          break;
+
+      case "left": {
+        tooltipX -= arrowMinIndent;
+        arrowX = arrowMinIndent;
+        break;
       }
+
+      case "right": {
+        tooltipX -= tooltipWidth - arrowMinIndent;
+        arrowX = tooltipWidth - arrowMinIndent;
+        break;
+      }
+      // No default
     }
-  } else {
-    // compute the tooltip's center inside ancestor element
+  } else if (tooltip.yAlign === "center") {
+    switch (tooltip.xAlign) {
+      case "left": {
+        tooltipX += caretPadding;
+        break;
+      }
+
+      case "right": {
+        tooltipX -= tooltipWidth - caretPadding;
+        break;
+      }
+
+      case "center": {
+        tooltipX -= tooltipWidth / 2;
+        break;
+      }
+      // No default
+    }
+  }
+
+  // Adjust X position if tooltip is centered inside ancestor
+  if (document.documentElement.clientWidth <= 2 * tooltip.width && tooltip.xAlign === "center") {
     tooltipX = (tooltipEl.ancestor.offsetWidth - tooltipWidth) / 2;
-    // move the tooltip if the arrow would stick out to the left
-    if (offsetX + caretX - arrowMinIndent < tooltipX) {
-      tooltipX = offsetX + caretX - arrowMinIndent;
-    }
-
-    // move the tooltip if the arrow would stick out to the right
-    if (offsetX + caretX - tooltipWidth + arrowMinIndent > tooltipX) {
-      tooltipX = offsetX + caretX - tooltipWidth + arrowMinIndent;
-    }
-
+    tooltipX = Math.max(tooltipX, offsetX + caretX - arrowMinIndent); // Prevent left overflow
+    tooltipX = Math.min(tooltipX, offsetX + caretX - tooltipWidth + arrowMinIndent); // Prevent right overflow
     arrowX = offsetX + caretX - tooltipX;
   }
 
-  // Compute Y position
-  switch (tooltip.yAlign) {
-    case "top":
-      tooltipY = offsetY + caretY + arrowSize + caretPadding;
-      break;
-    case "center":
-      tooltipY = offsetY + caretY - tooltipHeight / 2;
-      if (tooltip.xAlign === "left") {
-        tooltipX += arrowSize;
-      } else if (tooltip.xAlign === "right") {
-        tooltipX -= arrowSize;
+  let tooltipY;
+
+  if (isTimelineChart) {
+    // For timeline charts, always position tooltip below the chart with caret pointing to x-axis
+    const chartArea = context.chart.chartArea;
+    const canvasBottom = chartArea.bottom;
+    tooltipY = offsetY + canvasBottom + arrowSize + caretPadding;
+
+    // Ensure the arrow points to the correct X position
+    arrowX = tooltip.caretX - (tooltipX - offsetX);
+  } else {
+    tooltipY = offsetY + caretY;
+    switch (tooltip.yAlign) {
+      case "top": {
+        tooltipY += arrowSize + caretPadding;
+        break;
       }
 
-      break;
-    case "bottom":
-      tooltipY = offsetY + caretY - tooltipHeight - arrowSize - caretPadding;
-      break;
-    default:
-      break;
+      case "center": {
+        tooltipY -= tooltipHeight / 2;
+        if (tooltip.xAlign === "left") tooltipX += arrowSize;
+        if (tooltip.xAlign === "right") tooltipX -= arrowSize;
+        break;
+      }
+
+      case "bottom": {
+        tooltipY -= tooltipHeight + arrowSize + caretPadding;
+        break;
+      }
+      // No default
+    }
   }
 
   // Position tooltip and display
-  tooltipEl.style.top = tooltipY.toFixed(1) + "px";
-  tooltipEl.style.left = tooltipX.toFixed(1) + "px";
-  if (arrowX === undefined) {
-    tooltipEl.querySelector(".arrow").style.left = "";
-  } else {
+  tooltipEl.style.top = `${tooltipY.toFixed(1)}px`;
+  tooltipEl.style.left = `${tooltipX.toFixed(1)}px`;
+
+  // Set arrow position
+  const arrowEl = tooltipEl.querySelector(".arrow");
+  let arrowLeftPosition = "";
+
+  if (arrowX !== undefined) {
     // Calculate percentage X value depending on the tooltip's
     // width to avoid hanging arrow out on tooltip width changes
     const arrowXpercent = ((100 / tooltipWidth) * arrowX).toFixed(1);
-    tooltipEl.querySelector(".arrow").style.left = arrowXpercent + "%";
+    arrowLeftPosition = `${arrowXpercent}%`;
   }
 
-  tooltipEl.style.opacity = 1;
-};
+  arrowEl.style.left = arrowLeftPosition;
+}
 
-// eslint-disable-next-line no-unused-vars
-function doughnutTooltip(tooltipLabel) {
-  let percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(1);
+globalThis.doughnutTooltip = tooltipLabel => {
+  if (tooltipLabel.parsed === 0) return "";
+
   // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
   // to compensate rounding errors we round to one decimal
-
-  const label = " " + tooltipLabel.label;
+  let percentageTotalShown = tooltipLabel.chart._metasets[0].total.toFixed(1);
+  const label = ` ${tooltipLabel.label}`;
   let itemPercentage;
 
   // if we only show < 1% percent of all, show each item with two decimals
@@ -327,41 +390,32 @@ function doughnutTooltip(tooltipLabel) {
       tooltipLabel.parsed.toFixed(1) === "0.0" ? "< 0.1" : tooltipLabel.parsed.toFixed(1);
   }
 
-  // even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less then 100
+  // even if no doughnut slice is hidden, sometimes percentageTotalShown is slightly less than 100
   // we therefore use 99.9 to decide if slices are hidden (we only show with 0.1 precision)
   if (percentageTotalShown > 99.9) {
     // All items shown
-    return label + ": " + itemPercentage + "%";
+    return `${label}: ${itemPercentage}%`;
   }
 
   // set percentageTotalShown again without rounding to account
   // for cases where the total shown percentage would be <0.1% of all
   percentageTotalShown = tooltipLabel.chart._metasets[0].total;
+  const percentageOfShownItems = ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1);
+
   return (
-    label +
-    ":<br>&bull; " +
-    itemPercentage +
-    "% of all data<br>&bull; " +
-    ((tooltipLabel.parsed * 100) / percentageTotalShown).toFixed(1) +
-    "% of shown items"
+    `${label}:<br>&bull; ${itemPercentage}% of all data<br>` +
+    `&bull; ${percentageOfShownItems}% of shown items`
   );
-}
+};
 
 // chartjs plugin used by the custom doughnut legend
-const getOrCreateLegendList = (chart, id) => {
+function getOrCreateLegendList(id) {
   const legendContainer = document.getElementById(id);
   let listContainer = legendContainer.querySelector("ul");
+  if (listContainer) return listContainer;
 
-  if (!listContainer) {
-    listContainer = document.createElement("ul");
-    listContainer.style.display = "flex";
-    listContainer.style.flexDirection = "column";
-    listContainer.style.flexWrap = "wrap";
-    listContainer.style.margin = 0;
-    listContainer.style.padding = 0;
-
-    legendContainer.append(listContainer);
-  }
+  listContainer = document.createElement("ul");
+  legendContainer.append(listContainer);
 
   return listContainer;
-};
+}

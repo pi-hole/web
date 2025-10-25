@@ -40,17 +40,17 @@ function formatDnsmasq(line) {
   return txt;
 }
 
-function formatFTL(line, prio) {
+function formatFTL(line, priority) {
   // Colorize priority
-  let prioClass = "";
-  switch (prio) {
+  let priorityClass = "";
+  switch (priority) {
     case "INFO": {
-      prioClass = "text-success";
+      priorityClass = "text-success";
       break;
     }
 
     case "WARNING": {
-      prioClass = "text-warning";
+      priorityClass = "text-warning";
       break;
     }
 
@@ -59,44 +59,68 @@ function formatFTL(line, prio) {
     case "EMERG":
     case "ALERT":
     case "CRIT": {
-      prioClass = "text-danger";
+      priorityClass = "text-danger";
       break;
     }
 
     default:
-      prioClass = prio.startsWith("DEBUG") ? "text-info" : "text-muted";
+      priorityClass = priority.startsWith("DEBUG") ? "text-info" : "text-muted";
   }
 
   // Return formatted line
-  return `<span class="${prioClass}">${utils.escapeHtml(prio)}</span> ${line}`;
+  return `<span class="${priorityClass}">${utils.escapeHtml(priority)}</span> ${line}`;
 }
 
 let gAutoScrolling;
 
 // Function that asks the API for new data
 function getData() {
-  // Only update when spinner is spinning
-  if (!$("#feed-icon").hasClass("fa-play")) {
+  // Only update when the feed icon has the fa-play class
+  const feedIcon = document.getElementById("feed-icon");
+  if (!feedIcon.classList.contains("fa-play")) {
     utils.setTimer(getData, REFRESH_INTERVAL.logs);
     return;
   }
 
-  const GETDict = utils.parseQueryString();
-  if (!("file" in GETDict)) {
-    globalThis.location.href += "?file=dnsmasq";
+  const queryParams = utils.parseQueryString();
+  const outputElement = document.getElementById("output");
+  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
+
+  // Check if file parameter exists
+  if (!queryParams.file) {
+    // Add default file parameter and redirect
+    const url = new URL(globalThis.location.href);
+    url.searchParams.set("file", "dnsmasq");
+    globalThis.location.href = url.toString();
     return;
   }
 
-  $.ajax({
-    url: document.body.dataset.apiurl + "/logs/" + GETDict.file + "?nextID=" + nextID,
-    timeout: 5000,
+  // Validate that file parameter is one of the allowed values
+  if (!allowedFileParams.includes(queryParams.file)) {
+    const errorMessage = `Invalid file parameter: ${queryParams.file}. Allowed values are: ${allowedFileParams.join(", ")}`;
+    outputElement.innerHTML = `<div><em class="text-danger">*** Error: ${errorMessage} ***</em></div>`;
+    return;
+  }
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+  const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}?nextID=${nextID}`;
+
+  fetch(url, {
     method: "GET",
+    headers: {
+      "X-CSRF-TOKEN": csrfToken,
+    },
   })
-    .done(data => {
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
+    .then(data => {
+      // Set filename
+      document.getElementById("filename").textContent = data.file;
+
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
-          $("#output").append("<div><i class='text-danger'>*** FTL restarted ***</i></div>");
+          outputElement.innerHTML +=
+            '<div><em class="text-danger">*** FTL restarted ***</em></div>';
         }
 
         // Remember PID
@@ -111,119 +135,167 @@ function getData() {
       // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
-          $("#output").html("<div><em>*** Log file is empty ***</em></div>");
+          outputElement.innerHTML = "<div><em>*** Log file is empty ***</em></div>";
         }
 
         utils.setTimer(getData, REFRESH_INTERVAL.logs);
         return;
       }
 
+      // Create a document fragment to batch the DOM updates
+      const fragment = document.createDocumentFragment();
+
       // We have new lines
       if (markUpdates && nextID > 0) {
         // Add red fading out background to new lines
-        $("#output").append('<hr class="hr-small">').children(":last").fadeOut(2000);
+        const hr = document.createElement("hr");
+        hr.className = "hr-small fade-2s";
+        fragment.append(hr);
+      }
+
+      // Limit output to <maxlines> lines
+      // Check if adding these new lines would exceed maxlines
+      const totalAfterAdding =
+        outputElement.children.length + data.log.length + (markUpdates && nextID > 0 ? 1 : 0);
+
+      // If we'll exceed maxlines, remove old elements first
+      if (totalAfterAdding > maxlines) {
+        const elementsToRemove = totalAfterAdding - maxlines;
+        const elements = [...outputElement.children];
+        const elementsToKeep = elements.slice(elementsToRemove);
+        outputElement.replaceChildren(...elementsToKeep);
       }
 
       for (const line of data.log) {
         // Escape HTML
         line.message = utils.escapeHtml(line.message);
-        // Format line if applicable
-        if (GETDict.file === "dnsmasq") line.message = formatDnsmasq(line.message);
-        else if (GETDict.file === "ftl") line.message = formatFTL(line.message, line.prio);
 
-        // Add new line to output
-        $("#output").append(
-          '<div class="log-entry"><span class="text-muted">' +
-            moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS") +
-            "</span> " +
-            line.message +
-            "</div>"
-        );
-        if (fadeIn) {
-          //$(".left-line:last").fadeOut(2000);
-          $("#output").children(":last").hide().fadeIn("fast");
+        // Format line if applicable
+        if (queryParams.file === "dnsmasq") {
+          line.message = formatDnsmasq(line.message);
+        } else if (queryParams.file === "ftl") {
+          line.message = formatFTL(line.message, line.prio);
         }
+
+        // Create and add new log entry to fragment
+        const logEntry = document.createElement("div");
+        const logEntryDate = moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS");
+        logEntry.className = `log-entry${fadeIn ? " hidden-entry" : ""}`;
+        logEntry.innerHTML = `<span class="text-muted">${logEntryDate}</span> ${line.message}`;
+
+        fragment.append(logEntry);
       }
 
-      // Limit output to <maxlines> lines
-      const lines = $("#output").val().split("\n");
-      if (lines.length > maxlines) {
-        lines.splice(0, lines.length - maxlines);
-        $("#output").val(lines.join("\n"));
+      // Append all new elements at once
+      outputElement.append(fragment);
+
+      if (fadeIn) {
+        // Fade in the new log entries
+        const newEntries = outputElement.querySelectorAll(".hidden-entry");
+
+        for (const entry of newEntries) {
+          entry.classList.add("fade-in-transition");
+        }
+
+        // Force a reflow once before changing opacity
+        void outputElement.offsetWidth; // eslint-disable-line no-void
+
+        requestAnimationFrame(() => {
+          for (const entry of newEntries) {
+            entry.classList.remove("hidden-entry");
+            entry.style.opacity = 1;
+          }
+        });
+
+        // Clean up after animation completes
+        setTimeout(() => {
+          for (const entry of newEntries) {
+            entry.classList.remove("fade-in-transition");
+          }
+        }, 200);
       }
 
       // Scroll to bottom of output if we are already at the bottom
       if (gAutoScrolling) {
         // Auto-scrolling is enabled
-        $("#output").scrollTop($("#output")[0].scrollHeight);
+        requestAnimationFrame(() => {
+          outputElement.scrollTop = outputElement.scrollHeight;
+        });
       }
 
       // Update nextID
       nextID = data.nextID;
 
-      // Set filename
-      $("#filename").text(data.file);
-
       utils.setTimer(getData, REFRESH_INTERVAL.logs);
     })
-    .fail(data => {
-      apiFailure(data);
+    .catch(error => {
+      apiFailure(error);
       utils.setTimer(getData, 5 * REFRESH_INTERVAL.logs);
     });
 }
 
 gAutoScrolling = true;
-$("#output").on("scroll", () => {
-  // Check if we are at the bottom of the output
-  //
-  // - $("#output")[0].scrollHeight: This gets the entire height of the content
-  //   of the "output" element, including the part that is not visible due to
-  //   scrolling.
-  // - $("#output").innerHeight(): This gets the inner height of the "output"
-  //   element, which is the visible part of the content.
-  // - $("#output").scrollTop(): This gets the number of pixels that the content
-  //   of the "output" element is scrolled vertically from the top.
-  //
-  // By subtracting the inner height and the scroll top from the scroll height,
-  // you get the distance from the bottom of the scrollable area.
-  const bottom =
-    $("#output")[0].scrollHeight - $("#output").innerHeight() - $("#output").scrollTop();
-  // Add a tolerance of four line heights
-  const tolerance = 4 * Number.parseFloat($("#output").css("line-height"));
-  if (bottom <= tolerance) {
-    // Auto-scrolling is enabled
-    gAutoScrolling = true;
-    $("#autoscrolling").addClass("fa-check");
-    $("#autoscrolling").removeClass("fa-xmark");
-  } else {
-    // Auto-scrolling is disabled
-    gAutoScrolling = false;
-    $("#autoscrolling").addClass("fa-xmark");
-    $("#autoscrolling").removeClass("fa-check");
-  }
-});
+document.getElementById("output").addEventListener(
+  "scroll",
+  event => {
+    const output = event.currentTarget;
+
+    // Check if we are at the bottom of the output
+    //
+    // - output.scrollHeight: This gets the entire height of the content
+    //   of the "output" element, including the part that is not visible due to
+    //   scrolling.
+    // - output.clientHeight: This gets the inner height of the "output"
+    //   element, which is the visible part of the content.
+    // - output.scrollTop: This gets the number of pixels that the content
+    //   of the "output" element is scrolled vertically from the top.
+    //
+    // By subtracting the inner height and the scroll top from the scroll height,
+    // you get the distance from the bottom of the scrollable area.
+
+    const { scrollHeight, clientHeight, scrollTop } = output;
+    // Add a tolerance of four line heights
+    const tolerance = 4 * Number.parseFloat(getComputedStyle(output).lineHeight);
+
+    // Determine if the output is scrolled to the bottom within the tolerance
+    const isAtBottom = scrollHeight - clientHeight - scrollTop <= tolerance;
+    gAutoScrolling = isAtBottom;
+
+    const autoScrollingElement = document.getElementById("autoscrolling");
+    if (isAtBottom) {
+      autoScrollingElement.classList.add("fa-check");
+      autoScrollingElement.classList.remove("fa-xmark");
+    } else {
+      autoScrollingElement.classList.add("fa-xmark");
+      autoScrollingElement.classList.remove("fa-check");
+    }
+  },
+  { passive: true }
+);
 
 $(() => {
   getData();
 
-  // Clicking on the element with class "fa-spinner" will toggle the play/pause state
-  $("#live-feed").on("click", function () {
-    if ($("#feed-icon").hasClass("fa-play")) {
-      // Toggle button color
-      $("#feed-icon").addClass("fa-pause");
-      $("#feed-icon").removeClass("fa-fade");
-      $("#feed-icon").removeClass("fa-play");
-      $(this).addClass("btn-danger");
-      $(this).removeClass("btn-success");
-      $("#title").text("Paused");
+  const liveFeed = document.getElementById("live-feed");
+  const feedIcon = document.getElementById("feed-icon");
+  const title = document.getElementById("title");
+
+  // Clicking on the element with ID "live-feed" will toggle the play/pause state
+  liveFeed.addEventListener("click", event => {
+    // Determine current state based on whether feedIcon has the "fa-play" class
+    const isPlaying = feedIcon.classList.contains("fa-play");
+
+    if (isPlaying) {
+      feedIcon.classList.add("fa-pause");
+      feedIcon.classList.remove("fa-fade", "fa-play");
+      event.currentTarget.classList.add("btn-danger");
+      event.currentTarget.classList.remove("btn-success");
+      title.textContent = "Paused";
     } else {
-      // Toggle button color
-      $("#feed-icon").addClass("fa-play");
-      $("#feed-icon").addClass("fa-fade");
-      $("#feed-icon").removeClass("fa-pause");
-      $(this).addClass("btn-success");
-      $(this).removeClass("btn-danger");
-      $("#title").text("Live");
+      feedIcon.classList.add("fa-play", "fa-fade");
+      event.currentTarget.classList.add("btn-success");
+      event.currentTarget.classList.remove("btn-danger");
+      title.textContent = "Live";
     }
   });
 });

@@ -9,20 +9,22 @@
 ]]--
 mg.include('header.lp','r')
 ?>
+    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/chartjs-adapter-moment/chartjs-adapter-moment.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/hammer/hammer.min.js')?>"></script> <!-- Needed for chartjs-plugin-zoom -->
     <script src="<?=pihole.fileversion('vendor/chartjs-plugin-zoom/chartjs-plugin-zoom.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(mg.request_info.request_uri)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
+<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -54,12 +56,14 @@ mg.include('header.lp','r')
             </button>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li<? if string.len(hostname) == 0 then ?> class="hidden"<? end ?>>
-                        <p class="navbar-text">
-                            <span class="hidden-xs">hostname:</span>
-                            <code><?=hostname?></code>
-                        </p>
-                    </li>
+                    <? if string.len(hostname) > 0 then ?>
+                        <li>
+                            <p class="navbar-text">
+                                <span class="hidden-xs">hostname:</span>
+                                <code><?=hostname?></code>
+                            </p>
+                        </li>
+                    <? end ?>
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-bars"></i>
@@ -73,7 +77,7 @@ mg.include('header.lp','r')
                                 </p>
                             </li>
                             <!-- Menu Body -->
-                            <li class="user-body" id="advanced-info" style="display:none;"></li>
+                            <li class="user-body" id="advanced-info"></li>
                             <!-- Menu Footer -->
                             <li class="user-footer">
                                 <a class="btn-link" href="https://pi-hole.net/" rel="noopener noreferrer" target="_blank">

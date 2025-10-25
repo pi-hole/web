@@ -145,11 +145,6 @@ function populateDataTable(endpoint) {
   });
 }
 
-$(() => {
-  populateDataTable("hosts");
-  populateDataTable("cnameRecords");
-});
-
 function deleteRecord() {
   if ($(this).attr("data-type") === "hosts") delHosts($(this).attr("data-tag"));
   else delCNAME($(this).attr("data-tag"));
@@ -215,9 +210,12 @@ function delCNAME(elem) {
 }
 
 $(() => {
+  populateDataTable("hosts");
+  populateDataTable("cnameRecords");
+
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
-    const elem = $("#Hip").val() + " " + $("#Hdomain").val();
+    const elem = $("#Hip").val().trim() + " " + $("#Hdomain").val().trim();
     const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);
     $.ajax({
@@ -241,7 +239,7 @@ $(() => {
 
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
-    let elem = $("#Cdomain").val() + "," + $("#Ctarget").val();
+    let elem = $("#Cdomain").val().trim() + "," + $("#Ctarget").val().trim();
     const ttlVal = Number.parseInt($("#Cttl").val(), 10);
     // TODO Fix eslint
     // eslint-disable-next-line unicorn/prefer-number-properties

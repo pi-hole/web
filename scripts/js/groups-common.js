@@ -115,7 +115,7 @@ function delGroupItems(type, ids, table, listType = undefined) {
 
       // Clear selection after deletion
       table.rows().deselect();
-      utils.changeBulkDeleteStates(table);
+      utils.changeTableButtonStates(table);
 
       // Update number of <type> items in the sidebar
       updateFtlInfo();

@@ -26,21 +26,21 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 #v5.0.0
         with:
           persist-credentials: false
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3.28.18
+        uses: github/codeql-action/init@16140ae1a102900babc80a33c44059580f687047 #v4.30.9
         with:
           config-file: ./.github/codeql/codeql-config.yml
           languages: "javascript"
           queries: +security-and-quality
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3.28.18
+        uses: github/codeql-action/autobuild@16140ae1a102900babc80a33c44059580f687047 #v4.30.9
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3.28.18
+        uses: github/codeql-action/analyze@16140ae1a102900babc80a33c44059580f687047 #v4.30.9
         with:
           category: "/language:javascript"

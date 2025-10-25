@@ -44,7 +44,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th scope="row">Kernel:</th>
                                     <td><span id="sysinfo-kernel"></span></td>
                                 </tr>
-                                <tr>
+                                <tr title="The machine uptime. For containers, this will match the host uptime">
                                     <th scope="row">Uptime:</th>
                                     <td><span id="sysinfo-uptime"></span></td>
                                 </tr>
@@ -185,7 +185,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 </tr>
                             </tbody>
                         </table>
-<!--                    <table class="table table-striped table-bordered nowrap settings-level-expert d-none">
+<!--                    <table class="table table-striped table-bordered nowrap">
                             <tbody id="dns-cache-table">
                             </tbody>
                         </table> -->
@@ -230,7 +230,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th scope="row">Unanswered queries:</th>
                                     <td id="sysinfo-dns-replies-unanswered">&nbsp;</td>
                                 </tr>
-                                <tr class="settings-level-expert d-none">
+                                <tr>
                                     <th scope="row">Authoritative replies:</th>
                                     <td id="sysinfo-dns-replies-auth">&nbsp;</td>
                                 </tr>
@@ -260,7 +260,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled>Flush network table</button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3 settings-level-expert d-none">
+                    <div class="col-xs-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled>Flush logs (last 24 hours)</button>
                     </div>
                 </div>

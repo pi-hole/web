@@ -33,7 +33,7 @@
     "bootstrap-select": "1.13.18",
     "bootstrap-toggle": "2.2.2",
     "bstreeview": "1.2.0",
-    "chart.js": "4.4.9",
+    "chart.js": "4.5.0",
     "chartjs-adapter-moment": "1.0.1",
     "chartjs-plugin-deferred": "2.0.0",
     "chartjs-plugin-zoom": "2.2.0",
@@ -53,11 +53,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "eslint": "^9.38.0",
     "eslint-plugin-compat": "^6.0.2",
-    "postcss": "^8.5.3",
+    "globals": "^16.4.0",
+    "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "prettier": "^3.5.3",
-    "xo": "^0.60.0"
+    "prettier": "^3.6.2",
+    "xo": "^1.2.3"
   },
   "browserslist": [
     ">= 0.5%",
@@ -73,50 +75,5 @@
     "printWidth": 100,
     "singleQuote": false,
     "trailingComma": "es5"
-  },
-  "xo": {
-    "parserOptions": {
-      "sourceType": "script"
-    },
-    "envs": [
-      "browser",
-      "jquery"
-    ],
-    "extends": [
-      "plugin:compat/recommended"
-    ],
-    "prettier": true,
-    "space": 2,
-    "ignores": [
-      "**/vendor/**"
-    ],
-    "rules": {
-      "camelcase": [
-        "error",
-        {
-          "properties": "never"
-        }
-      ],
-      "capitalized-comments": "off",
-      "new-cap": [
-        "error",
-        {
-          "properties": false
-        }
-      ],
-      "no-alert": "off",
-      "no-console": "error",
-      "prefer-arrow-callback": "error",
-      "spaced-comment": "off",
-      "strict": "error",
-      "unicorn/no-anonymous-default-export": "off",
-      "unicorn/no-document-cookie": "off",
-      "unicorn/no-negated-condition": "off",
-      "unicorn/prefer-module": "off",
-      "unicorn/prefer-query-selector": "off",
-      "unicorn/prefer-string-slice": "off",
-      "unicorn/prevent-abbreviations": "off",
-      "unicorn/switch-case-braces": "off"
-    }
   }
 }
