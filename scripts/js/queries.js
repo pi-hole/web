@@ -34,6 +34,9 @@ let doDNSSEC = false;
 function getDnssecConfig() {
   $.getJSON(document.body.dataset.apiurl + "/config/dns/dnssec", data => {
     doDNSSEC = data.config.dns.dnssec;
+
+    // redraw the table to show the icons when the API call returns
+    $("#all-queries").DataTable().draw();
   });
 }
 
