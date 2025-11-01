@@ -320,7 +320,7 @@ function updateTopClientsTable(blocked) {
       if (privacyLevel > 1) {
         table.remove();
       } else {
-        clienttable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+        clienttable.append('<tr><td colspan="5" class="text-center">- No data -</td></tr>');
         overlay.hide();
       }
 
@@ -341,10 +341,16 @@ function updateTopClientsTable(blocked) {
         "</a>";
       percentage = (client.count / sum) * 100;
 
+      // Get MAC address and comment
+      const macAddress = client.hwaddr || "";
+      const comment = client.comment || "";
+
       // Add row to table
       clienttable.append(
         "<tr> " +
           utils.addTD(url) +
+          utils.addTD(utils.escapeHtml(macAddress)) +
+          utils.addTD(utils.escapeHtml(comment)) +
           utils.addTD(client.count) +
           utils.addTD(utils.colorBar(percentage, sum, style)) +
           "</tr> "
