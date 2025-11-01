@@ -306,55 +306,180 @@ function updateTopClientsTable(blocked) {
     clienttable = $("#client-frequency").find("tbody:last");
   }
 
-  $.getJSON(api, data => {
-    // Clear tables before filling them with data
-    tablecontent.remove();
-    let url;
-    let percentage;
-    const sum = blocked ? data.blocked_queries : data.total_queries;
+  // First, fetch client metadata (MAC addresses and comments)
+  // We need to fetch from both endpoints to get complete data
+  const clientsPromise = $.getJSON(document.body.dataset.apiurl + "/clients");
+  const suggestionsPromise = $.getJSON(document.body.dataset.apiurl + "/clients/_suggestions");
 
-    // When there is no data...
-    // a) remove table if there are no results (privacy mode enabled) or
-    // b) add note if there are no results (e.g. new installation)
-    if (jQuery.isEmptyObject(data.clients)) {
-      if (privacyLevel > 1) {
-        table.remove();
-      } else {
-        clienttable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
-        overlay.hide();
+  $.when(clientsPromise, suggestionsPromise).done((clientsResponse, suggestionsResponse) => {
+    const clientsData = clientsResponse[0];
+    const suggestionsData = suggestionsResponse[0];
+
+    // Create a mapping of client IPs/names to their metadata
+    const clientMetadata = {};
+
+    // First, process configured clients to get comments
+    const clientComments = {};
+    for (const clientInfo of clientsData.clients) {
+      clientComments[clientInfo.client] = clientInfo.comment || "";
+      // Also map by name if available
+      if (clientInfo.name && clientInfo.name.length > 0) {
+        clientComments[clientInfo.name] = clientInfo.comment || "";
+      }
+    }
+
+    // Then process suggestions to map IPs to MAC addresses
+    for (const client of suggestionsData.clients) {
+      let hwaddr = client.hwaddr ? client.hwaddr.toUpperCase() : "";
+
+      // Handle mock MAC addresses (IP-only devices)
+      if (hwaddr.startsWith("IP-")) {
+        hwaddr = "";
       }
 
-      return;
+      // Map all IP addresses to this MAC address
+      if (client.addresses && client.addresses.length > 0) {
+        const addresses = client.addresses.split(",");
+        for (const addr of addresses) {
+          const trimmedAddr = addr.trim();
+          clientMetadata[trimmedAddr] = {
+            hwaddr: hwaddr,
+            comment: clientComments[client.hwaddr] || clientComments[trimmedAddr] || ""
+          };
+        }
+      }
+
+      // Also map hostnames
+      if (client.names && client.names.length > 0) {
+        const names = client.names.split(",");
+        for (const name of names) {
+          const trimmedName = name.trim();
+          clientMetadata[trimmedName] = {
+            hwaddr: hwaddr,
+            comment: clientComments[client.hwaddr] || clientComments[trimmedName] || ""
+          };
+        }
+      }
+
+      // Map the MAC address itself
+      if (hwaddr) {
+        clientMetadata[hwaddr] = {
+          hwaddr: hwaddr,
+          comment: clientComments[client.hwaddr] || ""
+        };
+      }
     }
 
-    // Populate table with content
-    for (const client of data.clients) {
-      // Sanitize client
-      let clientname = client.name;
-      if (clientname.length === 0) clientname = client.ip;
-      url =
-        '<a href="queries?client_ip=' +
-        encodeURIComponent(client.ip) +
-        (blocked ? "&upstream=blocklist" : "") +
-        '">' +
-        utils.escapeHtml(clientname) +
-        "</a>";
-      percentage = (client.count / sum) * 100;
+    // Now fetch top clients statistics
+    $.getJSON(api, data => {
+      // Clear tables before filling them with data
+      tablecontent.remove();
+      let url;
+      let percentage;
+      const sum = blocked ? data.blocked_queries : data.total_queries;
 
-      // Add row to table
-      clienttable.append(
-        "<tr> " +
-          utils.addTD(url) +
-          utils.addTD(client.count) +
-          utils.addTD(utils.colorBar(percentage, sum, style)) +
-          "</tr> "
-      );
-    }
+      // When there is no data...
+      // a) remove table if there are no results (privacy mode enabled) or
+      // b) add note if there are no results (e.g. new installation)
+      if (jQuery.isEmptyObject(data.clients)) {
+        if (privacyLevel > 1) {
+          table.remove();
+        } else {
+          clienttable.append('<tr><td colspan="5" class="text-center">- No data -</td></tr>');
+          overlay.hide();
+        }
 
-    // Hide overlay
-    overlay.hide();
-  }).fail(data => {
-    apiFailure(data);
+        return;
+      }
+
+      // Populate table with content
+      for (const client of data.clients) {
+        // Sanitize client
+        let clientname = client.name;
+        if (clientname.length === 0) clientname = client.ip;
+        url =
+          '<a href="queries?client_ip=' +
+          encodeURIComponent(client.ip) +
+          (blocked ? "&upstream=blocklist" : "") +
+          '">' +
+          utils.escapeHtml(clientname) +
+          "</a>";
+        percentage = (client.count / sum) * 100;
+
+        // Get MAC address and comment from metadata
+        let macAddress = "";
+        let comment = "";
+
+        // Try to find metadata by IP first, then by name
+        const metadata = clientMetadata[client.ip] || clientMetadata[clientname] || null;
+        if (metadata) {
+          macAddress = metadata.hwaddr;
+          comment = metadata.comment;
+        }
+
+        // Add row to table
+        clienttable.append(
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD(utils.escapeHtml(macAddress)) +
+            utils.addTD(utils.escapeHtml(comment)) +
+            utils.addTD(client.count) +
+            utils.addTD(utils.colorBar(percentage, sum, style)) +
+            "</tr> "
+        );
+      }
+
+      // Hide overlay
+      overlay.hide();
+    }).fail(data => {
+      apiFailure(data);
+    });
+  }).fail(() => {
+    // If we fail to load client metadata, still try to show the table without MAC/comments
+    $.getJSON(api, data => {
+      tablecontent.remove();
+      let url;
+      let percentage;
+      const sum = blocked ? data.blocked_queries : data.total_queries;
+
+      if (jQuery.isEmptyObject(data.clients)) {
+        if (privacyLevel > 1) {
+          table.remove();
+        } else {
+          clienttable.append('<tr><td colspan="5" class="text-center">- No data -</td></tr>');
+          overlay.hide();
+        }
+
+        return;
+      }
+
+      for (const client of data.clients) {
+        let clientname = client.name;
+        if (clientname.length === 0) clientname = client.ip;
+        url =
+          '<a href="queries?client_ip=' +
+          encodeURIComponent(client.ip) +
+          (blocked ? "&upstream=blocklist" : "") +
+          '">' +
+          utils.escapeHtml(clientname) +
+          "</a>";
+        percentage = (client.count / sum) * 100;
+
+        clienttable.append(
+          "<tr> " +
+            utils.addTD(url) +
+            utils.addTD("") +  // Empty MAC
+            utils.addTD("") +  // Empty comment
+            utils.addTD(client.count) +
+            utils.addTD(utils.colorBar(percentage, sum, style)) +
+            "</tr> "
+        );
+      }
+
+      overlay.hide();
+    }).fail(data => {
+      apiFailure(data);
+    });
   });
 }
 

@@ -230,6 +230,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         <thead>
                             <tr>
                             <th>Client</th>
+                            <th>MAC Address</th>
+                            <th>Comment</th>
                             <th>Requests</th>
                             <th>Frequency</th>
                             </tr>
@@ -259,6 +261,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         <thead>
                             <tr>
                             <th>Client</th>
+                            <th>MAC Address</th>
+                            <th>Comment</th>
                             <th>Requests</th>
                             <th>Frequency</th>
                             </tr>
