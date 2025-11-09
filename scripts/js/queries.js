@@ -17,7 +17,7 @@ const endOfTime = moment().endOf("day").unix();
 let from = null;
 let until = null;
 
-const dateformat = "MMM Do YYYY, HH:mm";
+const dateformat = "LLL dd yyyy, HH:mm";
 
 let table = null;
 let cursor = null;
