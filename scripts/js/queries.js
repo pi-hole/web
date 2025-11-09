@@ -338,22 +338,6 @@ function formatInfo(data) {
       divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
   }
 
-  // Show TTL if applicable
-  let ttlInfo = "";
-  if (data.ttl > 0) {
-    ttlInfo =
-      divStart +
-      "Time-to-live (TTL):&nbsp;&nbsp;" +
-      luxon.Duration.fromObject({ seconds: data.ttl }).toHuman({
-        smallestUnit: "seconds",
-        maxUnits: 2,
-        stripZeroUnits: "all",
-      }) +
-      " (" +
-      data.ttl +
-      "s)</div>";
-  }
-
   // Show client information, show hostname only if available
   const ipInfo =
     data.client.name !== null && data.client.name.length > 0
