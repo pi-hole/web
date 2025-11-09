@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
+/* global luxon:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
 "use strict";
 
@@ -154,14 +154,14 @@ function datetime(date, html, humanReadable) {
 
   const format =
     html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
-  const timestr = moment.unix(Math.floor(date)).format(format).trim();
+  const timestr = luxon.DateTime.fromMillis(Math.floor(date)).toFormat(format).trim();
   return humanReadable
-    ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
+    ? '<span title="' + timestr + '">' + luxon.DateTime.fromMillis(Math.floor(date)).toRelative() + "</span>"
     : timestr;
 }
 
 function datetimeRelative(date) {
-  return moment.unix(Math.floor(date)).fromNow();
+  return luxon.DateTime.fromMillis(Math.floor(date)).toRelative();
 }
 
 function disableAll() {

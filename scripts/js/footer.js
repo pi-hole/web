@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, moment:false */
+/* global utils:false, luxon:false */
 
 "use strict";
 
@@ -262,9 +262,9 @@ function updateFtlInfo() {
         );
       updateQueryFrequency(intl, ftl.query_frequency);
       $("#sysinfo-pid-ftl").text(ftl.pid);
-      const startdate = moment()
-        .subtract(ftl.uptime, "milliseconds")
-        .format("dddd, MMMM Do YYYY, HH:mm:ss");
+      const startdate = luxon.DateTime.now()
+        .minus({ milliseconds: ftl.uptime })
+        .toFormat("dddd, MMMM Do YYYY, HH:mm:ss");
       $("#sysinfo-uptime-ftl").text(startdate);
 
       $(".destructive_action").prop("disabled", !ftl.allow_destructive);
@@ -371,19 +371,19 @@ function updateSystemInfo() {
       $("#sysinfo-cpu-ftl").text("(" + system.ftl["%cpu"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-ram-ftl").text("(" + system.ftl["%mem"].toFixed(1) + "% used by FTL)");
 
-      const startdate = moment()
-        .subtract(system.uptime, "seconds")
-        .format("dddd, MMMM Do YYYY, HH:mm:ss");
+      const startdate = luxon.DateTime.now()
+        .minus({ seconds: system.uptime })
+        .toFormat("dddd, MMMM Do YYYY, HH:mm:ss");
       $("#status").prop(
         "title",
         "System uptime: " +
-          moment.duration(1000 * system.uptime).humanize() +
+          luxon.Duration.fromMillis(1000 * system.uptime).toRelative() +
           " (running since " +
           startdate +
           ")"
       );
       $("#sysinfo-uptime").text(
-        moment.duration(1000 * system.uptime).humanize() + " (running since " + startdate + ")"
+        luxon.Duration.fromMillis(1000 * system.uptime).toRelative() + " (running since " + startdate + ")"
       );
       $("#sysinfo-system-overlay").hide();
 

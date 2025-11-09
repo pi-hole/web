@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, REFRESH_INTERVAL:false */
+/* global luxon:false, utils:false, REFRESH_INTERVAL:false */
 
 "use strict";
 
@@ -47,25 +47,25 @@ function initDateRangePicker() {
       timePickerIncrement: 5,
       timePicker24Hour: true,
       locale: { format: dateformat },
-      startDate: moment(from * 1000), // convert to milliseconds since epoch
-      endDate: moment(until * 1000), // convert to milliseconds since epoch
+      startDate: luxon.DateTime.fromMillis(from * 1000), // convert to milliseconds since epoch
+      endDate: luxon.DateTime.fromMillis(until * 1000), // convert to milliseconds since epoch
       ranges: {
-        "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
-        "Last Hour": [moment().subtract(1, "hours"), moment()],
-        Today: [moment().startOf("day"), moment().endOf("day")],
+        "Last 10 Minutes": [luxon.DateTime.now().minus({ minutes: 10 }), luxon.DateTime.now()],
+        "Last Hour": [luxon.DateTime.now().minus({ hours: 1 }), luxon.DateTime.now()],
+        Today: [luxon.DateTime.now().startOf("day"), luxon.DateTime.now().endOf("day")],
         Yesterday: [
-          moment().subtract(1, "days").startOf("day"),
-          moment().subtract(1, "days").endOf("day"),
+          luxon.DateTime.now().minus({ days: 1 }).startOf("day"),
+          luxon.DateTime.now().minus({ days: 1 }).endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment().endOf("day")],
-        "Last 30 Days": [moment().subtract(29, "days"), moment().endOf("day")],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last 7 Days": [luxon.DateTime.now().minus({ days: 6 }), luxon.DateTime.now().endOf("day")],
+        "Last 30 Days": [luxon.DateTime.now().minus({ days: 29 }), luxon.DateTime.now().endOf("day")],
+        "This Month": [luxon.DateTime.now().startOf("month"), luxon.DateTime.now().endOf("month")],
         "Last Month": [
-          moment().subtract(1, "month").startOf("month"),
-          moment().subtract(1, "month").endOf("month"),
+          luxon.DateTime.now().minus({ months: 1 }).startOf("month"),
+          luxon.DateTime.now().minus({ months: 1 }).endOf("month"),
         ],
-        "This Year": [moment().startOf("year"), moment().endOf("year")],
-        "All Time": [moment(beginningOfTime * 1000), moment(endOfTime * 1000)], // convert to milliseconds since epoch
+        "This Year": [luxon.DateTime.now().startOf("year"), luxon.DateTime.now().endOf("year")],
+        "All Time": [luxon.DateTime.fromMillis(beginningOfTime * 1000), luxon.DateTime.fromMillis(endOfTime * 1000)], // convert to milliseconds since epoch
       },
       opens: "center",
       showDropdowns: true,
@@ -74,8 +74,8 @@ function initDateRangePicker() {
     (startt, endt) => {
       // Update global variables
       // Convert milliseconds (JS) to seconds (API)
-      from = moment(startt).utc().valueOf() / 1000;
-      until = moment(endt).utc().valueOf() / 1000;
+      from = luxon.DateTime.fromMillis(startt).utc().valueOf() / 1000;
+      until = luxon.DateTime.fromMillis(endt).utc().valueOf() / 1000;
     }
   );
 }
@@ -338,7 +338,7 @@ function formatInfo(data) {
     ttlInfo =
       divStart +
       "Time-to-live (TTL):&nbsp;&nbsp;" +
-      moment.duration(data.ttl, "s").humanize() +
+      luxon.Duration.fromObject({ seconds: data.ttl }).toRelative() +
       " (" +
       data.ttl +
       "s)</div>";
@@ -392,7 +392,7 @@ function formatInfo(data) {
     '<div class="row">' +
     divStart +
     "Query received on:&nbsp;&nbsp;" +
-    moment.unix(data.time).format("Y-MM-DD HH:mm:ss.SSS z") +
+    luxon.DateTime.fromMillis(data.time * 1000).toFormat("yyyy-MM-dd HH:mm:ss.SSS z") +
     "</div>" +
     clientInfo +
     dnssecInfo +
@@ -551,7 +551,7 @@ $(() => {
         width: "10%",
         render(data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return luxon.DateTime.fromMillis(data * 1000).toFormat("yyyy-MM-dd [<br class='hidden-lg'>]HH:mm:ss z");
           }
 
           return data;
