@@ -14,7 +14,7 @@ const endOfTime = 2_147_483_647; // Jan 19, 2038, 03:14 in seconds
 let from = beginningOfTime;
 let until = endOfTime;
 
-const dateformat = "MMM Do YYYY, HH:mm";
+const dateformat = "LLL dd yyyy, HH:mm";
 
 let table = null;
 let cursor = null;
