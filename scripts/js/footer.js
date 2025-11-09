@@ -264,7 +264,7 @@ function updateFtlInfo() {
       $("#sysinfo-pid-ftl").text(ftl.pid);
       const startdate = luxon.DateTime.now()
         .minus({ milliseconds: ftl.uptime })
-        .toFormat("dddd, MMMM Do YYYY, HH:mm:ss");
+        .toFormat("cccc, LLLL d yyyy, TT");
       $("#sysinfo-uptime-ftl").text(startdate);
 
       $(".destructive_action").prop("disabled", !ftl.allow_destructive);
@@ -371,9 +371,7 @@ function updateSystemInfo() {
       $("#sysinfo-cpu-ftl").text("(" + system.ftl["%cpu"].toFixed(1) + "% used by FTL)");
       $("#sysinfo-ram-ftl").text("(" + system.ftl["%mem"].toFixed(1) + "% used by FTL)");
 
-      const startdate = luxon.DateTime.now()
-        .minus({ seconds: system.uptime })
-        .toFormat("dddd, MMMM Do YYYY, HH:mm:ss");
+      const startdate = luxon.DateTime.now().minus({ seconds: system.uptime }).toFormat("cccc, LLLL d yyyy, TT");
       $("#status").prop(
         "title",
         "System uptime: " +
