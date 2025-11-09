@@ -79,9 +79,10 @@ function initDateRangePicker() {
     },
     (startt, endt) => {
       // Update global variables
-      // Convert milliseconds (JS) to seconds (API)
-      from = luxon.DateTime.fromMillis(startt).utc().valueOf() / 1000;
-      until = luxon.DateTime.fromMillis(endt).utc().valueOf() / 1000;
+      // Daterange picker returns DateTime objects
+      // but the selector expects seconds since epoch as we are also receiving seconds from the API
+      from = startt.toUTC().toSeconds();
+      until = endt.toUTC().toSeconds();
     }
   );
 }
