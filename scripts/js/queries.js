@@ -12,8 +12,7 @@
 // These values are provided by the API (/info/database).
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch (set from API: info/database.earliest_timestamp)
-// endOfTime should be the end of today (local), in seconds since epoch
-const endOfTime = moment().endOf("day").unix();
+let endOfTime = null; // seconds since epoch (set to end of today)
 let from = null;
 let until = null;
 
@@ -48,46 +47,26 @@ function getDnssecConfig() {
 function getDatabaseInfo() {
   $.getJSON(document.body.dataset.apiurl + "/info/database", data => {
     // earliest_timestamp is provided in seconds since epoch
-    // We have two sources: earliest_timestamp_disk (on-disk) and earliest_timestamp (in-memory)
-    // Use whichever is smallest and non-zero
-    const diskTimestamp = Number(data.earliest_timestamp_disk);
-    const memoryTimestamp = Number(data.earliest_timestamp);
+    beginningOfTime = Number(data.earliest_timestamp_disk);
+    // Round down to nearest 5-minute segment (300 seconds)
+    beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
 
-    // Filter out zero/invalid timestamps
-    const validTimestamps = [diskTimestamp, memoryTimestamp].filter(ts => ts > 0);
-
-    // Use the smallest valid timestamp, or null if none exist
-    beginningOfTime = validTimestamps.length > 0 ? Math.min(...validTimestamps) : null;
-
-    // Round down to nearest 5-minute segment (300 seconds) if valid
-    if (beginningOfTime !== null) {
-      beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
-    }
+    // endOfTime should be the start of tomorrow in seconds since epoch
+    // We don't use 23:59:59 as the picker increments are set to 5 minutes
+    endOfTime = luxon.DateTime.now().plus({ days: 1 }).startOf("day").toSeconds();
 
     // If from/until were not provided via GET, default them
-    // Only use defaults if beginningOfTime is valid
-    if (beginningOfTime !== null) {
-      from ??= beginningOfTime;
-      until ??= endOfTime;
-    }
+    from ??= beginningOfTime;
+    until ??= endOfTime;
 
     initDateRangePicker();
   });
 }
 
 function initDateRangePicker() {
-  // If there's no valid data in the database, disable the datepicker
-  if (beginningOfTime === null) {
-    $("#querytime").prop("disabled", true);
-    $("#querytime").addClass("disabled");
-    $("#querytime-note").text("ℹ️ No data in the database");
-    return;
-  }
-
-  const minDateMoment = moment.unix(beginningOfTime);
-  const maxDateMoment = moment.unix(endOfTime);
-  const earliestDateStr = minDateMoment.format(dateformat);
-  $("#querytime-note").text(`Earliest date: ${earliestDateStr}`);
+  const now = luxon.DateTime.now();
+  const minDateDt = luxon.DateTime.fromSeconds(beginningOfTime);
+  const maxDateDt = luxon.DateTime.fromSeconds(endOfTime);
 
   $("#querytime").daterangepicker(
     {
@@ -95,35 +74,28 @@ function initDateRangePicker() {
       timePickerIncrement: 5,
       timePicker24Hour: true,
       locale: { format: dateformat },
-      startDate: luxon.DateTime.fromMillis(from * 1000), // convert to milliseconds since epoch
-      endDate: luxon.DateTime.fromMillis(until * 1000), // convert to milliseconds since epoch
+      // Use Luxon DateTime objects for the picker ranges/start/end. The
+      // daterangepicker in this build expects Luxon DateTime or ISO strings.
+      startDate: luxon.DateTime.fromSeconds(from),
+      endDate: luxon.DateTime.fromSeconds(until),
       ranges: {
-        "Last 10 Minutes": [luxon.DateTime.now().minus({ minutes: 10 }), luxon.DateTime.now()],
-        "Last Hour": [luxon.DateTime.now().minus({ hours: 1 }), luxon.DateTime.now()],
-        Today: [luxon.DateTime.now().startOf("day"), luxon.DateTime.now().endOf("day")],
-        Yesterday: [
-          luxon.DateTime.now().minus({ days: 1 }).startOf("day"),
-          luxon.DateTime.now().minus({ days: 1 }).endOf("day"),
-        ],
-        "Last 7 Days": [luxon.DateTime.now().minus({ days: 6 }), luxon.DateTime.now().endOf("day")],
-        "Last 30 Days": [
-          luxon.DateTime.now().minus({ days: 29 }),
-          luxon.DateTime.now().endOf("day"),
-        ],
-        "This Month": [luxon.DateTime.now().startOf("month"), luxon.DateTime.now().endOf("month")],
+        "Last 10 Minutes": [now.minus({ minutes: 10 }), now],
+        "Last Hour": [now.minus({ hours: 1 }), now],
+        Today: [now.startOf("day"), maxDateDt],
+        Yesterday: [now.minus({ days: 1 }).startOf("day"), now.minus({ days: 1 }).endOf("day")],
+        "Last 7 Days": [now.minus({ days: 6 }), maxDateDt],
+        "Last 30 Days": [now.minus({ days: 29 }), maxDateDt],
+        "This Month": [now.startOf("month"), now.endOf("month")],
         "Last Month": [
-          luxon.DateTime.now().minus({ months: 1 }).startOf("month"),
-          luxon.DateTime.now().minus({ months: 1 }).endOf("month"),
+          now.minus({ months: 1 }).startOf("month"),
+          now.minus({ months: 1 }).endOf("month"),
         ],
-        "This Year": [luxon.DateTime.now().startOf("year"), luxon.DateTime.now().endOf("year")],
-        "All Time": [
-          luxon.DateTime.fromMillis(beginningOfTime * 1000),
-          luxon.DateTime.fromMillis(endOfTime * 1000),
-        ], // convert to milliseconds since epoch
+        "This Year": [now.startOf("year"), now.endOf("year")],
+        "All Time": [minDateDt, maxDateDt],
       },
       // Don't allow selecting dates outside the database range
-      minDate: minDateMoment,
-      maxDate: maxDateMoment,
+      minDate: minDateDt,
+      maxDate: maxDateDt,
       opens: "center",
       showDropdowns: true,
       autoUpdateInput: true,
