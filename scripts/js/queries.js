@@ -338,7 +338,7 @@ function formatInfo(data) {
     ttlInfo =
       divStart +
       "Time-to-live (TTL):&nbsp;&nbsp;" +
-      luxon.Duration.fromObject({ seconds: data.ttl }).toRelative() +
+      luxon.Duration.fromObject({ seconds: data.ttl }).toHuman({smallestUnit: "seconds", maxUnits: 2, stripZeroUnits: "all"}) +
       " (" +
       data.ttl +
       "s)</div>";
