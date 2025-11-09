@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
+/* global luxon: false, apiFailure: false, utils: false, REFRESH_INTERVAL: false */
 
 "use strict";
 
@@ -179,7 +179,7 @@ function getData() {
 
         // Create and add new log entry to fragment
         const logEntry = document.createElement("div");
-        const logEntryDate = moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS");
+        const logEntryDate = luxon.DateTime.fromMillis(1000 * line.timestamp).toFormat("yyyy-MM-dd HH:mm:ss.SSS");
         logEntry.className = `log-entry${fadeIn ? " hidden-entry" : ""}`;
         logEntry.innerHTML = `<span class="text-muted">${logEntryDate}</span> ${line.message}`;
 
