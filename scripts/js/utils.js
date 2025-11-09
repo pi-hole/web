@@ -153,7 +153,7 @@ function datetime(date, html, humanReadable) {
   }
 
   const format =
-    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+    html === false ? "y-MM-dd TTT" : "y-MM-dd[<br class='hidden-lg'>] TTT";
   const timestr = luxon.DateTime.fromMillis(Math.floor(date)).toFormat(format).trim();
   return humanReadable
     ? '<span title="' +
