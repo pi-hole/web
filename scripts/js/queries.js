@@ -386,7 +386,7 @@ function formatInfo(data) {
     '<div class="row">' +
     divStart +
     "Query received on:&nbsp;&nbsp;" +
-    luxon.DateTime.fromMillis(data.time * 1000).toFormat("yyyy-MM-dd HH:mm:ss.SSS z") +
+    luxon.DateTime.fromMillis(data.time * 1000).toFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZ") +
     "</div>" +
     clientInfo +
     dnssecInfo +
@@ -394,7 +394,6 @@ function formatInfo(data) {
     statusInfo +
     cnameInfo +
     listInfo +
-    ttlInfo +
     replyInfo +
     dbInfo +
     "</div>"
@@ -546,7 +545,7 @@ $(() => {
         render(data, type) {
           if (type === "display") {
             return luxon.DateTime.fromMillis(data * 1000).toFormat(
-              "yyyy-MM-dd [<br class='hidden-lg'>]HH:mm:ss z"
+              "yyyy-MM-dd <br class='hidden-lg'>HH:mm:ss"
             );
           }
 
