@@ -179,7 +179,9 @@ function getData() {
 
         // Create and add new log entry to fragment
         const logEntry = document.createElement("div");
-        const logEntryDate = luxon.DateTime.fromMillis(1000 * line.timestamp).toFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        const logEntryDate = luxon.DateTime.fromMillis(1000 * line.timestamp).toFormat(
+          "yyyy-MM-dd HH:mm:ss.SSS"
+        );
         logEntry.className = `log-entry${fadeIn ? " hidden-entry" : ""}`;
         logEntry.innerHTML = `<span class="text-muted">${logEntryDate}</span> ${line.message}`;
 

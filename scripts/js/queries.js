@@ -58,14 +58,20 @@ function initDateRangePicker() {
           luxon.DateTime.now().minus({ days: 1 }).endOf("day"),
         ],
         "Last 7 Days": [luxon.DateTime.now().minus({ days: 6 }), luxon.DateTime.now().endOf("day")],
-        "Last 30 Days": [luxon.DateTime.now().minus({ days: 29 }), luxon.DateTime.now().endOf("day")],
+        "Last 30 Days": [
+          luxon.DateTime.now().minus({ days: 29 }),
+          luxon.DateTime.now().endOf("day"),
+        ],
         "This Month": [luxon.DateTime.now().startOf("month"), luxon.DateTime.now().endOf("month")],
         "Last Month": [
           luxon.DateTime.now().minus({ months: 1 }).startOf("month"),
           luxon.DateTime.now().minus({ months: 1 }).endOf("month"),
         ],
         "This Year": [luxon.DateTime.now().startOf("year"), luxon.DateTime.now().endOf("year")],
-        "All Time": [luxon.DateTime.fromMillis(beginningOfTime * 1000), luxon.DateTime.fromMillis(endOfTime * 1000)], // convert to milliseconds since epoch
+        "All Time": [
+          luxon.DateTime.fromMillis(beginningOfTime * 1000),
+          luxon.DateTime.fromMillis(endOfTime * 1000),
+        ], // convert to milliseconds since epoch
       },
       opens: "center",
       showDropdowns: true,
@@ -338,7 +344,11 @@ function formatInfo(data) {
     ttlInfo =
       divStart +
       "Time-to-live (TTL):&nbsp;&nbsp;" +
-      luxon.Duration.fromObject({ seconds: data.ttl }).toHuman({smallestUnit: "seconds", maxUnits: 2, stripZeroUnits: "all"}) +
+      luxon.Duration.fromObject({ seconds: data.ttl }).toHuman({
+        smallestUnit: "seconds",
+        maxUnits: 2,
+        stripZeroUnits: "all",
+      }) +
       " (" +
       data.ttl +
       "s)</div>";
@@ -551,7 +561,9 @@ $(() => {
         width: "10%",
         render(data, type) {
           if (type === "display") {
-            return luxon.DateTime.fromMillis(data * 1000).toFormat("yyyy-MM-dd [<br class='hidden-lg'>]HH:mm:ss z");
+            return luxon.DateTime.fromMillis(data * 1000).toFormat(
+              "yyyy-MM-dd [<br class='hidden-lg'>]HH:mm:ss z"
+            );
           }
 
           return data;

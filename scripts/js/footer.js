@@ -377,13 +377,24 @@ function updateSystemInfo() {
       $("#status").prop(
         "title",
         "System uptime: " +
-          luxon.Duration.fromMillis(1000 * system.uptime).toHuman({smallestUnit: "seconds", maxUnits: 2, stripZeroUnits: "all"}) +
+          luxon.Duration.fromMillis(1000 * system.uptime).toHuman({
+            smallestUnit: "seconds",
+            maxUnits: 2,
+            stripZeroUnits: "all",
+          }) +
           " (running since " +
           startdate +
           ")"
       );
       $("#sysinfo-uptime").text(
-        luxon.Duration.fromMillis(1000 * system.uptime).toHuman({smallestUnit: "seconds", maxUnits: 2, stripZeroUnits: "all"}) + " (running since " + startdate + ")"
+        luxon.Duration.fromMillis(1000 * system.uptime).toHuman({
+          smallestUnit: "seconds",
+          maxUnits: 2,
+          stripZeroUnits: "all",
+        }) +
+          " (running since " +
+          startdate +
+          ")"
       );
       $("#sysinfo-system-overlay").hide();
 
