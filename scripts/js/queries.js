@@ -12,7 +12,8 @@
 // These values are provided by the API (/info/database).
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch (set from API: info/database.earliest_timestamp)
-let endOfTime = null; // seconds since epoch (set to end of today)
+// endOfTime should be the end of today (local), in seconds since epoch
+const endOfTime = moment().endOf("day").unix();
 let from = null;
 let until = null;
 
@@ -47,24 +48,46 @@ function getDnssecConfig() {
 function getDatabaseInfo() {
   $.getJSON(document.body.dataset.apiurl + "/info/database", data => {
     // earliest_timestamp is provided in seconds since epoch
-    beginningOfTime = Number(data.earliest_timestamp_disk);
-    // Round down to nearest 5-minute segment (300 seconds)
-    beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
+    // We have two sources: earliest_timestamp_disk (on-disk) and earliest_timestamp (in-memory)
+    // Use whichever is smallest and non-zero
+    const diskTimestamp = Number(data.earliest_timestamp_disk);
+    const memoryTimestamp = Number(data.earliest_timestamp);
 
-    // endOfTime should be the end of today (local), in seconds since epoch
-    endOfTime = moment().endOf("day").unix();
+    // Filter out zero/invalid timestamps
+    const validTimestamps = [diskTimestamp, memoryTimestamp].filter(ts => ts > 0);
+
+    // Use the smallest valid timestamp, or null if none exist
+    beginningOfTime = validTimestamps.length > 0 ? Math.min(...validTimestamps) : null;
+
+    // Round down to nearest 5-minute segment (300 seconds) if valid
+    if (beginningOfTime !== null) {
+      beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
+    }
 
     // If from/until were not provided via GET, default them
-    from ??= beginningOfTime;
-    until ??= endOfTime;
+    // Only use defaults if beginningOfTime is valid
+    if (beginningOfTime !== null) {
+      from ??= beginningOfTime;
+      until ??= endOfTime;
+    }
 
     initDateRangePicker();
   });
 }
 
 function initDateRangePicker() {
+  // If there's no valid data in the database, disable the datepicker
+  if (beginningOfTime === null || endOfTime === null) {
+    $("#querytime").prop("disabled", true);
+    $("#querytime").addClass("disabled");
+    $("#querytime-note").text("ℹ️ No data in the database");
+    return;
+  }
+
   const minDateMoment = moment.unix(beginningOfTime);
   const maxDateMoment = moment.unix(endOfTime);
+  const earliestDateStr = minDateMoment.format(dateformat);
+  $("#querytime-note").text(`Earliest date: ${earliestDateStr}`);
 
   $("#querytime").daterangepicker(
     {
@@ -84,12 +107,12 @@ function initDateRangePicker() {
         ],
         "Last 7 Days": [moment().subtract(6, "days"), maxDateMoment],
         "Last 30 Days": [moment().subtract(29, "days"), maxDateMoment],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "This Month": [moment().startOf("month"), maxDateMoment],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
           moment().subtract(1, "month").endOf("month"),
         ],
-        "This Year": [moment().startOf("year"), moment().endOf("year")],
+        "This Year": [moment().startOf("year"), maxDateMoment],
         "All Time": [minDateMoment, maxDateMoment],
       },
       // Don't allow selecting dates outside the database range
