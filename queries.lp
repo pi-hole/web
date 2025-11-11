@@ -64,6 +64,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         </div>
                         <input type="button" class="form-control pull-right" id="querytime" value="Click to select date and time range">
                         </div>
+                        <small id="querytime-note" class="form-text text-muted" style="margin-top: 5px;"></small>
                     </div>
                     <div class="form-group col-md-6">
                         <div><input type="checkbox" id="disk"><label for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours. This option disables live update.</label></div>

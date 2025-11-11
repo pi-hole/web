@@ -47,26 +47,51 @@ function getDnssecConfig() {
 function getDatabaseInfo() {
   $.getJSON(document.body.dataset.apiurl + "/info/database", data => {
     // earliest_timestamp is provided in seconds since epoch
-    beginningOfTime = Number(data.earliest_timestamp_disk);
-    // Round down to nearest 5-minute segment (300 seconds)
-    beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
+    // We have two sources: earliest_timestamp_disk (on-disk) and earliest_timestamp (in-memory)
+    // Use whichever is smallest and non-zero
+    const diskTimestamp = Number(data.earliest_timestamp_disk);
+    const memoryTimestamp = Number(data.earliest_timestamp);
+
+    // Filter out zero/invalid timestamps
+    const validTimestamps = [diskTimestamp, memoryTimestamp].filter(ts => ts > 0);
+
+    // Use the smallest valid timestamp, or null if none exist
+    beginningOfTime = validTimestamps.length > 0 ? Math.min(...validTimestamps) : null;
+
+    // Round down to nearest 5-minute segment (300 seconds) if valid
+    if (beginningOfTime !== null) {
+      beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
+    }
 
     // endOfTime should be the start of tomorrow in seconds since epoch
     // We don't use 23:59:59 as the picker increments are set to 5 minutes
     endOfTime = luxon.DateTime.now().plus({ days: 1 }).startOf("day").toSeconds();
 
     // If from/until were not provided via GET, default them
-    from ??= beginningOfTime;
-    until ??= endOfTime;
+    // Only use defaults if beginningOfTime is valid
+    if (beginningOfTime !== null) {
+      from ??= beginningOfTime;
+      until ??= endOfTime;
+    }
 
     initDateRangePicker();
   });
 }
 
 function initDateRangePicker() {
+  // If there's no valid data in the database, disable the datepicker
+  if (beginningOfTime === null || endOfTime === null) {
+    $("#querytime").prop("disabled", true);
+    $("#querytime").addClass("disabled");
+    $("#querytime-note").text("ℹ️ No data in the database");
+    return;
+  }
+
   const now = luxon.DateTime.now();
   const minDateDt = luxon.DateTime.fromSeconds(beginningOfTime);
   const maxDateDt = luxon.DateTime.fromSeconds(endOfTime);
+  const earliestDateStr = minDateDt.toFormat(dateformat);
+  $("#querytime-note").text(`ℹ️ Earliest date: ${earliestDateStr}`);
 
   $("#querytime").daterangepicker(
     {
