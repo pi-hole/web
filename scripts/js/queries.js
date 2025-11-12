@@ -76,6 +76,7 @@ function initDateRangePicker() {
       opens: "center",
       showDropdowns: true,
       autoUpdateInput: true,
+      linkedCalendars: false,
     },
     (startt, endt) => {
       // Update global variables
