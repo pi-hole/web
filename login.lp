@@ -53,7 +53,7 @@ mg.include('scripts/lua/header.lp','r')
                     </div>
                     <div class="form-group hidden" id="totp_input">
                         <div class="input-group">
-                            <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="off">
+                            <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="one-time-code">
                             <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verification code">
                                 <i class="fa fa-clock-rotate-left"></i>
                             </div>
