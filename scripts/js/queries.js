@@ -12,7 +12,9 @@
 // These values are provided by the API (/info/database).
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch (set from API: info/database.earliest_timestamp)
-let endOfTime = null; // seconds since epoch (set to end of today)
+// endOfTime should be the start of tomorrow in seconds since epoch
+// We don't use 23:59:59 as the picker increments are set to 5 minutes
+const endOfTime = luxon.DateTime.now().plus({ days: 1 }).startOf("day").toSeconds(); // seconds since epoch (start of tomorrow)
 let from = null;
 let until = null;
 
@@ -63,10 +65,6 @@ function getDatabaseInfo() {
       beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
     }
 
-    // endOfTime should be the start of tomorrow in seconds since epoch
-    // We don't use 23:59:59 as the picker increments are set to 5 minutes
-    endOfTime = luxon.DateTime.now().plus({ days: 1 }).startOf("day").toSeconds();
-
     // If from/until were not provided via GET, default them
     // Only use defaults if beginningOfTime is valid
     if (beginningOfTime !== null) {
@@ -80,10 +78,10 @@ function getDatabaseInfo() {
 
 function initDateRangePicker() {
   // If there's no valid data in the database, disable the datepicker
-  if (beginningOfTime === null || endOfTime === null) {
+  if (beginningOfTime === null) {
     $("#querytime").prop("disabled", true);
     $("#querytime").addClass("disabled");
-    $("#querytime-note").text("ℹ️ No data in the database");
+    $("#querytime-note").text("No data in the database");
     return;
   }
 
@@ -91,14 +89,17 @@ function initDateRangePicker() {
   const minDateDt = luxon.DateTime.fromSeconds(beginningOfTime);
   const maxDateDt = luxon.DateTime.fromSeconds(endOfTime);
   const earliestDateStr = minDateDt.toFormat(dateformat);
-  $("#querytime-note").text(`ℹ️ Earliest date: ${earliestDateStr}`);
+  $("#querytime-note").text(`Earliest date: ${earliestDateStr}`);
 
   $("#querytime").daterangepicker(
     {
       timePicker: true,
       timePickerIncrement: 5,
       timePicker24Hour: true,
-      locale: { format: dateformat },
+      locale: {
+        format: dateformat,
+        firstDay: 7,
+      },
       // Use Luxon DateTime objects for the picker ranges/start/end. The
       // daterangepicker in this build expects Luxon DateTime or ISO strings.
       startDate: luxon.DateTime.fromSeconds(from),
@@ -110,12 +111,12 @@ function initDateRangePicker() {
         Yesterday: [now.minus({ days: 1 }).startOf("day"), now.minus({ days: 1 }).endOf("day")],
         "Last 7 Days": [now.minus({ days: 6 }), maxDateDt],
         "Last 30 Days": [now.minus({ days: 29 }), maxDateDt],
-        "This Month": [now.startOf("month"), now.endOf("month")],
+        "This Month": [now.startOf("month"), maxDateDt],
         "Last Month": [
           now.minus({ months: 1 }).startOf("month"),
           now.minus({ months: 1 }).endOf("month"),
         ],
-        "This Year": [now.startOf("year"), now.endOf("year")],
+        "This Year": [now.startOf("year"), maxDateDt],
         "All Time": [minDateDt, maxDateDt],
       },
       // Don't allow selecting dates outside the database range
