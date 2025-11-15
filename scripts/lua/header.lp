@@ -132,4 +132,5 @@ is_authenticated = mg.request_info.is_authenticated
     <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/luxon/luxon.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>

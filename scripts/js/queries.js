@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license.  */
 
-/* global moment:false, utils:false, REFRESH_INTERVAL:false */
+/* global luxon:false, utils:false, REFRESH_INTERVAL:false */
 
 "use strict";
 
@@ -14,7 +14,7 @@ const endOfTime = 2_147_483_647; // Jan 19, 2038, 03:14 in seconds
 let from = beginningOfTime;
 let until = endOfTime;
 
-const dateformat = "MMM Do YYYY, HH:mm";
+const dateformat = "LLL dd yyyy, HH:mm";
 
 let table = null;
 let cursor = null;
@@ -47,35 +47,43 @@ function initDateRangePicker() {
       timePickerIncrement: 5,
       timePicker24Hour: true,
       locale: { format: dateformat },
-      startDate: moment(from * 1000), // convert to milliseconds since epoch
-      endDate: moment(until * 1000), // convert to milliseconds since epoch
+      startDate: luxon.DateTime.fromMillis(from * 1000), // convert to milliseconds since epoch
+      endDate: luxon.DateTime.fromMillis(until * 1000), // convert to milliseconds since epoch
       ranges: {
-        "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
-        "Last Hour": [moment().subtract(1, "hours"), moment()],
-        Today: [moment().startOf("day"), moment().endOf("day")],
+        "Last 10 Minutes": [luxon.DateTime.now().minus({ minutes: 10 }), luxon.DateTime.now()],
+        "Last Hour": [luxon.DateTime.now().minus({ hours: 1 }), luxon.DateTime.now()],
+        Today: [luxon.DateTime.now().startOf("day"), luxon.DateTime.now().endOf("day")],
         Yesterday: [
-          moment().subtract(1, "days").startOf("day"),
-          moment().subtract(1, "days").endOf("day"),
+          luxon.DateTime.now().minus({ days: 1 }).startOf("day"),
+          luxon.DateTime.now().minus({ days: 1 }).endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment().endOf("day")],
-        "Last 30 Days": [moment().subtract(29, "days"), moment().endOf("day")],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last 7 Days": [luxon.DateTime.now().minus({ days: 6 }), luxon.DateTime.now().endOf("day")],
+        "Last 30 Days": [
+          luxon.DateTime.now().minus({ days: 29 }),
+          luxon.DateTime.now().endOf("day"),
+        ],
+        "This Month": [luxon.DateTime.now().startOf("month"), luxon.DateTime.now().endOf("month")],
         "Last Month": [
-          moment().subtract(1, "month").startOf("month"),
-          moment().subtract(1, "month").endOf("month"),
+          luxon.DateTime.now().minus({ months: 1 }).startOf("month"),
+          luxon.DateTime.now().minus({ months: 1 }).endOf("month"),
         ],
-        "This Year": [moment().startOf("year"), moment().endOf("year")],
-        "All Time": [moment(beginningOfTime * 1000), moment(endOfTime * 1000)], // convert to milliseconds since epoch
+        "This Year": [luxon.DateTime.now().startOf("year"), luxon.DateTime.now().endOf("year")],
+        "All Time": [
+          luxon.DateTime.fromMillis(beginningOfTime * 1000),
+          luxon.DateTime.fromMillis(endOfTime * 1000),
+        ], // convert to milliseconds since epoch
       },
       opens: "center",
       showDropdowns: true,
       autoUpdateInput: true,
+      linkedCalendars: false,
     },
     (startt, endt) => {
       // Update global variables
-      // Convert milliseconds (JS) to seconds (API)
-      from = moment(startt).utc().valueOf() / 1000;
-      until = moment(endt).utc().valueOf() / 1000;
+      // Daterange picker returns DateTime objects
+      // but the selector expects seconds since epoch as we are also receiving seconds from the API
+      from = startt.toUTC().toSeconds();
+      until = endt.toUTC().toSeconds();
     }
   );
 }
@@ -332,18 +340,6 @@ function formatInfo(data) {
       divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
   }
 
-  // Show TTL if applicable
-  let ttlInfo = "";
-  if (data.ttl > 0) {
-    ttlInfo =
-      divStart +
-      "Time-to-live (TTL):&nbsp;&nbsp;" +
-      moment.duration(data.ttl, "s").humanize() +
-      " (" +
-      data.ttl +
-      "s)</div>";
-  }
-
   // Show client information, show hostname only if available
   const ipInfo =
     data.client.name !== null && data.client.name.length > 0
@@ -392,7 +388,7 @@ function formatInfo(data) {
     '<div class="row">' +
     divStart +
     "Query received on:&nbsp;&nbsp;" +
-    moment.unix(data.time).format("Y-MM-DD HH:mm:ss.SSS z") +
+    luxon.DateTime.fromMillis(data.time * 1000).toFormat("yyyy-MM-dd HH:mm:ss.SSS ZZZZ") +
     "</div>" +
     clientInfo +
     dnssecInfo +
@@ -400,7 +396,6 @@ function formatInfo(data) {
     statusInfo +
     cnameInfo +
     listInfo +
-    ttlInfo +
     replyInfo +
     dbInfo +
     "</div>"
@@ -551,7 +546,9 @@ $(() => {
         width: "10%",
         render(data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return luxon.DateTime.fromMillis(data * 1000).toFormat(
+              "yyyy-MM-dd <br class='hidden-lg'>HH:mm:ss"
+            );
           }
 
           return data;
