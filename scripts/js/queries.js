@@ -9,10 +9,13 @@
 
 "use strict";
 
-const beginningOfTime = 1_262_304_000; // Jan 01 2010, 00:00 in seconds
-const endOfTime = 2_147_483_647; // Jan 19, 2038, 03:14 in seconds
-let from = beginningOfTime;
-let until = endOfTime;
+// These values are provided by the API (/info/database).
+// We initialize them as null and populate them during page init.
+let beginningOfTime = null; // seconds since epoch (set from API: info/database.earliest_timestamp)
+// endOfTime should be the end of today (local), in seconds since epoch
+const endOfTime = moment().endOf("day").unix();
+let from = null;
+let until = null;
 
 const dateformat = "MMM Do YYYY, HH:mm";
 
@@ -40,7 +43,52 @@ function getDnssecConfig() {
   });
 }
 
+// Fetch database info (earliest timestamp, sizes, ...) from the API and
+// initialize related globals.
+function getDatabaseInfo() {
+  $.getJSON(document.body.dataset.apiurl + "/info/database", data => {
+    // earliest_timestamp is provided in seconds since epoch
+    // We have two sources: earliest_timestamp_disk (on-disk) and earliest_timestamp (in-memory)
+    // Use whichever is smallest and non-zero
+    const diskTimestamp = Number(data.earliest_timestamp_disk);
+    const memoryTimestamp = Number(data.earliest_timestamp);
+
+    // Filter out zero/invalid timestamps
+    const validTimestamps = [diskTimestamp, memoryTimestamp].filter(ts => ts > 0);
+
+    // Use the smallest valid timestamp, or null if none exist
+    beginningOfTime = validTimestamps.length > 0 ? Math.min(...validTimestamps) : null;
+
+    // Round down to nearest 5-minute segment (300 seconds) if valid
+    if (beginningOfTime !== null) {
+      beginningOfTime = Math.floor(beginningOfTime / 300) * 300;
+    }
+
+    // If from/until were not provided via GET, default them
+    // Only use defaults if beginningOfTime is valid
+    if (beginningOfTime !== null) {
+      from ??= beginningOfTime;
+      until ??= endOfTime;
+    }
+
+    initDateRangePicker();
+  });
+}
+
 function initDateRangePicker() {
+  // If there's no valid data in the database, disable the datepicker
+  if (beginningOfTime === null || endOfTime === null) {
+    $("#querytime").prop("disabled", true);
+    $("#querytime").addClass("disabled");
+    $("#querytime-note").text("ℹ️ No data in the database");
+    return;
+  }
+
+  const minDateMoment = moment.unix(beginningOfTime);
+  const maxDateMoment = moment.unix(endOfTime);
+  const earliestDateStr = minDateMoment.format(dateformat);
+  $("#querytime-note").text(`Earliest date: ${earliestDateStr}`);
+
   $("#querytime").daterangepicker(
     {
       timePicker: true,
@@ -52,21 +100,24 @@ function initDateRangePicker() {
       ranges: {
         "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
         "Last Hour": [moment().subtract(1, "hours"), moment()],
-        Today: [moment().startOf("day"), moment().endOf("day")],
+        Today: [moment().startOf("day"), maxDateMoment],
         Yesterday: [
           moment().subtract(1, "days").startOf("day"),
           moment().subtract(1, "days").endOf("day"),
         ],
-        "Last 7 Days": [moment().subtract(6, "days"), moment().endOf("day")],
-        "Last 30 Days": [moment().subtract(29, "days"), moment().endOf("day")],
-        "This Month": [moment().startOf("month"), moment().endOf("month")],
+        "Last 7 Days": [moment().subtract(6, "days"), maxDateMoment],
+        "Last 30 Days": [moment().subtract(29, "days"), maxDateMoment],
+        "This Month": [moment().startOf("month"), maxDateMoment],
         "Last Month": [
           moment().subtract(1, "month").startOf("month"),
           moment().subtract(1, "month").endOf("month"),
         ],
-        "This Year": [moment().startOf("year"), moment().endOf("year")],
-        "All Time": [moment(beginningOfTime * 1000), moment(endOfTime * 1000)], // convert to milliseconds since epoch
+        "This Year": [moment().startOf("year"), maxDateMoment],
+        "All Time": [minDateMoment, maxDateMoment],
       },
+      // Don't allow selecting dates outside the database range
+      minDate: minDateMoment,
+      maxDate: maxDateMoment,
       opens: "center",
       showDropdowns: true,
       autoUpdateInput: true,
@@ -510,14 +561,15 @@ $(() => {
   const apiURL = getAPIURL(GETDict);
 
   if ("from" in GETDict) {
-    from = GETDict.from;
+    from = Number(GETDict.from);
   }
 
   if ("until" in GETDict) {
-    until = GETDict.until;
+    until = Number(GETDict.until);
   }
 
-  initDateRangePicker();
+  // Fetch earliest timestamp from API and initialize date picker / table
+  getDatabaseInfo();
 
   table = $("#all-queries").DataTable({
     ajax: {
