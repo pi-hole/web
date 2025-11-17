@@ -65,7 +65,7 @@ h2 {
 }
 
 h3,
-.box-header .box-title {
+.card-header .card-title {
   font-size: 1.2em;
 }
 
@@ -1191,26 +1191,26 @@ footer a:focus {
 }
 
 /*** Page, panels, boxes, tables, etc. ***/
-.box,
-.box-title,
-.box-footer,
+.card,
+.card-title,
+.card-footer,
 .info-box,
-.box-comment,
+.card-comment,
 .comment-text,
 .comment-text .username,
-.box-info {
+.card-info {
   color: var(--text-color);
 }
 
-.btn .box-title {
+.btn .card-title {
   color: inherit;
 }
 
-.box.box-solid .box-title {
+.card.card-solid .card-title {
   color: #fff;
 }
 
-.box {
+.card {
   margin-bottom: 1.8em;
   background: #111;
   border-color: transparent;
@@ -1218,7 +1218,7 @@ footer a:focus {
   box-shadow: none;
 }
 
-.box .overlay,
+.card .overlay,
 .overlay-wrapper .overlay {
   background: rgba(34, 34, 34, 0.8);
   border-radius: 12px;
@@ -1235,7 +1235,7 @@ footer a:focus {
   border-color: #222;
 }
 
-.box-header.with-border,
+.card-header.with-border,
 .table-responsive,
 .table-bordered,
 .table-bordered tr,
@@ -1252,7 +1252,7 @@ table.table-bordered.dataTable td {
   vertical-align: baseline;
 }
 
-.box-footer {
+.card-footer {
   border-radius: 0;
   border-top: 4px solid #000;
   padding: 10px;
@@ -1665,12 +1665,12 @@ table.dataTable {
   }
 }
 
-.box.box-warning {
+.card.card-warning {
   border-top-color: #71480a;
   position: relative;
 }
 
-.box.box-warning:after {
+.card.card-warning:after {
   content: "";
   border-top: 3px solid #f89201;
   border-radius: 12px;
@@ -1681,7 +1681,7 @@ table.dataTable {
   animation: 3s infinite warningPulse steps(30);
 }
 
-.box.box-warning div {
+.card.card-warning div {
   z-index: 2;
 }
 
@@ -2095,11 +2095,11 @@ td.highlight {
   color: #000 !important;
 }
 
-.small-box > .small-box-footer:hover {
+.small-box > .small-card-footer:hover {
   color: #000;
 }
 
-.small-box > .small-box-footer {
+.small-box > .small-card-footer {
   color: rgba(0, 0, 0, 0.5);
 }
 

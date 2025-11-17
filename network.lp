@@ -13,7 +13,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card" id="network-details">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Network overview</h3>
             </div>
             <!-- /.card-header -->

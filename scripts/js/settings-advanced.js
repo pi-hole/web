@@ -25,9 +25,9 @@ function addAllowedValues(allowed) {
   }
 }
 
-function boxIcons(value) {
+function cardIcons(value) {
   return (
-    '<span class="box-icons">' +
+    '<span class="card-icons">' +
     (value.modified
       ? '<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
       : "") +
@@ -273,21 +273,21 @@ function generateRow(topic, key, value) {
 
   // else: we have a setting we can display
   const box =
-    '<div class="box settings-box">' +
-    '<div class="box-header with-border">' +
-    '<h3 class="box-title" data-key="' +
+    '<div class="card settings-card">' +
+    '<div class="card-header">' +
+    '<h3 class="card-title" data-key="' +
     key +
     '" data-modified="' +
     (value.modified ? "true" : "false") +
     '">' +
     key +
-    boxIcons(value) +
+    cardIcons(value) +
     "</h3>" +
     "</div>" +
-    '<div class="box-body">' +
+    '<div class="card-body">' +
     utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
     "</div>" +
-    '<div class="box-footer">' +
+    '<div class="card-footer">' +
     valueDetails(key, value) +
     "</div></div> ";
 
@@ -307,7 +307,7 @@ function createDynamicConfigTabs() {
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
             <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
             <div class="row" id="advanced-content-${topic.name}-body">
-              <div class="col-xs-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
+              <div class="col-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
             </div>
           </div>
         `);
@@ -382,7 +382,7 @@ function applyOnlyChanged() {
     );
 
     // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
-    $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
+    $(".card-title[data-key]").not("[data-modified='true']").closest("\.card").hide();
   } else {
     // Show the tabs menu and activate only the first button (deactivate other buttons)
     $("#advanced-settings-menu").show();
@@ -393,7 +393,7 @@ function applyOnlyChanged() {
     $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("in active");
 
     // Show all boxes with data-key attribute
-    $(".box-title[data-key]").closest(".box").show();
+    $(".card-title[data-key]").closest("\.card").show();
   }
 }
 

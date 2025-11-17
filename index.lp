@@ -81,7 +81,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card" id="queries-over-time">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Total queries</h3>
                 <button class="btn btn-sm btn-default float-end zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
                 <span class="float-end zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
@@ -101,7 +101,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card" id="clients">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Client activity</h3>
                 <button class="btn btn-sm btn-default float-end zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
                 <span class="float-end zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
@@ -122,7 +122,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-6">
         <div class="card" id="query-types-pie">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Query Types</h3>
             </div>
             <div class="card-body">
@@ -139,7 +139,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
     <div class="col-md-6">
         <div class="card" id="forward-destinations-pie">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Upstream servers</h3>
             </div>
             <div class="card-body">
@@ -160,7 +160,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="<?=tablelayout?>">
         <div class="card" id="domain-frequency">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Top Permitted Domains</h3>
             </div>
             <!-- /.card-header -->
@@ -189,7 +189,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <!-- /.col -->
     <div class="<?=tablelayout?>">
         <div class="card" id="ad-frequency">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Top Blocked Domains</h3>
             </div>
             <!-- /.card-header -->
@@ -220,7 +220,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <!-- /.col -->
     <div class="<?=tablelayout?>">
         <div class="card" id="client-frequency">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Top Clients (total)</h3>
             </div>
             <!-- /.card-header -->
@@ -249,7 +249,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <!-- /.col -->
     <div class="<?=tablelayout?>">
         <div class="card" id="client-frequency-blocked">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Top Clients (blocked only)</h3>
             </div>
             <!-- /.card-header -->

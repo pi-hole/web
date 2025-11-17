@@ -20,7 +20,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="card" id="add-group">
             <!-- /.card-header -->
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     Add a new group
                 </h3>
@@ -52,7 +52,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card" id="groups-list">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     List of groups
                 </h3>

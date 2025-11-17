@@ -16,7 +16,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 <div class="row">
     <div class="col-md-12 col-lg-6">
         <div class="card">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
             </div>
             <div class="card-body">
@@ -57,7 +57,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
     <div class="col-md-12 col-lg-6">
         <div class="card">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records</h3>
             </div>
             <div class="card-body">

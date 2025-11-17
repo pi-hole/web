@@ -16,7 +16,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 <div class="row">
     <div class="col-md-6">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
             </div>
             <div class="card-body">
@@ -51,7 +51,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 
     <div class="col-md-6 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
             </div>
             <div class="card-body">
@@ -84,7 +84,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 <div class="row">
     <div class="col-md-12 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
             </div>
             <div class="card-body">
@@ -112,7 +112,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     <!-- TODO: Why is this commented out?
     <div class="col-md-6">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Query Log</h3>
             </div>
             <div class="card-body">
@@ -136,7 +136,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 
     <div class="col-md-12 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Currently active sessions</h3>
             </div>
             <div class="card-body">

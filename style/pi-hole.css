@@ -243,13 +243,13 @@ td.lookatme {
   vertical-align: text-top;
 }
 
-#query-types-pie .box-body,
-#forward-destinations-pie .box-body {
+#query-types-pie .card-body,
+#forward-destinations-pie .card-body {
   display: flex;
 }
 
-#query-types-pie .box-body,
-#forward-destinations-pie .box-body,
+#query-types-pie .card-body,
+#forward-destinations-pie .card-body,
 #cache-metrics-chart {
   display: flex;
 }
@@ -465,7 +465,7 @@ tfoot.add-new-item > tr > th {
   margin-right: 0;
 }
 
-.box {
+.card {
   border-radius: 8px;
   overflow: hidden;
 }
@@ -476,7 +476,7 @@ tfoot.add-new-item > tr > th {
   overflow: hidden;
 }
 
-.small-box-header {
+.small-card-header {
   padding: 4px 8px;
 }
 
@@ -484,7 +484,7 @@ tfoot.add-new-item > tr > th {
   transition-duration: 0.5s;
 }
 
-.small-box-footer span {
+.small-card-footer span {
   transition-duration: 0s;
 }
 
@@ -496,19 +496,19 @@ tfoot.add-new-item > tr > th {
   padding: 10px 10px 0;
 }
 
-.small-box > .small-box-footer {
+.small-box > .small-card-footer {
   color: rgba(255, 255, 255, 0.75);
   transition: all 0.5s;
 }
 
 @media screen and (min-width: 768px) {
-  .small-box > .small-box-footer {
+  .small-box > .small-card-footer {
     text-align: right;
     padding: 3px 7px;
   }
 }
 
-.small-box-footer i {
+.small-card-footer i {
   margin: 0 5px;
   font-size: 13px;
 }
@@ -784,12 +784,12 @@ li:not(.menu-open) .treeview-menu .warning-count {
 }
 
 /* Domains table: filter by type */
-#domains-list .box-header {
+#domains-list .card-header {
   display: flex;
   flex-wrap: wrap;
   padding: 5px 10px;
 }
-#domains-list .box-header h3 {
+#domains-list .card-header h3 {
   flex: 1 1 auto;
   margin: 5px 0;
   width: auto;
@@ -1121,7 +1121,7 @@ table.dataTable tbody > tr > .selected {
 }
 @media screen and (max-width: 546px) {
   .pre-scrollable {
-    /* reduce max-height even more (box-header text wraps, increasing the height) */
+    /* reduce max-height even more (card-header text wraps, increasing the height) */
     max-height: max(195px, 100dvh - 240px);
   }
 }
@@ -1179,19 +1179,19 @@ table.dataTable tbody > tr > .selected {
   flex-wrap: wrap;
   gap: var(--gap);
 }
-.settings-container > .box {
+.settings-container > .card {
   margin: 0;
   width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
   border: none;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
 }
-.settings-box .control-label small {
+.settings-card .control-label small {
   font-weight: normal;
   display: block;
 }
 
 /* Settings containers without modified items and with hidden boxes will display this text */
-.settings-container:not(:has(h3[data-modified="true"])):has(.box[style*="display: none;"])::before {
+.settings-container:not(:has(h3[data-modified="true"])):has(.card[style*="display: none;"])::before {
   content: "No modified settings to display";
   opacity: 0.7;
   font-style: italic;
@@ -1565,11 +1565,11 @@ table.dataTable tbody > tr > .selected {
   }
 }
 
-.box-icons {
+.card-icons {
   margin: 0 5px;
 }
 
-.box-icons i {
+.card-icons i {
   margin: 0 4px;
 }
 

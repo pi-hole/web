@@ -12,7 +12,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title"><code>tail -F <span id="filename">...</span></code></h3>
                 <div class="float-end">
                     Autoscroll:&nbsp;<i class="fa fa-fw fa-check" id="autoscrolling"></i>&nbsp;&nbsp;

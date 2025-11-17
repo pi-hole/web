@@ -891,8 +891,8 @@ $(() => {
         maintainAspectRatio: true,
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color"),
-            hoverBorderColor: $(".box").css("background-color"),
+            borderColor: $("\.card").css("background-color"),
+            hoverBorderColor: $("\.card").css("background-color"),
             hoverOffset: 10,
           },
         },
@@ -942,8 +942,8 @@ $(() => {
         maintainAspectRatio: true,
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color"),
-            hoverBorderColor: $(".box").css("background-color"),
+            borderColor: $("\.card").css("background-color"),
+            hoverBorderColor: $("\.card").css("background-color"),
             hoverOffset: 10,
           },
         },

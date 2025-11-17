@@ -652,7 +652,7 @@ function toggleBoxCollapse(box, expand = true) {
   if (!box) return;
 
   const icon = box.querySelector(".btn-box-tool > i");
-  const body = box.querySelector(".box-body");
+  const body = box.querySelector(".card-body");
 
   if (expand) {
     box.classList.remove("collapsed-box");

@@ -67,7 +67,7 @@ mg.include('scripts/lua/header.lp','r')
                 <div class="row">
                     <div class="col-12">
                         <div class="card "box-danger hidden" id="invalid2fa-box">
-                            <div class="card-header with-border pointer no-user-select" data-widget="collapse">
+                            <div class="card-header pointer no-user-select" data-widget="collapse">
                                 <h3 class="card-title">Wrong 2FA token</h3>
                                 <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
@@ -87,7 +87,7 @@ mg.include('scripts/lua/header.lp','r')
                 <div class="row">
                     <div class="col-12">
                         <div class="card "box-info collapsed-box" id="forgot-pw-box">
-                            <div class="card-header with-border pointer no-user-select" data-widget="collapse">
+                            <div class="card-header pointer no-user-select" data-widget="collapse">
                                 <h3 class="card-title">Forgot password?</h3>
                                 <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">

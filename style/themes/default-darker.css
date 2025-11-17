@@ -2915,13 +2915,13 @@ a:focus {
 .small-box {
   box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px;
 }
-.small-box > .small-box-footer {
+.small-box > .small-card-footer {
   color: rgba(232, 230, 227, 0.8);
   background-color: rgba(0, 0, 0, 0.1);
   background-image: none;
   text-decoration-color: currentcolor;
 }
-.small-box > .small-box-footer:hover {
+.small-box > .small-card-footer:hover {
   color: rgb(232, 230, 227);
   background-color: rgba(0, 0, 0, 0.15);
   background-image: none;
@@ -2936,160 +2936,160 @@ a:focus {
   text-decoration-color: currentcolor;
   color: rgb(228, 226, 222);
 }
-.box {
+.card {
   background-color: rgb(24, 26, 27);
   background-image: none;
   border-top-color: rgb(59, 64, 66);
   box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px;
 }
-.box.box-primary {
+.card.card-primary {
   border-top-color: rgb(44, 103, 137);
 }
-.box.box-info {
+.card.card-info {
   border-top-color: rgb(0, 147, 183);
 }
-.box.box-danger {
+.card.card-danger {
   border-top-color: rgb(146, 38, 25);
 }
-.box.box-warning {
+.card.card-warning {
   border-top-color: rgb(168, 106, 9);
 }
-.box.box-success {
+.card.card-success {
   border-top-color: rgb(0, 205, 111);
 }
-.box.box-default {
+.card.card-default {
   border-top-color: rgb(59, 64, 66);
 }
-.box .nav-stacked > li {
+.card .nav-stacked > li {
   border-bottom-color: rgb(51, 55, 57);
 }
-.box .nav-stacked > li:last-of-type {
+.card .nav-stacked > li:last-of-type {
   border-bottom-color: currentcolor;
 }
-.box .border-right {
+.card .border-right {
   border-right-color: rgb(51, 55, 57);
 }
-.box .border-left {
+.card .border-left {
   border-left-color: rgb(51, 55, 57);
 }
-.box.box-solid {
+.card.card-solid {
   border-top-color: currentcolor;
 }
-.box.box-solid > .box-header .btn.btn-default {
+.card.card-solid > .card-header .btn.btn-default {
   background-color: transparent;
   background-image: none;
 }
-.box.box-solid > .box-header .btn:hover,
-.box.box-solid > .box-header a:hover {
+.card.card-solid > .card-header .btn:hover,
+.card.card-solid > .card-header a:hover {
   background-color: rgba(0, 0, 0, 0.1);
   background-image: none;
 }
-.box.box-solid.box-default {
+.card.card-solid.card-default {
   border-color: rgb(59, 64, 66);
 }
-.box.box-solid.box-default > .box-header {
+.card.card-solid.card-default > .card-header {
   color: rgb(189, 183, 175);
   background-image: none;
   background-color: rgb(46, 50, 52);
 }
-.box.box-solid.box-default > .box-header a,
-.box.box-solid.box-default > .box-header .btn {
+.card.card-solid.card-default > .card-header a,
+.card.card-solid.card-default > .card-header .btn {
   color: rgb(189, 183, 175);
 }
-.box.box-solid.box-primary {
+.card.card-solid.card-primary {
   border-color: rgb(44, 103, 137);
 }
-.box.box-solid.box-primary > .box-header {
+.card.card-solid.card-primary > .card-header {
   color: rgb(232, 230, 227);
   background-image: none;
   background-color: rgb(48, 113, 150);
 }
-.box.box-solid.box-primary > .box-header a,
-.box.box-solid.box-primary > .box-header .btn {
+.card.card-solid.card-primary > .card-header a,
+.card.card-solid.card-primary > .card-header .btn {
   color: rgb(232, 230, 227);
 }
-.box.box-solid.box-info {
+.card.card-solid.card-info {
   border-color: rgb(0, 147, 183);
 }
-.box.box-solid.box-info > .box-header {
+.card.card-solid.card-info > .card-header {
   color: rgb(232, 230, 227);
   background-image: none;
   background-color: rgb(0, 154, 191);
 }
-.box.box-solid.box-info > .box-header a,
-.box.box-solid.box-info > .box-header .btn {
+.card.card-solid.card-info > .card-header a,
+.card.card-solid.card-info > .card-header .btn {
   color: rgb(232, 230, 227);
 }
-.box.box-solid.box-danger {
+.card.card-solid.card-danger {
   border-color: rgb(146, 38, 25);
 }
-.box.box-solid.box-danger > .box-header {
+.card.card-solid.card-danger > .card-header {
   color: rgb(232, 230, 227);
   background-image: none;
   background-color: rgb(162, 43, 28);
 }
-.box.box-solid.box-danger > .box-header a,
-.box.box-solid.box-danger > .box-header .btn {
+.card.card-solid.card-danger > .card-header a,
+.card.card-solid.card-danger > .card-header .btn {
   color: rgb(232, 230, 227);
 }
-.box.box-solid.box-warning {
+.card.card-solid.card-warning {
   border-color: rgb(168, 106, 9);
 }
-.box.box-solid.box-warning > .box-header {
+.card.card-solid.card-warning > .card-header {
   color: rgb(232, 230, 227);
   background-image: none;
   background-color: rgb(191, 121, 10);
 }
-.box.box-solid.box-warning > .box-header a,
-.box.box-solid.box-warning > .box-header .btn {
+.card.card-solid.card-warning > .card-header a,
+.card.card-solid.card-warning > .card-header .btn {
   color: rgb(232, 230, 227);
 }
-.box.box-solid.box-success {
+.card.card-solid.card-success {
   border-color: rgb(0, 205, 111);
 }
-.box.box-solid.box-success > .box-header {
+.card.card-solid.card-success > .card-header {
   color: rgb(232, 230, 227);
   background-image: none;
   background-color: rgb(0, 133, 72);
 }
-.box.box-solid.box-success > .box-header a,
-.box.box-solid.box-success > .box-header .btn {
+.card.card-solid.card-success > .card-header a,
+.card.card-solid.card-success > .card-header .btn {
   color: rgb(232, 230, 227);
 }
-.box.box-solid > .box-header > .box-tools .btn {
+.card.card-solid > .card-header > .card-tools .btn {
   border-color: currentcolor;
   box-shadow: none;
 }
-.box.box-solid[class*="bg"] > .box-header {
+.card.card-solid[class*="bg"] > .card-header {
   color: rgb(232, 230, 227);
 }
-.box .knob-label {
+.card .knob-label {
   color: rgb(200, 195, 188);
 }
-.box .overlay,
+.card .overlay,
 .overlay-wrapper .overlay {
   background-color: rgba(24, 26, 27, 0.7);
   background-image: none;
 }
-.box .overlay > .fa,
+.card .overlay > .fa,
 .overlay-wrapper .overlay > .fa {
   color: rgb(232, 230, 227);
 }
-.box .overlay.dark,
+.card .overlay.dark,
 .overlay-wrapper .overlay.dark {
   background-color: rgba(0, 0, 0, 0.5);
   background-image: none;
 }
-.box-header {
+.card-header {
   color: rgb(189, 183, 175);
 }
-.box-header.with-border {
+.card-header.with-border {
   border-bottom-color: rgb(51, 55, 57);
 }
-.collapsed-box .box-header.with-border {
+.collapsed-box .card-header.with-border {
   border-bottom-color: currentcolor;
 }
-.box-header > .box-tools .dropdown-menu > li > a {
+.card-header > .card-tools .dropdown-menu > li > a {
   color: rgb(189, 183, 175) !important;
 }
 .btn-box-tool {
@@ -3104,24 +3104,24 @@ a:focus {
 .btn-box-tool.btn:active {
   box-shadow: none;
 }
-.box-footer {
+.card-footer {
   border-top-color: rgb(51, 55, 57);
   background-color: rgb(24, 26, 27);
 }
-.box-comments {
+.card-comments {
   background-color: rgb(29, 31, 32);
   background-image: none;
 }
-.box-comments .box-comment {
+.card-comments .card-comment {
   border-bottom-color: rgb(53, 57, 59);
 }
-.box-comments .box-comment:last-of-type {
+.card-comments .card-comment:last-of-type {
   border-bottom-color: currentcolor;
 }
-.box-comments .comment-text {
+.card-comments .comment-text {
   color: rgb(178, 172, 162);
 }
-.box-comments .username {
+.card-comments .username {
   color: rgb(189, 183, 175);
 }
 .todo-list {
@@ -3613,7 +3613,7 @@ a:focus {
 .modal-danger .modal-footer {
   border-color: rgb(160, 42, 27);
 }
-.box-widget {
+.card-widget {
   border-color: currentcolor;
 }
 .widget-user .widget-user-username {
@@ -3680,15 +3680,15 @@ a:focus {
 .register-page {
   background-color: rgb(46, 50, 52);
 }
-.login-box-body,
-.register-box-body {
+.login-card-body,
+.register-card-body {
   background-color: rgb(24, 26, 27);
   background-image: none;
   border-top-color: currentcolor;
   color: rgb(168, 160, 149);
 }
-.login-box-body .form-control-feedback,
-.register-box-body .form-control-feedback {
+.login-card-body .form-control-feedback,
+.register-card-body .form-control-feedback {
   color: rgb(157, 148, 136);
 }
 input[type="password"]::-webkit-caps-lock-indicator {
@@ -4883,20 +4883,20 @@ fieldset[disabled] .btn-yahoo.focus {
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
   color: rgb(200, 195, 188);
 }
-.box .datepicker-inline td:hover,
-.box .datepicker-inline .datepicker-days td:hover,
-.box .datepicker-inline > table td:hover,
-.box .datepicker-inline .datepicker-days > table td:hover {
+.card .datepicker-inline td:hover,
+.card .datepicker-inline .datepicker-days td:hover,
+.card .datepicker-inline > table td:hover,
+.card .datepicker-inline .datepicker-days > table td:hover {
   background-color: rgba(24, 26, 27, 0.3);
 }
-.box .datepicker-inline td.day.old,
-.box .datepicker-inline .datepicker-days td.day.old,
-.box .datepicker-inline > table td.day.old,
-.box .datepicker-inline .datepicker-days > table td.day.old,
-.box .datepicker-inline td.day.new,
-.box .datepicker-inline .datepicker-days td.day.new,
-.box .datepicker-inline > table td.day.new,
-.box .datepicker-inline .datepicker-days > table td.day.new {
+.card .datepicker-inline td.day.old,
+.card .datepicker-inline .datepicker-days td.day.old,
+.card .datepicker-inline > table td.day.old,
+.card .datepicker-inline .datepicker-days > table td.day.old,
+.card .datepicker-inline td.day.new,
+.card .datepicker-inline .datepicker-days td.day.new,
+.card .datepicker-inline > table td.day.new,
+.card .datepicker-inline .datepicker-days > table td.day.new {
   color: rgb(157, 148, 136);
 }
 .bg-red,

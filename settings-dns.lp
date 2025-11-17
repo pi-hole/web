@@ -16,7 +16,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 <div class="row">
     <div class="col-lg-6">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h1 class="card-title" data-configkeys="dns.upstreams" id="lblDNSupstreams">Upstream DNS Servers</h1>
             </div>
             <div class="card-body">
@@ -37,7 +37,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     </div>
                     <div class="col-sm-12">
                         <div class="card "collapsed-box" id="custom-servers-box">
-                            <div class="card-header with-border pointer" data-widget="collapse">
+                            <div class="card-header pointer" data-widget="collapse">
                                 <h3 class="card-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
                                 <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
@@ -58,7 +58,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
         <div class="card "box-warning settings-level-expert d-none">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dns.domain.name dns.expandHosts">DNS domain settings</h3>
             </div>
             <div class="card-body">
@@ -82,7 +82,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
         <div class="card "box-warning settings-level-expert d-none">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
             </div>
             <div class="card-body">
@@ -106,7 +106,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
     <div class="col-lg-6 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h1 class="card-title" data-configkeys="dns.listeningMode">Interface settings</h1>
             </div>
             <div class="card-body">
@@ -148,7 +148,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
         </div>
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
             </div>
             <div class="card-body">
@@ -196,7 +196,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
     <div class="col-lg-12">
         <div class="card "box-warning settings-level-expert d-none">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>
             <div class="card-body">

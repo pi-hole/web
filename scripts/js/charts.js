@@ -188,11 +188,11 @@ function getOrCreateTooltipElement(canvasId, options, context) {
     font: ${options.bodyFont.string};
     font-family: ${options.bodyFont.family};
     font-size: ${options.bodyFont.size / fontZoom}px;
-    font-style: ${options.bodyFont.style};
+  font-style: ${options.bodyFont.style};
   `;
 
-  // Append Tooltip next to canvas-containing box
-  tooltipEl.ancestor = context.chart.canvas.closest(".box[id]").parentNode;
+  // Append Tooltip next to canvas-containing card
+  tooltipEl.ancestor = context.chart.canvas.closest(".card[id]").parentNode;
   tooltipEl.ancestor.append(tooltipEl);
 
   return tooltipEl;

@@ -18,7 +18,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         <div class="row">
             <div class="col-md-12">
                 <div class="card "box-warning">
-                    <div class="card-header with-border">
+                    <div class="card-header">
                         <h3 class="card-title" data-configkeys="dns.queryLogging">Query Logging</h3>
                     </div>
                     <div class="card-body">
@@ -36,7 +36,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
             <div class="col-md-12 settings-level-expert d-none">
                 <div class="card "box-warning">
-                    <div class="card-header with-border">
+                    <div class="card-header">
                         <h3 class="card-title" data-configkeys="database.DBimport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
                     </div>
                     <div class="card-body">
@@ -66,7 +66,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
     <div class="col-md-6 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
             </div>
             <div class="card-body">

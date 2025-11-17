@@ -46,7 +46,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card "box-info collapsed-box box-solid">
-            <div class="card-header with-border pointer no-user-select p-4" data-widget="collapse">
+            <div class="card-header pointer no-user-select p-4" data-widget="collapse">
                 <h3 class="card-title">Advanced filtering</h3>
                 <div class="box-tools float-end">
                     <button type="button" class="btn btn-box-tool">
@@ -151,7 +151,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card" id="recent-queries">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Recent Queries</h3>
                 <div class="float-end align-click-options">
                     <span><input type="checkbox" id="live"><label for="live">Live update</label></span>

@@ -20,7 +20,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     <div class="col-md-12">
         <div class="card" id="add-client">
             <!-- /.card-header -->
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     Add a new client
                 </h3>
@@ -68,7 +68,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card" id="clients-list">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">
                     List of configured clients
                 </h3>

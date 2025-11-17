@@ -17,7 +17,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     <!-- DHCP Settings Box -->
     <div class="col-md-6">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dhcp.active dhcp.start dhcp.end dhcp.router dhcp.ipv6">DHCP Settings</h3>
             </div>
             <div class="card-body">
@@ -88,7 +88,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
     <div class="col-md-6 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
             </div>
             <div class="card-body">
@@ -139,7 +139,7 @@ mg.include('scripts/lua/settings_header.lp','r')
 <div class="row">
     <div class="col-md-12">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title">Currently active DHCP leases</h3>
             </div>
             <div class="card-body">
@@ -167,7 +167,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
     <div class="col-md-12 settings-level-expert d-none">
         <div class="card "box-warning">
-            <div class="card-header with-border">
+            <div class="card-header">
                 <h3 class="card-title" data-configkeys="dhcp.hosts">Static DHCP configuration</h3>
             </div>
             <div class="card-body">
@@ -189,7 +189,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     </div>
                     <div class="col-12">
                         <div class="card "box-success collapsed-box">
-                            <div class="card-header with-border pointer no-user-select" data-widget="collapse">
+                            <div class="card-header pointer no-user-select" data-widget="collapse">
                                 <h3 class="card-title">Advanced description</h3>
                                 <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
