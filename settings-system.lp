@@ -15,11 +15,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">System Information</h3>
+        <div class="card">
+            <div class="card-header with-border">
+                <h3 class="card-title">System Information</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
@@ -74,11 +74,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <i class="fa fa-sync fa-spin"></i>
             </div>
         </div>
-        <div class="box settings-level-expert d-none">
-            <div class="box-header with-border">
-                <h3 class="box-title">DHCP server metrics</h3>
+        <div class="card "settings-level-expert d-none">
+            <div class="card-header with-border">
+                <h3 class="card-title">DHCP server metrics</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
@@ -150,11 +150,11 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-6">
-        <div class="box settings-level-expert d-none" id="cache-metrics">
-            <div class="box-header with-border">
-                <h3 class="box-title">DNS cache metrics</h3>
+        <div class="card "settings-level-expert d-none" id="cache-metrics">
+            <div class="card-header with-border">
+                <h3 class="card-title">DNS cache metrics</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
@@ -205,11 +205,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <i class="fa fa-sync fa-spin"></i>
             </div>
         </div>
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">DNS reply metrics</h3>
+        <div class="card">
+            <div class="card-header with-border">
+                <h3 class="card-title">DNS reply metrics</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <table class="table table-striped table-bordered nowrap">
@@ -245,22 +245,22 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-12 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Actions</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">Actions</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-xs-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3">
                         <button type="button" id="loggingButton" class="btn btn-block button-pad btn-primary"><i class="fa fa-spinner fa-pulse"></i></button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-warning confirm-restartdns btn-block button-pad destructive_action" disabled>Restart DNS resolver</button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled>Flush network table</button>
                     </div>
-                    <div class="col-xs-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3">
                         <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled>Flush logs (last 24 hours)</button>
                     </div>
                 </div>

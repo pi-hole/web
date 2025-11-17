@@ -18,15 +18,15 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <!-- Domain Input -->
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="add-client">
-            <!-- /.box-header -->
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card" id="add-client">
+            <!-- /.card-header -->
+            <div class="card-header with-border">
+                <h3 class="card-title">
                     Add a new client
                 </h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="select">Known clients:</label>
@@ -59,22 +59,22 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                 </div>
             </div>
-            <div class="box-footer clearfix">
-                <button type="button" id="btnAdd" class="btn btn-primary pull-right">Add</button>
+            <div class="card-footer clearfix">
+                <button type="button" id="btnAdd" class="btn btn-primary float-end">Add</button>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="clients-list">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card" id="clients-list">
+            <div class="card-header with-border">
+                <h3 class="card-title">
                     List of configured clients
                 </h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <table id="clientsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -89,7 +89,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </table>
                 <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>

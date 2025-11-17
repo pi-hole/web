@@ -15,8 +15,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box">
-            <div class="box-header">
+        <div class="card">
+            <div class="card-header">
                 <div id="domain-search-block" class="input-group">
                     <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                     <span class="input-group-btn">
@@ -24,7 +24,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </span>
                 </div>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div>

@@ -15,14 +15,14 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Export your Pi-hole's configuration</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">Export your Pi-hole's configuration</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <p><strong>Warning:</strong><br>This archive contains sensitive information about your Pi-hole installation, e.g. your 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
                 <p class='text-danger' id="encryption-warning" style="display: none;"><strong>Warning:</strong><br>You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p>
-                <div class="pull-right">
+                <div class="float-end">
                     <a class="btn btn-app btn-success" id="GETTeleporter" target="_blank">
                         <i class="fa fa-save fa-xl"></i><br>Export
                     </a>
@@ -31,11 +31,11 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Import previously exported configuration</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">Import previously exported configuration</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="form-group">
                     <label for="file">File input</label>
                     <input type="file" name="file" id="file" accept="application/gzip,application/zip">
@@ -51,7 +51,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div><input type="checkbox" id="import.gravity.domainlist" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.domainlist"><strong>Domains/Regexes</strong></label></div>
                     <div><input type="checkbox" id="import.gravity.client" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.client"><strong>Clients</strong></label></div>
                 </div>
-                <div class="pull-right">
+                <div class="float-end">
                     <a class="btn btn-app btn-success" id="submit-import">
                         <i class="fa fa-upload fa-xl"></i><br>Import
                     </a>
@@ -95,7 +95,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div id="modal-import-info-message"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default float-start" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

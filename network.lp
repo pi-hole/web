@@ -12,12 +12,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="network-details">
-            <div class="box-header with-border">
-                <h3 class="box-title">Network overview</h3>
+        <div class="card" id="network-details">
+            <div class="card-header with-border">
+                <h3 class="card-title">Network overview</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <table id="network-entries" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -57,7 +57,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </tr>
                 </table>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>

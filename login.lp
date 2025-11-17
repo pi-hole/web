@@ -11,7 +11,7 @@ mg.include('scripts/lua/header.lp','r')
 ?>
 </head>
 <body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
-<div class="box login-box" id="login-box">
+<div class="card "login-box" id="login-box">
     <section style="padding: 15px;">
         <div class="login-logo">
             <div class="text-center">
@@ -28,8 +28,8 @@ mg.include('scripts/lua/header.lp','r')
                     <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
                 </div>
                 <div class="text-center form-group has-warning" id="insecure-box" style="display: none;">
-                    <div class="box box-warning">
-                        <div class="box-body">
+                    <div class="card "box-warning">
+                        <div class="card-body">
                             Consider upgrading to <a href="#" id="https-link">HTTPS</a> (end-to-end encryption)
                         </div>
                     </div>
@@ -65,17 +65,17 @@ mg.include('scripts/lua/header.lp','r')
                 </form>
                 <br>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box box-danger hidden" id="invalid2fa-box">
-                            <div class="box-header with-border pointer no-user-select" data-widget="collapse">
-                                <h3 class="box-title">Wrong 2FA token</h3>
-                                <div class="box-tools pull-right">
+                    <div class="col-12">
+                        <div class="card "box-danger hidden" id="invalid2fa-box">
+                            <div class="card-header with-border pointer no-user-select" data-widget="collapse">
+                                <h3 class="card-title">Wrong 2FA token</h3>
+                                <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-minus"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body">
+                            <div class="card-body">
                                 <p>Your Pi-hole has two-factor authentication enabled. You have to
                                     enter a valid <a href="https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm" rel="noopener noreferrer" target="_blank">TOTP</a>
                                     token in addition to your password. You see this message because your
@@ -85,17 +85,17 @@ mg.include('scripts/lua/header.lp','r')
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <div class="box box-info collapsed-box" id="forgot-pw-box">
-                            <div class="box-header with-border pointer no-user-select" data-widget="collapse">
-                                <h3 class="box-title">Forgot password?</h3>
-                                <div class="box-tools pull-right">
+                    <div class="col-12">
+                        <div class="card "box-info collapsed-box" id="forgot-pw-box">
+                            <div class="card-header with-border pointer no-user-select" data-widget="collapse">
+                                <h3 class="card-title">Forgot password?</h3>
+                                <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-plus" id="forgot-pw-toggle-icon"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body" style="display: none;">
+                            <div class="card-body" style="display: none;">
                                 <p>After installing Pi-hole for the first time, a password is generated and displayed
                                     to the user. The password cannot be retrieved later on, but it is possible to set
                                     a new password (or explicitly disable the password by setting an empty password)

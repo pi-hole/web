@@ -15,11 +15,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="webserver.interface.theme webserver.interface.boxed">Theme settings</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="row form-group">
@@ -50,11 +50,11 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 
     <div class="col-md-6 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="webserver.api.prettyJSON webserver.api.allow_destructive">Advanced Settings</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
@@ -73,7 +73,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-lg-12 pt-3">
                         <button type="button" id="button-enable-totp" class="btn btn-success hidden" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
                         <button type="button" id="button-disable-totp" class="btn btn-danger hidden" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
-                        <button type="button" id="button-apppw" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-apppw">Configure app password</button>
+                        <button type="button" id="button-apppw" class="btn btn-default float-end" data-toggle="modal" data-target="#modal-apppw">Configure app password</button>
                     </div>
                 </div>
             </div>
@@ -83,11 +83,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 
 <div class="row">
     <div class="col-md-12 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="webserver.api.excludeDomains webserver.api.excludeClients">Exclusions</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Domains to be excluded from Top Domain Lists and Query Log</strong></p>
@@ -111,11 +111,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 
     <!-- TODO: Why is this commented out?
     <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Query Log</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">Query Log</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
@@ -135,11 +135,11 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>-->
 
     <div class="col-md-12 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Currently active sessions</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">Currently active sessions</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <table id="APISessionsTable" class="table table-striped table-bordered nowrap" width="100%">
@@ -207,7 +207,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <p>IMPORTANT: If you lose your 2FA token, you will not be able to login. You will need to disable 2FA on the command line and re-enable 2FA to generate a new secret.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default float-start" data-dismiss="modal">Close</button>
                 <button type="button" id="totp_submit" class="btn btn-default" disabled>Enable 2FA</button>
             </div>
         </div>
@@ -243,7 +243,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="apppw_clear" class="btn btn-danger pull-left">Remove currently set app password</button>
+                <button type="button" id="apppw_clear" class="btn btn-danger float-start">Remove currently set app password</button>
                 <button type="button" id="apppw_submit" class="btn btn-success">Enable new app password</button>
             </div>
         </div>

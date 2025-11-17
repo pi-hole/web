@@ -17,11 +17,11 @@ mg.include('scripts/lua/settings_header.lp','r')
     <div class="col-md-6">
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-warning">
-                    <div class="box-header with-border">
-                        <h3 class="box-title" data-configkeys="dns.queryLogging">Query Logging</h3>
+                <div class="card "box-warning">
+                    <div class="card-header with-border">
+                        <h3 class="card-title" data-configkeys="dns.queryLogging">Query Logging</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <p>The currently configured logging file is <code id="files.log.dnsmasq"></code></p>
@@ -35,11 +35,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
             <div class="col-md-12 settings-level-expert d-none">
-                <div class="box box-warning">
-                    <div class="box-header with-border">
-                        <h3 class="box-title" data-configkeys="database.DBimport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
+                <div class="card "box-warning">
+                    <div class="card-header with-border">
+                        <h3 class="card-title" data-configkeys="database.DBimport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
                                     <p>Pi-hole's long-term database is stored at <code id="files.database"></code></p>
@@ -65,11 +65,11 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-6 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="misc.privacylevel">Query Anonymization ("Privacy Level")</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <p>Specify if DNS queries should be anonymized, available options are:</p>

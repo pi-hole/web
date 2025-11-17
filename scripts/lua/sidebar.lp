@@ -7,262 +7,284 @@
 *    Please see LICENSE file for your rights under this license.
 */ ]]-- ?>
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="<?=webhome?>" class="brand-link">
+            <span class="brand-text"><span style="font-weight: 300;">Pi-</span><strong>hole</strong></span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
             <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
                     <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" width="60" height="87">
                 </div>
-                <div class="pull-left info">
-                    <p>Status</p>
-                    <span id="status"></span><br>
-                    <span id="query_frequency"></span><br>
-                    <span id="cpu"></span><br>
-                    <span id="memory"></span>
+                <div class="info">
+                    <p class="mb-1"><strong>Status</strong></p>
+                    <span id="status" class="d-block"></span>
+                    <span id="query_frequency" class="d-block"></span>
+                    <span id="cpu" class="d-block"></span>
+                    <span id="memory" class="d-block"></span>
                 </div>
             </div>
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="header text-uppercase">Main</li>
+            <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header text-uppercase">Main</li>
                 <!-- Home Page -->
-                <li class="menu-main<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
-                    <a href="<?=webhome?>">
-                        <i class="fa fa-fw menu-icon fa-home"></i> <span>Dashboard</span>
+                <li class="nav-item menu-main<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
+                    <a href="<?=webhome?>" class="nav-link<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-home"></i>
+                        <p>Dashboard</p>
                     </a>
                 </li>
                 <!-- Query Log -->
-                <li class="menu-analysis<? if scriptname == 'queries' then ?> active<? end ?>">
-                    <a href="<?=webhome?>queries">
-                        <i class="fa fa-fw menu-icon fa-file-alt"></i> <span>Query Log</span>
+                <li class="nav-item menu-analysis<? if scriptname == 'queries' then ?> active<? end ?>">
+                    <a href="<?=webhome?>queries" class="nav-link<? if scriptname == 'queries' then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-file-alt"></i>
+                        <p>Query Log</p>
                     </a>
                 </li>
 
-                <li class="header text-uppercase">Group Management</li>
+                <li class="nav-header text-uppercase">Group Management</li>
                 <!-- Group Management -->
-                <li class="menu-group<? if scriptname == 'groups' then ?> active<? end ?>">
-                    <a href="<?=webhome?>groups">
-                        <i class="fa fa-fw menu-icon fa-user-friends"></i>
-                        <span>Groups
-                            <span class="pull-right-container">
-                                <span class="label label-primary pull-right" id="num_groups" title="Number of enabled groups"></span>
-                            </span>
-                        </span>
+                <li class="nav-item menu-group<? if scriptname == 'groups' then ?> active<? end ?>">
+                    <a href="<?=webhome?>groups" class="nav-link<? if scriptname == 'groups' then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-user-friends"></i>
+                        <p>Groups
+                            <span class="badge badge-primary right" id="num_groups" title="Number of enabled groups"></span>
+                        </p>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups/clients' then ?> active<? end ?>">
-                    <a href="<?=webhome?>groups/clients">
-                        <i class="fa fa-fw menu-icon fa-laptop"></i>
-                        <span>Clients
-                            <span class="pull-right-container">
-                                <span class="label label-primary pull-right" id="num_clients" title="Number of defined clients"></span>
-                            </span>
-                        </span>
+                <li class="nav-item menu-group<? if scriptname == 'groups/clients' then ?> active<? end ?>">
+                    <a href="<?=webhome?>groups/clients" class="nav-link<? if scriptname == 'groups/clients' then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-laptop"></i>
+                        <p>Clients
+                            <span class="badge badge-primary right" id="num_clients" title="Number of defined clients"></span>
+                        </p>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups/domains' then ?> active<? end ?>">
-                    <a href="<?=webhome?>groups/domains">
-                        <i class="fa fa-fw menu-icon fa-list"></i>
-                        <span>Domains
-                            <span class="pull-right-container">
-                                <span class="label bg-red pull-right" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
-                                <span class="label bg-green pull-right" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
-                            </span>
-                        </span>
+                <li class="nav-item menu-group<? if scriptname == 'groups/domains' then ?> active<? end ?>">
+                    <a href="<?=webhome?>groups/domains" class="nav-link<? if scriptname == 'groups/domains' then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-list"></i>
+                        <p>Domains
+                            <span class="badge badge-danger right" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
+                            <span class="badge badge-success right" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
+                        </p>
                     </a>
                 </li>
-                <li class="menu-group<? if scriptname == 'groups/lists' then ?> active<? end ?>">
-                    <a href="<?=webhome?>groups/lists">
-                        <i class="fa fa-fw menu-icon fa-shield-alt"></i>
-                        <span>Lists
-                            <span class="pull-right-container">
-                                <span class="label label-primary pull-right" id="num_lists" title="Number of subscribed and enabled lists"></span>
-                                <span class="label bg-yellow pull-right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
-                            </span>
-                        </span>
+                <li class="nav-item menu-group<? if scriptname == 'groups/lists' then ?> active<? end ?>">
+                    <a href="<?=webhome?>groups/lists" class="nav-link<? if scriptname == 'groups/lists' then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-shield-alt"></i>
+                        <p>Lists
+                            <span class="badge badge-primary right" id="num_lists" title="Number of subscribed and enabled lists"></span>
+                            <span class="badge badge-warning right" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
+                        </p>
                     </a>
                 </li>
 
-                <li class="header text-uppercase">DNS Control</li>
+                <li class="nav-header text-uppercase">DNS Control</li>
                 <!-- Enable/Disable Blocking -->
-                <li id="pihole-disable" class="menu-dns treeview">
-                    <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-stop"></i> <span>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
+                <li id="pihole-disable" class="nav-item menu-dns has-treeview">
+                    <a href="<?=webhome?>#" class="nav-link">
+                        <i class="nav-icon fa fa-stop"></i>
+                        <p>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
                     </a>
-                    <ul class="treeview-menu">
-                        <li>
-                            <a href="<?=webhome?>#" id="pihole-disable-indefinitely">
-                                <i class="fa fa-fw menu-icon fa-infinity"></i> Indefinitely
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?=webhome?>#" id="pihole-disable-indefinitely" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Indefinitely</p>
                             </a>
                         </li>
-                        <li>
-                            <a href="<?=webhome?>#" id="pihole-disable-10s">
-                                <i class="fa fa-fw menu-icon fa-clock"></i> For 10 seconds
+                        <li class="nav-item">
+                            <a href="<?=webhome?>#" id="pihole-disable-10s" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>For 10 seconds</p>
                             </a>
                         </li>
-                        <li>
-                            <a href="<?=webhome?>#" id="pihole-disable-30s">
-                                <i class="fa fa-fw menu-icon fa-clock"></i> For 30 seconds
+                        <li class="nav-item">
+                            <a href="<?=webhome?>#" id="pihole-disable-30s" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>For 30 seconds</p>
                             </a>
                         </li>
-                        <li>
-                            <a href="<?=webhome?>#" id="pihole-disable-5m">
-                                <i class="fa fa-fw menu-icon fas fa-clock"></i> For 5 minutes
+                        <li class="nav-item">
+                            <a href="<?=webhome?>#" id="pihole-disable-5m" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>For 5 minutes</p>
                             </a>
                         </li>
-                        <li>
-                            <a href="<?=webhome?>#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                                <i class="fa fa-fw menu-icon fa-user-clock"></i> Custom time
+                        <li class="nav-item">
+                            <a href="<?=webhome?>#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Custom time</p>
                             </a>
                         </li>
                     </ul>
-                    <!-- <a href="<?=webhome?>#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                 </li>
-                <li id="pihole-enable" class="menu-dns treeview" style="display: none;">
-                    <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-play"></i>
-                        <span id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
+                <li id="pihole-enable" class="nav-item menu-dns" style="display: none;">
+                    <a href="<?=webhome?>#" class="nav-link">
+                        <i class="nav-icon fa fa-play"></i>
+                        <p id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
                             <span id="flip-status-enable"></span>
-                        </span>
+                        </p>
                     </a>
                 </li>
-                <li class="header text-uppercase">System</li>
+                <li class="nav-header text-uppercase">System</li>
                 <!-- Settings -->
-                <li class="menu-system treeview<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
-                    <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-cogs"></i> <span>Settings</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
+                <li class="nav-item menu-system has-treeview<? if startsWith(scriptname, 'settings/') then ?> menu-open<? end ?>">
+                    <a href="<?=webhome?>#" class="nav-link<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-cogs"></i>
+                        <p>Settings
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
                     </a>
-                    <ul class="treeview-menu">
-                        <li<? if scriptname == 'settings/system' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/system">
-                                <i class="fa-fw menu-icon fa-solid fa-circle-info"></i> <span>System</span>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item<? if scriptname == 'settings/system' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/system" class="nav-link<? if scriptname == 'settings/system' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>System</p>
                             </a>
                         </li>
-                        <li<? if scriptname == 'settings/dns' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/dns">
-                                <i class="fa-fw menu-icon fa-solid fa-book-atlas"></i> <span>DNS</span>
+                        <li class="nav-item<? if scriptname == 'settings/dns' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/dns" class="nav-link<? if scriptname == 'settings/dns' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>DNS</p>
                             </a>
                         </li>
-                        <li<? if scriptname == 'settings/dhcp' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/dhcp">
-                                <i class="fa-fw menu-icon fa-solid fa-sitemap"></i> <span>DHCP</span>
+                        <li class="nav-item<? if scriptname == 'settings/dhcp' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/dhcp" class="nav-link<? if scriptname == 'settings/dhcp' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>DHCP</p>
                             </a>
                         </li>
-                        <li<? if scriptname == 'settings/api' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/api">
-                                <i class="fa-fw menu-icon fa-solid fa-window-restore"></i> <span>Web interface / API</span>
+                        <li class="nav-item<? if scriptname == 'settings/api' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/api" class="nav-link<? if scriptname == 'settings/api' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Web interface / API</p>
                             </a>
                         </li>
-                        <li<? if scriptname == 'settings/privacy' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/privacy">
-                                <i class="fa-fw menu-icon fa-solid fa-binoculars"></i> <span>Privacy</span>
+                        <li class="nav-item<? if scriptname == 'settings/privacy' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/privacy" class="nav-link<? if scriptname == 'settings/privacy' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Privacy</p>
                             </a>
                         </li>
-                        <li<? if scriptname == 'settings/teleporter' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/teleporter">
-                                <i class="fa-fw menu-icon fa-solid fa-file-export"></i> <span>Teleporter</span>
+                        <li class="nav-item<? if scriptname == 'settings/teleporter' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/teleporter" class="nav-link<? if scriptname == 'settings/teleporter' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Teleporter</p>
                             </a>
                         </li>
-                        <li<? if scriptname == 'settings/dnsrecords' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>settings/dnsrecords">
-                                <i class="fa-fw menu-icon fa-solid fa-address-book"></i> <span>Local DNS Records</span>
+                        <li class="nav-item<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/dnsrecords" class="nav-link<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Local DNS Records</p>
                             </a>
                         </li>
-                        <li class="settings-level-expert d-none<? if scriptname == 'settings/all' then ?> active<? end ?>">
-                            <a href="<?=webhome?>settings/all">
-                                <i class="fa-fw menu-icon fa-solid fa-pen-to-square"></i> <span>All settings</span>
+                        <li class="nav-item settings-level-expert d-none<? if scriptname == 'settings/all' then ?> active<? end ?>">
+                            <a href="<?=webhome?>settings/all" class="nav-link<? if scriptname == 'settings/all' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All settings</p>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <!-- Tools -->
-                <li class="menu-system treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
-                    <a href="<?=webhome?>#">
-                        <i class="fa fa-fw menu-icon fa-tools"></i> <span>Tools</span>
-                        <span class="warning-count hidden"></span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
+                <li class="nav-item menu-system has-treeview<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> menu-open<? end ?>">
+                    <a href="<?=webhome?>#" class="nav-link<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
+                        <i class="nav-icon fa fa-tools"></i>
+                        <p>Tools
+                            <span class="warning-count hidden"></span>
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
                     </a>
-                    <ul class="treeview-menu">
+                    <ul class="nav nav-treeview">
                         <!-- Pi-hole diagnosis -->
-                        <li<? if scriptname == 'messages' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>messages">
-                                <i class="fa fa-fw menu-icon fa-file-medical-alt"></i> <span>Pi-hole diagnosis</span>
-                                <span class="pull-right-container warning-count hidden"></span>
+                        <li class="nav-item<? if scriptname == 'messages' then ?> active<? end ?>">
+                            <a href="<?=webhome?>messages" class="nav-link<? if scriptname == 'messages' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Pi-hole diagnosis
+                                    <span class="warning-count hidden"></span>
+                                </p>
                             </a>
                         </li>
                         <!-- Tail log files -->
-                        <li class="treeview<? if scriptname == 'taillog' then ?> active<? end ?>">
-                            <a href="<?=webhome?>#">
-                                <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> <span>Tail log files</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
+                        <li class="nav-item has-treeview<? if scriptname == 'taillog' then ?> menu-open<? end ?>">
+                            <a href="<?=webhome?>#" class="nav-link<? if scriptname == 'taillog' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Tail log files
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
-                            <ul class="treeview-menu">
+                            <ul class="nav nav-treeview">
                                 <!-- Tail pihole.log -->
-                                <li<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> class="active"<? end ?>>
-                                    <a href="<?=webhome?>taillog?file=dnsmasq">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> pihole.log
+                                <li class="nav-item<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
+                                    <a href="<?=webhome?>taillog?file=dnsmasq" class="nav-link<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>pihole.log</p>
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
-                                <li<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> class="active"<? end ?>>
-                                    <a href="<?=webhome?>taillog?file=ftl">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> FTL.log
+                                <li class="nav-item<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
+                                    <a href="<?=webhome?>taillog?file=ftl" class="nav-link<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>FTL.log</p>
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
-                                <li<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> class="active"<? end ?>>
-                                    <a href="<?=webhome?>taillog?file=webserver">
-                                        <i class="fa-fw menu-icon fa-solid fa-list-ul"></i> webserver.log
+                                <li class="nav-item<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
+                                    <a href="<?=webhome?>taillog?file=webserver" class="nav-link<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
+                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <p>webserver.log</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
                         <!-- Update Gravity -->
-                        <li<? if scriptname == 'gravity' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>gravity">
-                                <i class="fa fa-fw menu-icon fa-arrow-circle-down"></i> <span>Update Gravity</span>
+                        <li class="nav-item<? if scriptname == 'gravity' then ?> active<? end ?>">
+                            <a href="<?=webhome?>gravity" class="nav-link<? if scriptname == 'gravity' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Update Gravity</p>
                             </a>
                         </li>
                         <!-- Query Lists -->
-                        <li<? if scriptname == 'search' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>search">
-                                <i class="fa fa-fw menu-icon fa-search"></i> <span>Search Lists</span>
+                        <li class="nav-item<? if scriptname == 'search' then ?> active<? end ?>">
+                            <a href="<?=webhome?>search" class="nav-link<? if scriptname == 'search' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Search Lists</p>
                             </a>
                         </li>
                         <!-- Interfaces -->
-                        <li<? if scriptname == 'interfaces' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>interfaces">
-                                <i class="fa fa-fw menu-icon fa-wifi"></i> <span>Interfaces</span>
+                        <li class="nav-item<? if scriptname == 'interfaces' then ?> active<? end ?>">
+                            <a href="<?=webhome?>interfaces" class="nav-link<? if scriptname == 'interfaces' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Interfaces</p>
                             </a>
                         </li>
                         <!-- Network -->
-                        <li<? if scriptname == 'network' then ?> class="active"<? end ?>>
-                            <a href="<?=webhome?>network">
-                                <i class="fa fa-fw menu-icon fa-network-wired"></i> <span>Network</span>
+                        <li class="nav-item<? if scriptname == 'network' then ?> active<? end ?>">
+                            <a href="<?=webhome?>network" class="nav-link<? if scriptname == 'network' then ?> active<? end ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Network</p>
                             </a>
                         </li>
                     </ul>
                 </li>
 
                 <!-- Donate button -->
-                <li class="header text-uppercase">Donate</li>
-                <li class="menu-donate">
-                    <a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank">
-                        <i class="fas fa-fw menu-icon fa-donate"></i> <span>Donate</span>
+                <li class="nav-header text-uppercase">Donate</li>
+                <li class="nav-item menu-donate">
+                    <a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank" class="nav-link">
+                        <i class="nav-icon fas fa-donate"></i>
+                        <p>Donate</p>
                     </a>
                 </li>
             </ul>
-        </section>
+            </nav>
+        </div>
         <!-- /.sidebar -->
     </aside>

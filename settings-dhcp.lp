@@ -16,11 +16,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 <div class="row">
     <!-- DHCP Settings Box -->
     <div class="col-md-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dhcp.active dhcp.start dhcp.end dhcp.router dhcp.ipv6">DHCP Settings</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dhcp.active dhcp.start dhcp.end dhcp.router dhcp.ipv6">DHCP Settings</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div>
@@ -28,10 +28,10 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <p class="help-block" id="dhcpnotice">Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                         </div>
                     </div>
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <label style="margin-top: 10px">Range of IP addresses to hand out</label>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Start</div>
@@ -41,7 +41,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">End</div>
@@ -51,7 +51,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
                         <label>Router (gateway) IP address</label>
                         <div class="form-group">
                             <div class="input-group">
@@ -62,7 +62,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
                         <label>Netmask</label>
                         <div class="form-group">
                             <div class="input-group">
@@ -87,11 +87,11 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-6 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dhcp.leaseTime dhcp.rapidCommit dhcp.multiDNS">Advanced DHCP Settings</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <label>DHCP lease time</label>
@@ -138,11 +138,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 <!-- DHCP Leases Box -->
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title">Currently active DHCP leases</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title">Currently active DHCP leases</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <table id="DHCPLeasesTable" class="table table-striped table-bordered nowrap" width="100%">
@@ -166,20 +166,20 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-md-12 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dhcp.hosts">Static DHCP configuration</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dhcp.hosts">Static DHCP configuration</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
-                    <div class="col-xs-12 col-md-6">
+                    <div class="col-12 col-md-6">
                         <p>Specify per host parameters for the DHCP server. This allows a machine with a particular hardware address to be always allocated the same hostname, IP address and lease time. A hostname specified like this overrides any supplied by the DHCP client on the machine. It is also allowable to omit the hardware address and include the hostname, in which case the IP address and lease times will apply to any machine claiming that name.</p>
                         <textarea class="form-control field-sizing-content" id="dhcp-hosts" data-key="dhcp.hosts" style="resize: vertical;"></textarea><br>&nbsp;
                         <p>Each entry should be on a separate line, and should be of the form:</p>
                         <pre>[&lt;hwaddr&gt;][,id:&lt;client_id&gt;|*][,set:&lt;tag&gt;][,tag:&lt;tag&gt;][,&lt;ipaddr&gt;][,&lt;hostname&gt;][,&lt;lease_time&gt;][,ignore]</pre>
                         <p>Only one entry per MAC address is allowed.</p>
                     </div>
-                    <div class="col-xs-12 col-md-6">
+                    <div class="col-12 col-md-6">
                         <p>Examples:</p>
                         <ul>
                             <li><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code><br>&nbsp;</li>
@@ -187,17 +187,17 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <li><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease<br>&nbsp;</li>
                         </ul>
                     </div>
-                    <div class="col-xs-12">
-                        <div class="box box-success collapsed-box">
-                            <div class="box-header with-border pointer no-user-select" data-widget="collapse">
-                                <h3 class="box-title">Advanced description</h3>
-                                <div class="box-tools pull-right">
+                    <div class="col-12">
+                        <div class="card "box-success collapsed-box">
+                            <div class="card-header with-border pointer no-user-select" data-widget="collapse">
+                                <h3 class="card-title">Advanced description</h3>
+                                <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body" style="display: none;">
+                            <div class="card-body" style="display: none;">
                                 <ul>
                                     <li> Addresses allocated like this are not constrained to be in the DHCP range specified above but they must be in the same subnet. For subnets which don't need a pool of dynamically allocated addresses, you can set a one-address range above and specify only static leases here.</li>
                                     <li> It is allowed to use client identifiers (called client DUID in IPv6-land) rather than hardware addresses to identify hosts by prefixing with <code>id:</code>. Thus lines like <code>id:01:02:03:04,.....</code> refer to the host with client identifier <code>01:02:03:04</code>. It is also allowed to specify the client ID as text, like this: <code>id:clientidastext,.....</code></li>

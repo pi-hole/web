@@ -18,9 +18,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="messages-list">
-            <!-- /.box-header -->
-            <div class="box-body">
+        <div class="card" id="messages-list">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <table id="messagesTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -35,7 +35,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </table>
                 <p>Note: If errors are shown, you generate a debug log (use <code>pihole -d</code>), which will do a thorough Pi-hole evaluation.</p>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>

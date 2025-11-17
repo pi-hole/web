@@ -14,7 +14,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <div class="col-lg-3 col-sm-6">
         <!-- small box -->
-        <div class="small-box bg-aqua no-user-select" id="total_queries" title="Total number of queries">
+        <div class="small-box bg-info no-user-select" id="total_queries" title="Total number of queries">
             <div class="inner">
                 <p>Total Queries</p>
                 <h3 class="statistic"><span id="dns_queries">---</span></h3>
@@ -80,13 +80,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="queries-over-time">
-            <div class="box-header with-border">
-                <h3 class="box-title">Total queries</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+        <div class="card" id="queries-over-time">
+            <div class="card-header with-border">
+                <h3 class="card-title">Total queries</h3>
+                <button class="btn btn-sm btn-default float-end zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                <span class="float-end zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="chart" style="width: 100%; height: 180px">
                     <canvas id="queryOverTimeChart"></canvas>
                 </div>
@@ -94,19 +94,19 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="clients">
-            <div class="box-header with-border">
-                <h3 class="box-title">Client activity</h3>
-                <button class="btn btn-xs btn-default pull-right zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="pull-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+        <div class="card" id="clients">
+            <div class="card-header with-border">
+                <h3 class="card-title">Client activity</h3>
+                <button class="btn btn-sm btn-default float-end zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                <span class="float-end zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="chart" style="width: 100%; height: 180px">
                     <canvas id="clientsChart" class="no-user-select"></canvas>
                 </div>
@@ -114,18 +114,18 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-6">
-        <div class="box" id="query-types-pie">
-            <div class="box-header with-border">
-                <h3 class="box-title">Query Types</h3>
+        <div class="card" id="query-types-pie">
+            <div class="card-header with-border">
+                <h3 class="card-title">Query Types</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div style="width:50%">
                     <canvas id="queryTypePieChart" width="280" height="280"></canvas>
                 </div>
@@ -134,15 +134,15 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
     </div>
     <div class="col-md-6">
-        <div class="box" id="forward-destinations-pie">
-            <div class="box-header with-border">
-                <h3 class="box-title">Upstream servers</h3>
+        <div class="card" id="forward-destinations-pie">
+            <div class="card-header with-border">
+                <h3 class="card-title">Upstream servers</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div style="width:50%">
                     <canvas id="forwardDestinationPieChart" width="280" height="280" class="no-user-select"></canvas>
                 </div>
@@ -151,7 +151,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
     </div>
 </div>
@@ -159,12 +159,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <? if pihole.boxedlayout() then tablelayout = 'col-md-6' else  tablelayout = 'col-md-6 col-lg-6' end ?>
 <div class="row">
     <div class="<?=tablelayout?>">
-        <div class="box" id="domain-frequency">
-            <div class="box-header with-border">
-                <h3 class="box-title">Top Permitted Domains</h3>
+        <div class="card" id="domain-frequency">
+            <div class="card-header with-border">
+                <h3 class="card-title">Top Permitted Domains</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
@@ -182,18 +182,18 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>
     <!-- /.col -->
     <div class="<?=tablelayout?>">
-        <div class="box" id="ad-frequency">
-            <div class="box-header with-border">
-                <h3 class="box-title">Top Blocked Domains</h3>
+        <div class="card" id="ad-frequency">
+            <div class="card-header with-border">
+                <h3 class="card-title">Top Blocked Domains</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
@@ -211,7 +211,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>
@@ -219,12 +219,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="row">
     <!-- /.col -->
     <div class="<?=tablelayout?>">
-        <div class="box" id="client-frequency">
-            <div class="box-header with-border">
-                <h3 class="box-title">Top Clients (total)</h3>
+        <div class="card" id="client-frequency">
+            <div class="card-header with-border">
+                <h3 class="card-title">Top Clients (total)</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
@@ -242,18 +242,18 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>
     <!-- /.col -->
     <div class="<?=tablelayout?>">
-        <div class="box" id="client-frequency-blocked">
-            <div class="box-header with-border">
-                <h3 class="box-title">Top Clients (blocked only)</h3>
+        <div class="card" id="client-frequency-blocked">
+            <div class="card-header with-border">
+                <h3 class="card-title">Top Clients (blocked only)</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered">
                         <thead>
@@ -271,7 +271,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="overlay">
                 <i class="fa fa-sync fa-spin"></i>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
         <!-- /.box -->
     </div>

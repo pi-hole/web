@@ -11,10 +11,10 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
 <div class="row">
     <div class="col-md-12">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title"><code>tail -F <span id="filename">...</span></code></h3>
-                <div class="pull-right">
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title"><code>tail -F <span id="filename">...</span></code></h3>
+                <div class="float-end">
                     Autoscroll:&nbsp;<i class="fa fa-fw fa-check" id="autoscrolling"></i>&nbsp;&nbsp;
                     <button class="btn btn-success" id="live-feed">
                         <span id="title">Live</span>&nbsp;&nbsp;
@@ -22,7 +22,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </button>
                 </div>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <pre id="output" class="pre pre-scrollable pre-taillog"></pre>

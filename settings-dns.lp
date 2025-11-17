@@ -15,11 +15,11 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-lg-6">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h1 class="box-title" data-configkeys="dns.upstreams" id="lblDNSupstreams">Upstream DNS Servers</h1>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h1 class="card-title" data-configkeys="dns.upstreams" id="lblDNSupstreams">Upstream DNS Servers</h1>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-sm-12">
                         <table class="table table-striped table-bordered">
@@ -36,16 +36,16 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                     </div>
                     <div class="col-sm-12">
-                        <div class="box collapsed-box" id="custom-servers-box">
-                            <div class="box-header with-border pointer" data-widget="collapse">
-                                <h3 class="box-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
-                                <div class="box-tools pull-right">
+                        <div class="card "collapsed-box" id="custom-servers-box">
+                            <div class="card-header with-border pointer" data-widget="collapse">
+                                <h3 class="card-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
+                                <div class="box-tools float-end">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body" style="display: none;">
+                            <div class="card-body" style="display: none;">
                                 <p>The following list contains all DNS servers selected above. Furthermore, you can add your own custom DNS servers here. The expected format is one server per line in form of <code>IP#port</code>, where the <code>port</code> is optional. If given, it has to be separated by a hash <code>#</code> from the address (e.g. <code>127.0.0.1#5335</code> for a local <code>unbound</code> instance running on port <code>5335</code>). The port defaults to 53 if omitted.</p>
                                 <textarea class="form-control" rows="3" id="DNSupstreamsTextfield" data-key="dns.upstreams" placeholder="Enter upstream DNS servers, one per line" style="resize: vertical;"></textarea>
                             </div>
@@ -57,11 +57,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-expert d-none">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.domain.name dns.expandHosts">DNS domain settings</h3>
+        <div class="card "box-warning settings-level-expert d-none">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dns.domain.name dns.expandHosts">DNS domain settings</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <label>Pi-hole domain name</label>
@@ -81,11 +81,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning settings-level-expert d-none">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
+        <div class="card "box-warning settings-level-expert d-none">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dns.rateLimit.count dns.rateLimit.interval">Rate-limiting</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <p>Block clients making more than <input type="number" id="dns.rateLimit.count" data-key="dns.rateLimit.count" data-type="integer" value="" min="0" step="10" style="width: 5em;"> queries within
@@ -105,11 +105,11 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-6 settings-level-expert d-none">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h1 class="box-title" data-configkeys="dns.listeningMode">Interface settings</h1>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h1 class="card-title" data-configkeys="dns.listeningMode">Interface settings</h1>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group">
@@ -147,11 +147,11 @@ mg.include('scripts/lua/settings_header.lp','r')
                 </div>
             </div>
         </div>
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
+        <div class="card "box-warning">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dns.domainNeeded dns.bogusPriv dns.dnssec">Advanced DNS settings</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <div>
@@ -195,11 +195,11 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="box box-warning settings-level-expert d-none">
-            <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
+        <div class="card "box-warning settings-level-expert d-none">
+            <div class="card-header with-border">
+                <h3 class="card-title" data-configkeys="dns.revServers">Conditional forwarding</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <p>If not configured as your DHCP server, Pi-hole typically won't be able to
