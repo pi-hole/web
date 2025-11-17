@@ -65,31 +65,41 @@ mg.include('header.lp','r')
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-bars"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <!-- User image -->
-                    <li class="user-header">
+                    <div class="dropdown-header user-header text-center">
                         <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
                         <p>
                             Open Source Ad Blocker
                         </p>
-                    </li>
+                    </div>
                     <!-- Menu Body -->
-                    <li class="user-body" id="advanced-info"></li>
+                    <div class="dropdown-divider"></div>
+                    <div class="user-body px-3 py-2" id="advanced-info"></div>
+                    <div class="dropdown-divider"></div>
                     <!-- Menu Footer -->
-                    <li class="user-footer">
-                        <a class="btn-link" href="https://pi-hole.net/" rel="noopener noreferrer" target="_blank">
-                            <? mg.include('../../img/logo-bw.svg', 'r') ?>
-                            Pi-hole Website
-                        </a>
-                        <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fa-solid fa-circle-question"></i> Documentation</a>
-                        <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fab fa-discourse"></i> Pi-hole Discourse</a>
-                        <a class="btn-link" href="https://github.com/pi-hole" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
-                        <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fa-solid fa-rocket"></i> Pi-hole Releases</a>
-                        <? if pihole.needLogin() then ?>
-                        <a class="btn-link" href="#" id="logout-button"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</a>
-                        <? end ?>
-                    </li>
-                </ul>
+                    <a class="dropdown-item" href="https://pi-hole.net/" rel="noopener noreferrer" target="_blank">
+                        <i class="fa-fw fa-solid fa-home"></i> Pi-hole Website
+                    </a>
+                    <a class="dropdown-item" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank">
+                        <i class="fa-fw fa-solid fa-circle-question"></i> Documentation
+                    </a>
+                    <a class="dropdown-item" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank">
+                        <i class="fa-fw fab fa-discourse"></i> Pi-hole Discourse
+                    </a>
+                    <a class="dropdown-item" href="https://github.com/pi-hole" rel="noopener noreferrer" target="_blank">
+                        <i class="fa-fw fab fa-github"></i> GitHub
+                    </a>
+                    <a class="dropdown-item" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener noreferrer" target="_blank">
+                        <i class="fa-fw fa-solid fa-rocket"></i> Pi-hole Releases
+                    </a>
+                    <? if pihole.needLogin() then ?>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" id="logout-button">
+                        <i class="fa-fw fa-solid fa-arrow-right-from-bracket"></i> Log out
+                    </a>
+                    <? end ?>
+                </div>
             </li>
         </ul>
     </nav>
