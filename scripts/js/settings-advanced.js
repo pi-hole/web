@@ -382,7 +382,7 @@ function applyOnlyChanged() {
     );
 
     // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
-    $(".card-title[data-key]").not("[data-modified='true']").closest("\.card").hide();
+    $(".card-title[data-key]").not("[data-modified='true']").closest(".card").hide();
   } else {
     // Show the tabs menu and activate only the first button (deactivate other buttons)
     $("#advanced-settings-menu").show();
@@ -393,7 +393,7 @@ function applyOnlyChanged() {
     $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("in active");
 
     // Show all boxes with data-key attribute
-    $(".card-title[data-key]").closest("\.card").show();
+    $(".card-title[data-key]").closest(".card").show();
   }
 }
 

@@ -340,7 +340,7 @@ $(() => {
       maintainAspectRatio: true,
       elements: {
         arc: {
-          borderColor: $("\.card").css("background-color"),
+          borderColor: $(".card").css("background-color"),
         },
       },
       plugins: {

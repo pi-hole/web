@@ -1191,7 +1191,9 @@ table.dataTable tbody > tr > .selected {
 }
 
 /* Settings containers without modified items and with hidden boxes will display this text */
-.settings-container:not(:has(h3[data-modified="true"])):has(.card[style*="display: none;"])::before {
+.settings-container:not(:has(h3[data-modified="true"])):has(
+    .card[style*="display: none;"]
+  )::before {
   content: "No modified settings to display";
   opacity: 0.7;
   font-style: italic;
