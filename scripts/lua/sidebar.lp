@@ -88,8 +88,9 @@
                 <li id="pihole-disable" class="nav-item menu-dns has-treeview">
                     <a href="<?=webhome?>#" class="nav-link">
                         <i class="nav-icon fa fa-stop"></i>
-                        <p>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
+                        <p>Disable Blocking&nbsp;&nbsp;&nbsp;
                             <i class="right fas fa-angle-left"></i>
+                            <span id="flip-status-disable"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
