@@ -198,8 +198,8 @@
                     <a href="<?=webhome?>#" class="nav-link<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
                         <i class="nav-icon fa fa-tools"></i>
                         <p>Tools
-                            <span class="warning-count hidden"></span>
                             <i class="right fas fa-angle-left"></i>
+                            <span class="badge badge-warning warning-count right hidden"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -208,7 +208,7 @@
                             <a href="<?=webhome?>messages" class="nav-link<? if scriptname == 'messages' then ?> active<? end ?>">
                                 <i class="fa fa-file-medical-alt nav-icon"></i>
                                 <p>Pi-hole diagnosis
-                                    <span class="warning-count hidden"></span>
+                                    <span class="badge badge-warning warning-count right hidden"></span>
                                 </p>
                             </a>
                         </li>

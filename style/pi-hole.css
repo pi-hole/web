@@ -631,25 +631,14 @@ td.details-control {
 
 /*** Warning icon and count ***/
 .warning-count {
-  position: absolute;
-  display: inline-block;
-  text-align: center;
   background: #e08e0b;
-  color: #fff;
-  line-height: 1;
-  padding: 0.25em 0.5em;
-  margin: -0.7em 4px;
-  border-radius: 2em;
-  right: 3em;
-  top: 50%;
-  font-size: 12px;
 }
 
 #top-warning-count {
   top: 55%;
   left: 50%;
   right: unset;
-  margin: 0;
+  font-weight: bold;
 }
 
 .treeview-menu .warning-count {
