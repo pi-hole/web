@@ -905,7 +905,7 @@ input[type="password"]::-webkit-caps-lock-indicator {
   filter: none;
 }
 
-.small-box > .small-card-footer {
+.small-box > .small-box-footer {
   color: #fff;
   background: rgba(0, 0, 0, 0.3);
 }

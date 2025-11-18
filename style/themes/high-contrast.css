@@ -367,7 +367,7 @@ select:-webkit-autofill {
   background: var(--success-color) !important;
 }
 
-.small-box > .small-card-footer {
+.small-box > .small-box-footer {
   background: rgba(0, 0, 0, 0.3);
   color: #fff;
 }

@@ -2095,11 +2095,11 @@ td.highlight {
   color: #000 !important;
 }
 
-.small-box > .small-card-footer:hover {
+.small-box > .small-box-footer:hover {
   color: #000;
 }
 
-.small-box > .small-card-footer {
+.small-box > .small-box-footer {
   color: rgba(0, 0, 0, 0.5);
 }
 
