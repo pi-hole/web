@@ -347,29 +347,25 @@ td.lookatme {
 }
 
 .user-panel {
-  display: flex;
   align-items: center;
-  padding: 10px 0;
 }
 
 .user-panel .image {
-  flex: 1 0 25%;
-  margin: 0 10px;
+  flex: 1 0 58px;
+  padding: 0 6px;
   text-align: center;
 }
 
 .user-panel > .image > img {
-  max-width: 60px;
-  min-width: 30px;
+  max-width: 58px;
+  min-width: 38px;
+  width: auto;
 }
 
 .user-panel > .info {
   padding: 0;
-  position: relative;
-  line-height: 1.05;
+  line-height: 1.1;
   flex: 1 1 auto;
-  left: auto;
-  width: 138px;
 }
 
 .user-panel > .info > p {
@@ -377,9 +373,8 @@ td.lookatme {
 }
 
 .user-panel > .info > span {
-  display: inline-block;
   padding: 0;
-  margin: 2px 0;
+  margin: 4px 0;
   font-size: 11px;
 }
 

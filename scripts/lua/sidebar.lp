@@ -18,7 +18,7 @@
             <!-- Sidebar user panel -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" width="60" height="87">
+                    <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" width="58" height="84">
                 </div>
                 <div class="info">
                     <p class="mb-1"><strong>Status</strong></p>
