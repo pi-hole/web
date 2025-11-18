@@ -509,14 +509,20 @@ tfoot.add-new-item > tr > th {
 }
 
 .small-box .icon {
-  font-size: 76px;
   z-index: -1; /* sends the icon behind the text */
+  position: absolute;
+  inset: 0
 }
 
-/*** Icons grow on hover, but remain centered ***/
-.small-box:hover .icon {
-  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
-  transform: scale(1.06);
+.small-box .icon > i,
+.small-box .icon > i.fa,
+.small-box .icon > i.fab,
+.small-box .icon > i.fad,
+.small-box .icon > i.fal,
+.small-box .icon > i.far,
+.small-box .icon > i.fas,
+.small-box .icon > i.ion {
+  font-size: 76px;
 }
 
 .list-status-0 {
