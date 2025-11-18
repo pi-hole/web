@@ -145,49 +145,49 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item<? if scriptname == 'settings/system' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/system" class="nav-link<? if scriptname == 'settings/system' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-circle-info nav-icon"></i>
                                 <p>System</p>
                             </a>
                         </li>
                         <li class="nav-item<? if scriptname == 'settings/dns' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/dns" class="nav-link<? if scriptname == 'settings/dns' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-book-atlas nav-icon"></i>
                                 <p>DNS</p>
                             </a>
                         </li>
                         <li class="nav-item<? if scriptname == 'settings/dhcp' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/dhcp" class="nav-link<? if scriptname == 'settings/dhcp' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-sitemap nav-icon"></i>
                                 <p>DHCP</p>
                             </a>
                         </li>
                         <li class="nav-item<? if scriptname == 'settings/api' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/api" class="nav-link<? if scriptname == 'settings/api' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-window-restore nav-icon"></i>
                                 <p>Web interface / API</p>
                             </a>
                         </li>
                         <li class="nav-item<? if scriptname == 'settings/privacy' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/privacy" class="nav-link<? if scriptname == 'settings/privacy' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-binoculars nav-icon"></i>
                                 <p>Privacy</p>
                             </a>
                         </li>
                         <li class="nav-item<? if scriptname == 'settings/teleporter' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/teleporter" class="nav-link<? if scriptname == 'settings/teleporter' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-file-export nav-icon"></i>
                                 <p>Teleporter</p>
                             </a>
                         </li>
                         <li class="nav-item<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/dnsrecords" class="nav-link<? if scriptname == 'settings/dnsrecords' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-address-book nav-icon"></i>
                                 <p>Local DNS Records</p>
                             </a>
                         </li>
                         <li class="nav-item settings-level-expert d-none<? if scriptname == 'settings/all' then ?> active<? end ?>">
                             <a href="<?=webhome?>settings/all" class="nav-link<? if scriptname == 'settings/all' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-pen-to-square nav-icon"></i>
                                 <p>All settings</p>
                             </a>
                         </li>
@@ -206,7 +206,7 @@
                         <!-- Pi-hole diagnosis -->
                         <li class="nav-item<? if scriptname == 'messages' then ?> active<? end ?>">
                             <a href="<?=webhome?>messages" class="nav-link<? if scriptname == 'messages' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-file-medical-alt nav-icon"></i>
                                 <p>Pi-hole diagnosis
                                     <span class="warning-count hidden"></span>
                                 </p>
@@ -215,7 +215,7 @@
                         <!-- Tail log files -->
                         <li class="nav-item has-treeview<? if scriptname == 'taillog' then ?> menu-open<? end ?>">
                             <a href="<?=webhome?>#" class="nav-link<? if scriptname == 'taillog' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-list-ul nav-icon"></i>
                                 <p>Tail log files
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
@@ -224,21 +224,21 @@
                                 <!-- Tail pihole.log -->
                                 <li class="nav-item<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
                                     <a href="<?=webhome?>taillog?file=dnsmasq" class="nav-link<? if scriptname == 'taillog' and GET("file") == "dnsmasq" then ?> active<? end ?>">
-                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <i class="fa fa-list-ul nav-icon"></i>
                                         <p>pihole.log</p>
                                     </a>
                                 </li>
                                 <!-- Tail FTL.log -->
                                 <li class="nav-item<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
                                     <a href="<?=webhome?>taillog?file=ftl" class="nav-link<? if scriptname == 'taillog' and GET("file") == "ftl" then ?> active<? end ?>">
-                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <i class="fa fa-list-ul nav-icon"></i>
                                         <p>FTL.log</p>
                                     </a>
                                 </li>
                                 <!-- Tail webserver.log -->
                                 <li class="nav-item<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
                                     <a href="<?=webhome?>taillog?file=webserver" class="nav-link<? if scriptname == 'taillog' and GET("file") == "webserver" then ?> active<? end ?>">
-                                        <i class="far fa-dot-circle nav-icon"></i>
+                                        <i class="fa fa-list-ul nav-icon"></i>
                                         <p>webserver.log</p>
                                     </a>
                                 </li>
@@ -247,28 +247,28 @@
                         <!-- Update Gravity -->
                         <li class="nav-item<? if scriptname == 'gravity' then ?> active<? end ?>">
                             <a href="<?=webhome?>gravity" class="nav-link<? if scriptname == 'gravity' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-arrow-circle-down nav-icon"></i>
                                 <p>Update Gravity</p>
                             </a>
                         </li>
                         <!-- Query Lists -->
                         <li class="nav-item<? if scriptname == 'search' then ?> active<? end ?>">
                             <a href="<?=webhome?>search" class="nav-link<? if scriptname == 'search' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-search nav-icon"></i>
                                 <p>Search Lists</p>
                             </a>
                         </li>
                         <!-- Interfaces -->
                         <li class="nav-item<? if scriptname == 'interfaces' then ?> active<? end ?>">
                             <a href="<?=webhome?>interfaces" class="nav-link<? if scriptname == 'interfaces' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-wifi nav-icon"></i>
                                 <p>Interfaces</p>
                             </a>
                         </li>
                         <!-- Network -->
                         <li class="nav-item<? if scriptname == 'network' then ?> active<? end ?>">
                             <a href="<?=webhome?>network" class="nav-link<? if scriptname == 'network' then ?> active<? end ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-network-wired nav-icon"></i>
                                 <p>Network</p>
                             </a>
                         </li>
