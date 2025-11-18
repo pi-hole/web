@@ -43,7 +43,7 @@ mg.include('header.lp','r')
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button" aria-label="Toggle Navigation">
-                    <i class="fa fa-bars"></i>
+                    <i class="fa fa-angle-double-left"></i>
                     <span class="warning-count badge navbar-badge hidden" id="top-warning-count"></span>
                 </a>
             </li>

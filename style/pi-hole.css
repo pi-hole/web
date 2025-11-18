@@ -896,14 +896,9 @@ body:not([class*="lcars"])
 }
 
 .navbar-nav {
-  height: 50px;
+  gap: 1em;
 }
 
-.navbar-nav > .user-menu {
-  margin-left: 15px;
-  width: 50px;
-  text-align: center;
-}
 @media screen and (min-width: 767px) {
   .navbar-nav > .user-menu {
     background: rgba(0, 0, 0, 0.1);
@@ -1495,10 +1490,6 @@ table.dataTable tbody > tr > .selected {
 .py-3 {
   padding-bottom: 1rem !important;
   padding-top: 1rem !important;
-}
-
-.d-none {
-  display: none !important;
 }
 
 .password_background {
