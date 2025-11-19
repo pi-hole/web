@@ -461,8 +461,12 @@ tfoot.add-new-item > tr > th {
 }
 
 .card {
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
+}
+
+.card-body {
+  padding: 1rem;
 }
 
 .small-box {
@@ -584,6 +588,10 @@ td.details-control {
   flex-direction: column;
 }
 
+.card.login-box > section {
+  padding: 15px;
+}
+
 .login-box {
   position: relative;
   margin: 0 auto;
@@ -595,29 +603,12 @@ td.details-control {
   border: none;
 }
 
+.login-card-body {
+  background: transparent;
+}
+
 .loginpage-logo {
   margin: 0 0 10px;
-}
-
-.login-options {
-  display: flex;
-  margin: 0 0 15px -15px;
-  flex-wrap: wrap;
-}
-
-.login-options div {
-  position: relative;
-  margin-left: 15px;
-}
-
-.login-options div:last-child {
-  margin-right: 2px;
-  margin-bottom: 0 !important;
-  font-size: 95%;
-}
-
-.pwd-field {
-  flex: 1 0 auto;
 }
 
 .login-footer a {
