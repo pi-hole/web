@@ -49,12 +49,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <li>Multiple lists can be added by separating each <em>unique</em> URL with a space or comma</li>
                     <li>Click on the icon in the first column to get additional information about your lists. The icons correspond to the health of the list.</li>
                 </ol>
-                <div class="btn-toolbar float-end" role="toolbar" aria-label="Toolbar with buttons">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with buttons">
                     <div class="btn-group" role="group">
-                        <button type="button" id="btnAddBlock" class="btn btn-danger float-end">Add blocklist</button>
+                        <button type="button" id="btnAddBlock" class="btn btn-danger float-right">Add blocklist</button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="btnAddAllow" class="btn btn-success float-end">Add allowlist</button>
+                        <button type="button" id="btnAddAllow" class="btn btn-success float-right">Add allowlist</button>
                     </div>
                 </div>
             </div>

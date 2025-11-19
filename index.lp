@@ -83,8 +83,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="card" id="queries-over-time">
             <div class="card-header">
                 <h3 class="card-title">Total queries</h3>
-                <button class="btn btn-sm btn-default float-end zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="float-end zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                <button class="btn btn-sm btn-default float-right zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                <span class="float-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="card-body">
                 <div class="chart" style="width: 100%; height: 180px">
@@ -103,8 +103,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="card" id="clients">
             <div class="card-header">
                 <h3 class="card-title">Client activity</h3>
-                <button class="btn btn-sm btn-default float-end zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="float-end zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                <button class="btn btn-sm btn-default float-right zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                <span class="float-right zoom-info" data-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
             </div>
             <div class="card-body">
                 <div class="chart" style="width: 100%; height: 180px">

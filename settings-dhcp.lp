@@ -191,7 +191,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="card "box-success collapsed-box">
                             <div class="card-header pointer no-user-select" data-widget="collapse">
                                 <h3 class="card-title">Advanced description</h3>
-                                <div class="box-tools float-end">
+                                <div class="box-tools float-right">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-plus"></i>
                                     </button>

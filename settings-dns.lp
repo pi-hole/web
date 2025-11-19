@@ -39,7 +39,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="card "collapsed-box" id="custom-servers-box">
                             <div class="card-header pointer" data-widget="collapse">
                                 <h3 class="card-title">Custom DNS servers <span id="custom-servers-title"></span></h3>
-                                <div class="box-tools float-end">
+                                <div class="box-tools float-right">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-plus"></i>
                                     </button>

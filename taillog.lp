@@ -14,7 +14,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="card "box-warning">
             <div class="card-header">
                 <h3 class="card-title"><code>tail -F <span id="filename">...</span></code></h3>
-                <div class="float-end">
+                <div class="float-right">
                     Autoscroll:&nbsp;<i class="fa fa-fw fa-check" id="autoscrolling"></i>&nbsp;&nbsp;
                     <button class="btn btn-success" id="live-feed">
                         <span id="title">Live</span>&nbsp;&nbsp;

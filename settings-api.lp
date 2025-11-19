@@ -73,7 +73,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-lg-12 pt-3">
                         <button type="button" id="button-enable-totp" class="btn btn-success d-none" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
                         <button type="button" id="button-disable-totp" class="btn btn-danger d-none" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
-                        <button type="button" id="button-apppw" class="btn btn-default float-end" data-toggle="modal" data-target="#modal-apppw">Configure app password</button>
+                        <button type="button" id="button-apppw" class="btn btn-default float-right" data-toggle="modal" data-target="#modal-apppw">Configure app password</button>
                     </div>
                 </div>
             </div>

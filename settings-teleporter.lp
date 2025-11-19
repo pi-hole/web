@@ -22,7 +22,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="card-body">
                 <p><strong>Warning:</strong><br>This archive contains sensitive information about your Pi-hole installation, e.g. your 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.</p>
                 <p class='text-danger' id="encryption-warning" style="display: none;"><strong>Warning:</strong><br>You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p>
-                <div class="float-end">
+                <div class="float-right">
                     <a class="btn btn-app btn-success" id="GETTeleporter" target="_blank">
                         <i class="fa fa-save fa-xl"></i><br>Export
                     </a>
@@ -51,7 +51,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div><input type="checkbox" id="import.gravity.domainlist" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.domainlist"><strong>Domains/Regexes</strong></label></div>
                     <div><input type="checkbox" id="import.gravity.client" data-key="config" class="import-select" checked>&nbsp;<label for="import.gravity.client"><strong>Clients</strong></label></div>
                 </div>
-                <div class="float-end">
+                <div class="float-right">
                     <a class="btn btn-app btn-success" id="submit-import">
                         <i class="fa fa-upload fa-xl"></i><br>Import
                     </a>

@@ -98,7 +98,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         You can add multiple entries at once by separating them with spaces (e.g. <code>example.com example.org</code>).
                     </p>
                 </div>
-                <div class="btn-toolbar float-end" role="toolbar" aria-label="Toolbar with buttons">
+                <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with buttons">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-danger" id="add_deny">Add to denied domains</button>
                     </div>
