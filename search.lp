@@ -32,7 +32,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <label for="partialMatch"><strong>Use partial matching</strong> (may not find complex regex entries)</label>
                         </div>
                     </div>
-                    <br class="hidden-md hidden-lg">
+                    <br class="d-md-none d-lg-none">
                     <div class="col-md-6">
                         <div id="domain-limitbox-block" class="form-inline">
                             <label for="number">Maximum number of results to be returned:&nbsp;</label>
@@ -45,7 +45,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<pre id="output" style="width: 100%; height: 100%;" hidden></pre>
+<pre id="output" style="width: 100%; height: 100%;" d-none></pre>
 
 <script src="<?=pihole.fileversion('scripts/js/search.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>

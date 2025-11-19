@@ -200,7 +200,7 @@
                         <i class="nav-icon fa fa-tools"></i>
                         <p>Tools
                             <i class="right fas fa-angle-left"></i>
-                            <span class="badge badge-warning warning-count right hidden"></span>
+                            <span class="badge badge-warning warning-count right d-none"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -209,7 +209,7 @@
                             <a href="<?=webhome?>messages" class="nav-link<? if scriptname == 'messages' then ?> active<? end ?>">
                                 <i class="fa fa-file-medical-alt nav-icon"></i>
                                 <p>Pi-hole diagnosis
-                                    <span class="badge badge-warning warning-count right hidden"></span>
+                                    <span class="badge badge-warning warning-count right d-none"></span>
                                 </p>
                             </a>
                         </li>

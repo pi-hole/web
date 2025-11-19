@@ -71,8 +71,8 @@ mg.include('scripts/lua/settings_header.lp','r')
                         </div>
                     </div>
                     <div class="col-lg-12 pt-3">
-                        <button type="button" id="button-enable-totp" class="btn btn-success hidden" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
-                        <button type="button" id="button-disable-totp" class="btn btn-danger hidden" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
+                        <button type="button" id="button-enable-totp" class="btn btn-success d-none" data-toggle="modal" data-target="#modal-totp">Enable 2FA</button>
+                        <button type="button" id="button-disable-totp" class="btn btn-danger d-none" data-toggle="modal" data-target="#modal-totp-disable">Disable 2FA</button>
                         <button type="button" id="button-apppw" class="btn btn-default float-end" data-toggle="modal" data-target="#modal-apppw">Configure app password</button>
                     </div>
                 </div>
@@ -234,7 +234,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div class="text-center">
                     <i id="password-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
                 </div>
-                <p id="password_display" class="text-center hidden">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
+                <p id="password_display" class="text-center d-none">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
                 <p>IMPORTANT: The app password generated here will only be shown
                 once and cannot be recovered. Make sure to store it in a safe
                 place!</p>

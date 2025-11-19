@@ -71,7 +71,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
+                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red d-none">Reset sorting</button>
             </div>
             <!-- /.card-body -->
         </div>

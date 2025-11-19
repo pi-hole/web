@@ -50,7 +50,7 @@ mg.include('scripts/lua/header.lp','r')
                         </span>
                     </div>
                 </div>
-                <div class="form-group hidden" id="totp_input">
+                <div class="form-group d-none" id="totp_input">
                     <div class="input-group">
                         <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="one-time-code">
                         <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verification code">
@@ -65,7 +65,7 @@ mg.include('scripts/lua/header.lp','r')
             <br>
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-danger collapsed-card card-outline hidden" id="invalid2fa-box">
+                    <div class="card card-danger collapsed-card card-outline d-none" id="invalid2fa-box">
                         <div class="card-header pointer no-user-select" data-widget="collapse">
                             <h3 class="card-title">Wrong 2FA token</h3>
                             <div class="card-tools float-end">
