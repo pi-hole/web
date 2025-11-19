@@ -11,7 +11,7 @@ mg.include('scripts/lua/header.lp','r')
 ?>
 </head>
 <body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>">
-    <div class="card "login-box">
+    <div class="card login-box">
         <section style="padding: 15px;">
                 <h2 class="error-headline text-yellow">404</h2>
                 <div class="error-content">
