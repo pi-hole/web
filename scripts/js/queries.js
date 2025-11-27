@@ -635,12 +635,12 @@ $(() => {
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
           "<i class='fa fa-fw " +
-          querystatus.icon +
-          " " +
-          querystatus.colorClass +
-          "' title='" +
-          utils.escapeHtml(querystatus.fieldtext) +
-          "'></i>"
+            querystatus.icon +
+            " " +
+            querystatus.colorClass +
+            "' title='" +
+            utils.escapeHtml(querystatus.fieldtext) +
+            "'></i>"
         );
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
