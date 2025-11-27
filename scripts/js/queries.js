@@ -12,8 +12,9 @@
 // These values are provided by the API (/info/database).
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch (set from API: info/database.earliest_timestamp)
-// endOfTime should be the end of today (local), in seconds since epoch
-const endOfTime = moment().endOf("day").unix();
+// endOfTime should be the start of tomorrow in seconds since epoch
+// We don't use 23:59:59 (endOf("day")) as the picker increments are set to 5 minutes
+const endOfTime = luxon.DateTime.now().plus({ days: 1 }).startOf("day").toSeconds(); // seconds since epoch (start of tomorrow)
 let from = null;
 let until = null;
 
@@ -84,9 +85,10 @@ function initDateRangePicker() {
     return;
   }
 
-  const minDateMoment = moment.unix(beginningOfTime);
-  const maxDateMoment = moment.unix(endOfTime);
-  const earliestDateStr = minDateMoment.format(dateformat);
+  const now = luxon.DateTime.now();
+  const minDateDt = luxon.DateTime.fromSeconds(beginningOfTime);
+  const maxDateDt = luxon.DateTime.fromSeconds(endOfTime);
+  const earliestDateStr = minDateDt.toFormat(dateformat);
   $("#querytime-note").text(`Earliest date: ${earliestDateStr}`);
 
   $("#querytime").daterangepicker(
@@ -94,36 +96,32 @@ function initDateRangePicker() {
       timePicker: true,
       timePickerIncrement: 5,
       timePicker24Hour: true,
-      locale: { format: dateformat },
-      startDate: luxon.DateTime.fromMillis(from * 1000), // convert to milliseconds since epoch
-      endDate: luxon.DateTime.fromMillis(until * 1000), // convert to milliseconds since epoch
+      locale: {
+        format: dateformat,
+        firstDay: 7,
+      },
+      // Use Luxon DateTime objects for the picker ranges/start/end. The
+      // daterangepicker in this build expects Luxon DateTime or ISO strings.
+      startDate: luxon.DateTime.fromSeconds(from),
+      endDate: luxon.DateTime.fromSeconds(until),
       ranges: {
-        "Last 10 Minutes": [luxon.DateTime.now().minus({ minutes: 10 }), luxon.DateTime.now()],
-        "Last Hour": [luxon.DateTime.now().minus({ hours: 1 }), luxon.DateTime.now()],
-        Today: [luxon.DateTime.now().startOf("day"), luxon.DateTime.now().endOf("day")],
-        Yesterday: [
-          luxon.DateTime.now().minus({ days: 1 }).startOf("day"),
-          luxon.DateTime.now().minus({ days: 1 }).endOf("day"),
-        ],
-        "Last 7 Days": [luxon.DateTime.now().minus({ days: 6 }), luxon.DateTime.now().endOf("day")],
-        "Last 30 Days": [
-          luxon.DateTime.now().minus({ days: 29 }),
-          luxon.DateTime.now().endOf("day"),
-        ],
-        "This Month": [luxon.DateTime.now().startOf("month"), luxon.DateTime.now().endOf("month")],
+        "Last 10 Minutes": [now.minus({ minutes: 10 }), now],
+        "Last Hour": [now.minus({ hours: 1 }), now],
+        Today: [now.startOf("day"), maxDateDt],
+        Yesterday: [now.minus({ days: 1 }).startOf("day"), now.minus({ days: 1 }).endOf("day")],
+        "Last 7 Days": [now.minus({ days: 6 }).startOf("day"), maxDateDt],
+        "Last 30 Days": [now.minus({ days: 29 }).startOf("day"), maxDateDt],
+        "This Month": [now.startOf("month"), maxDateDt],
         "Last Month": [
-          luxon.DateTime.now().minus({ months: 1 }).startOf("month"),
-          luxon.DateTime.now().minus({ months: 1 }).endOf("month"),
+          now.minus({ months: 1 }).startOf("month"),
+          now.minus({ months: 1 }).endOf("month"),
         ],
-        "This Year": [luxon.DateTime.now().startOf("year"), luxon.DateTime.now().endOf("year")],
-        "All Time": [
-          luxon.DateTime.fromMillis(beginningOfTime * 1000),
-          luxon.DateTime.fromMillis(endOfTime * 1000),
-        ], // convert to milliseconds since epoch
+        "This Year": [now.startOf("year"), maxDateDt],
+        "All Time": [minDateDt, maxDateDt],
       },
       // Don't allow selecting dates outside the database range
-      minDate: minDateMoment,
-      maxDate: maxDateMoment,
+      minDate: minDateDt,
+      maxDate: maxDateDt,
       opens: "center",
       showDropdowns: true,
       autoUpdateInput: true,
@@ -635,12 +633,12 @@ $(() => {
       if (querystatus.icon !== false) {
         $("td:eq(1)", row).html(
           "<i class='fa fa-fw " +
-          querystatus.icon +
-          " " +
-          querystatus.colorClass +
-          "' title='" +
-          utils.escapeHtml(querystatus.fieldtext) +
-          "'></i>"
+            querystatus.icon +
+            " " +
+            querystatus.colorClass +
+            "' title='" +
+            utils.escapeHtml(querystatus.fieldtext) +
+            "'></i>"
         );
       } else if (querystatus.colorClass !== false) {
         $(row).addClass(querystatus.colorClass);
