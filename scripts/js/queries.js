@@ -13,7 +13,7 @@
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch (set from API: info/database.earliest_timestamp)
 // endOfTime should be the start of tomorrow in seconds since epoch
-// We don't use 23:59:59 as the picker increments are set to 5 minutes
+// We don't use 23:59:59 (endOf("day")) as the picker increments are set to 5 minutes
 const endOfTime = luxon.DateTime.now().plus({ days: 1 }).startOf("day").toSeconds(); // seconds since epoch (start of tomorrow)
 let from = null;
 let until = null;
@@ -81,7 +81,7 @@ function initDateRangePicker() {
   if (beginningOfTime === null) {
     $("#querytime").prop("disabled", true);
     $("#querytime").addClass("disabled");
-    $("#querytime-note").text("No data in the database");
+    $("#querytime-note").text("ℹ️ No data in the database");
     return;
   }
 
@@ -109,8 +109,8 @@ function initDateRangePicker() {
         "Last Hour": [now.minus({ hours: 1 }), now],
         Today: [now.startOf("day"), maxDateDt],
         Yesterday: [now.minus({ days: 1 }).startOf("day"), now.minus({ days: 1 }).endOf("day")],
-        "Last 7 Days": [now.minus({ days: 6 }), maxDateDt],
-        "Last 30 Days": [now.minus({ days: 29 }), maxDateDt],
+        "Last 7 Days": [now.minus({ days: 6 }).startOf("day"), maxDateDt],
+        "Last 30 Days": [now.minus({ days: 29 }).startOf("day"), maxDateDt],
         "This Month": [now.startOf("month"), maxDateDt],
         "Last Month": [
           now.minus({ months: 1 }).startOf("month"),
