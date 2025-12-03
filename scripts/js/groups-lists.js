@@ -243,7 +243,13 @@ function initTable() {
         const aElem = document.createElement("a");
         aElem.id = "address_" + dataId;
         aElem.className = "breakall";
-        aElem.href = data.address;
+        // Decode the address to prevent double-encoding (e.g., %20 -> %2520)
+        try {
+          aElem.href = decodeURIComponent(data.address);
+        } catch (e) {
+          // If decoding fails, use the original address
+          aElem.href = data.address;
+        }
         aElem.target = "_blank";
         aElem.rel = "noopener noreferrer";
         aElem.textContent = data.address;
@@ -495,11 +501,11 @@ function addList(event) {
   // Convert all group IDs to integers
   const group = $("#new_group").val().map(Number);
 
-  // Check if the user wants to add multiple domains (comma or newline separated)
+  // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
   let addresses = $("#new_address")
     .val()
-    .split(/[,\n]+/);
+    .split(/[\s,]+/);
   // Remove empty elements
   addresses = addresses.filter(el => el !== "");
   const addressestr = JSON.stringify(addresses);
