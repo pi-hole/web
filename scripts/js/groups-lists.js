@@ -246,10 +246,11 @@ function initTable() {
         // Decode the address to prevent double-encoding (e.g., %20 -> %2520)
         try {
           aElem.href = decodeURIComponent(data.address);
-        } catch (e) {
+        } catch {
           // If decoding fails, use the original address
           aElem.href = data.address;
         }
+
         aElem.target = "_blank";
         aElem.rel = "noopener noreferrer";
         aElem.textContent = data.address;
