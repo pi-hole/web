@@ -32,6 +32,7 @@ const filters = [
   "dnssec",
 ];
 let doDNSSEC = false;
+let clientDescriptions = {};
 
 // Check if pihole is validiting DNSSEC
 function getDnssecConfig() {
@@ -40,6 +41,18 @@ function getDnssecConfig() {
 
     // redraw the table to show the icons when the API call returns
     $("#all-queries").DataTable().draw();
+  });
+}
+
+// Fetch client descriptions
+function fetchClientData() {
+  $.getJSON(document.body.dataset.apiurl + "/clients", data => {
+    clientDescriptions = {};
+    for (const client of data.clients) {
+      if (client.comment && client.comment.length > 0) {
+        clientDescriptions[client.client] = client.comment;
+      }
+    }
   });
 }
 
@@ -545,6 +558,8 @@ $(() => {
   // Do we want to show DNSSEC icons?
   getDnssecConfig();
 
+  fetchClientData();
+
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 
@@ -680,9 +695,11 @@ $(() => {
         $("td:eq(3)", row).html(domain);
       }
 
-      // Show hostname instead of IP if available
-      if (data.client.name !== null && data.client.name !== "") {
-        $("td:eq(4)", row).text(data.client.name);
+      // Show client description instead of IP based on toggle preference
+      const showClientDescription = $("#show-client-description").prop("checked");
+      const clientDescription = clientDescriptions[data.client.ip];
+      if (showClientDescription && clientDescription) {
+        $("td:eq(4)", row).text(clientDescription);
       } else {
         $("td:eq(4)", row).text(data.client.ip);
       }
@@ -775,11 +792,19 @@ $(() => {
       $("#live").prop("disabled", false);
     }
   });
+
+  // Redraw table when client description toggle is changed
+  $("#show-client-description").on("click", function () {
+    table.draw(false);
+  });
 });
 
 function refreshTable() {
   // Set cursor to NULL so we pick up newer queries
   cursor = null;
+
+  // Fetch client descriptions
+  fetchClientData();
 
   // Clear table
   table.clear();

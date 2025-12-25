@@ -68,6 +68,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="form-group col-md-6">
                         <div><input type="checkbox" id="disk"><label for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours. This option disables live update.</label></div>
+                        <div style="margin-top: 10px;"><input type="checkbox" id="show-client-description"><label for="show-client-description">Show client description instead of IP address (when available).</label></div>
                     </div>
                 </div>
                 <div class="row">
