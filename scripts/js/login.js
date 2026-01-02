@@ -25,31 +25,34 @@ function redirect() {
   globalThis.location.replace(target);
 }
 
+function showErrorMessage(errorMessage) {
+  $("#error-message").text(errorMessage);
+  $("#error-label").show();
+}
+
 function wrongPassword(isError = false, isSuccess = false, data = null) {
   if (isError) {
     let isErrorResponse = false;
     let isInvalidTOTP = false;
-
+    let errorMessage = "Wrong password!";
     // Reset hint and error message
     $("#error-message").text("");
     $("#error-hint").hide();
     $("#error-hint").text("");
-    if (data !== null && "error" in data.responseJSON && "message" in data.responseJSON.error) {
+
+    if ("error" in data.responseJSON && "message" in data.responseJSON.error) {
       // This is an error, highlight both the password and the TOTP field
       isErrorResponse = true;
       // Check if the error is caused by an invalid TOTP token
       isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
-      $("#error-message").text(data.responseJSON.error.message);
+      errorMessage = data.responseJSON.error.message;
       if ("hint" in data.responseJSON.error && data.responseJSON.error.hint !== null) {
         $("#error-hint").text(data.responseJSON.error.hint);
         $("#error-hint").show();
       }
-    } else {
-      $("#error-message").text("Wrong password!");
     }
 
-    $("#error-label").show();
-
+    showErrorMessage(errorMessage);
     // Always highlight the TOTP field on error
     if (isErrorResponse) $("#totp_input").addClass("has-error");
 
@@ -105,7 +108,12 @@ function doLogin(password) {
       redirect();
     })
     .fail(data => {
-      wrongPassword(true, false, data);
+      if (!data || !data.responseJSON) {
+        showErrorMessage("Server unreachable!");
+      } else {
+        wrongPassword(true, false, data);
+      }
+
       NProgress.done();
       utils.enableAll();
     });
