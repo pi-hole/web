@@ -33,6 +33,7 @@
 
   --datatable-bgcolor: rgba(18, 44, 68, 0.3);
   --overlay-bgcolor: rgba(24, 28, 32, 0.8);
+  --dt-row-selected: 18, 44, 68;
 }
 
 /* removing transition for every element, to avoid unnecessary movement */

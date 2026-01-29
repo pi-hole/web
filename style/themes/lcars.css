@@ -11,6 +11,7 @@
   --net-old-color: #125;
   --net-older-color: #1c2228;
   --datatable-bgcolor: var(--net-old-color);
+  --dt-row-selected: 17, 34, 85;
 
   /* Dashboard graphic bars */
   --allowed-color: #073;
@@ -1897,12 +1898,6 @@ table.dataTable {
   background-color: #678;
   color: #000;
   border: none;
-}
-
-/*** datatables Select: row, checkbox and button ***/
-table.dataTable tbody > tr.selected td,
-table.dataTable tbody > tr > .selected td {
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .select-checkbox {

@@ -115,6 +115,7 @@ select:-webkit-autofill {
   --darkreader-selection-text: #e8e6e3;
   --datatable-bgcolor: rgb(35, 47, 52);
   --overlay-bgcolor: rgba(35, 47, 52, 0.7);
+  --dt-row-selected: 35, 47, 52;
 
   /* Dashboard graphic bars */
   --allowed-color: #12b660;

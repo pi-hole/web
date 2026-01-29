@@ -8,6 +8,7 @@
 :root {
   /* Datatables Select - bgcolor */
   --datatable-bgcolor: #e0e8ee;
+  --dt-row-selected: 224, 232, 238;
 
   /* Used in settings save button */
   --overlay-bgcolor: rgba(212, 220, 232, 0.55);
@@ -1041,13 +1042,6 @@ table.dataTable tr.selected th.select-checkbox::after {
 
 .datatable-bt span {
   font-size: 17px;
-}
-
-/* Datatables Select - selected row bgcolor */
-table.dataTable tbody > tr.selected,
-table.dataTable tbody > tr > .selected {
-  background: none;
-  background-image: linear-gradient(var(--datatable-bgcolor), var(--datatable-bgcolor));
 }
 
 #messagesTable pre {
