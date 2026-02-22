@@ -392,6 +392,13 @@ h4 {
   background-color: #913225 !important;
 }
 
+kbd {
+  color: #353c42;
+  background-color: #bec5cb;
+  box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.5);
+  vertical-align: middle;
+}
+
 code,
 pre {
   padding: 2px 4px;
