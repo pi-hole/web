@@ -516,12 +516,13 @@ function updateVersionInfo() {
               '" rel="noopener noreferrer" target="_blank">' +
               localVersion +
               "</a>";
-            if (v.remote == null) {
+            if (v.remote === null) {
               // No remote version available, we cannot determine if an update is available
               updateComponentAvailable = false;
+              localVersion = v.local + " (Latest: N/A)";
             } else if (versionCompare(v.local, v.remote) === -1) {
-                // Update available
-                updateComponentAvailable = true;
+              // Update available
+              updateComponentAvailable = true;
             }
           } else {
             // non-master branch
@@ -540,6 +541,7 @@ function updateVersionInfo() {
             // No remote version available, we cannot determine if an update is available
             updateComponentAvailable = false;
             dockerUpdate = false;
+            localVersion = v.local + " (Latest: N/A)";
           } else if (versionCompare(v.local, v.remote) === -1) {
             // Display update information for the docker tag
             updateComponentAvailable = true;
