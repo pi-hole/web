@@ -518,7 +518,6 @@ function updateVersionInfo() {
               "</a>";
             if (v.remote === null) {
               // No remote version available, we cannot determine if an update is available
-              updateComponentAvailable = false;
               localVersion = v.local + " (Latest: N/A)";
             } else if (versionCompare(v.local, v.remote) === -1) {
               // Update available
@@ -539,8 +538,6 @@ function updateVersionInfo() {
         if (v.name === "Docker Tag") {
           if (v.remote === null) {
             // No remote version available, we cannot determine if an update is available
-            updateComponentAvailable = false;
-            dockerUpdate = false;
             localVersion = v.local + " (Latest: N/A)";
           } else if (versionCompare(v.local, v.remote) === -1) {
             // Display update information for the docker tag
