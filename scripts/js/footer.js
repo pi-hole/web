@@ -537,8 +537,8 @@ function updateVersionInfo() {
             // Display update information for the docker tag
             updateComponentAvailable = true;
             dockerUpdate = true;
-          } else if (v.local !== "nightly") {
-            // Display the link for the current tag if not nightly
+          } else if (/^\d{4}\.\d{2}\.\d+/.test(v.local)) {
+            // Display the link if the current tag is a normal date-based tag
             localVersion =
               '<a href="' +
               v.url +
