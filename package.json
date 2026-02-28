@@ -52,7 +52,7 @@
     "select2": "4.0.13"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.24",
+    "autoprefixer": "^10.4.27",
     "eslint": "^10.0.1",
     "eslint-plugin-compat": "^7.0.0",
     "globals": "^17.3.0",
