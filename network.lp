@@ -24,6 +24,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <th>ID</th>
                             <th>IP address (hostname)</th>
                             <th>Hardware address</th>
+                            <th>Client Name</th>
                             <th>Interface</th>
                             <th>First seen</th>
                             <th>Last Query</th>
@@ -37,6 +38,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <th>ID</th>
                             <th>IP address (hostname)</th>
                             <th>Hardware address</th>
+                            <th>Client Name</th>
                             <th>Interface</th>
                             <th>First seen</th>
                             <th>Last Query</th>

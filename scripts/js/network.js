@@ -14,6 +14,7 @@ let tableApi;
 // How many IPs do we show at most per device?
 const MAXIPDISPLAY = 3;
 const DAY_IN_SECONDS = 24 * 60 * 60;
+const clientNameMap = {};
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -92,7 +93,7 @@ function deleteNetworkEntry() {
   });
 }
 
-$(() => {
+function initTable() {
   tableApi = $("#network-entries").DataTable({
     rowCallback(row, data) {
       let color;
@@ -125,16 +126,16 @@ $(() => {
 
       // Set determined background color
       $(row).css("background-color", color);
-      $("td:eq(6)", row).html('<i class="' + iconClasses + '"></i>');
+      $("td:eq(7)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
       if (data.lastQuery === 0) {
-        $("td:eq(4)", row).text("Never");
+        $("td:eq(5)", row).text("Never");
       }
 
       // Set number of queries to localized string (add thousand separators)
-      $("td:eq(5)", row).text(data.numQueries.toLocaleString());
+      $("td:eq(6)", row).text(data.numQueries.toLocaleString());
 
       const ips = [];
       const iptitles = [];
@@ -200,7 +201,7 @@ $(() => {
         '">' +
         '<span class="far fa-trash-alt"></span>' +
         "</button>";
-      $("td:eq(7)", row).html(button);
+      $("td:eq(8)", row).html(button);
     },
     dom:
       "<'row'<'col-sm-12'f>>" +
@@ -220,11 +221,23 @@ $(() => {
     },
     autoWidth: false,
     processing: true,
-    order: [[6, "desc"]],
+    order: [[7, "desc"]],
     columns: [
       { data: "id", visible: false },
       { data: "ips[].ip", type: "ip-address", width: "25%" },
       { data: "hwaddr", width: "10%" },
+      {
+        data: "hwaddr",
+        width: "10%",
+        render(data, type) {
+          const name = clientNameMap[data.toLowerCase()] || "";
+          if (type === "display") {
+            return utils.escapeHtml(name);
+          }
+
+          return name;
+        },
+      },
       { data: "interface", width: "4%" },
       {
         data: "firstSeen",
@@ -289,4 +302,22 @@ $(() => {
   input.setAttribute("autocorrect", "off");
   input.setAttribute("autocapitalize", "off");
   input.setAttribute("spellcheck", false);
+}
+
+$(() => {
+  $.ajax({
+    url: document.body.dataset.apiurl + "/clients",
+    type: "GET",
+    dataType: "json",
+    success(data) {
+      if (data && Array.isArray(data.clients)) {
+        for (const client of data.clients) {
+          if (client.comment && client.comment.length > 0) {
+            clientNameMap[client.client.toLowerCase()] = client.comment;
+          }
+        }
+      }
+    },
+    complete: initTable,
+  });
 });
