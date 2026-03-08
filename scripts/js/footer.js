@@ -454,6 +454,7 @@ function updateVersionInfo() {
     let updateAvailable = false;
     let dockerUpdate = false;
     let isDocker = false;
+    let versionWarning = false;
     $("#versions").empty();
     $("#update-hint").empty();
 
@@ -516,7 +517,10 @@ function updateVersionInfo() {
               '" rel="noopener noreferrer" target="_blank">' +
               localVersion +
               "</a>";
-            if (versionCompare(v.local, v.remote) === -1) {
+            if (v.remote === null) {
+              // No remote version available, we cannot determine if an update is available
+              versionWarning = true;
+            } else if (versionCompare(v.local, v.remote) === -1) {
               // Update available
               updateComponentAvailable = true;
             }
@@ -533,7 +537,10 @@ function updateVersionInfo() {
         }
 
         if (v.name === "Docker Tag") {
-          if (versionCompare(v.local, v.remote) === -1) {
+          if (v.remote === null) {
+            // No remote version available, we cannot determine if an update is available
+            versionWarning = true;
+          } else if (versionCompare(v.local, v.remote) === -1) {
             // Display update information for the docker tag
             updateComponentAvailable = true;
             dockerUpdate = true;
@@ -567,6 +574,13 @@ function updateVersionInfo() {
           $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
         }
       }
+    }
+
+    // Display message asking to run updatechecker, to populate versions file
+    if (versionWarning) {
+      $("#versions").append(
+        "<p><small>The <code>versions</code> file is incomplete. Please execute <code>sudo pihole updatechecker</code> on the command line.</small></p>"
+      );
     }
 
     if (dockerUpdate)
