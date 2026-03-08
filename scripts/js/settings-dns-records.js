@@ -207,6 +207,8 @@ function delCNAME(elem) {
         "Successfully deleted local CNAME record",
         elem
       );
+      // Show loading overlay
+      utils.loadingOverlay(true);
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
     .fail((data, exception) => {
@@ -267,6 +269,8 @@ $(() => {
       .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
+        // Show loading overlay
+        utils.loadingOverlay(true);
         $("#Cdomain").val("");
         $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
