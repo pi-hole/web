@@ -159,7 +159,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-cloud-download-alt";
       fieldtext =
         (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
-        data.upstream;
+        utils.escapeHtml(data.upstream);
       buttontext =
         '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
@@ -270,14 +270,14 @@ function parseQueryStatus(data) {
     case "SPECIAL_DOMAIN":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
-      fieldtext = data.status;
+      fieldtext = utils.escapeHtml(data.status);
       buttontext = "";
       blocked = true;
       break;
     default:
       colorClass = "text-orange";
       icon = "fa-solid fa-question";
-      fieldtext = data.status;
+      fieldtext = utils.escapeHtml(data.status);
       buttontext = "";
   }
 
@@ -374,7 +374,10 @@ function formatInfo(data) {
   let cnameInfo = "";
   if (queryStatus.isCNAME) {
     cnameInfo =
-      divStart + "Query was blocked during CNAME inspection of&nbsp;&nbsp;" + data.cname + "</div>";
+      divStart +
+      "Query was blocked during CNAME inspection of&nbsp;&nbsp;" +
+      utils.escapeHtml(data.cname) +
+      "</div>";
   }
 
   // Show TTL if applicable
@@ -392,8 +395,8 @@ function formatInfo(data) {
   // Show client information, show hostname only if available
   const ipInfo =
     data.client.name !== null && data.client.name.length > 0
-      ? utils.escapeHtml(data.client.name) + " (" + data.client.ip + ")"
-      : data.client.ip;
+      ? utils.escapeHtml(data.client.name) + " (" + utils.escapeHtml(data.client.ip) + ")"
+      : utils.escapeHtml(data.client.ip);
   const clientInfo = divStart + "Client:&nbsp;&nbsp;<strong>" + ipInfo + "</strong></div>";
 
   // Show DNSSEC status if applicable
@@ -418,7 +421,7 @@ function formatInfo(data) {
   let replyInfo = "";
   replyInfo =
     data.reply.type !== "UNKNOWN"
-      ? divStart + "Reply:&nbsp;&nbsp;" + data.reply.type + "</div>"
+      ? divStart + `Reply:&nbsp;&nbsp;${utils.escapeHtml(data.reply.type)}</div>`
       : divStart + "Reply:&nbsp;&nbsp;No reply received</div>";
 
   // Show extended DNS error if applicable
@@ -429,7 +432,7 @@ function formatInfo(data) {
       edeInfo += ' class="' + dnssec.color + '"';
     }
 
-    edeInfo += ">" + data.ede.text + "</strong></div>";
+    edeInfo += ">" + utils.escapeHtml(data.ede.text) + "</strong></div>";
   }
 
   // Compile extra info for displaying
@@ -640,7 +643,7 @@ $(() => {
             " " +
             querystatus.colorClass +
             "' title='" +
-            utils.escapeHtml(querystatus.fieldtext) +
+            querystatus.fieldtext +
             "'></i>"
         );
       } else if (querystatus.colorClass !== false) {
