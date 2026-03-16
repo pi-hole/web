@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, moment:false, base64ToString:false */
+/* global utils:false, moment:false */
 
 "use strict";
 
@@ -715,7 +715,7 @@ function addAdvancedInfo() {
   const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
   const xffData = advancedInfoSource.data("xff") || "";
-  const XForwardedFor = xffData ? base64ToString(xffData) : null;
+  const XForwardedFor = xffData ? utils.base64ToString(xffData) : null;
   const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
   const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);

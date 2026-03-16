@@ -733,5 +733,6 @@ globalThis.utils = (function () {
     setTimer,
     setInter,
     toggleBoxCollapse,
+    base64ToString,
   };
 })();
