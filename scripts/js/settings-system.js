@@ -35,7 +35,7 @@ function updateCachePie(data) {
   }
 
   // Sort data by value, put OTHER always as last
-  const sorted = Object.keys(data).sort((a, b) => {
+  const sorted = Object.keys(data).toSorted((a, b) => {
     if (a === "OTHER") {
       return 1;
     }
@@ -292,8 +292,7 @@ $("#loggingButton").confirm({
     "Furthermore, you will be logged out of the web interface.",
   title: "Confirmation required",
   confirm() {
-    const data = {};
-    data.config = {};
+    const data = { config: {} };
     data.config.dns = {};
     data.config.dns.queryLogging = $("#loggingButton").data("state") !== "enabled";
     $.ajax({
