@@ -484,7 +484,7 @@ function sortInterfaces(interfaces, masterInterfaces) {
   }
 
   // Add interfaces that are not slaves at the top of the list (in reverse order)
-  for (const iface of ifaces.reverse()) {
+  for (const iface of ifaces.toReversed()) {
     if (!interfaceList.includes(iface)) {
       interfaceList.unshift(iface);
     }

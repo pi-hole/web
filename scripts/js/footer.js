@@ -544,7 +544,7 @@ function updateVersionInfo() {
             // Display update information for the docker tag
             updateComponentAvailable = true;
             dockerUpdate = true;
-          } else if (/^\d{4}\.\d{2}\.\d+/.test(v.local)) {
+          } else if (/^\d{4}\.\d{2}\.\d+/v.test(v.local)) {
             // Display the link if the current tag is a normal date-based tag
             localVersion =
               '<a href="' +
@@ -714,7 +714,8 @@ function addAdvancedInfo() {
   const advancedInfoTarget = $("#advanced-info");
   const isTLS = location.protocol === "https:";
   const clientIP = advancedInfoSource.data("client-ip");
-  const XForwardedFor = globalThis.atob(advancedInfoSource.data("xff") || "") || null;
+  const xffData = advancedInfoSource.data("xff") || "";
+  const XForwardedFor = xffData ? utils.base64ToString(xffData) : null;
   const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
   const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
