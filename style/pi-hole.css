@@ -594,12 +594,6 @@ td.details-control {
   border: none;
 }
 
-.form-control-feedback {
-  right: 0.5em;
-  width: 16px;
-  height: 100%;
-}
-
 .loginpage-logo {
   margin: 0 0 10px;
 }
@@ -1649,4 +1643,14 @@ div.dhcp-hosts-wrapper {
 #StaticDHCPTable td.table-success {
   background-color: #599900;
   color: #fff;
+}
+
+/* Used in query log page */
+td.dnssec {
+  padding-inline-start: 2.25em !important;
+  text-indent: -1.25em;
+}
+td.dnssec i {
+  text-indent: 0;
+  margin-left: -0.5rem;
 }

@@ -59,7 +59,7 @@ mg.include('scripts/lua/settings_header.lp','r')
         </div>
         <div class="box box-warning settings-level-expert d-none">
             <div class="box-header with-border">
-                <h3 class="box-title" data-configkeys="dns.domain dns.expandHosts">DNS domain settings</h3>
+                <h3 class="box-title" data-configkeys="dns.domain.name dns.expandHosts">DNS domain settings</h3>
             </div>
             <div class="box-body">
                 <div class="row">
@@ -68,7 +68,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">Domain</div>
-                                <input type="text" class="form-control" id="dns.domain" data-key="dns.domain" value="">
+                                <input type="text" class="form-control" id="dns.domain.name" data-key="dns.domain.name" value="">
                             </div>
                         </div>
                         <p>The DNS domains for your Pi-hole. This DNS domain is purely local. FTL may answer queries from its local cache and configuration but *never* forwards any requests upstream *unless* you have configured a dns.revServer exactly for this domain. If no domain is specified and you are using Pi-hole's DHCP server, then any hostnames with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>

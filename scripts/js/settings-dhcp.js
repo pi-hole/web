@@ -361,7 +361,7 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
   if (!row.next().hasClass("edit-hint-row")) {
     row.next(".edit-hint-row").remove(); // Remove any existing hint
     row.after(
-      '<tr class="edit-hint-row"><td colspan="4" class="text-info" style="font-style:italic;">Please save this line before editing another or leaving the page, otherwise your changes will be lost.</td></tr>'
+      '<tr class="edit-hint-row"><td colspan="4" class="text-info" style="font-style:italic;">Please confirm changes using the green button, then click "Save &amp; Apply" before leaving the page.</td></tr>'
     );
   }
 });
@@ -398,10 +398,10 @@ function renderStaticDHCPTable() {
         $("<td></td>")
           .append(
             $(
-              '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-floppy-disk"></i></button>'
+              '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
             )
               .attr("data-row", idx)
-              .attr("title", "Save changes to this line")
+              .attr("title", "Confirm changes to this line")
               .attr("data-toggle", "tooltip")
           )
           .append(" ")
@@ -515,6 +515,20 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
   } else {
     $(this).addClass("table-success");
     $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+  }
+});
+
+$(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", function () {
+  const val = $(this).text().trim();
+  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
+  const hostnameValidator = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/v;
+  if (val && !hostnameValidator.test(val)) {
+    $(this).addClass("table-danger");
+    $(this).removeClass("table-success");
+    $(this).attr("title", "Invalid hostname: only letters, digits, hyphens, and dots allowed");
+  } else {
+    $(this).removeClass("table-danger table-success");
     $(this).attr("title", "");
   }
 });

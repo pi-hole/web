@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global upstreams:false */
+/* global upstreamIPs:false */
 
 "use strict";
 
@@ -63,6 +63,23 @@ globalThis.htmlLegendPlugin = {
     for (const item of items) {
       const li = document.createElement("li");
 
+      // Select the corresponding "slice" of the chart when the mouse is over a legend item
+      li.addEventListener("mouseover", () => {
+        chart.setActiveElements([
+          {
+            datasetIndex: 0,
+            index: item.index,
+          },
+        ]);
+        chart.update();
+      });
+
+      // Deselect all "slices"
+      li.addEventListener("mouseout", () => {
+        chart.setActiveElements([]);
+        chart.update();
+      });
+
       // Color checkbox (toggle visibility)
       const boxSpan = document.createElement("span");
       boxSpan.title = "Toggle visibility";
@@ -96,9 +113,19 @@ globalThis.htmlLegendPlugin = {
 
         if (isQueryTypeChart) {
           link.href = `queries?type=${item.text}`;
-        } else if (isForwardDestinationChart) {
+        } else {
           // Encode the forward destination as it may contain an "#" character
-          link.href = `queries?upstream=${encodeURIComponent(upstreams[item.text])}`;
+          link.href = `queries?upstream=${encodeURIComponent(upstreamIPs[item.index])}`;
+
+          // If server name and IP are different:
+          if (item.text !== upstreamIPs[item.index]) {
+            // replace the title tooltip to include the upstream IP to the text ...
+            link.title = `List ${item.text} (${upstreamIPs[item.index]}) queries`;
+
+            // ... and include the server name (without port) to the querystring, to match
+            // the text used on the SELECT element (sent by suggestions API endpoint)
+            link.href += ` (${item.text.split("#")[0]})`;
+          }
         }
       } else {
         // no clickable links in other charts
@@ -233,6 +260,10 @@ function positionTooltip(tooltipEl, tooltip, context) {
   const arrowMinIndent = 2 * tooltip.options.cornerRadius;
   const arrowSize = 5;
 
+  // Check if this is a queryOverTimeChart or clientsChart - these should stick to x-axis
+  const canvasId = context.chart.canvas.id;
+  const isTimelineChart = canvasId === "queryOverTimeChart" || canvasId === "clientsChart";
+
   let tooltipX = offsetX + caretX;
   let arrowX;
 
@@ -289,27 +320,37 @@ function positionTooltip(tooltipEl, tooltip, context) {
     arrowX = offsetX + caretX - tooltipX;
   }
 
-  let tooltipY = offsetY + caretY;
+  let tooltipY;
 
-  // Compute Y position
-  switch (tooltip.yAlign) {
-    case "top": {
-      tooltipY += arrowSize + caretPadding;
-      break;
-    }
+  if (isTimelineChart) {
+    // For timeline charts, always position tooltip below the chart with caret pointing to x-axis
+    const chartArea = context.chart.chartArea;
+    const canvasBottom = chartArea.bottom;
+    tooltipY = offsetY + canvasBottom + arrowSize + caretPadding;
 
-    case "center": {
-      tooltipY -= tooltipHeight / 2;
-      if (tooltip.xAlign === "left") tooltipX += arrowSize;
-      if (tooltip.xAlign === "right") tooltipX -= arrowSize;
-      break;
-    }
+    // Ensure the arrow points to the correct X position
+    arrowX = tooltip.caretX - (tooltipX - offsetX);
+  } else {
+    tooltipY = offsetY + caretY;
+    switch (tooltip.yAlign) {
+      case "top": {
+        tooltipY += arrowSize + caretPadding;
+        break;
+      }
 
-    case "bottom": {
-      tooltipY -= tooltipHeight + arrowSize + caretPadding;
-      break;
+      case "center": {
+        tooltipY -= tooltipHeight / 2;
+        if (tooltip.xAlign === "left") tooltipX += arrowSize;
+        if (tooltip.xAlign === "right") tooltipX -= arrowSize;
+        break;
+      }
+
+      case "bottom": {
+        tooltipY -= tooltipHeight + arrowSize + caretPadding;
+        break;
+      }
+      // No default
     }
-    // No default
   }
 
   // Position tooltip and display
