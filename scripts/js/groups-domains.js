@@ -611,7 +611,7 @@ function editDomain() {
       "/domains/" +
       newTypestr +
       "/" +
-      encodeURIComponent(domainDecoded),
+      utils.encodePathSegment(domainDecoded),
     method: "put",
     dataType: "json",
     processData: false,
