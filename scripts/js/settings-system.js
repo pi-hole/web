@@ -185,32 +185,6 @@ function updateMetrics() {
     });
 }
 
-function showQueryLoggingButton(state) {
-  if (state) {
-    $("#loggingButton").addClass("btn-warning");
-    $("#loggingButton").removeClass("btn-success");
-    $("#loggingButton").text("Disable query logging");
-    $("#loggingButton").data("state", "enabled");
-  } else {
-    $("#loggingButton").addClass("btn-success");
-    $("#loggingButton").removeClass("btn-warning");
-    $("#loggingButton").text("Enable query logging");
-    $("#loggingButton").data("state", "disabled");
-  }
-}
-
-function getLoggingButton() {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/config/dns/queryLogging",
-  })
-    .done(data => {
-      showQueryLoggingButton(data.config.dns.queryLogging);
-    })
-    .fail(data => {
-      apiFailure(data);
-    });
-}
-
 $(".confirm-restartdns").confirm({
   text:
     "Are you sure you want to send a restart command to your DNS server?<br><br>" +
@@ -284,47 +258,9 @@ $(".confirm-flusharp").confirm({
   dialogClass: "modal-dialog",
 });
 
-$("#loggingButton").confirm({
-  text:
-    "Are you sure you want to switch query logging mode?<br><br>" +
-    "<strong>This will restart the DNS server.</strong><br>" +
-    "As consequence of this action, your DNS cache will be cleared and you may temporarily lose your internet connection.<br>" +
-    "Furthermore, you will be logged out of the web interface.",
-  title: "Confirmation required",
-  confirm() {
-    const data = { config: {} };
-    data.config.dns = {};
-    data.config.dns.queryLogging = $("#loggingButton").data("state") !== "enabled";
-    $.ajax({
-      url: document.body.dataset.apiurl + "/config/dns/queryLogging",
-      type: "PATCH",
-      dataType: "json",
-      processData: false,
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify(data),
-    })
-      .done(data => {
-        showQueryLoggingButton(data.config.dns.queryLogging);
-      })
-      .fail(data => {
-        apiFailure(data);
-      });
-  },
-  cancel() {
-    // nothing to do
-  },
-  confirmButton: "Yes, change query logging",
-  cancelButton: "No, go back",
-  post: true,
-  confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
-  dialogClass: "modal-dialog",
-});
-
 $(() => {
   updateHostInfo();
   updateMetrics();
-  getLoggingButton();
 
   const ctx = document.getElementById("cachePieChart").getContext("2d");
   cachePieChart = new Chart(ctx, {
