@@ -286,8 +286,8 @@ function parseStaticDHCPLine(line) {
   };
 }
 
-// Save button for each row updates only that line in the textarea
-$(document).on("click", ".save-static-row", function () {
+// Save button for each row updates only that line in the textarea, if it doesn't contain the class ".disabled"
+$(document).on("click", ".save-static-row:not(.disabled)", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
   const row = $(this).closest("tr");
   const hwaddr = row.find(".static-hwaddr").text().trim();
@@ -365,13 +365,15 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
     );
   }
 });
-// On save, re-enable all buttons and remove the hint
+
+// On save, re-enable all buttons (except buttons with class "disabled") and remove the hint
 $(document).on("click", ".save-static-row", function () {
   $(
-    "#StaticDHCPTable .save-static-row, #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
+    "#StaticDHCPTable .save-static-row:not(.disabled), #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
   ).prop("disabled", false);
   $(".edit-hint-row").remove();
 });
+
 // On table redraw, ensure all buttons are enabled and hints are removed
 function renderStaticDHCPTable() {
   const tbody = $("#StaticDHCPTable tbody");
@@ -379,54 +381,59 @@ function renderStaticDHCPTable() {
   const lines = $("#dhcp-hosts").val().split(/\r?\n/);
   for (const [idx, line] of lines.entries()) {
     const parsed = parseStaticDHCPLine(line);
+
+    const saveBtn = $(
+      '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
+    )
+      .attr("data-row", idx)
+      .attr("title", "Confirm changes to this line")
+      .attr("data-toggle", "tooltip");
+
+    const delBtn = $(
+      '<button type="button" class="btn btn-danger btn-xs delete-static-row"><i class="fa fa-fw fa-trash"></i></button>'
+    )
+      .attr("data-row", idx)
+      .attr("title", "Delete this line")
+      .attr("data-toggle", "tooltip");
+
+    const addBtn = $(
+      '<button type="button" class="btn btn-primary btn-xs add-static-row"><i class="fa fa-fw fa-plus"></i></button>'
+    )
+      .attr("data-row", idx)
+      .attr("title", "Add new line after this")
+      .attr("data-toggle", "tooltip");
+
+    const tr = $("<tr></tr>")
+
     if (parsed === "advanced") {
-      const tr = $(
-        '<tr class="table-warning"><td colspan="4" style="font-style:italic;color:#888;">Advanced settings present in line ' +
-          (idx + 1) +
-          "</td></tr>"
-      );
+      tr.addClass("table-warning")
+        .append(
+          '<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ' +
+            (idx + 1) +
+            "</td>",
+        )
+
+      // Keep the original data
       tr.data("original-line", line);
-      tbody.append(tr);
-      continue;
+
+      // Disable the save button on advanced rows
+      saveBtn
+        .addClass("disabled")
+        .prop("disabled", true)
+        .attr("title", "Disabled");
+
+    } else {
+      // Append 3 cells containing parsed values, with placeholder for empty hwaddr
+      tr.append($('<td contenteditable="true" class="static-hwaddr"></td>').text(parsed.hwaddr))
+        .append($('<td contenteditable="true" class="static-ipaddr"></td>').text(parsed.ipaddr))
+        .append(
+          $('<td contenteditable="true" class="static-hostname"></td>').text(parsed.hostname),
+        );
     }
 
-    const tr = $("<tr>")
-      .append($('<td contenteditable="true" class="static-hwaddr"></td>'))
-      .append($('<td contenteditable="true" class="static-ipaddr"></td>'))
-      .append($('<td contenteditable="true" class="static-hostname"></td>'))
-      .append(
-        $("<td></td>")
-          .append(
-            $(
-              '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
-            )
-              .attr("data-row", idx)
-              .attr("title", "Confirm changes to this line")
-              .attr("data-toggle", "tooltip")
-          )
-          .append(" ")
-          .append(
-            $(
-              '<button type="button" class="btn btn-danger btn-xs delete-static-row"><i class="fa fa-fw fa-trash"></i></button>'
-            )
-              .attr("data-row", idx)
-              .attr("title", "Delete this line")
-              .attr("data-toggle", "tooltip")
-          )
-          .append(" ")
-          .append(
-            $(
-              '<button type="button" class="btn btn-primary btn-xs add-static-row"><i class="fa fa-fw fa-plus"></i></button>'
-            )
-              .attr("data-row", idx)
-              .attr("title", "Add new line after this")
-              .attr("data-toggle", "tooltip")
-          )
-      );
-    // Set cell values, with placeholder for empty hwaddr
-    tr.find(".static-hwaddr").text(parsed.hwaddr);
-    tr.find(".static-ipaddr").text(parsed.ipaddr);
-    tr.find(".static-hostname").text(parsed.hostname);
+    // Append a last cell containing the buttons
+    tr.append($("<td></td>").append(saveBtn, " ", delBtn, " ", addBtn));
+
     tbody.append(tr);
   }
 
