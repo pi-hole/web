@@ -1645,6 +1645,10 @@ div.dhcp-hosts-wrapper {
   color: #fff;
 }
 
+.save-static-row.disabled {
+  opacity: 0.15;
+}
+
 /* Used in query log page */
 td.dnssec {
   padding-inline-start: 2.25em !important;
