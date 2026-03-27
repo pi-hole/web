@@ -522,7 +522,7 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", function () {
   const val = $(this).text().trim();
   // Hostnames must not contain spaces, commas, or characters invalid in DNS names
-  const hostnameValidator = /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/v;
+  const hostnameValidator = /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
   if (val && !hostnameValidator.test(val)) {
     $(this).addClass("table-danger");
     $(this).removeClass("table-success");
