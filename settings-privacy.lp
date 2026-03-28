@@ -104,8 +104,8 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings-privacy.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>" defer></script>
+<script src="<?=pihole.fileversion('scripts/js/settings-privacy.js')?>" defer></script>
+<script src="<?=pihole.fileversion('scripts/js/settings.js')?>" defer></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>
