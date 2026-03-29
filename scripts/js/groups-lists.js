@@ -499,7 +499,7 @@ function addList(event) {
   // If so, split the input and store it in an array
   let addresses = $("#new_address")
     .val()
-    .split(/[\s,]+/);
+    .split(/[\s,]+/v);
   // Remove empty elements
   addresses = addresses.filter(el => el !== "");
   const addressestr = JSON.stringify(addresses);

@@ -9,6 +9,11 @@ updates:
     open-pull-requests-limit: 10
     target-branch: development
     versioning-strategy: increase
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+      development-dependencies:
+        dependency-type: "development"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -17,3 +22,7 @@ updates:
       time: "10:00"
     open-pull-requests-limit: 10
     target-branch: development
+    groups:
+      github_action-dependencies:
+        patterns:
+          - "*"

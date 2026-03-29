@@ -19,6 +19,37 @@ $(() => {
   });
 });
 
+/**
+ * Decode a base64 string to UTF-8 text using native browser APIs
+ * This is the replacement for the deprecated atob() function
+ * @param {string} base64 - Base64 encoded string
+ * @returns {string} Decoded UTF-8 string
+ */
+// eslint-disable-next-line no-unused-vars -- Used by other scripts (e.g., footer.js)
+function base64ToString(base64) {
+  // Remove padding and whitespace
+  const cleanBase64 = base64.replaceAll(/[=\s]/gv, "");
+  const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+  // Decode base64 to bytes
+  const bytes = [];
+  for (let i = 0; i < cleanBase64.length; i += 4) {
+    const encoded1 = base64Chars.indexOf(cleanBase64[i]);
+    const encoded2 = base64Chars.indexOf(cleanBase64[i + 1]);
+    const encoded3 = base64Chars.indexOf(cleanBase64[i + 2]);
+    const encoded4 = base64Chars.indexOf(cleanBase64[i + 3]);
+
+    /* eslint-disable no-bitwise -- Bitwise operations required for base64 decoding */
+    bytes.push((encoded1 << 2) | (encoded2 >> 4));
+    if (encoded3 !== -1) bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
+    if (encoded4 !== -1) bytes.push(((encoded3 & 3) << 6) | encoded4);
+    /* eslint-enable no-bitwise */
+  }
+
+  // Decode bytes as UTF-8
+  return new TextDecoder().decode(new Uint8Array(bytes));
+}
+
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
   const map = {
@@ -32,7 +63,7 @@ function escapeHtml(text) {
   // Return early when text is not a string
   if (typeof text !== "string") return text;
 
-  return text.replaceAll(/[&<>"']/g, m => map[m]);
+  return text.replaceAll(/[&<>"']/gv, m => map[m]);
 }
 
 function unescapeHtml(text) {
@@ -54,7 +85,7 @@ function unescapeHtml(text) {
   if (text === null) return null;
 
   return text.replaceAll(
-    /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/g,
+    /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/gv,
     m => map[m]
   );
 }
@@ -195,7 +226,8 @@ function validateIPv4CIDR(ip) {
   // Build the complete IPv4/CIDR validator
   // Format: xxx.xxx.xxx.xxx[/yy] where each xxx is 0-255 and optional yy is 1-32
   const ipv4validator = new RegExp(
-    `^${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}${v4cidr}$`
+    `^${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}${v4cidr}$`,
+    "v"
   );
 
   return ipv4validator.test(ip);
@@ -217,7 +249,8 @@ function validateIPv6CIDR(ip) {
   const v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
 
   const ipv6validator = new RegExp(
-    `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`
+    `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`,
+    "v"
   );
 
   return ipv6validator.test(ip);
@@ -233,12 +266,12 @@ function validateIPv6(ip) {
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
-  const macvalidator = /^([\da-f]{2}[:-]){5}([\da-f]{2})$/i;
+  const macvalidator = /^([\da-f]{2}[:\-]){5}([\da-f]{2})$/iv;
   return macvalidator.test(mac.trim());
 }
 
 function validateHostname(name) {
-  const namevalidator = /[^<>;"]/;
+  const namevalidator = /[^<>;"]/v;
   return namevalidator.test(name.trim());
 }
 
@@ -402,14 +435,8 @@ function colorBar(percentage, total, cssClass) {
 }
 
 function checkMessages() {
-  const ignoreNonfatal = localStorage
-    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
-    : false;
   $.ajax({
-    url:
-      document.body.dataset.apiurl +
-      "/info/messages/count" +
-      (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : ""),
+    url: document.body.dataset.apiurl + "/info/messages/count",
     method: "GET",
     dataType: "json",
   })
@@ -516,7 +543,7 @@ function hexEncode(text) {
 function hexDecode(text) {
   if (typeof text !== "string" || text.length === 0) return "";
 
-  const hexes = text.match(/.{1,4}/g);
+  const hexes = text.match(/.{1,4}/gv);
   if (!hexes || hexes.length === 0) return "";
 
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
@@ -724,5 +751,6 @@ globalThis.utils = (function () {
     setTimer,
     setInter,
     toggleBoxCollapse,
+    base64ToString,
   };
 })();

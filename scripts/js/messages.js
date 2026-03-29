@@ -13,13 +13,7 @@ let table;
 const toasts = {};
 
 $(() => {
-  const ignoreNonfatal = localStorage
-    ? localStorage.getItem("hideNonfatalDnsmasqWarnings_chkbox") === "true"
-    : false;
-  const url =
-    document.body.dataset.apiurl +
-    "/info/messages" +
-    (ignoreNonfatal ? "?filter_dnsmasq_warnings=true" : "");
+  const url = document.body.dataset.apiurl + "/info/messages";
   table = $("#messagesTable").DataTable({
     ajax: {
       url,

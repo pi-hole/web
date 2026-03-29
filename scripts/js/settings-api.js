@@ -115,7 +115,7 @@ $(() => {
       // Show x-forwarded-for instead of the remote address in italics
       // and show the remote address in the title attribute
       if (data.x_forwarded_for !== null) {
-        $("td:eq(8)", row).html("<em>" + data.x_forwarded_for + "</em>");
+        $("td:eq(8)", row).html("<em>" + utils.escapeHtml(data.x_forwarded_for) + "</em>");
         $("td:eq(8)", row).attr("title", "Original remote address: " + data.remote_addr);
       }
     },

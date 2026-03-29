@@ -457,7 +457,10 @@ pre {
 }
 
 kbd {
-  background-color: #3c4652;
+  color: #3c4652;
+  background-color: #d2dde1;
+  box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.5);
+  vertical-align: middle;
 }
 
 /* Used in the Query Log table */

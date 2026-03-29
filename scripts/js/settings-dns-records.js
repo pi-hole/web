@@ -14,7 +14,7 @@ function hostsDomain(data) {
   // We split both on spaces and tabs to support both formats
   // Also, we remove any comments after the name(s)
   const name = data
-    .split(/[\t ]+/)
+    .split(/[\t ]+/v)
     .slice(1)
     .join(" ")
     .split("#")[0]
@@ -25,7 +25,7 @@ function hostsDomain(data) {
 function hostsIP(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
-  const ip = data.split(/[\t ]+/)[0].trim();
+  const ip = data.split(/[\t ]+/v)[0].trim();
   return ip;
 }
 
@@ -99,14 +99,27 @@ function populateDataTable(endpoint) {
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data);
-      const button = `<button type="button"
-                      class="btn btn-danger btn-xs"
-                      id="delete${endpoint}${utils.hexEncode(data)}"
-                      data-tag="${data}"
-                      data-type="${endpoint}"
-                      ${setByEnv ? "disabled" : ""}>
-                      <span class="far fa-trash-alt"></span>
-                    </button>`;
+
+      // Create delete button
+      const button = document.createElement("button");
+
+      // Set button ID and add CSS classes
+      button.id = `delete${endpoint}${utils.hexEncode(data)}`;
+      button.classList.add("btn", "btn-danger", "btn-xs");
+
+      // Set data-* attributes
+      button.dataset.type = endpoint;
+      button.dataset.tag = data;
+
+      // Disable the button if set by environment variables
+      button.disabled = setByEnv;
+
+      // Add a trash icon to the button
+      const iconSpan = document.createElement("span");
+      iconSpan.classList.add("far", "fa-trash-alt");
+      button.append(iconSpan);
+
+      // Add the button to the table row
       $(`td:eq(${endpoint === "hosts" ? 2 : 3})`, row).html(button);
     },
     dom:
@@ -194,6 +207,8 @@ function delCNAME(elem) {
         "Successfully deleted local CNAME record",
         elem
       );
+      // Show loading overlay
+      utils.loadingOverlay(true);
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
     .fail((data, exception) => {
@@ -254,6 +269,8 @@ $(() => {
       .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
+        // Show loading overlay
+        utils.loadingOverlay(true);
         $("#Cdomain").val("");
         $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);

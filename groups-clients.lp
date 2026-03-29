@@ -45,7 +45,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>&#x23CE;</kbd>.
+                        <p>You can select an existing client or add a custom one by typing into the field above and confirming your entry with <kbd>ENTER</kbd>.
                         Multiple clients can be added by separating each client with a space or comma. Clients may be described either by their</p>
                         <ol>
                             <li>IP addresses (IPv4 and IPv6 are supported),</li>

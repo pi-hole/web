@@ -51,7 +51,7 @@ function mixColors(ratio, rgb1, rgb2) {
 }
 
 function parseColor(input) {
-  const match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i);
+  const match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/iv);
 
   if (match) {
     return [match[1], match[2], match[3]];
