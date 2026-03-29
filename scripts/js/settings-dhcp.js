@@ -250,7 +250,7 @@ function parseStaticDHCPLine(line) {
     };
 
   // Advanced if contains id:, set:, tag:, ignore
-  if (/id:|set:|tag:|ignore|lease_time|,\s*,/.test(line)) return "advanced";
+  if (/id:|set:|tag:|ignore|lease_time|,\s*,/v.test(line)) return "advanced";
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
@@ -307,7 +307,7 @@ $(document).on("click", ".save-static-row:not(.disabled)", function () {
     return;
   }
 
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   // Only update if at least one field is non-empty
   lines[rowIdx] =
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
@@ -319,7 +319,7 @@ $(document).on("click", ".save-static-row:not(.disabled)", function () {
 // Delete button for each row removes that line from the textarea and updates the table
 $(document).on("click", ".delete-static-row", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   lines.splice(rowIdx, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
   renderStaticDHCPTable();
@@ -328,7 +328,7 @@ $(document).on("click", ".delete-static-row", function () {
 // Add button for each row inserts a new empty line after this row
 $(document).on("click", ".add-static-row", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   lines.splice(rowIdx + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
   renderStaticDHCPTable();
@@ -378,7 +378,7 @@ $(document).on("click", ".save-static-row", function () {
 function renderStaticDHCPTable() {
   const tbody = $("#StaticDHCPTable tbody");
   tbody.empty();
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   for (const [idx, line] of lines.entries()) {
     const parsed = parseStaticDHCPLine(line);
 
@@ -403,31 +403,26 @@ function renderStaticDHCPTable() {
       .attr("title", "Add new line after this")
       .attr("data-toggle", "tooltip");
 
-    const tr = $("<tr></tr>")
+    const tr = $("<tr></tr>");
 
     if (parsed === "advanced") {
-      tr.addClass("table-warning")
-        .append(
-          '<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ' +
-            (idx + 1) +
-            "</td>",
-        )
+      tr.addClass("table-warning").append(
+        '<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ' +
+          (idx + 1) +
+          "</td>"
+      );
 
       // Keep the original data
       tr.data("original-line", line);
 
       // Disable the save button on advanced rows
-      saveBtn
-        .addClass("disabled")
-        .prop("disabled", true)
-        .attr("title", "Disabled");
-
+      saveBtn.addClass("disabled").prop("disabled", true).attr("title", "Disabled");
     } else {
       // Append 3 cells containing parsed values, with placeholder for empty hwaddr
       tr.append($('<td contenteditable="true" class="static-hwaddr"></td>').text(parsed.hwaddr))
         .append($('<td contenteditable="true" class="static-ipaddr"></td>').text(parsed.ipaddr))
         .append(
-          $('<td contenteditable="true" class="static-hostname"></td>').text(parsed.hostname),
+          $('<td contenteditable="true" class="static-hostname"></td>').text(parsed.hostname)
         );
     }
 
@@ -529,7 +524,8 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", function () {
   const val = $(this).text().trim();
   // Hostnames must not contain spaces, commas, or characters invalid in DNS names
-  const hostnameValidator = /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
+  const hostnameValidator =
+    /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
   if (val && !hostnameValidator.test(val)) {
     $(this).addClass("table-danger");
     $(this).removeClass("table-success");
