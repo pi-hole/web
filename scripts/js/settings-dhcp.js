@@ -314,6 +314,12 @@ $(document).on("click", ".save-static-row:not(.disabled)", function () {
   $("#dhcp-hosts").val(lines.join("\n"));
   // Optionally, re-render the table to reflect changes
   renderStaticDHCPTable();
+
+  // On save, re-enable all buttons (except buttons with class "disabled") and remove the hint
+  $(
+    "#StaticDHCPTable .save-static-row:not(.disabled), #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
+  ).prop("disabled", false);
+  $(".edit-hint-row").remove();
 });
 
 // Delete button for each row removes that line from the textarea and updates the table
@@ -364,14 +370,6 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
       '<tr class="edit-hint-row"><td colspan="4" class="text-info" style="font-style:italic;">Please confirm changes using the green button, then click "Save &amp; Apply" before leaving the page.</td></tr>'
     );
   }
-});
-
-// On save, re-enable all buttons (except buttons with class "disabled") and remove the hint
-$(document).on("click", ".save-static-row", function () {
-  $(
-    "#StaticDHCPTable .save-static-row:not(.disabled), #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
-  ).prop("disabled", false);
-  $(".edit-hint-row").remove();
 });
 
 // On table redraw, ensure all buttons are enabled and hints are removed
