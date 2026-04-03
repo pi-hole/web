@@ -438,6 +438,7 @@ function renderStaticDHCPTable() {
 
   tbody.find(".delete-static-row, .add-static-row").prop("disabled", false);
   tbody.find(".edit-hint-row").remove();
+  showLineNumbers();
 }
 
 // Copy button for each lease row copies the lease as a new static lease line
@@ -452,7 +453,7 @@ $(document).on("click", ".copy-to-static", function () {
 });
 
 // Add line numbers to the textarea for static DHCP hosts
-document.addEventListener("DOMContentLoaded", function () {
+function showLineNumbers() {
   const textarea = document.getElementById("dhcp-hosts");
   const linesElem = document.getElementById("dhcp-hosts-lines");
   let lastLineCount = 0;
@@ -473,13 +474,12 @@ document.addEventListener("DOMContentLoaded", function () {
       "letterSpacing",
       "lineHeight",
       "padding",
-      "height",
     ]) {
       linesElem.style[property] = globalThis.getComputedStyle(textarea)[property];
     }
 
-    // Match height and scroll
-    linesElem.style.height = textarea.offsetHeight > 0 ? textarea.offsetHeight + "px" : "auto";
+    // Update "--num-lines" variable and let CSS handle the height
+    $(".dhcp-hosts-wrapper").css("--num-lines", lines);
   }
 
   function syncScroll() {
@@ -497,7 +497,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateLineNumbers(true);
     syncScroll();
   }
-});
+}
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function () {
   const val = $(this).text().trim();

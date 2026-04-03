@@ -1651,6 +1651,30 @@ div.dhcp-hosts-wrapper {
   color: #fff;
 }
 
+/*
+Calculate the total height using the number of lines and line-height. Also account for borders and padding.
+Use the same values used by ".form-control" class:
+line-height=1.42857; font-size=14px;
+border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
+
+(num-lines * line-height * font-size) + 14px
+*/
+.dhcp-hosts-wrapper {
+  --num-lines: 1;
+  --max-lines: 12;
+  --total-height: calc((min(var(--num-lines), var(--max-lines)) * 1.42857 * 14px) + 14px);
+}
+
+#dhcp-hosts {
+  height: var(--total-height);
+}
+
+#dhcp-hosts-lines {
+  height: var(--total-height);
+  border: 1px solid transparent;
+  border-right-color: #ddd;
+}
+
 .save-static-row.disabled {
   opacity: 0.15;
 }
