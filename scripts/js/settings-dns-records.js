@@ -14,7 +14,7 @@ function hostsDomain(data) {
   // We split both on spaces and tabs to support both formats
   // Also, we remove any comments after the name(s)
   const name = data
-    .split(/[\t ]+/)
+    .split(/[\t ]+/v)
     .slice(1)
     .join(" ")
     .split("#")[0]
@@ -25,7 +25,7 @@ function hostsDomain(data) {
 function hostsIP(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
-  const ip = data.split(/[\t ]+/)[0].trim();
+  const ip = data.split(/[\t ]+/v)[0].trim();
   return ip;
 }
 
@@ -207,6 +207,8 @@ function delCNAME(elem) {
         "Successfully deleted local CNAME record",
         elem
       );
+      // Show loading overlay
+      utils.loadingOverlay(true);
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
     .fail((data, exception) => {
@@ -267,6 +269,8 @@ $(() => {
       .done(() => {
         utils.enableAll();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
+        // Show loading overlay
+        utils.loadingOverlay(true);
         $("#Cdomain").val("");
         $("#Ctarget").val("");
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);

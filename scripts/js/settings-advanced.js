@@ -90,9 +90,9 @@ function valueDetails(key, value) {
         '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
         '<div class="col-sm-10">' +
         '<input type="text" class="form-control" value="' +
-        value.value +
+        utils.escapeHtml(value.value) +
         '" data-key="' +
-        key +
+        utils.escapeHtml(key) +
         '"' +
         extraAttributes +
         "> " +
@@ -129,9 +129,9 @@ function valueDetails(key, value) {
         '<label class="col-sm-2 control-label">Value</label>' +
         '<div class="col-sm-10">' +
         '<input type="number" class="form-control" value="' +
-        value.value +
+        utils.escapeHtml(String(value.value)) +
         '" data-key="' +
-        key +
+        utils.escapeHtml(key) +
         '" data-type="float"' +
         extraAttributes +
         "> " +
@@ -146,9 +146,9 @@ function valueDetails(key, value) {
         '<label class="col-sm-2 control-label">Value <small>(integer)</small></label>' +
         '<div class="col-sm-10">' +
         '<input type="number" step="1" class="form-control" value="' +
-        value.value +
+        utils.escapeHtml(String(value.value)) +
         '" data-key="' +
-        key +
+        utils.escapeHtml(key) +
         '" data-type="integer"' +
         extraAttributes +
         "> " +
@@ -163,9 +163,9 @@ function valueDetails(key, value) {
         '<label class="col-sm-4 control-label">Value <small>(unsigned integer)</small></label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" class="form-control" value="' +
-        value.value +
+        utils.escapeHtml(String(value.value)) +
         '" data-key="' +
-        key +
+        utils.escapeHtml(key) +
         '" data-type="integer"' +
         extraAttributes +
         "> " +
@@ -180,9 +180,9 @@ function valueDetails(key, value) {
         '<label class="col-sm-4 control-label">Value <small>(unsigned 16bit integer)</small></label>' +
         '<div class="col-sm-8">' +
         '<input type="number" step="1" min="0" max="65535" class="form-control" value="' +
-        value.value +
+        utils.escapeHtml(String(value.value)) +
         '" data-key="' +
-        key +
+        utils.escapeHtml(key) +
         '" data-type="integer"' +
         extraAttributes +
         "> " +

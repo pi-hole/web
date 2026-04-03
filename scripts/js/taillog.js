@@ -24,7 +24,7 @@ const markUpdates = true;
 // Format a line of the dnsmasq log
 function formatDnsmasq(line) {
   // Remove dnsmasq + PID
-  let txt = line.replaceAll(/ dnsmasq\[\d*]/g, "");
+  let txt = line.replaceAll(/ dnsmasq\[\d*\]/gv, "");
 
   if (line.includes("denied") || line.includes("gravity blocked")) {
     // Red bold text for blocked domains
@@ -98,7 +98,7 @@ function getData() {
   // Validate that file parameter is one of the allowed values
   if (!allowedFileParams.includes(queryParams.file)) {
     const errorMessage = `Invalid file parameter: ${queryParams.file}. Allowed values are: ${allowedFileParams.join(", ")}`;
-    outputElement.innerHTML = `<div><em class="text-danger">*** Error: ${errorMessage} ***</em></div>`;
+    outputElement.innerHTML = `<div><em class="text-danger">*** Error: ${utils.escapeHtml(errorMessage)} ***</em></div>`;
     return;
   }
 

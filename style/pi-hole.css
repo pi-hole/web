@@ -1236,8 +1236,8 @@ table.dataTable tbody > tr > .selected {
 }
 
 @media screen and (min-width: 2250px) {
-  /* show 3 columns in larger screens */
-  .settings-container {
+  /* show 3 columns in larger screens, expect when using boxed layout */
+  body:not(.layout-boxed) .settings-container {
     --columns: 3;
   }
 }
