@@ -163,7 +163,9 @@ $(() => {
 
         // Only add IPs to the table if we have not reached the maximum
         if (ips.length < MAXIPDISPLAY) {
-          ips.push(`<a href="queries?client_ip=${ip}">${iptext}</a>`);
+          ips.push(
+            `<a href="queries?client_ip=${encodeURIComponent(ip)}">${utils.escapeHtml(iptext)}</a>`
+          );
         }
       }
 
