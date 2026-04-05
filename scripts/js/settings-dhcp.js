@@ -313,18 +313,20 @@ $(document).on("click", ".save-static-row", function () {
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
   $("#dhcp-hosts").val(lines.join("\n"));
 
-  // On save, re-enable all buttons, except from all rows currently being edited, ...
-  $("#StaticDHCPTable tbody tr:not(:has(+ tr.edit-hint-row), .edit-hint-row) button").prop(
-    "disabled",
-    false,
-  );
-  // ... then enable the buttons on the current row, ...
-  row.find(".delete-static-row, .add-static-row").prop("disabled", false);
-  // ... remove highlight colors from all cells on this row ...
-  $("td", row).removeClass("table-danger");
-  // ... and remove the save button and the hint
+  // On save remove the save button and the hint
   $(this).remove();
   row.next(".edit-hint-row").remove();
+  // and remove highlight colors from all cells on this row
+  $("td", row).removeClass("table-danger");
+
+  // Check if all rows were already saved (no rows are still being edited)
+  if ($("#StaticDHCPTable .edit-hint-row").length == 0) {
+    // Re-enable all table buttons
+    $("#StaticDHCPTable button").prop("disabled", false);
+    // and re-enable the textarea
+    $("#dhcp-hosts").prop("disabled", false);
+    $("#dhcp-hosts").prop("title", "");
+  }
 });
 
 // Delete button for each row removes that line from the textarea and updates the table
@@ -386,8 +388,15 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
         )
       );
 
-    row.next(".edit-hint-row").remove(); // Remove any existing hint
-    row.after(hintRow); // Add the created hint
+    // Disable the textarea to avoid losing unsaved changes to the table
+    $("#dhcp-hosts").prop("disabled", true);
+    $("#dhcp-hosts").prop("title", "Disabled.\nConfirm all changes above to enable this field");
+
+    // Remove any previously existing hint
+    row.next(".edit-hint-row").remove();
+
+    // Add the created hint
+    row.after(hintRow);
   }
 });
 
