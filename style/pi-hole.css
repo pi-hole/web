@@ -1624,6 +1624,24 @@ textarea.no-wrap {
   resize: none;
 }
 
+/* Show hint message on the static DHCP lease table, when at least one Save button exists */
+div:has(> .table-responsive #StaticDHCPTable) {
+  position: relative;
+}
+div:has(> .table-responsive #StaticDHCPTable .save-static-row)::before {
+  content: 'Please confirm changes using the green button, then click "Save & Apply" before leaving the page.';
+  position:absolute;
+  display: block;
+  padding: 4px 12px;
+  max-width: calc(100% - 30px);
+  right: 15px;
+  bottom: 0px;
+  color: #000;
+  font-style: italic;
+  text-align: right;
+  background: #eedd88;
+}
+
 /*
 Calculate the total height using the number of lines and line-height. Also account for borders and padding.
 Use the same values used by ".form-control" class:
@@ -1639,6 +1657,24 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   position: relative;
   display: flex;
   gap: 0;
+}
+
+/* Message displayed when the textarea is disabled because there are table rows being edited */
+.dhcp-hosts-wrapper:has(textarea[disabled]):hover::before {
+  content: "Please confirm all changes above before editing this field.";
+  display: block;
+  position: absolute;
+  width: 380px;
+  padding: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-45%, -50%);
+  text-align: center;
+  font-style: italic;
+  color: #000;
+  background: #ed8;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+  cursor: not-allowed;
 }
 
 #dhcp-hosts {

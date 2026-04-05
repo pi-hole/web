@@ -313,19 +313,17 @@ $(document).on("click", ".save-static-row", function () {
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
   $("#dhcp-hosts").val(lines.join("\n"));
 
-  // On save remove the save button and the hint
+  // On save remove the save button
   $(this).remove();
-  row.next(".edit-hint-row").remove();
   // and remove highlight colors from all cells on this row
   $("td", row).removeClass("table-danger");
 
   // Check if all rows were already saved (no rows are still being edited)
-  if ($("#StaticDHCPTable .edit-hint-row").length == 0) {
+  if ($("#StaticDHCPTable .save-static-row").length === 0) {
     // Re-enable all table buttons
     $("#StaticDHCPTable button").prop("disabled", false);
     // and re-enable the textarea
     $("#dhcp-hosts").prop("disabled", false);
-    $("#dhcp-hosts").prop("title", "");
   }
 });
 
@@ -367,8 +365,8 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
   // Disable all action buttons in all rows
   $("#StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row").prop("disabled", true);
 
-  // Add save button and show a hint below the current row if not already present
-  if (!row.next().hasClass("edit-hint-row")) {
+  // Add save button (a hint asking to click on the button will be shown below the table - CSS pseudo-element)
+  if (row.find(".save-static-row").length === 0) {
     const idx = row.attr("data-row");
     const saveBtn = $(
       '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
@@ -380,23 +378,8 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
     // Add the save button to the actions column
     row.find("td").last().prepend(saveBtn, " ");
 
-    // Create a table row containing the edit hint and the save button
-    const hintRow = $('<tr class="edit-hint-row"></tr>')
-      .append(
-        $(
-          '<td colspan="4" class="bg-info"><em>Please confirm changes using the green button, then click "Save &amp; Apply" before leaving the page.</em></td>'
-        )
-      );
-
     // Disable the textarea to avoid losing unsaved changes to the table
     $("#dhcp-hosts").prop("disabled", true);
-    $("#dhcp-hosts").prop("title", "Disabled.\nConfirm all changes above to enable this field");
-
-    // Remove any previously existing hint
-    row.next(".edit-hint-row").remove();
-
-    // Add the created hint
-    row.after(hintRow);
   }
 });
 
@@ -446,7 +429,6 @@ function renderStaticDHCPTable() {
   }
 
   tbody.find(".delete-static-row, .add-static-row").prop("disabled", false);
-  tbody.find(".edit-hint-row").remove();
   showLineNumbers();
 }
 
