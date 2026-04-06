@@ -13,9 +13,7 @@ let dhcpLeaesTable = null;
 const toasts = {};
 
 // DHCP leases tooltips
-$(() => {
-  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
-});
+$("body").tooltip({ selector: '[data-toggle="tooltip"]', container: "body" });
 
 function renderHostnameCLID(data, type) {
   // Display and search content
@@ -313,9 +311,9 @@ $(document).on("click", ".save-static-row", function () {
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
   $("#dhcp-hosts").val(lines.join("\n"));
 
-  // On save remove the save button
-  $(this).remove();
-  // and remove highlight colors from all cells on this row
+  // On save, hide the tooltip and remove the save button
+  $(this).tooltip("hide").remove();
+  // then remove highlight colors from all cells on this row
   $("td", row).removeClass("table-danger");
 
   // Check if all rows were already saved (no rows are still being edited)
@@ -333,6 +331,8 @@ $(document).on("click", ".delete-static-row", function () {
   const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   lines.splice(rowIdx, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
+  // Hide the tooltip
+  $(this).tooltip("hide");
   renderStaticDHCPTable();
 });
 
@@ -342,6 +342,8 @@ $(document).on("click", ".add-static-row", function () {
   const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   lines.splice(rowIdx + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
+  // Hide the tooltip
+  $(this).tooltip("hide");
   renderStaticDHCPTable();
   // Focus the new row after render
   setTimeout(() => {
