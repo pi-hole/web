@@ -261,13 +261,9 @@ function parseStaticDHCPLine(line) {
   const hwaddr = haveMAC ? parts[0].trim() : "";
 
   // Check if the first or second part is a valid IPv4 or IPv6 address
-  const hasSquareBrackets0 = parts[0][0] === "[" && parts[0].at(-1) === "]";
-  const ipv60 = hasSquareBrackets0 ? parts[0].slice(1, -1) : parts[0];
-  const hasSquareBrackets1 = parts.length > 1 && parts[1][0] === "[" && parts[1].at(-1) === "]";
-  const ipv61 = hasSquareBrackets1 ? parts[1].slice(1, -1) : parts.length > 1 ? parts[1] : "";
-  const firstIsValidIP = utils.validateIPv4(parts[0]) || utils.validateIPv6(ipv60);
+  const firstIsValidIP = utils.validateIPv4(parts[0]) || utils.validateIPv6Brackets(parts[0]);
   const secondIsValidIP =
-    parts.length > 1 && (utils.validateIPv4(parts[1]) || utils.validateIPv6(ipv61));
+    parts.length > 1 && (utils.validateIPv4(parts[1]) || utils.validateIPv6Brackets(parts[1]));
   const ipaddr = firstIsValidIP ? parts[0].trim() : secondIsValidIP ? parts[1].trim() : "";
   const haveIP = ipaddr.length > 0;
 
@@ -294,12 +290,13 @@ $(document).on("click", ".save-static-row", function () {
 
   // Validate MAC and IP before saving
   const macValid = !hwaddr || utils.validateMAC(hwaddr);
-  const ipValid = !ipaddr || utils.validateIPv4(ipaddr) || utils.validateIPv6(ipaddr);
-  if (!macValid || !ipValid) {
+  const ipValid = !ipaddr || utils.validateIPv4(ipaddr) || utils.validateIPv6Brackets(ipaddr);
+  const nameValid = !hostname || utils.validateHostnameStrict(hostname);
+  if (!macValid || !ipValid || !nameValid) {
     utils.showAlert(
       "error",
       "fa-times",
-      "Cannot save: Invalid MAC or IP address",
+      "Cannot save: Invalid value found on the table",
       "Please correct the highlighted fields before saving."
     );
     return;
@@ -505,7 +502,7 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function () {
   const val = $(this).text().trim();
-  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
+  if (val && !(utils.validateIPv4(val) || utils.validateIPv6Brackets(val))) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid IP address format");
   } else {
@@ -516,10 +513,7 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", function () {
   const val = $(this).text().trim();
-  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
-  const hostnameValidator =
-    /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
-  if (val && !hostnameValidator.test(val)) {
+  if (val && !utils.validateHostnameStrict(val)) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid hostname: only letters, digits, hyphens, and dots allowed");
   } else {

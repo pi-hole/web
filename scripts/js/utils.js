@@ -263,6 +263,18 @@ function validateIPv6(ip) {
   return validateIPv6CIDR(ipv6WithCIDR);
 }
 
+function validateIPv6Brackets(ip) {
+  // Check if the IPv6 is enclosed in brackets and return in case of failure
+  if (!ip.trim().startsWith("[") || !ip.trim().endsWith("]")) {
+    return false;
+  }
+
+  // Strip brackets before validating the IPv6
+  const ipWithoutBrackets = ip.replaceAll("[", "").replaceAll("]", "");
+  // Validate the ip
+  return validateIPv6(ipWithoutBrackets);
+}
+
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
@@ -273,6 +285,13 @@ function validateMAC(mac) {
 function validateHostname(name) {
   const namevalidator = /[^<>;"]/v;
   return namevalidator.test(name.trim());
+}
+
+function validateHostnameStrict(name) {
+  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
+  const hostnameValidator =
+    /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
+  return hostnameValidator.test(name.trim());
 }
 
 // set bootstrap-select defaults
@@ -728,11 +747,13 @@ globalThis.utils = (function () {
     validateIPv4,
     validateIPv6CIDR,
     validateIPv6,
+    validateIPv6Brackets,
     setBsSelectDefaults,
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
     validateHostname,
+    validateHostnameStrict,
     addFromQueryLog,
     addTD,
     toPercent,
