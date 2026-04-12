@@ -1576,41 +1576,6 @@ table.dataTable tbody > tr > .selected {
   margin: 0 4px;
 }
 
-textarea.field-sizing-content {
-  min-block-size: 3.5rlh;
-  max-block-size: 20rlh;
-  min-inline-size: 20ch;
-  field-sizing: content;
-}
-
-textarea.no-wrap {
-  white-space: pre;
-  overflow-x: auto;
-  overflow-y: auto;
-  resize: none;
-}
-
-div.line-numbers {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  text-align: right;
-  color: #aaa;
-  border-right: 1px solid #ddd;
-  padding: 8px 4px 8px 0;
-  font-family: monospace;
-  font-size: 13px;
-  min-width: 2em;
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-
-div.dhcp-hosts-wrapper {
-  position: relative;
-  display: flex;
-  gap: 0.5em;
-}
-
 /* Used in interfaces page */
 .list-group-item {
   background: transparent;
@@ -1641,14 +1606,22 @@ div.dhcp-hosts-wrapper {
   text-align: right;
 }
 
-#StaticDHCPTable td.table-danger {
-  background-color: #700000;
-  color: #fff;
+#StaticDHCPTable .table-danger {
+  background-color: #d337;
 }
 
-#StaticDHCPTable td.table-success {
-  background-color: #599900;
-  color: #fff;
+textarea.field-sizing-content {
+  min-block-size: 3.5rlh;
+  max-block-size: 20rlh;
+  min-inline-size: 20ch;
+  field-sizing: content;
+}
+
+textarea.no-wrap {
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: auto;
+  resize: none;
 }
 
 /*
@@ -1663,20 +1636,29 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   --num-lines: 1;
   --max-lines: 12;
   --total-height: calc((min(var(--num-lines), var(--max-lines)) * 1.42857 * 14px) + 14px);
+  position: relative;
+  display: flex;
+  gap: 0;
 }
 
 #dhcp-hosts {
   height: var(--total-height);
 }
 
-#dhcp-hosts-lines {
-  height: var(--total-height);
+.line-numbers {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  text-align: right;
+  color: #aaa;
   border: 1px solid transparent;
   border-right-color: #ddd;
-}
-
-.save-static-row.disabled {
-  opacity: 0.15;
+  padding: 8px 4px 8px 0;
+  font-size: 14px;
+  min-width: 2em;
+  overflow: hidden;
+  height: var(--total-height);
+  flex: 0 0 auto;
 }
 
 /* Used in query log page */
