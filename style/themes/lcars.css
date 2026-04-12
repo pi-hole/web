@@ -203,6 +203,7 @@ th {
 .btn-xs {
   padding: 0 5px 2px;
   border-radius: 5px;
+  min-width: auto;
 }
 
 .btn.btn-box-tool {

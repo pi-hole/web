@@ -1635,6 +1635,12 @@ div.dhcp-hosts-wrapper {
   transition: opacity 200ms ease-in-out;
 }
 
+#StaticDHCPTable th:last-of-type,
+#StaticDHCPTable td:last-of-type {
+  width: 106px;
+  text-align: right;
+}
+
 #StaticDHCPTable td.table-danger {
   background-color: #700000;
   color: #fff;

@@ -286,10 +286,10 @@ function parseStaticDHCPLine(line) {
   };
 }
 
-// Save button for each row updates only that line in the textarea, if it doesn't contain the class ".disabled"
-$(document).on("click", ".save-static-row:not(.disabled)", function () {
+// Save button for each row updates only that line in the textarea
+$(document).on("click", ".save-static-row", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
-  const row = $(this).closest("tr");
+  const row = $(`tr[data-row="${rowIdx}"]`);
   const hwaddr = row.find(".static-hwaddr").text().trim();
   const ipaddr = row.find(".static-ipaddr").text().trim();
   const hostname = row.find(".static-hostname").text().trim();
@@ -312,14 +312,19 @@ $(document).on("click", ".save-static-row:not(.disabled)", function () {
   lines[rowIdx] =
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
   $("#dhcp-hosts").val(lines.join("\n"));
-  // Optionally, re-render the table to reflect changes
-  renderStaticDHCPTable();
 
-  // On save, re-enable all buttons (except buttons with class "disabled") and remove the hint
-  $(
-    "#StaticDHCPTable .save-static-row:not(.disabled), #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
-  ).prop("disabled", false);
-  $(".edit-hint-row").remove();
+  // On save, re-enable all buttons, except from all rows currently being edited, ...
+  $("#StaticDHCPTable tbody tr:not(:has(+ tr.edit-hint-row), .edit-hint-row) button").prop(
+    "disabled",
+    false,
+  );
+  // ... then enable the buttons on the current row, ...
+  row.find(".delete-static-row, .add-static-row").prop("disabled", false);
+  // ... remove highlight colors from all cells on this row ...
+  $("td", row).removeClass("table-danger");
+  // ... and remove the save button and the hint
+  $(this).remove();
+  row.next(".edit-hint-row").remove();
 });
 
 // Delete button for each row removes that line from the textarea and updates the table
@@ -358,17 +363,31 @@ $(() => {
 $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function () {
   const row = $(this).closest("tr");
   // Disable all action buttons in all rows
-  $(
-    "#StaticDHCPTable .save-static-row, #StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row"
-  ).prop("disabled", true);
-  // Enable only the save button in the current row
-  row.find(".save-static-row").prop("disabled", false);
-  // Show a hint below the current row if not already present
+  $("#StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row").prop("disabled", true);
+
+  // Add save button and show a hint below the current row if not already present
   if (!row.next().hasClass("edit-hint-row")) {
+    const idx = row.attr("data-row");
+    const saveBtn = $(
+      '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
+    )
+      .attr("data-row", idx)
+      .attr("title", "Confirm changes to this line")
+      .attr("data-toggle", "tooltip");
+
+    // Add the save button to the actions column
+    row.find("td").last().prepend(saveBtn, " ");
+
+    // Create a table row containing the edit hint and the save button
+    const hintRow = $('<tr class="edit-hint-row"></tr>')
+      .append(
+        $(
+          '<td colspan="4" class="bg-info"><em>Please confirm changes using the green button, then click "Save &amp; Apply" before leaving the page.</em></td>'
+        )
+      );
+
     row.next(".edit-hint-row").remove(); // Remove any existing hint
-    row.after(
-      '<tr class="edit-hint-row"><td colspan="4" class="text-info" style="font-style:italic;">Please confirm changes using the green button, then click "Save &amp; Apply" before leaving the page.</td></tr>'
-    );
+    row.after(hintRow); // Add the created hint
   }
 });
 
@@ -379,13 +398,6 @@ function renderStaticDHCPTable() {
   const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
   for (const [idx, line] of lines.entries()) {
     const parsed = parseStaticDHCPLine(line);
-
-    const saveBtn = $(
-      '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
-    )
-      .attr("data-row", idx)
-      .attr("title", "Confirm changes to this line")
-      .attr("data-toggle", "tooltip");
 
     const delBtn = $(
       '<button type="button" class="btn btn-danger btn-xs delete-static-row"><i class="fa fa-fw fa-trash"></i></button>'
@@ -401,36 +413,30 @@ function renderStaticDHCPTable() {
       .attr("title", "Add new line after this")
       .attr("data-toggle", "tooltip");
 
-    const tr = $("<tr></tr>");
+    const tr = $("<tr></tr>").attr("data-row", idx);
 
     if (parsed === "advanced") {
       tr.addClass("table-warning").append(
-        '<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ' +
-          (idx + 1) +
-          "</td>"
+        `<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ${idx + 1}</td>`
       );
 
       // Keep the original data
       tr.data("original-line", line);
-
-      // Disable the save button on advanced rows
-      saveBtn.addClass("disabled").prop("disabled", true).attr("title", "Disabled");
     } else {
+      const cell = '<td contenteditable="true"></td>';
       // Append 3 cells containing parsed values, with placeholder for empty hwaddr
-      tr.append($('<td contenteditable="true" class="static-hwaddr"></td>').text(parsed.hwaddr))
-        .append($('<td contenteditable="true" class="static-ipaddr"></td>').text(parsed.ipaddr))
-        .append(
-          $('<td contenteditable="true" class="static-hostname"></td>').text(parsed.hostname)
-        );
+      tr.append($(cell).addClass("static-hwaddr").text(parsed.hwaddr))
+        .append($(cell).addClass("static-ipaddr").text(parsed.ipaddr))
+        .append($(cell).addClass("static-hostname").text(parsed.hostname));
     }
 
     // Append a last cell containing the buttons
-    tr.append($("<td></td>").append(saveBtn, " ", delBtn, " ", addBtn));
+    tr.append($('<td class="actions"></td>').append(delBtn, " ", addBtn));
 
     tbody.append(tr);
   }
 
-  tbody.find(".save-static-row, .delete-static-row, .add-static-row").prop("disabled", false);
+  tbody.find(".delete-static-row, .add-static-row").prop("disabled", false);
   tbody.find(".edit-hint-row").remove();
 }
 
@@ -497,10 +503,8 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function
   const val = $(this).text().trim();
   if (val && !utils.validateMAC(val)) {
     $(this).addClass("table-danger");
-    $(this).removeClass("table-success");
     $(this).attr("title", "Invalid MAC address format");
   } else {
-    $(this).addClass("table-success");
     $(this).removeClass("table-danger");
     $(this).attr("title", "");
   }
@@ -510,10 +514,8 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
   const val = $(this).text().trim();
   if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
     $(this).addClass("table-danger");
-    $(this).removeClass("table-success");
     $(this).attr("title", "Invalid IP address format");
   } else {
-    $(this).addClass("table-success");
     $(this).removeClass("table-danger");
     $(this).attr("title", "");
   }
@@ -526,10 +528,9 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", functi
     /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
   if (val && !hostnameValidator.test(val)) {
     $(this).addClass("table-danger");
-    $(this).removeClass("table-success");
     $(this).attr("title", "Invalid hostname: only letters, digits, hyphens, and dots allowed");
   } else {
-    $(this).removeClass("table-danger table-success");
+    $(this).removeClass("table-danger");
     $(this).attr("title", "");
   }
 });
