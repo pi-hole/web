@@ -1600,6 +1600,11 @@ table.dataTable tbody > tr > .selected {
   transition: opacity 200ms ease-in-out;
 }
 
+#StaticDHCPTable,
+.table-responsive:has(#StaticDHCPTable) {
+  margin: 0;
+}
+
 #StaticDHCPTable th:last-of-type,
 #StaticDHCPTable td:last-of-type {
   width: 106px;
@@ -1608,6 +1613,26 @@ table.dataTable tbody > tr > .selected {
 
 #StaticDHCPTable .table-danger {
   background-color: #d337;
+}
+
+/* Show hint message on the static DHCP lease table, when at least one Save button exists */
+div:has(> .table-responsive #StaticDHCPTable) {
+  position: relative;
+  margin-bottom: 15px;
+}
+div:has(> .table-responsive #StaticDHCPTable .save-static-row)::after {
+  content: 'Please confirm changes using the green button, then click "Save & Apply" before leaving the page.';
+  position: relative;
+  margin: 2px 0 15px;
+  padding: 4px 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  color: #000;
+  font-style: italic;
+  text-align: right;
+  background: #eedd88;
+  float: right;
 }
 
 textarea.field-sizing-content {
@@ -1622,24 +1647,6 @@ textarea.no-wrap {
   overflow-x: auto;
   overflow-y: auto;
   resize: none;
-}
-
-/* Show hint message on the static DHCP lease table, when at least one Save button exists */
-div:has(> .table-responsive #StaticDHCPTable) {
-  position: relative;
-}
-div:has(> .table-responsive #StaticDHCPTable .save-static-row)::before {
-  content: 'Please confirm changes using the green button, then click "Save & Apply" before leaving the page.';
-  position:absolute;
-  display: block;
-  padding: 4px 12px;
-  max-width: calc(100% - 30px);
-  right: 15px;
-  bottom: 0px;
-  color: #000;
-  font-style: italic;
-  text-align: right;
-  background: #eedd88;
 }
 
 /*
@@ -1675,6 +1682,7 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   background: #ed8;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
   cursor: not-allowed;
+  z-index: 10;
 }
 
 #dhcp-hosts {

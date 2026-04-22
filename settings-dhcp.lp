@@ -173,7 +173,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="table-responsive" style="margin-bottom: 10px;">
+                        <div class="table-responsive">
                             <table id="StaticDHCPTable" class="table table-striped table-bordered nowrap" width="100%">
                                 <thead>
                                     <tr>
