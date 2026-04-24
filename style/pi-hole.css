@@ -1607,12 +1607,20 @@ table.dataTable tbody > tr > .selected {
 
 #StaticDHCPTable th:last-of-type,
 #StaticDHCPTable td:last-of-type {
-  width: 106px;
+  width: 122px;
   text-align: right;
 }
 
 #StaticDHCPTable .table-danger {
   background-color: #d337;
+}
+
+#StaticDHCPTable .btn-xs {
+  width: 24px;
+  height: 24px;
+}
+.btn-xs .fa-fw {
+  width: 1em;
 }
 
 /* Show hint message on the static DHCP lease table, when at least one Save button exists */
