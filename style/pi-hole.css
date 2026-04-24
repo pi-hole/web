@@ -1607,12 +1607,17 @@ table.dataTable tbody > tr > .selected {
 
 #StaticDHCPTable th:last-of-type,
 #StaticDHCPTable td:last-of-type {
-  width: 106px;
+  width: 78px;
   text-align: right;
 }
 
 #StaticDHCPTable .table-danger {
   background-color: #d337;
+}
+
+/* Hide "Delete" and "Add" buttons when "Save" button is present */
+.actions:has(.save-static-row) :is(.delete-static-row, .add-static-row) {
+  display: none;
 }
 
 /* Show hint message on the static DHCP lease table, when at least one Save button exists */

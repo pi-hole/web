@@ -308,12 +308,52 @@ $(document).on("click", ".save-static-row", function () {
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
   $("#dhcp-hosts").val(lines.join("\n"));
 
-  // On save, hide the tooltip and remove the save button
+  // Update "data-original-line" to containing the new saved values
+  row.attr("data-original-line", lines[rowIdx]);
+
+  // Hide the tooltips and remove Save and Cancel buttons
+  $(this).siblings(".cancel-static-row").tooltip("hide").remove();
   $(this).tooltip("hide").remove();
   // then remove highlight colors from all cells on this row
-  $("td", row).removeClass("table-danger");
+  $("td", row).blur();
 
   // Check if all rows were already saved (no rows are still being edited)
+  if ($("#StaticDHCPTable .save-static-row").length === 0) {
+    // Re-enable all table buttons
+    $("#StaticDHCPTable button").prop("disabled", false);
+    // and re-enable the textarea
+    $("#dhcp-hosts").prop("disabled", false);
+  }
+});
+
+// Cancel button: restores the original line value when editing a row
+$(document).on("click", ".cancel-static-row", function () {
+  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const row = $(`tr[data-row="${rowIdx}"]`);
+
+  // Get the original values
+  const originalLine = row.attr("data-original-line");
+
+  if (originalLine) {
+    const values = originalLine.split(",");
+
+    // Reset with original values, ensuring index exists
+    row.find(".static-hwaddr").text(values[0] ? values[0].trim() : "");
+    row.find(".static-ipaddr").text(values[1] ? values[1].trim() : "");
+    row.find(".static-hostname").text(values[2] ? values[2].trim() : "");
+  } else {
+    // Optional: Handle empty state, e.g., clear fields or set defaults
+    row.find(".static-hwaddr, .static-ipaddr, .static-hostname").text("");
+  }
+
+  // Trigger "blur" event to remove highlight colors and titles from all cells on this row
+  row.find(".static-hwaddr, .static-ipaddr, .static-hostname").blur();
+
+  // Then hide the tooltip and remove Save and Cancel buttons
+  $(this).siblings(".save-static-row").tooltip("hide").remove();
+  $(this).tooltip("hide").remove();
+
+  // Check if all rows were already saved or canceled (no rows are still being edited)
   if ($("#StaticDHCPTable .save-static-row").length === 0) {
     // Re-enable all table buttons
     $("#StaticDHCPTable button").prop("disabled", false);
@@ -373,9 +413,15 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
       .attr("data-row", idx)
       .attr("title", "Confirm changes to this line")
       .attr("data-toggle", "tooltip");
+    const cancelBtn = $(
+      '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><i class="fa fa-fw fa-xmark"></i></button>'
+    )
+      .attr("data-row", idx)
+      .attr("title", "Cancel changes and restore original values")
+      .attr("data-toggle", "tooltip");
 
     // Add the save button to the actions column
-    row.find("td").last().prepend(saveBtn, " ");
+    row.find("td").last().prepend(saveBtn, " ", cancelBtn, " ");
 
     // Disable the textarea to avoid losing unsaved changes to the table
     $("#dhcp-hosts").prop("disabled", true);
@@ -404,15 +450,13 @@ function renderStaticDHCPTable() {
       .attr("title", "Add new line after this")
       .attr("data-toggle", "tooltip");
 
-    const tr = $("<tr></tr>").attr("data-row", idx);
+    // Create the new row - store the original data, in case we need to restore the values
+    const tr = $("<tr></tr>").attr("data-row", idx).attr("data-original-line", line);
 
     if (parsed === "advanced") {
       tr.addClass("table-warning").append(
         `<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ${idx + 1}</td>`
       );
-
-      // Keep the original data
-      tr.data("original-line", line);
     } else {
       const cell = '<td contenteditable="true"></td>';
       // Append 3 cells containing parsed values, with placeholder for empty hwaddr
