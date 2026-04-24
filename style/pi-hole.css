@@ -1713,6 +1713,20 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   flex: 0 0 auto;
 }
 
+.advanced-help ul {
+  padding: 0 0 0 1em;
+}
+.advanced-help li {
+  margin: 0 0 1em;
+}
+
+.card {
+  border-radius: 6px;
+  margin: 0 0 1em;
+  padding: 0.5em;
+  border: 1px solid color-mix(currentColor 15%, transparent);
+}
+
 /* Used in query log page */
 td.dnssec {
   padding-inline-start: 2.25em !important;
