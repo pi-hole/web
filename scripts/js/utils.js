@@ -518,6 +518,13 @@ function parseQueryString() {
   return Object.fromEntries(params.entries());
 }
 
+// Encode a string for use as a URL path segment. encodeURIComponent does not
+// encode dots, but browsers resolve "." and ".." as relative path components
+// before sending the request, breaking domains like "." or "..".
+function encodePathSegment(text) {
+  return encodeURIComponent(text).replaceAll(".", "%2E");
+}
+
 function hexEncode(text) {
   if (typeof text !== "string" || text.length === 0) return "";
 
@@ -726,6 +733,7 @@ globalThis.utils = (function () {
     changeTableButtonStates,
     getCSSval,
     parseQueryString,
+    encodePathSegment,
     hexEncode,
     hexDecode,
     listsAlert,
