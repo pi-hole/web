@@ -203,6 +203,7 @@ th {
 .btn-xs {
   padding: 0 5px 2px;
   border-radius: 5px;
+  min-width: auto;
 }
 
 .btn.btn-box-tool {
@@ -2183,4 +2184,21 @@ td.highlight {
 
 .help-block {
   color: #76808a;
+}
+
+div:has(> .table-responsive #StaticDHCPTable .save-static-row)::after {
+  padding: 1px 10px 3px;
+  background: #fd8;
+  border-radius: 5px;
+}
+.dhcp-hosts-wrapper:has(textarea[disabled]):hover::before {
+  padding: 6px 8px 8px;
+  background: #fd8;
+  border-radius: 5px;
+  width: 400px;
+  transform: translate(-47%, -50%);
+  box-shadow: 0 0 10px 2px #000;
+}
+.line-numbers {
+  border-color: transparent;
 }

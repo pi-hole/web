@@ -1390,6 +1390,9 @@ table.dataTable tbody > tr > .selected {
 .mb-3 {
   margin-bottom: 1rem !important;
 }
+.mb-4 {
+  margin-bottom: 2rem !important;
+}
 .ml-3 {
   margin-left: 1rem !important;
 }
@@ -1573,13 +1576,6 @@ table.dataTable tbody > tr > .selected {
   margin: 0 4px;
 }
 
-textarea.field-sizing-content {
-  min-block-size: 3.5rlh;
-  max-block-size: 20rlh;
-  min-inline-size: 20ch;
-  field-sizing: content;
-}
-
 /* Used in interfaces page */
 .list-group-item {
   background: transparent;
@@ -1602,6 +1598,130 @@ textarea.field-sizing-content {
 .fade-in-transition {
   opacity: 0;
   transition: opacity 200ms ease-in-out;
+}
+
+#StaticDHCPTable,
+.table-responsive:has(#StaticDHCPTable) {
+  margin: 0;
+}
+
+#StaticDHCPTable th:last-of-type,
+#StaticDHCPTable td:last-of-type {
+  width: 78px;
+  text-align: right;
+}
+
+#StaticDHCPTable .table-danger {
+  background-color: #d337;
+}
+
+/* Hide "Delete" and "Add" buttons when "Save" button is present */
+.actions:has(.save-static-row) :is(.delete-static-row, .add-static-row) {
+  display: none;
+}
+
+/* Show hint message on the static DHCP lease table, when at least one Save button exists */
+div:has(> .table-responsive #StaticDHCPTable) {
+  position: relative;
+  margin-bottom: 15px;
+}
+div:has(> .table-responsive #StaticDHCPTable .save-static-row)::after {
+  content: 'Please confirm changes using the green button, then click "Save & Apply" before leaving the page.';
+  position: relative;
+  margin: 2px 0 15px;
+  padding: 4px 12px;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  color: #000;
+  font-style: italic;
+  text-align: right;
+  background: #eedd88;
+  float: right;
+}
+
+textarea.field-sizing-content {
+  min-block-size: 3.5rlh;
+  max-block-size: 20rlh;
+  min-inline-size: 20ch;
+  field-sizing: content;
+}
+
+textarea.no-wrap {
+  white-space: pre;
+  overflow-x: auto;
+  overflow-y: auto;
+  resize: none;
+}
+
+/*
+Calculate the total height using the number of lines and line-height. Also account for borders and padding.
+Use the same values used by ".form-control" class:
+line-height=1.42857; font-size=14px;
+border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
+
+(num-lines * line-height * font-size) + 14px
+*/
+.dhcp-hosts-wrapper {
+  --num-lines: 1;
+  --max-lines: 12;
+  --total-height: calc((min(var(--num-lines), var(--max-lines)) * 1.42857 * 14px) + 14px);
+  position: relative;
+  display: flex;
+  gap: 0;
+}
+
+/* Message displayed when the textarea is disabled because there are table rows being edited */
+.dhcp-hosts-wrapper:has(textarea[disabled]):hover::before {
+  content: "Please confirm all changes above before editing this field.";
+  display: block;
+  position: absolute;
+  width: 380px;
+  padding: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-45%, -50%);
+  text-align: center;
+  font-style: italic;
+  color: #000;
+  background: #ed8;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
+  cursor: not-allowed;
+  z-index: 10;
+}
+
+#dhcp-hosts {
+  height: var(--total-height);
+}
+
+.line-numbers {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  text-align: right;
+  color: #aaa;
+  border: 1px solid transparent;
+  border-right-color: #ddd;
+  padding: 8px 4px 8px 0;
+  font-size: 14px;
+  min-width: 2em;
+  overflow: hidden;
+  height: var(--total-height);
+  flex: 0 0 auto;
+}
+
+.advanced-help ul {
+  padding: 0 0 0 1em;
+}
+.advanced-help li {
+  margin: 0 0 1em;
+}
+
+.card {
+  border-radius: 6px;
+  margin: 0 0 1em;
+  padding: 0.5em;
+  border: 1px solid color-mix(currentColor 15%, transparent);
 }
 
 /* Used in query log page */
