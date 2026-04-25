@@ -30,5 +30,5 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('scripts/js/interfaces.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/interfaces.js')?>" defer></script>
 <? mg.include('scripts/lua/footer.lp','r')?>
