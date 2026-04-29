@@ -210,23 +210,72 @@ mg.include('scripts/lua/settings_header.lp','r')
                             home network.  To configure this we will need to know the IP
                             address of your DHCP server and which addresses belong to your local network.
                             Exemplary input is given below as placeholder in the text boxes (if empty).</p>
-                        <p>If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
-                            <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will
-                            be <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be
-                            different, for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>,
-                            whereas an even wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>.
-                            Setting up IPv6 ranges is exactly similar to setting up IPv4 here and fully supported.
-                            Feel free to reach out to us on our
-                            <a href="https://discourse.pi-hole.net" rel="noopener noreferrer" target="_blank">Discourse forum</a>
-                            in case you need any assistance setting up local host name resolution for your particular system.</p>
-                        <p>You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
-                            devices ending in your local domain name will not leave your network, however, this is optional.
-                            The local domain name must match the domain name specified
-                            in your DHCP server for this to work. You can likely find it within the DHCP settings.</p>
                         <p>Enabling Conditional Forwarding will also forward all hostnames (i.e., non-FQDNs) to the router
                             when "Never forward non-FQDNs" is <em>not</em> enabled.</p>
-                        <p>The following list contains all reverse servers you want to add. The expected format is one server per line in form of <code>&lt;enabled&gt;,&lt;ip-address&gt;[/&lt;prefix-len&gt;],&lt;server&gt;[#&lt;port&gt;][,&lt;domain&gt;]</code>. A valid config line could look like <code>true,192.168.0.0/24,192.168.0.1,fritz.box</code></p>
-                        <textarea class="form-control field-sizing-content" id="dns.revServers" data-key="dns.revServers" placeholder="Enter reverse DNS servers, one per line" style="resize: vertical;"></textarea>
+                        <p>The following list contains all reverse servers you want to add.</p>
+                        <textarea class="form-control field-sizing-content revServers" id="dns.revServers" data-key="dns.revServers" placeholder="Enter reverse DNS servers, one per line"></textarea>
+
+                        <table id="revServers-table" class="table table-striped table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Enabled</th>
+                                    <th>Network Range <sup>1</sup></th>
+                                    <th>Server IP <sup>2</sup></th>
+                                    <th>Domain <sup>3</sup></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamically updated -->
+                            </tbody>
+                            <tfoot class="add-new-item">
+                                <tr>
+                                    <th>
+                                        <input id="enabled-revServers" type="checkbox" class="no-icheck" data-configkeys="revServers" checked>
+                                    </th>
+                                    <th>
+                                        <input id="network-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.0/24" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="server-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.1" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <input id="domain-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="local" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                    </th>
+                                    <th>
+                                        <button type="button" id="btnAdd-revServers" class="btn btn-primary btn-xs" data-configkeys="revServers"><i class="fa fa-plus"></i></button>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="5">
+                                        <ol>
+                                            <li>
+                                                <label>Local network range using <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing" target="_blank">CIDR notation</a></label>
+                                                <span class="help-block">If your local network spans 192.168.0.1 - 192.168.0.255, then you will have to input
+                                                <code>192.168.0.0/24</code>. If your local network is 192.168.47.1 - 192.168.47.255, it will be
+                                                <code>192.168.47.0/24</code> and similar. If your network is larger, the CIDR has to be  different,
+                                                for instance a range of 10.8.0.1 - 10.8.255.255 results in <code>10.8.0.0/16</code>, whereas an even
+                                                wider network of 10.0.0.1 - 10.255.255.255 results in <code>10.0.0.0/8</code>. Setting up IPv6 ranges
+                                                is exactly similar to setting up IPv4 here and fully supported. Feel free to reach out to us on our
+                                                <a href="https://discourse.pi-hole.net" rel="noopener noreferrer" target="_blank">Discourse forum</a>
+                                                in case you need any assistance setting up local host name resolution for your particular system.</span>
+                                            </li>
+                                            <li>
+                                                <label>IP address of your DHCP server (or router)</label>
+                                                <span class="help-block"></span>
+                                            </li>
+                                            <li>
+                                                <label>Local domain name (optional)</label>
+                                                <span class="help-block">You can also specify a local domain name (like <code>fritz.box</code>) to ensure queries to
+                                                devices ending in your local domain name will not leave your network, however, this is optional.
+                                                The local domain name must match the domain name specified in your DHCP server for this to work.
+                                                You can likely find it within the DHCP settings.</span>
+                                            </li>
+                                        </ol>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
