@@ -81,7 +81,7 @@ $(() => {
         .attr("title", "Delete lease")
         .attr("data-toggle", "tooltip");
       const $copyBtn = $(
-        '<button type="button" class="btn btn-secondary btn-xs copy-to-static"><i class="fa fa-fw fa-copy"></i></button>'
+        '<button type="button" class="btn btn-secondary btn-xs copy-to-static"><span class="fa fa-fw fa-copy"></span></button>'
       )
         .attr("title", "Copy to static leases")
         .attr("data-toggle", "tooltip")
@@ -408,13 +408,13 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
   if (row.find(".save-static-row").length === 0) {
     const idx = row.attr("data-row");
     const saveBtn = $(
-      '<button type="button" class="btn btn-success btn-xs save-static-row"><i class="fa fa-fw fa-check"></i></button>'
+      '<button type="button" class="btn btn-success btn-xs save-static-row"><span class="fa fa-fw fa-check"></span></button>'
     )
       .attr("data-row", idx)
       .attr("title", "Confirm changes to this line")
       .attr("data-toggle", "tooltip");
     const cancelBtn = $(
-      '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><i class="fa fa-fw fa-undo"></i></button>'
+      '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><span class="fa fa-fw fa-undo"></span></button>'
     )
       .attr("data-row", idx)
       .attr("title", "Cancel changes and restore original values")
@@ -437,14 +437,14 @@ function renderStaticDHCPTable() {
     const parsed = parseStaticDHCPLine(line);
 
     const delBtn = $(
-      '<button type="button" class="btn btn-danger btn-xs delete-static-row"><i class="fa fa-fw fa-trash"></i></button>'
+      '<button type="button" class="btn btn-danger btn-xs delete-static-row"><span class="fa fa-fw fa-trash"></span></button>'
     )
       .attr("data-row", idx)
       .attr("title", "Delete this line")
       .attr("data-toggle", "tooltip");
 
     const addBtn = $(
-      '<button type="button" class="btn btn-primary btn-xs add-static-row"><i class="fa fa-fw fa-plus"></i></button>'
+      '<button type="button" class="btn btn-primary btn-xs add-static-row"><span class="fa fa-fw fa-plus"></span></button>'
     )
       .attr("data-row", idx)
       .attr("title", "Add new line after this")
