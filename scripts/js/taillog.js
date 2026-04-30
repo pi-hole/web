@@ -24,7 +24,7 @@ const markUpdates = true;
 // Format a line of the dnsmasq log
 function formatDnsmasq(line) {
   // Remove dnsmasq + PID
-  let txt = line.replaceAll(/ dnsmasq\[\d*\]/gv, "");
+  let txt = line.replaceAll(/ dnsmasq\[\d*\]/g, "");
 
   if (line.includes("denied") || line.includes("gravity blocked")) {
     // Red bold text for blocked domains

@@ -86,7 +86,7 @@ function parseLines(outputElement, text) {
   // We want to split the text before an "OVER" escape sequence to allow overwriting previous line when needed
 
   // Splitting the text on "\r"
-  const lines = text.split(/(?=\r)/gv);
+  const lines = text.split(/(?=\r)/g);
 
   for (let line of lines) {
     // Escape HTML to prevent XSS attacks (both in adlist URL and non-domain entries)
@@ -117,7 +117,7 @@ function parseLines(outputElement, text) {
 
     // Create a regex that matches all ANSI codes (including reset)
     /* eslint-disable-next-line no-control-regex */
-    const ansiRegex = /(\u001B\[(?:1|90|91|32|33|94|95|96|0)m)/gv;
+    const ansiRegex = /(\u001B\[(?:1|90|91|32|33|94|95|96|0)m)/g;
 
     // Process the line sequentially, replacing ANSI codes with their corresponding HTML spans
     // we use a counter to keep track of how many spans are open and close the correct number of spans when we encounter a reset code

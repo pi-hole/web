@@ -486,7 +486,7 @@ function addDomain() {
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  let domains = domainEl.val().split(/\s+/v);
+  let domains = domainEl.val().split(/\s+/);
   // Remove empty elements
   domains = domains.filter(el => el !== "");
   const domainStr = JSON.stringify(domains);
