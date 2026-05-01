@@ -613,7 +613,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
       if (reloadAfterTimeout) {
         location.reload();
       } else {
-        waitMe.hideAll();
+        waitMe.hide();
       }
     })
     .fail(() => {
