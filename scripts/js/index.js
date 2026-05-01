@@ -647,7 +647,7 @@ $(() => {
           callbacks: {
             title(tooltipTitle) {
               const label = tooltipTitle[0].label;
-              const time = label.match(/(\d?\d):?(\d?\d?)/v);
+              const time = label.match(/(\d?\d):?(\d?\d?)/);
               const h = Number.parseInt(time[1], 10);
               const m = Number.parseInt(time[2], 10) || 0;
               const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
@@ -751,7 +751,7 @@ $(() => {
             callbacks: {
               title(tooltipTitle) {
                 const label = tooltipTitle[0].label;
-                const time = label.match(/(\d?\d):?(\d?\d?)/v);
+                const time = label.match(/(\d?\d):?(\d?\d?)/);
                 const h = Number.parseInt(time[1], 10);
                 const m = Number.parseInt(time[2], 10) || 0;
                 const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
