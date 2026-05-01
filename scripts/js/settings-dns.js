@@ -141,16 +141,16 @@ function getRevServerLines() {
   return $(".revServers")
     .val()
     .split(/\r?\n/)
-    .filter((line) => line.trim() !== "");
+    .filter(line => line.trim() !== "");
 }
 
-// Return the values ​​from the textarea, structured as an array of objects
+// Return an array of objects containing the current values from the textarea
 function getRevServerArray() {
   let items = [];
 
   const lines = getRevServerLines();
   lines.forEach((line, index) => {
-    const cols = line.split(",").map((s) => s.trim());
+    const cols = line.split(",").map(s => s.trim());
     items.push({
       enabled: cols[0] ?? "",
       network: cols[1] ?? "",
@@ -162,7 +162,7 @@ function getRevServerArray() {
   return items;
 }
 
-function renderRevServerTable() {
+function createRevServerTable() {
   // The Conditional Forwarding option will be disabled when this option was set via ENV VAR.
   // Check if the textarea is disabled.
   if ($(".revServers").prop("disabled")) {
@@ -172,22 +172,9 @@ function renderRevServerTable() {
     return;
   }
 
-  // Get an array containing the current values from the textarea
-  const data = getRevServerArray();
+  // Get the data
+  const tableRows = getRevServerArray();
 
-  // Check if the DataTable already exists
-  if ($.fn.DataTable.isDataTable("#revServers-table")) {
-    // If it already exists, we need to reset it to load the updated data.
-    // Remove all rows from the table, then add new rows with the updated data and finally redraw the table
-    var table = $("#revServers-table").DataTable();
-    table.clear().rows.add(data).draw();
-  } else {
-    // If the table doesn't exist, create it.
-    createRevServerTable(data);
-  }
-}
-
-function createRevServerTable(tableRows) {
   $("#revServers-table").DataTable({
     data: tableRows,
     autoWidth: false,
@@ -314,18 +301,14 @@ function addRevServer() {
   if (values[3] == "") values.pop();
 
   // Add the new values to the textarea
-  const newValues = values.join(",");
-  $(".revServers").val($(".revServers").val() + "\n" + newValues);
-
-  // Show confirmation message
-  utils.showAlert("success", "fa fa-check", "New values added", values.join(", "));
+  $(".revServers").val($(".revServers").val() + "\n" + values.join(","));
 
   // Clear the table footer fields
   $("#revServers-table tfoot input[type=text]").val("");
   $("#revServers-table tfoot input[type=checkbox]").prop("checked", true);
 
-  // Recreate the table with updated values
-  renderRevServerTable();
+  // Save changes with message
+  saveRevServerData("New values added: " + values.join(", "));
 }
 
 // Button to add a new reverse server
@@ -373,17 +356,14 @@ function saveRecord() {
   // Finish the edition disabling the fields
   $(this).closest("tr").find("td input").prop("disabled", true);
 
-  // Show confirmation message
-  utils.showAlert("success", "fa fa-check", "Values succesfully edited", values.join(", "));
-
   // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
   $(this).siblings('[id^="edit"]').show();
   $(this).siblings('[id^="delete"]').show();
   $(this).hide();
   $(this).siblings('[id^="cancel"]').hide();
 
-  // Recreate the table with updated values
-  renderRevServerTable();
+  // Save changes with message
+  saveRevServerData("Values successfully edited" + values.join(", "));
 }
 
 function restoreRecord() {
@@ -420,18 +400,15 @@ function deleteRecord() {
   lines.splice(index, 1);
   $(".revServers").val(lines.join("\n"));
 
-  // Show confirmation message
-  utils.showAlert("success", "fa fa-check", "Line successfully deleted", "");
-
-  // Recreate the table with updated values
-  renderRevServerTable();
+  // Save changes with message
+  saveRevServerData("Line successfully deleted");
 }
 
 function processDNSConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
   })
-    .done((data) => {
+    .done(data => {
       // Initialize the DNS upstreams
       fillDNSupstreams(data.config.dns.upstreams, data.dns_servers);
       setInterfaceName(data.config.dns.interface.value);
@@ -439,9 +416,9 @@ function processDNSConfig() {
     })
     .done(() => {
       // This will be executed only after the done block above is executed
-      renderRevServerTable();
+      createRevServerTable();
     })
-    .fail((data) => {
+    .fail(data => {
       apiFailure(data);
     });
 }
@@ -449,3 +426,42 @@ function processDNSConfig() {
 $(() => {
   processDNSConfig();
 });
+
+// Save the Reverse Servers data via API and recreate the table with updated values
+function saveRevServerData(msg) {
+  // Get the data from the textarea
+  const data = getRevServerLines();
+
+  // Call the API to save only the dns.revServers option
+  $.ajax({
+    url: document.body.dataset.apiurl + "/config",
+    method: "PATCH",
+    dataType: "json",
+    processData: false,
+    data: JSON.stringify({ config: { dns: { revServers: data } } }),
+    contentType: "application/json; charset=utf-8",
+  })
+    .done(() => {
+      utils.enableAll();
+      // Success
+      utils.showAlert(
+        "success",
+        "fa-solid fa-fw fa-floppy-disk",
+        "Conditional Forwarding settings successfully saved",
+        msg
+      );
+      // Show loading overlay
+      utils.loadingOverlay(false);
+
+      // Reset the table to show the updated data
+      // Remove all rows from the table, then create rows with the updated data and finally redraw the table
+      var table = $("#revServers-table").DataTable();
+      table.clear().rows.add(getRevServerArray()).draw();
+    })
+    .fail((data, exception) => {
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      console.log(exception); // eslint-disable-line no-console
+      apiFailure(data);
+    });
+}
