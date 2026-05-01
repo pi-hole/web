@@ -140,16 +140,16 @@ function getRevServerLines() {
   // Return the lines from the textarea (array of lines)
   return $(".revServers")
     .val()
-    .split(/\r?\n/)
+    .split(/\r?\n/v)
     .filter(line => line.trim() !== "");
 }
 
 // Return an array of objects containing the current values from the textarea
 function getRevServerArray() {
-  let items = [];
+  const items = [];
 
   const lines = getRevServerLines();
-  lines.forEach((line, index) => {
+  for (const line of lines) {
     const cols = line.split(",").map(s => s.trim());
     items.push({
       enabled: cols[0] ?? "",
@@ -157,7 +157,7 @@ function getRevServerArray() {
       ip: cols[2] ?? "",
       domain: cols[3] ?? "",
     });
-  });
+  }
 
   return items;
 }
@@ -190,7 +190,7 @@ function createRevServerTable() {
       {
         targets: 0,
         class: "input-checkbox text-center",
-        render: function (data, type, row, meta) {
+        render(data, type, row, meta) {
           const name = "enabled_" + meta.row;
           const ckbox =
             `<input type="checkbox" name="${name}" id="${name}" class="no-icheck" ` +
@@ -202,7 +202,7 @@ function createRevServerTable() {
       {
         targets: "_all",
         class: "input-text",
-        render: function (data, type, row, meta) {
+        render(data, type, row, meta) {
           let name;
           switch (meta.col) {
             case 1:
@@ -221,13 +221,13 @@ function createRevServerTable() {
         },
       },
     ],
-    drawCallback: function () {
+    drawCallback() {
       $('button[id^="deleteRevServers"]').on("click", deleteRecord);
       $('button[id^="editRevServers"]').on("click", editRecord);
       $('button[id^="saveRevServers"]').on("click", saveRecord).hide();
       $('button[id^="cancelRevServers"]').on("click", restoreRecord).hide();
     },
-    rowCallback: function (row, data, displayNum, displayIndex, dataIndex) {
+    rowCallback(row, data, displayNum, displayIndex, dataIndex) {
       $(row).attr("data-index", dataIndex);
       const bt = '<button type="button" class="btn btn-xs"</button>';
       const btEdit = $(bt)
@@ -269,11 +269,11 @@ function createRevServerTable() {
     stateSave: true,
     stateDuration: 0,
     processing: true,
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback(settings, data) {
       utils.stateSaveCallback("revServers-records-table", data);
     },
-    stateLoadCallback: function () {
-      var data = utils.stateLoadCallback("revServers-records-table");
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("revServers-records-table");
       // Return if not available
       if (data === null) return null;
 
@@ -284,21 +284,21 @@ function createRevServerTable() {
 }
 
 function addRevServer() {
-  var values = [];
+  const values = [];
   values[0] = $("#enabled-revServers").is(":checked") ? "true" : "false";
   values[1] = $("#network-revServers").val();
   values[2] = $("#server-revServers").val();
   values[3] = $("#domain-revServers").val();
 
   // Reject empty network range and server IP
-  if (values[1] == "" || values[2] == "") {
+  if (values[1] === "" || values[2] === "") {
     // Show error message
     utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
     return;
   }
 
   // Domain is optional: if empty, remove it from the array
-  if (values[3] == "") values.pop();
+  if (values[3] === "") values.pop();
 
   // Add the new values to the textarea
   $(".revServers").val($(".revServers").val() + "\n" + values.join(","));
@@ -337,17 +337,17 @@ function saveRecord() {
   values[3] = $("#domain_" + index).val();
 
   // Reject empty network range and server IP
-  if (values[1] == "" || values[2] == "") {
+  if (values[1] === "" || values[2] === "") {
     // Show error message
     utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
     return;
   }
 
   // Domain is optional: if empty, remove it from the array
-  if (values[3] == "") values.pop();
+  if (values[3] === "") values.pop();
 
   // Get the values from the textarea
-  let lines = getRevServerLines();
+  const lines = getRevServerLines();
 
   // Replace the edited line on the textarea
   lines[index] = values.join(",");
@@ -394,7 +394,7 @@ function deleteRecord() {
   const index = $(this).closest("tr").attr("data-index");
 
   // Get the current lines from the textarea
-  let lines = getRevServerLines();
+  const lines = getRevServerLines();
 
   // Remove the deleted line and update the textearea
   lines.splice(index, 1);
@@ -455,7 +455,7 @@ function saveRevServerData(msg) {
 
       // Reset the table to show the updated data
       // Remove all rows from the table, then create rows with the updated data and finally redraw the table
-      var table = $("#revServers-table").DataTable();
+      const table = $("#revServers-table").DataTable();
       table.clear().rows.add(getRevServerArray()).draw();
     })
     .fail((data, exception) => {
