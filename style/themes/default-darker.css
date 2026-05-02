@@ -117,6 +117,7 @@ embed[type="application/pdf"] {
   --darkreader-selection-text: #e8e6e3;
   --datatable-bgcolor: rgb(35, 47, 52);
   --overlay-bgcolor: rgba(35, 47, 52, 0.7);
+  --dt-row-selected: 35, 47, 52;
 
   /* Dashboard graphic bars */
   --allowed-color: #12b660;
@@ -402,6 +403,9 @@ caption {
   border-color: rgb(51, 55, 57);
 }
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
+  background-color: rgb(27, 30, 31);
+}
+table.dataTable.table-striped > tbody > tr.odd {
   background-color: rgb(27, 30, 31);
 }
 .table-hover > tbody > tr:hover {

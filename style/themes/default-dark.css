@@ -11,6 +11,7 @@
 :root {
   --datatable-bgcolor: rgba(64, 76, 88, 0.8);
   --overlay-bgcolor: var(--datatable-bgcolor);
+  --dt-row-selected: 64, 76, 88;
 
   /* Dashboard graphic bars */
   --allowed-color: #12b660;
@@ -562,6 +563,9 @@ fieldset[disabled] .form-control {
 }
 
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
+  background-color: #2d343a;
+}
+table.dataTable.table-striped > tbody > tr.odd {
   background-color: #2d343a;
 }
 .panel,

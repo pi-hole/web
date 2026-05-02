@@ -30,6 +30,7 @@
   --other-color: #908878;
 
   --overlay-bgcolor: rgba(255, 255, 255, 0.8);
+  --dt-row-selected-text: 0, 0, 0;
 }
 
 /* removing transition for every element, to avoid unnecessary movement */
@@ -382,9 +383,6 @@ select:-webkit-autofill {
 .table-bordered > tfoot > tr > td {
   border: 1px solid #d0d0d0;
 }
-.table-striped > tbody > tr:nth-of-type(2n + 1) {
-  background-color: #fcfcfc;
-}
 
 .blocked-row td {
   background-color: rgba(230, 160, 160, 0.3);
@@ -397,27 +395,23 @@ td.highlight {
   background-color: rgba(255, 204, 0, 0.333);
 }
 
-table.dataTable thead .sorting:after,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:after {
+table.dataTable thead > tr > th.sorting::before {
+  opacity: 0.5;
+}
+
+table.dataTable thead > tr > th.sorting::after {
+  opacity: 0.5;
+}
+
+table.dataTable thead > tr > th.sorting:hover::before,
+table.dataTable thead > tr > th.sorting:hover::after {
+  color: var(--primary-color);
+}
+
+table.dataTable thead > tr > th.sorting.sorting_asc::before,
+table.dataTable thead > tr > th.sorting.sorting_desc::after {
   opacity: 1;
-  width: 20px;
-  padding: 0 1px;
-  border-radius: 4px;
-  text-align: center;
-}
-table.dataTable thead .sorting:after {
-  opacity: 0.6;
-}
-table.dataTable thead th:hover.sorting::after,
-table.dataTable thead th:hover.sorting_asc::after,
-table.dataTable thead th:hover.sorting_desc::after,
-table.dataTable thead th:hover.sorting_asc_disabled::after,
-table.dataTable thead th:hover.sorting_desc_disabled::after {
   color: #fff;
-  background: #000;
 }
 
 #domain-frequency .table-responsive table tr th:nth-child(3),

@@ -11,6 +11,7 @@
   --net-old-color: #125;
   --net-older-color: #1c2228;
   --datatable-bgcolor: var(--net-old-color);
+  --dt-row-selected: 17, 34, 85;
 
   /* Dashboard graphic bars */
   --allowed-color: #073;
@@ -1361,44 +1362,27 @@ table.table-bordered.dataTable td {
   border: 1px solid #111 !important;
 }
 
-table.dataTable thead .sorting::before {
-  content: "\25B3";
-  position: absolute;
-  bottom: 16px;
-  right: 8px;
-  display: block;
-  font-family: "Glyphicons Halflings";
-  opacity: 0.3;
-  font-size: 0.6em;
+table.dataTable thead > tr > th.sorting::before {
+  bottom: calc(50% + 2px);
+  opacity: 0.2;
 }
 
-table.dataTable thead .sorting:after,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:after {
-  opacity: 0.6;
+table.dataTable thead > tr > th.sorting::after {
+  opacity: 0.2;
 }
 
-table.dataTable thead .sorting:after {
-  opacity: 0.3;
-  content: "\25BD";
-  font-size: 0.6em;
+table.dataTable thead > tr > th.sorting.sorting_asc::before {
+  opacity: 1;
 }
 
-table.dataTable thead .sorting_asc::after {
-  content: "\25B2";
+table.dataTable thead > tr > th.sorting.sorting_desc::after {
+  opacity: 1;
 }
 
-table.dataTable thead .sorting_desc::after {
-  content: "\25BC";
+table.dataTable.table-striped > tbody > tr.odd {
+  background: none;
+  background-color: rgba(80, 80, 80, 0.1);
 }
-
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:after {
-  color: #eee;
-}
-
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
   background: none;
   background-color: rgba(80, 80, 80, 0.1);
@@ -1914,12 +1898,6 @@ table.dataTable {
   background-color: #678;
   color: #000;
   border: none;
-}
-
-/*** datatables Select: row, checkbox and button ***/
-table.dataTable tbody > tr.selected td,
-table.dataTable tbody > tr > .selected td {
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .select-checkbox {
