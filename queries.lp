@@ -196,9 +196,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/queries.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>" defer></script>
+<script src="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.js')?>" defer></script>
+<script src="<?=pihole.fileversion('scripts/js/queries.js')?>" defer></script>
+<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>" defer></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>

@@ -64,7 +64,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <!-- /.row -->
 
-<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
-<script src="<?=pihole.fileversion('scripts/js/network.js')?>"></script>
+<script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>" defer></script>
+<script src="<?=pihole.fileversion('scripts/js/network.js')?>" defer></script>
 
 <? mg.include('scripts/lua/footer.lp','r')?>
