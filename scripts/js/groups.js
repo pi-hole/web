@@ -328,7 +328,7 @@ function editGroup() {
   utils.disableAll();
   utils.showAlert("info", "", "Editing group...", oldName);
   $.ajax({
-    url: document.body.dataset.apiurl + "/groups/" + oldName,
+    url: document.body.dataset.apiurl + "/groups/" + utils.encodePathSegment(oldName),
     method: "put",
     dataType: "json",
     processData: false,
