@@ -233,6 +233,13 @@ function validateIPv4CIDR(ip) {
   return ipv4validator.test(ip);
 }
 
+function validateIPv4(ip) {
+  // Add pseudo-CIDR to the IPv4
+  const ipv4WithCIDR = ip.includes("/") ? ip : ip + "/32";
+  // Validate the IPv4/CIDR
+  return validateIPv4CIDR(ipv4WithCIDR);
+}
+
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
@@ -249,14 +256,42 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
+function validateIPv6(ip) {
+  // Add pseudo-CIDR to the IPv6
+  const ipv6WithCIDR = ip.includes("/") ? ip : ip + "/128";
+  // Validate the IPv6/CIDR
+  return validateIPv6CIDR(ipv6WithCIDR);
+}
+
+function validateIPv6Brackets(ip) {
+  // Check if the IPv6 is enclosed in brackets and return in case of failure
+  if (!ip.trim().startsWith("[") || !ip.trim().endsWith("]")) {
+    return false;
+  }
+
+  // Strip brackets before validating the IPv6
+  const ipWithoutBrackets = ip.replaceAll("[", "").replaceAll("]", "");
+  // Validate the ip
+  return validateIPv6(ipWithoutBrackets);
+}
+
 function validateMAC(mac) {
-  const macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/v;
-  return macvalidator.test(mac);
+  // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
+  // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
+  const macvalidator = /^([\da-f]{2}[:\-]){5}([\da-f]{2})$/iv;
+  return macvalidator.test(mac.trim());
 }
 
 function validateHostname(name) {
   const namevalidator = /[^<>;"]/v;
-  return namevalidator.test(name);
+  return namevalidator.test(name.trim());
+}
+
+function validateHostnameStrict(name) {
+  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
+  const hostnameValidator =
+    /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
+  return hostnameValidator.test(name.trim());
 }
 
 // set bootstrap-select defaults
@@ -709,12 +744,16 @@ globalThis.utils = (function () {
     disableAll,
     enableAll,
     validateIPv4CIDR,
+    validateIPv4,
     validateIPv6CIDR,
+    validateIPv6,
+    validateIPv6Brackets,
     setBsSelectDefaults,
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
     validateHostname,
+    validateHostnameStrict,
     addFromQueryLog,
     addTD,
     toPercent,

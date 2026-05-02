@@ -172,32 +172,65 @@ mg.include('scripts/lua/settings_header.lp','r')
             </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <p>Specify per host parameters for the DHCP server. This allows a machine with a particular hardware address to be always allocated the same hostname, IP address and lease time. A hostname specified like this overrides any supplied by the DHCP client on the machine. It is also allowable to omit the hardware address and include the hostname, in which case the IP address and lease times will apply to any machine claiming that name.</p>
-                        <textarea class="form-control field-sizing-content" id="dhcp-hosts" data-key="dhcp.hosts" style="resize: vertical;"></textarea><br>&nbsp;
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table id="StaticDHCPTable" class="table table-striped table-bordered nowrap" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>MAC address</th>
+                                        <th>IP address</th>
+                                        <th>Hostname</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows will be dynamically added/edited -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label>Description:</label>
+                        <p class="help-block">Specify per host parameters for the DHCP server. This allows a machine with a particular hardware address to be always allocated the same hostname, IP address and lease time. A hostname specified like this overrides any supplied by the DHCP client on the machine. It is also allowable to omit the hardware address and include the hostname, in which case the IP address and lease times will apply to any machine claiming that name.</p>
                         <p>Each entry should be on a separate line, and should be of the form:</p>
                         <pre>[&lt;hwaddr&gt;][,id:&lt;client_id&gt;|*][,set:&lt;tag&gt;][,tag:&lt;tag&gt;][,&lt;ipaddr&gt;][,&lt;hostname&gt;][,&lt;lease_time&gt;][,ignore]</pre>
-                        <p>Only one entry per MAC address is allowed.</p>
+                        <br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <label>Advanced Settings:</label>
+                        <ul>
+                            <li>Only one entry per MAC address is allowed.</li>
+                            <li>IPv6 addresses must be enclosed in square brackets like <code>[2001:db8::1]</code>.</li>
+                            <li>Only letters, digits, hyphens and dots are allowed in hostnames.</li>
+                        </ul>
+                        <br>
+                        <div class="dhcp-hosts-wrapper mb-4">
+                            <div id="dhcp-hosts-lines" class="line-numbers" aria-hidden="true"></div>
+                            <textarea class="form-control no-wrap" id="dhcp-hosts" data-key="dhcp.hosts" wrap="off"></textarea>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-md-6">
-                        <p>Examples:</p>
-                        <ul>
-                            <li><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code><br>&nbsp;</li>
-                            <li><pre>00:20:e0:3b:13:af,laptop</pre>tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code><br>&nbsp;</li>
-                            <li><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease<br>&nbsp;</li>
-                        </ul>
+                        <label>Examples:</label>
+                        <div class="card"><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code></div>
+                        <div class="card"><pre>00:20:e0:3b:13:af,laptop</pre>tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code></div>
+                        <div class="card"><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease</div>
+                        <div class="card"><pre>00:20:e0:3b:13:af,[2001:db8::1]</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>[2001:db8::1]</code></div>
                     </div>
                     <div class="col-xs-12">
-                        <div class="box box-success collapsed-box">
+                        <div class="box box-info collapsed-box">
                             <div class="box-header with-border pointer no-user-select" data-widget="collapse">
-                                <h3 class="box-title">Advanced description</h3>
+                                <h3 class="box-title">Advanced settings help</h3>
                                 <div class="box-tools pull-right">
                                     <button type="button" class="btn btn-box-tool">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="box-body" style="display: none;">
+                            <div class="box-body advanced-help" style="display: none;">
                                 <ul>
                                     <li> Addresses allocated like this are not constrained to be in the DHCP range specified above but they must be in the same subnet. For subnets which don't need a pool of dynamically allocated addresses, you can set a one-address range above and specify only static leases here.</li>
                                     <li> It is allowed to use client identifiers (called client DUID in IPv6-land) rather than hardware addresses to identify hosts by prefixing with <code>id:</code>. Thus lines like <code>id:01:02:03:04,.....</code> refer to the host with client identifier <code>01:02:03:04</code>. It is also allowed to specify the client ID as text, like this: <code>id:clientidastext,.....</code></li>
