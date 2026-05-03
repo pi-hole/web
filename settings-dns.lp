@@ -231,19 +231,19 @@ mg.include('scripts/lua/settings_header.lp','r')
                             <tfoot class="add-new-item">
                                 <tr>
                                     <th>
-                                        <input id="enabled-revServers" type="checkbox" class="no-icheck" data-configkeys="revServers" checked>
+                                        <input id="enabled-revServers" type="checkbox" class="no-icheck" checked>
                                     </th>
                                     <th>
-                                        <input id="network-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.0/24" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="network-revServers" type="text" class="form-control" placeholder="192.168.0.0/24" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
-                                        <input id="server-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="192.168.0.1" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="server-revServers" type="text" class="form-control" placeholder="192.168.0.1" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
-                                        <input id="domain-revServers" type="text" class="form-control" data-configkeys="revServers" placeholder="local" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="domain-revServers" type="text" class="form-control" placeholder="local" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
-                                        <button type="button" id="btnAdd-revServers" class="btn btn-primary btn-xs" data-configkeys="revServers"><i class="fa fa-plus"></i></button>
+                                        <button type="button" id="btnAdd-revServers" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></button>
                                     </th>
                                 </tr>
                                 <tr>
