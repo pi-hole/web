@@ -179,82 +179,59 @@ function createRevServerTable() {
     data: tableRows,
     autoWidth: false,
     columns: [
-      { data: null, width: "54px" },
-      { data: "network" },
-      { data: "ip" },
-      { data: "domain" },
-      { data: null, width: "52px" },
+      { data: "enabled", width: "54px", className: "revserver-chkbox text-center" },
+      { data: "network", className: "revserver-network" },
+      { data: "ip", className: "revserver-ip" },
+      { data: "domain", className: "revserver-domain" },
+      { data: null, width: "82px", className: "actions" },
     ],
     ordering: false,
     columnDefs: [
       {
         targets: 0,
-        class: "input-checkbox text-center",
+        // eslint-disable-next-line no-unused-vars
+        createdCell(td, cellData, rowData, row, col) {
+          $(td).attr("data-initial-value", cellData);
+        },
         render(data, type, row, meta) {
           const name = "enabled_" + meta.row;
           const ckbox =
             `<input type="checkbox" name="${name}" id="${name}" class="no-icheck" ` +
-            (data.enabled === "true" ? "checked " : "") +
-            ` data-initial-value="${data.enabled}" disabled>`;
+            (data === "true" ? "checked " : "") +
+            ">";
           return ckbox;
         },
       },
       {
-        targets: "_all",
-        class: "input-text",
-        render(data, type, row, meta) {
-          let name;
-          switch (meta.col) {
-            case 1:
-              name = "network_" + meta.row;
-              break;
-            case 2:
-              name = "ip_" + meta.row;
-              break;
-            case 3:
-              name = "domain_" + meta.row;
-              break;
-            // No default
-          }
-
-          return `<input type="text" name="${name}" id="${name}" value="${data}" class="form-control" data-initial-value="${data}" disabled>`;
+        targets: [1, 2, 3],
+        // eslint-disable-next-line no-unused-vars
+        createdCell(td, cellData, rowData, row, col) {
+          $(td).attr("contenteditable", "true").attr("data-initial-value", cellData);
         },
       },
     ],
     drawCallback() {
-      $('button[id^="deleteRevServers"]').on("click", deleteRecord);
-      $('button[id^="editRevServers"]').on("click", editRecord);
-      $('button[id^="saveRevServers"]').on("click", saveRecord).hide();
-      $('button[id^="cancelRevServers"]').on("click", restoreRecord).hide();
+      $(".deleteRevServers").on("click", deleteRecord);
+      $(".saveRevServers").on("click", saveRecord);
+      $(".cancelRevServers").on("click", restoreRecord);
     },
     rowCallback(row, data, displayNum, displayIndex, dataIndex) {
       $(row).attr("data-index", dataIndex);
-      const bt = '<button type="button" class="btn btn-xs"</button>';
-      const btEdit = $(bt)
-        .addClass("btn-primary")
-        .attr("id", `editRevServers_${dataIndex}`)
-        .attr("title", "Edit")
-        .append('<span class="far fa-edit"></span>');
+      const bt = '<button type="button" class="btn btn-xs"></button>';
       const btDel = $(bt)
-        .addClass("btn-danger")
-        .attr("id", `deleteRevServers_${dataIndex}`)
-        .attr("data-tag", Object.values(data))
-        .attr("data-type", "revServers")
+        .addClass("btn-danger deleteRevServers")
         .attr("title", "Delete")
         .append('<span class="fa fa-trash"></span>');
       const btSave = $(bt)
-        .addClass("btn-success")
-        .attr("id", `saveRevServers_${dataIndex}`)
+        .addClass("btn-success saveRevServers")
         .attr("title", "Confirm changes")
         .append('<span class="fa fa-check"></span>');
       const btCancel = $(bt)
-        .addClass("btn-warning")
-        .attr("id", `cancelRevServers_${dataIndex}`)
-        .attr("data-tag", Object.values(data))
+        .addClass("btn-warning cancelRevServers")
         .attr("title", "Undo changes")
         .append('<span class="fa fa-undo"></span>');
 
-      $("td:eq(4)", row).html(btEdit).append(" ", btDel, " ", btSave, " ", btCancel);
+      $("td:eq(4)", row).html(btSave).append(" ", btCancel, " ", btDel);
     },
     dom:
       "<'row'<'col-sm-12 text-right'l>>" +
@@ -285,10 +262,10 @@ function createRevServerTable() {
 
 function addRevServer() {
   const values = [];
-  values[0] = $("#enabled-revServers").is(":checked") ? "true" : "false";
-  values[1] = $("#network-revServers").val();
-  values[2] = $("#server-revServers").val();
-  values[3] = $("#domain-revServers").val();
+  values[0] = $("#enabled-revServers input").prop("checked") ? "true" : "false";
+  values[1] = $("#network-revServers").text();
+  values[2] = $("#ip-revServers").text();
+  values[3] = $("#domain-revServers").text();
 
   // Reject empty network range and server IP
   if (values[1] === "" || values[2] === "") {
@@ -304,37 +281,30 @@ function addRevServer() {
   $(".revServers").val($(".revServers").val() + "\n" + values.join(","));
 
   // Clear the table footer fields
-  $("#revServers-table tfoot input[type=text]").val("");
-  $("#revServers-table tfoot input[type=checkbox]").prop("checked", true);
+  $("#revServers-table tfoot [contenteditable]").text("");
+  $("#revServers-table tfoot input[type=checkbox]").prop("checked", false);
 
   // Save changes with message
-  saveRevServerData("New values added: " + values.join(", "));
+  saveRevServerData("Added values: " + values.join(", "));
 }
 
 // Button to add a new reverse server
-$("#btnAdd-revServers").on("click", addRevServer);
-
-function editRecord() {
-  // Enable fields on the selected row
-  $(this).closest("tr").find("td input").prop("disabled", false);
-
-  // Hide EDIT and DELETE buttons. Show SAVE and UNDO buttons
-  $(this).hide();
-  $(this).siblings('[id^="delete"]').hide();
-  $(this).siblings('[id^="save"]').show();
-  $(this).siblings('[id^="cancel"]').show();
-}
+$("#btnAddRevServers").on("click", addRevServer);
 
 function saveRecord() {
-  // Find the row index
-  const index = $(this).closest("tr").attr("data-index");
+  // Find the row and its index number
+  const row = $(this).closest("tr");
+  const index = row.attr("data-index");
 
   // Get the edited values from each field
   const values = [];
-  values[0] = $("#enabled_" + index).prop("checked") ? "true" : "false";
-  values[1] = $("#network_" + index).val();
-  values[2] = $("#ip_" + index).val();
-  values[3] = $("#domain_" + index).val();
+  values[0] = $(".revserver-chkbox input", row).prop("checked") ? "true" : "false";
+  values[1] = $(".revserver-network", row).text();
+  values[2] = $(".revserver-ip", row).text();
+  values[3] = $(".revserver-domain", row).text();
+
+  // Remove "editing" class from the row. Buttons will be shown/hidden via CSS
+  row.removeClass("editing");
 
   // Reject empty network range and server IP
   if (values[1] === "" || values[2] === "") {
@@ -349,44 +319,34 @@ function saveRecord() {
   // Get the values from the textarea
   const lines = getRevServerLines();
 
-  // Replace the edited line on the textarea
+  // Update the edited line on the textarea
   lines[index] = values.join(",");
   $(".revServers").val(lines.join("\n"));
 
-  // Finish the edition disabling the fields
-  $(this).closest("tr").find("td input").prop("disabled", true);
-
-  // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
-  $(this).siblings('[id^="edit"]').show();
-  $(this).siblings('[id^="delete"]').show();
-  $(this).hide();
-  $(this).siblings('[id^="cancel"]').hide();
-
   // Save changes with message
-  saveRevServerData("Values successfully edited" + values.join(", "));
+  saveRevServerData("Updated values: " + values.join(", "));
 }
 
 function restoreRecord() {
-  // Find the row index
-  const index = $(this).closest("tr").attr("data-index");
+  // Find the row and its index number
+  const row = $(this).closest("tr");
 
-  // Reset values
-  $("#enabled_" + index).prop("checked", $("#enabled_" + index).attr("data-initial-value"));
-  $("#network_" + index).val($("#network_" + index).attr("data-initial-value"));
-  $("#ip_" + index).val($("#ip_" + index).attr("data-initial-value"));
-  $("#domain_" + index).val($("#domain_" + index).attr("data-initial-value"));
+  // Reset values using "data-initial-value"
+  $(".revserver-chkbox input", row).prop(
+    "checked",
+    $(".revserver-chkbox input", row).attr("data-initial-value")
+  );
+  $('[contenteditable="true"]', row).text(function () {
+    return $(this).attr("data-initial-value");
+  });
 
   // Show cancellation message
   utils.showAlert("info", "fas fa-undo", "Canceled", "Original values restored");
 
-  // Finish the edition disabling the fields
-  $(this).closest("tr").find("td input").prop("disabled", true);
-
-  // Show EDIT and DELETE buttons. Hide SAVE and UNDO buttons
-  $(this).siblings('[id^="edit"]').show();
-  $(this).siblings('[id^="delete"]').show();
-  $(this).siblings('[id^="save"]').hide();
-  $(this).hide();
+  // Make sure all highlighted cells are restored
+  // Remove "editing" class from the row. The buttons will be shown/hidden via CSS
+  row.find(".table-danger").removeClass("table-danger");
+  row.removeClass("editing");
 }
 
 function deleteRecord() {
@@ -443,14 +403,13 @@ function saveRevServerData(msg) {
   })
     .done(() => {
       utils.enableAll();
-      // Success
       utils.showAlert(
         "success",
         "fa-solid fa-fw fa-floppy-disk",
         "Conditional Forwarding settings successfully saved",
         msg
       );
-      // Show loading overlay
+      // Show loading overlay (without reloading the page)
       utils.loadingOverlay(false);
 
       // Reset the table to show the updated data
@@ -465,3 +424,51 @@ function saveRevServerData(msg) {
       apiFailure(data);
     });
 }
+
+// Mark the row with "editing" class when an editable cell or checkbox is focused/edited
+// This will use CSS rules to show/hide buttons
+$(document).on("focus input", "#revServers-table [contenteditable]", function () {
+  $(this).closest("tr").addClass("editing");
+});
+$(document).on("change", "#revServers-table .revserver-chkbox input", function () {
+  $(this).closest("tr").addClass("editing");
+});
+
+// Validate data entered on the table
+// If a cell contains an invalid value, it will be highlighted and the save button will be disabled
+$(document).on("input blur paste", ".revserver-network", function () {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
+    $(this).addClass("table-danger");
+    $(this).attr("title", "Invalid network range");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
+  } else {
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", false);
+  }
+});
+$(document).on("input blur paste", ".revserver-ip", function () {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
+    $(this).addClass("table-danger");
+    $(this).attr("title", "Invalid server IP");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
+  } else {
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", false);
+  }
+});
+$(document).on("input blur paste", ".revserver-domain", function () {
+  const val = $(this).text().trim();
+  if (val && !utils.validateHostnameStrict(val)) {
+    $(this).addClass("table-danger");
+    $(this).attr("title", "Invalid domain");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
+  } else {
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", false);
+  }
+});

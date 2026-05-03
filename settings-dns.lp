@@ -230,20 +230,14 @@ mg.include('scripts/lua/settings_header.lp','r')
                             </tbody>
                             <tfoot class="add-new-item">
                                 <tr>
-                                    <th>
-                                        <input id="enabled-revServers" type="checkbox" class="no-icheck" checked>
+                                    <th id="enabled-revServers" class="revserver-chkbox" type="checkbox">
+                                        <input type="checkbox" class="no-icheck">
                                     </th>
+                                    <th id="network-revServers" class="revserver-network" contenteditable="true"></th>
+                                    <th id="ip-revServers" class="revserver-ip" contenteditable="true"></th>
+                                    <th id="domain-revServers" class="revserver-domain" contenteditable="true"></th>
                                     <th>
-                                        <input id="network-revServers" type="text" class="form-control" placeholder="192.168.0.0/24" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </th>
-                                    <th>
-                                        <input id="server-revServers" type="text" class="form-control" placeholder="192.168.0.1" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </th>
-                                    <th>
-                                        <input id="domain-revServers" type="text" class="form-control" placeholder="local" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                    </th>
-                                    <th>
-                                        <button type="button" id="btnAdd-revServers" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></button>
+                                        <button type="button" id="btnAddRevServers" class="btn btn-primary btn-xs saveRevServers" data-configkeys="revServers"><i class="fa fa-plus"></i></button>
                                     </th>
                                 </tr>
                                 <tr>

@@ -1582,9 +1582,20 @@ table.dataTable tbody > tr > .selected {
   resize: vertical;
 }
 
-#revServers-table .btn-xs {
-  width: 24px;
-  height: 24px;
+.actions {
+  text-align: right;
+}
+
+/* Initially hide Save and Cancel buttons */
+:not(#btnAddRevServers).saveRevServers,
+.cancelRevServers {
+  display: none;
+}
+
+/* Show Save and Cancel buttons, when the row is being edited */
+.editing :not(#btnAddRevServers).saveRevServers,
+.editing .cancelRevServers {
+  display: unset;
 }
 
 #revServers-table tbody td {
@@ -1639,10 +1650,11 @@ table.dataTable tbody > tr > .selected {
   text-align: right;
 }
 
-#StaticDHCPTable .table-danger {
+.table-danger {
   background-color: #d337;
 }
 
+#revServers-table .btn-xs,
 #StaticDHCPTable .btn-xs {
   width: 24px;
   height: 24px;
