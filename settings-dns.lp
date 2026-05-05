@@ -237,7 +237,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th id="ip-revServers" class="revserver-ip" contenteditable="true"></th>
                                     <th id="domain-revServers" class="revserver-domain" contenteditable="true"></th>
                                     <th>
-                                        <button type="button" id="btnAddRevServers" class="btn btn-primary btn-xs saveRevServers" data-configkeys="revServers"><i class="fa fa-plus"></i></button>
+                                        <button type="button" id="btnAddRevServers" class="btn btn-primary btn-xs saveRevServers" title="Save the new entry"><i class="fa fa-plus"></i></button>
                                     </th>
                                 </tr>
                                 <tr>
