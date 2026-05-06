@@ -247,31 +247,38 @@ function parseStaticDHCPLine(line) {
       hostname: "",
     };
 
-  // Advanced if contains id:, set:, tag:, ignore
-  if (/id:|set:|tag:|ignore|lease_time|,\s*,/v.test(line)) return "advanced";
+  // Advanced if line contains id:, set:, tag:
+  if (/id:|set:|tag:/v.test(line)) return "advanced";
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
 
-  // If there are more than 3 parts or less than 2, it's considered advanced
-  if (parts.length > 3 || parts.length < 2) return "advanced";
+  // Advanced if there are more than 3 parts
+  if (parts.length > 3) return "advanced";
 
-  // Check if first part is a valid MAC address
-  const haveMAC = parts.length > 0 && utils.validateMAC(parts[0]);
-  const hwaddr = haveMAC ? parts[0].trim() : "";
-
-  // Check if the first or second part is a valid IPv4 or IPv6 address
-  const firstIsValidIP = utils.validateIPv4(parts[0]) || utils.validateIPv6Brackets(parts[0]);
-  const secondIsValidIP =
-    parts.length > 1 && (utils.validateIPv4(parts[1]) || utils.validateIPv6Brackets(parts[1]));
-  const ipaddr = firstIsValidIP ? parts[0].trim() : secondIsValidIP ? parts[1].trim() : "";
-  const haveIP = ipaddr.length > 0;
-
-  // Check if the second or third part is a valid hostname
+  let hwaddr = "";
+  let ipaddr = "";
   let hostname = "";
-  if (parts.length > 2 && parts[2].length > 0) hostname = parts[2].trim();
-  else if (parts.length > 1 && parts[1].length > 0 && (!haveIP || !haveMAC))
-    hostname = parts[1].trim();
+
+  for (const part of parts) {
+    // Advanced if the part is "infinite", "ignore" or a lease time value
+    if (/^(infinite|ignore|\d+(w|W|d|D|h|H|m|M|s|S))$/v.test(part)) return "advanced";
+
+    if (part.includes(":")) {
+      if (part.startsWith("[") && part.endsWith("]") && !ipaddr) {
+        // Check if this is a valid IPv6
+        ipaddr = utils.validateIPv6Brackets(part) ? part : "";
+      } else {
+        // Check if this is a valid MAC Address
+        hwaddr ||= utils.validateMAC(part) ? part : "";
+      }
+    } else if (utils.validateIPv4(part) && !ipaddr) {
+      // It's a valid IPv4
+      ipaddr = part;
+    } else {
+      hostname ||= part;
+    }
+  }
 
   return {
     hwaddr,
@@ -335,12 +342,12 @@ $(document).on("click", ".cancel-static-row", function () {
   const originalLine = row.attr("data-original-line");
 
   if (originalLine) {
-    const values = originalLine.split(",");
+    const values = parseStaticDHCPLine(originalLine);
 
     // Reset with original values, ensuring index exists
-    row.find(".static-hwaddr").text(values[0] ? values[0].trim() : "");
-    row.find(".static-ipaddr").text(values[1] ? values[1].trim() : "");
-    row.find(".static-hostname").text(values[2] ? values[2].trim() : "");
+    row.find(".static-hwaddr").text(values.hwaddr);
+    row.find(".static-ipaddr").text(values.ipaddr);
+    row.find(".static-hostname").text(values.hostname);
   } else {
     // Optional: Handle empty state, e.g., clear fields or set defaults
     row.find(".static-hwaddr, .static-ipaddr, .static-hostname").text("");
