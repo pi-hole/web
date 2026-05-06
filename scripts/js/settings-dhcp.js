@@ -495,50 +495,52 @@ $(document).on("click", ".copy-to-static", function () {
 
 // Add line numbers to the textarea for static DHCP hosts
 function showLineNumbers() {
+  updateLineNumbers(true);
+  syncScroll();
+}
+
+function updateLineNumbers(force) {
   const textarea = document.getElementById("dhcp-hosts");
   const linesElem = document.getElementById("dhcp-hosts-lines");
-  let lastLineCount = 0;
+  updateLineNumbers.lastLineCount ||= 0;
 
-  function updateLineNumbers(force) {
-    if (!textarea || !linesElem) return;
-    const lines = textarea.value.split("\n").length || 1;
-    if (!force && lines === lastLineCount) return;
-    lastLineCount = lines;
-    let html = "";
-    for (let i = 1; i <= lines; i++) html += i + "<br>";
-    linesElem.innerHTML = html;
-    // Apply the same styles to the lines element as the textarea
-    for (const property of [
-      "fontFamily",
-      "fontSize",
-      "fontWeight",
-      "letterSpacing",
-      "lineHeight",
-      "padding",
-    ]) {
-      linesElem.style[property] = globalThis.getComputedStyle(textarea)[property];
-    }
-
-    // Update "--num-lines" variable and let CSS handle the height
-    $(".dhcp-hosts-wrapper").css("--num-lines", lines);
+  if (!textarea || !linesElem) return;
+  const lines = textarea.value.split("\n").length || 1;
+  if (!force && lines === updateLineNumbers.lastLineCount) return;
+  updateLineNumbers.lastLineCount = lines;
+  let html = "";
+  for (let i = 1; i <= lines; i++) html += i + "<br>";
+  linesElem.innerHTML = html;
+  // Apply the same styles to the lines element as the textarea
+  for (const property of [
+    "fontFamily",
+    "fontSize",
+    "fontWeight",
+    "letterSpacing",
+    "lineHeight",
+    "padding",
+  ]) {
+    linesElem.style[property] = globalThis.getComputedStyle(textarea)[property];
   }
 
-  function syncScroll() {
-    linesElem.scrollTop = textarea.scrollTop;
-  }
-
-  if (textarea && linesElem) {
-    textarea.addEventListener("input", function () {
-      updateLineNumbers(false);
-    });
-    textarea.addEventListener("scroll", syncScroll);
-    window.addEventListener("resize", function () {
-      updateLineNumbers(true);
-    });
-    updateLineNumbers(true);
-    syncScroll();
-  }
+  // Update "--num-lines" variable and let CSS handle the height
+  $(".dhcp-hosts-wrapper").css("--num-lines", lines);
 }
+
+function syncScroll() {
+  document.getElementById("dhcp-hosts-lines").scrollTop =
+    document.getElementById("dhcp-hosts").scrollTop;
+}
+
+document.getElementById("dhcp-hosts").addEventListener("scroll", syncScroll);
+
+document.getElementById("dhcp-hosts").addEventListener("input", function () {
+  updateLineNumbers(false);
+});
+
+window.addEventListener("resize", function () {
+  updateLineNumbers(true);
+});
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function () {
   const val = $(this).text().trim();

@@ -264,13 +264,12 @@ function validateIPv6(ip) {
 }
 
 function validateIPv6Brackets(ip) {
+  const trimmedIp = ip.trim();
   // Check if the IPv6 is enclosed in brackets and return in case of failure
-  if (!ip.trim().startsWith("[") || !ip.trim().endsWith("]")) {
-    return false;
-  }
+  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) return false;
 
   // Strip brackets before validating the IPv6
-  const ipWithoutBrackets = ip.replaceAll("[", "").replaceAll("]", "");
+  const ipWithoutBrackets = trimmedIp.slice(1, -1);
   // Validate the ip
   return validateIPv6(ipWithoutBrackets);
 }
@@ -278,7 +277,7 @@ function validateIPv6Brackets(ip) {
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
-  const macvalidator = /^([\da-f]{2}[:\-]){5}([\da-f]{2})$/iv;
+  const macvalidator = /^(?:[\da-f]{2}([:\-]))(?:[\da-f]{2}\1){4}[\da-f]{2}$/iv;
   return macvalidator.test(mac.trim());
 }
 
