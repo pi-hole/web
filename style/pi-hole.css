@@ -1605,6 +1605,11 @@ table.dataTable tbody > tr > .selected {
   margin: 0;
 }
 
+#StaticDHCPTable th,
+#StaticDHCPTable td {
+  width: calc((100% - 122px) / 3);
+}
+
 #StaticDHCPTable th:last-of-type,
 #StaticDHCPTable td:last-of-type {
   width: 122px;
