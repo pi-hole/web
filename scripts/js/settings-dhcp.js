@@ -247,8 +247,8 @@ function parseStaticDHCPLine(line) {
       hostname: "",
     };
 
-  // Advanced if line contains id:, set:, tag:
-  if (/id:|set:|tag:/v.test(line)) return "advanced";
+  // Advanced if line contains id:, set:, tag, or "*":
+  if (/id:|set:|tag:\*/v.test(line)) return "advanced";
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
@@ -265,18 +265,31 @@ function parseStaticDHCPLine(line) {
     if (/^(infinite|ignore|\d+(w|W|d|D|h|H|m|M|s|S))$/v.test(part)) return "advanced";
 
     if (part.includes(":")) {
-      if (part.startsWith("[") && part.endsWith("]") && !ipaddr) {
-        // Check if this is a valid IPv6
-        ipaddr = utils.validateIPv6Brackets(part) ? part : "";
+      if (part.startsWith("[") && part.endsWith("]")) {
+        // Advanced if more than one IP was found
+        if (ipaddr) return "advanced";
+
+        // Potentially an IPv6 (we allow invalid values here. The table will highlight them)
+        ipaddr = part;
       } else {
-        // Check if this is a valid MAC Address
-        hwaddr ||= utils.validateMAC(part) ? part : "";
+        // Advanced if more than one MAC Address was found
+        if (hwaddr) return "advanced";
+
+        // Potentially a MAC Address (we allow invalid values here. The table will highlight them)
+        hwaddr = part;
       }
-    } else if (utils.validateIPv4(part) && !ipaddr) {
-      // It's a valid IPv4
+    } else if (/^[.0-9]+$/v.test(part)) {
+      // Advanced if more than one IP was found
+      if (ipaddr) return "advanced";
+
+      // Potentially an IPv4 (we allow invalid values here. The table will highlight them)
       ipaddr = part;
     } else {
-      hostname ||= part;
+      // Advanced if more than one hostname was found
+      if (hostname) return "advanced";
+
+      // Potentially a hostname (we allow invalid values here. The table will highlight them)
+      hostname = part;
     }
   }
 
@@ -466,10 +479,28 @@ function renderStaticDHCPTable() {
       );
     } else {
       const cell = '<td contenteditable="true"></td>';
-      // Append 3 cells containing parsed values, with placeholder for empty hwaddr
-      tr.append($(cell).addClass("static-hwaddr").text(parsed.hwaddr))
-        .append($(cell).addClass("static-ipaddr").text(parsed.ipaddr))
-        .append($(cell).addClass("static-hostname").text(parsed.hostname));
+
+      // Populate the 3 cells. Validate and highlight in case of failure
+      const tdHwaddr = $(cell).addClass("static-hwaddr").text(parsed.hwaddr);
+      if (parsed.hwaddr && !utils.validateMAC(parsed.hwaddr)) {
+        tdHwaddr.addClass("table-danger");
+      }
+
+      const tdIpaddr = $(cell).addClass("static-ipaddr").text(parsed.ipaddr);
+      if (
+        parsed.ipaddr &&
+        !(utils.validateIPv4(parsed.ipaddr) || utils.validateIPv6Brackets(parsed.ipaddr))
+      ) {
+        tdIpaddr.addClass("table-danger");
+      }
+
+      const tdHostname = $(cell).addClass("static-hostname").text(parsed.hostname);
+      if (parsed.hostname && !utils.validateHostnameStrict(parsed.hostname)) {
+        tdHostname.addClass("table-danger");
+      }
+
+      // Append 3 cells containing parsed values
+      tr.append(tdHwaddr, tdIpaddr, tdHostname);
     }
 
     // Append a last cell containing the buttons
