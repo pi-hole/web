@@ -47,13 +47,13 @@ end
 
 -- Function to sanitize hostname containing invalid HTML characters
 function sanitize_hostname(str)
-    -- Check if string contains any of the HTML special characters
-    if str:find("&<>\"'") then
-        return "invalid hostname"
-    end
-
-    -- Return the original string if no special characters are found
-    return str
+    return str:gsub("[&<>\"']", {
+        ["&"] = "&amp;",
+        ["<"] = "&lt;",
+        [">"] = "&gt;",
+        ['"'] = "&quot;",
+        ["'"] = "&#039;"
+    })
 end
 
 -- Sanitize hostname

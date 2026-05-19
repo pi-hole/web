@@ -49,6 +49,11 @@ module.exports = defineConfig([
       ],
       // This should be reverted to "error" later
       strict: ["error", "global"],
+      // Require u flag instead of v: WebKit (Safari, DuckDuckGo) does not yet
+      // support the ES2024 v (Unicode Sets) flag, causing a SyntaxError that
+      // prevents all JS from executing. None of our regexes use v-exclusive
+      // features, so u is fully equivalent and broadly compatible.
+      "require-unicode-regexp": ["error", { requireFlag: "u" }],
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
       "unicorn/no-negated-condition": "off",
