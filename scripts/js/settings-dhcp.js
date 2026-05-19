@@ -248,7 +248,7 @@ function parseStaticDHCPLine(line) {
     };
 
   // Advanced if line contains id:, set:, tag, or "*":
-  if (/id:|set:|tag:\*/v.test(line)) return "advanced";
+  if (/id:|set:|tag:\*/u.test(line)) return "advanced";
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
@@ -262,7 +262,7 @@ function parseStaticDHCPLine(line) {
 
   for (const part of parts) {
     // Advanced if the part is "infinite", "ignore" or a lease time value
-    if (/^(infinite|ignore|\d+(w|W|d|D|h|H|m|M|s|S))$/v.test(part)) return "advanced";
+    if (/^(infinite|ignore|\d+(w|W|d|D|h|H|m|M|s|S))$/u.test(part)) return "advanced";
 
     if (part.includes(":")) {
       if (part.startsWith("[") && part.endsWith("]")) {
@@ -278,7 +278,7 @@ function parseStaticDHCPLine(line) {
         // Potentially a MAC Address (we allow invalid values here. The table will highlight them)
         hwaddr = part;
       }
-    } else if (/^[.0-9]+$/v.test(part)) {
+    } else if (/^[.0-9]+$/u.test(part)) {
       // Advanced if more than one IP was found
       if (ipaddr) return "advanced";
 
@@ -322,7 +322,7 @@ $(document).on("click", ".save-static-row", function () {
     return;
   }
 
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   // Only update if at least one field is non-empty
   lines[rowIdx] =
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
@@ -385,7 +385,7 @@ $(document).on("click", ".cancel-static-row", function () {
 // Delete button for each row removes that line from the textarea and updates the table
 $(document).on("click", ".delete-static-row", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   lines.splice(rowIdx, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
@@ -396,7 +396,7 @@ $(document).on("click", ".delete-static-row", function () {
 // Add button for each row inserts a new empty line after this row
 $(document).on("click", ".add-static-row", function () {
   const rowIdx = Number.parseInt($(this).data("row"), 10);
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   lines.splice(rowIdx + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
@@ -452,7 +452,7 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
 function renderStaticDHCPTable() {
   const tbody = $("#StaticDHCPTable tbody");
   tbody.empty();
-  const lines = $("#dhcp-hosts").val().split(/\r?\n/v);
+  const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   for (const [idx, line] of lines.entries()) {
     const parsed = parseStaticDHCPLine(line);
 

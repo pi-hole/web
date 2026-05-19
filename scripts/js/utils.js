@@ -277,7 +277,7 @@ function validateIPv6Brackets(ip) {
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
-  const macvalidator = /^(?:[\da-f]{2}([:\-]))(?:[\da-f]{2}\1){4}[\da-f]{2}$/iu;
+  const macvalidator = /^(?:[\da-f]{2}([:-]))(?:[\da-f]{2}\1){4}[\da-f]{2}$/iu;
   return macvalidator.test(mac.trim());
 }
 
@@ -289,7 +289,7 @@ function validateHostname(name) {
 function validateHostnameStrict(name) {
   // Hostnames must not contain spaces, commas, or characters invalid in DNS names
   const hostnameValidator =
-    /^[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?)*$/v;
+    /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
   return hostnameValidator.test(name.trim());
 }
 
