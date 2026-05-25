@@ -35,12 +35,36 @@ const filters = [
 ];
 let doDNSSEC = false;
 
+// Map of client identifier (lower-cased IP or hostname) -> description/comment,
+// populated from the /clients endpoint (same data as the Clients settings page).
+let clientComments = {};
+
 // Check if pihole is validiting DNSSEC
 function getDnssecConfig() {
   $.getJSON(document.body.dataset.apiurl + "/config/dns/dnssec", data => {
     doDNSSEC = data.config.dns.dnssec;
 
     // redraw the table to show the icons when the API call returns
+    $("#all-queries").DataTable().draw();
+  });
+}
+
+// Fetch the client descriptions (comments) so they can be shown in the
+// Client column instead of the bare IP address.
+function getClientComments() {
+  $.getJSON(document.body.dataset.apiurl + "/clients", data => {
+    const comments = {};
+    for (const client of data.clients) {
+      if (client.comment !== null && client.comment !== "") {
+        // Clients may be identified by IP, MAC, hostname or subnet; key the
+        // lookup on that identifier so we can match it against a query's client.
+        comments[client.client.toLowerCase()] = client.comment;
+      }
+    }
+
+    clientComments = comments;
+
+    // redraw the table to apply the comments once the API call returns
     $("#all-queries").DataTable().draw();
   });
 }
@@ -543,6 +567,9 @@ $(() => {
   // Do we want to show DNSSEC icons?
   getDnssecConfig();
 
+  // Fetch client descriptions to show them in the Client column
+  getClientComments();
+
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 
@@ -681,8 +708,14 @@ $(() => {
         $("td:eq(3)", row).html(domain);
       }
 
-      // Show hostname instead of IP if available
-      if (data.client.name !== null && data.client.name !== "") {
+      // Prefer the client's description (comment) if one is set, showing the IP
+      // alongside it. Fall back to the hostname, then the bare IP.
+      const clientComment =
+        clientComments[data.client.ip.toLowerCase()] ||
+        (data.client.name ? clientComments[data.client.name.toLowerCase()] : undefined);
+      if (clientComment) {
+        $("td:eq(4)", row).text(clientComment + " (" + data.client.ip + ")");
+      } else if (data.client.name !== null && data.client.name !== "") {
         $("td:eq(4)", row).text(data.client.name);
       } else {
         $("td:eq(4)", row).text(data.client.ip);
