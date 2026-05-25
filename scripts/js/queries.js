@@ -35,6 +35,10 @@ const filters = [
 ];
 let doDNSSEC = false;
 
+// Map of client identifier (lower-cased IP or hostname) -> description/comment,
+// populated from the /clients endpoint (same data as the Clients settings page).
+let clientComments = {};
+
 // Check if pihole is validiting DNSSEC
 function getDnssecConfig() {
   $.getJSON(document.body.dataset.apiurl + "/config/dns/dnssec", data => {
@@ -42,6 +46,55 @@ function getDnssecConfig() {
 
     // redraw the table to show the icons when the API call returns
     $("#all-queries").DataTable().draw();
+  });
+}
+
+// Fetch the client descriptions (comments) so they can be shown in the
+// Client column instead of the bare IP address.
+function getClientComments() {
+  $.getJSON(document.body.dataset.apiurl + "/clients", data => {
+    const comments = {};
+    const macComments = {};
+    const macRe = /^([\da-f]{2}:){5}[\da-f]{2}$/iu;
+    for (const client of data.clients) {
+      if (client.comment !== null && client.comment !== "") {
+        // Clients may be identified by IP, MAC, hostname or subnet; key the
+        // lookup on that identifier so we can match it against a query's client.
+        const id = client.client.toLowerCase();
+        comments[id] = client.comment;
+        // MAC-defined clients never match a query's IP/hostname directly;
+        // remember them so we can resolve their live IPs/names below.
+        if (macRe.test(id)) {
+          macComments[id] = client.comment;
+        }
+      }
+    }
+
+    const applyComments = () => {
+      clientComments = comments;
+      // redraw the table to apply the comments once the API call returns
+      $("#all-queries").DataTable().draw();
+    };
+
+    // Clients defined by MAC address won't match a query's IP/hostname, so
+    // resolve each MAC to its current IP(s)/hostname(s) via the network
+    // devices endpoint and key the comment under those too.
+    if (Object.keys(macComments).length > 0) {
+      $.getJSON(document.body.dataset.apiurl + "/network/devices", netData => {
+        for (const device of netData.devices) {
+          const mac = (device.hwaddr || "").toLowerCase();
+          if (!(mac in macComments)) continue;
+          for (const entry of device.ips || []) {
+            if (entry.ip) comments[entry.ip.toLowerCase()] = macComments[mac];
+            if (entry.name) comments[entry.name.toLowerCase()] = macComments[mac];
+          }
+        }
+
+        applyComments();
+      }).fail(applyComments);
+    } else {
+      applyComments();
+    }
   });
 }
 
@@ -543,6 +596,9 @@ $(() => {
   // Do we want to show DNSSEC icons?
   getDnssecConfig();
 
+  // Fetch client descriptions to show them in the Client column
+  getClientComments();
+
   // Do we want to filter queries?
   const GETDict = utils.parseQueryString();
 
@@ -681,8 +737,14 @@ $(() => {
         $("td:eq(3)", row).html(domain);
       }
 
-      // Show hostname instead of IP if available
-      if (data.client.name !== null && data.client.name !== "") {
+      // Prefer the client's description (comment) if one is set, showing the IP
+      // alongside it. Fall back to the hostname, then the bare IP.
+      const clientComment =
+        clientComments[data.client.ip.toLowerCase()] ||
+        (data.client.name ? clientComments[data.client.name.toLowerCase()] : undefined);
+      if (clientComment) {
+        $("td:eq(4)", row).text(clientComment + " (" + data.client.ip + ")");
+      } else if (data.client.name !== null && data.client.name !== "") {
         $("td:eq(4)", row).text(data.client.name);
       } else {
         $("td:eq(4)", row).text(data.client.ip);
