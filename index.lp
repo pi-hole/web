@@ -191,6 +191,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="box" id="ad-frequency">
             <div class="box-header with-border">
                 <h3 class="box-title">Top Blocked Domains</h3>
+                <div class="pull-right" style="width:45%;max-width:280px;">
+                    <select id="ad-frequency-list-filter" class="form-control input-sm" title="Filter by subscription list">
+                        <option value="">All lists</option>
+                    </select>
+                </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">

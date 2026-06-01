@@ -358,6 +358,68 @@ function updateTopClientsTable(blocked) {
   });
 }
 
+// Populate the subscription-list dropdown on the "Top Blocked Domains" card.
+// Only enabled blocklists are shown; allowlists are excluded.
+function populateBlockedListFilter() {
+  const select = $("#ad-frequency-list-filter");
+  // Preserve any previously selected value
+  const previousVal = select.val();
+
+  $.getJSON(document.body.dataset.apiurl + "/lists", data => {
+    // Remove all options except the first "All lists" placeholder
+    select.find("option:not(:first)").remove();
+
+    if (!data.lists) return;
+
+    data.lists.forEach(list => {
+      if (list.type === "block" && list.enabled) {
+        const label =
+          list.address.length > 50 ? list.address.substring(0, 47) + "..." : list.address;
+        select.append($("<option>", { value: list.id, text: label, title: list.address }));
+      }
+    });
+
+    // Restore selection if the same list is still present
+    if (previousVal) select.val(previousVal);
+  });
+}
+
+// Fetch the set of adlist IDs a domain belongs to via the search API.
+// Returns a Promise resolving to a Set of numeric IDs.
+// Response shape: { search: { gravity: [ { id: N, address: "...", ... }, ... ] } }
+function fetchDomainAdlistIds(domain) {
+  return new Promise(resolve => {
+    $.getJSON(document.body.dataset.apiurl + "/search/" + encodeURIComponent(domain))
+      .then(data => {
+        const ids = new Set();
+        if (data.search && Array.isArray(data.search.gravity)) {
+          data.search.gravity.forEach(entry => {
+            if (typeof entry.id === "number") ids.add(entry.id);
+          });
+        }
+        resolve(ids);
+      })
+      .fail(() => resolve(new Set()));
+  });
+}
+
+// Render a list of domain items into the blocked-domains table.
+function renderBlockedDomainRows(items, sum, domaintable) {
+  items.forEach(item => {
+    const domain = encodeURIComponent(item.domain);
+    const urlText = domain === "" ? "." : item.domain;
+    const url = '<a href="queries?domain=' + domain + '&upstream=blocklist">' + urlText + "</a>";
+    const percentage = (item.count / sum) * 100;
+    domaintable.append(
+      "<tr> " +
+        utils.addTD(url) +
+        utils.addTD(item.count) +
+        utils.addTD(utils.colorBar(percentage, sum, "queries-blocked")) +
+        "</tr> "
+    );
+  });
+}
+
 function updateTopDomainsTable(blocked) {
   let api;
   let style;
@@ -366,12 +428,73 @@ function updateTopDomainsTable(blocked) {
   let overlay;
   let domaintable;
   if (blocked) {
-    api = document.body.dataset.apiurl + "/stats/top_domains?blocked=true";
     style = "queries-blocked";
     table = $("#ad-frequency");
     tablecontent = $("#ad-frequency td").parent();
     overlay = $("#ad-frequency .overlay");
     domaintable = $("#ad-frequency").find("tbody:last");
+
+    const selectedList = $("#ad-frequency-list-filter").val();
+    const adlistId = selectedList ? parseInt(selectedList, 10) : -1;
+
+    if (adlistId >= 0) {
+      // ── Filtered mode ────────────────────────────────────────────────────
+      // Client-side filtering: fetch a larger pool of blocked domains, then
+      // use /api/search/<domain> for each to check which adlist it belongs
+      // to. This works with the stock FTL binary (no rebuild required).
+      // When FTL is eventually rebuilt with the ?list= server-side param,
+      // this code can be replaced by a single API call.
+      const POOL_SIZE = 25;
+      tablecontent.remove();
+      overlay.show();
+
+      $.getJSON(
+        document.body.dataset.apiurl + "/stats/top_domains?blocked=true&count=" + POOL_SIZE,
+        data => {
+          const domains = data.domains || [];
+          const sum = data.blocked_queries;
+
+          if (domains.length === 0) {
+            domaintable.append('<tr><td colspan="3" class="text-center">- No data -</td></tr>');
+            overlay.hide();
+            return;
+          }
+
+          // Check every domain in parallel; then filter and render.
+          Promise.all(
+            domains.map(item =>
+              fetchDomainAdlistIds(item.domain).then(ids => ({
+                item,
+                inList: ids.has(adlistId),
+              }))
+            )
+          ).then(results => {
+            const matched = results
+              .filter(r => r.inList)
+              .slice(0, 10)
+              .map(r => r.item);
+
+            tablecontent.remove();
+            if (matched.length === 0) {
+              domaintable.append(
+                '<tr><td colspan="3" class="text-center">- No blocked domains from this list -</td></tr>'
+              );
+            } else {
+              renderBlockedDomainRows(matched, sum, domaintable);
+            }
+            overlay.hide();
+          });
+        }
+      ).fail(data => {
+        apiFailure(data);
+      });
+
+      // Early return — rendering happens inside the async callbacks above.
+      return;
+    }
+
+    // ── Unfiltered mode (All lists) ───────────────────────────────────────
+    api = document.body.dataset.apiurl + "/stats/top_domains?blocked=true";
   } else {
     api = document.body.dataset.apiurl + "/stats/top_domains";
     style = "queries-permitted";
@@ -828,6 +951,14 @@ $(() => {
 
   // Initialize privacy level before loading any data that depends on it
   initPrivacyLevel().then(() => {
+    // Populate the subscription-list dropdown, then load the top lists
+    populateBlockedListFilter();
+
+    // Re-fetch the blocked table whenever the user changes the list filter
+    $("#ad-frequency-list-filter").on("change", () => {
+      updateTopDomainsTable(true);
+    });
+
     // After privacy level is initialized, load the top lists
     updateTopLists();
   });
