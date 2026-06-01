@@ -371,13 +371,13 @@ function populateBlockedListFilter() {
 
     if (!data.lists) return;
 
-    data.lists.forEach(list => {
+    for (const list of data.lists) {
       if (list.type === "block" && list.enabled) {
         const label =
           list.address.length > 50 ? list.address.substring(0, 47) + "..." : list.address;
         select.append($("<option>", { value: list.id, text: label, title: list.address }));
       }
-    });
+    }
 
     // Restore selection if the same list is still present
     if (previousVal) select.val(previousVal);
@@ -393,10 +393,11 @@ function fetchDomainAdlistIds(domain) {
       .then(data => {
         const ids = new Set();
         if (data.search && Array.isArray(data.search.gravity)) {
-          data.search.gravity.forEach(entry => {
+          for (const entry of data.search.gravity) {
             if (typeof entry.id === "number") ids.add(entry.id);
-          });
+          }
         }
+
         resolve(ids);
       })
       .fail(() => resolve(new Set()));
@@ -405,7 +406,7 @@ function fetchDomainAdlistIds(domain) {
 
 // Render a list of domain items into the blocked-domains table.
 function renderBlockedDomainRows(items, sum, domaintable) {
-  items.forEach(item => {
+  for (const item of items) {
     const domain = encodeURIComponent(item.domain);
     const urlText = domain === "" ? "." : item.domain;
     const url = '<a href="queries?domain=' + domain + '&upstream=blocklist">' + urlText + "</a>";
@@ -417,7 +418,7 @@ function renderBlockedDomainRows(items, sum, domaintable) {
         utils.addTD(utils.colorBar(percentage, sum, "queries-blocked")) +
         "</tr> "
     );
-  });
+  }
 }
 
 function updateTopDomainsTable(blocked) {
@@ -435,7 +436,7 @@ function updateTopDomainsTable(blocked) {
     domaintable = $("#ad-frequency").find("tbody:last");
 
     const selectedList = $("#ad-frequency-list-filter").val();
-    const adlistId = selectedList ? parseInt(selectedList, 10) : -1;
+    const adlistId = selectedList ? Number.parseInt(selectedList, 10) : -1;
 
     if (adlistId >= 0) {
       // ── Filtered mode ────────────────────────────────────────────────────
@@ -482,6 +483,7 @@ function updateTopDomainsTable(blocked) {
             } else {
               renderBlockedDomainRows(matched, sum, domaintable);
             }
+
             overlay.hide();
           });
         }
