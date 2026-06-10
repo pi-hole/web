@@ -544,6 +544,12 @@ tfoot.add-new-item > tr > th {
   color: #cc0000;
 }
 
+.list-icon-legend-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 60px;
+}
+
 td.details-control {
   cursor: pointer;
   text-align: center;
