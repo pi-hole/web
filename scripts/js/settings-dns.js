@@ -450,7 +450,7 @@ $(document).on("input blur paste", ".revserver-network", function () {
 });
 $(document).on("input blur paste", ".revserver-ip", function () {
   const val = $(this).text().trim();
-  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
+  if (val && !(utils.validateIPv4WithPort(val) || utils.validateIPv6WithPort(val))) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid server IP");
     $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
