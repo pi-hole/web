@@ -1576,6 +1576,29 @@ table.dataTable tbody > tr > .selected {
   margin: 0 4px;
 }
 
+/* Used in Settings DNS page */
+.revServers {
+  display: none;
+  resize: vertical;
+}
+
+#revServers-table .btn-xs {
+  width: 24px;
+  height: 24px;
+}
+
+#revServers-table tbody td {
+  vertical-align: middle;
+}
+
+#revServers-table th {
+  white-space: normal;
+}
+
+#revServers-table tfoot ol {
+  padding: 0.5em 0 0 1em;
+}
+
 /* Used in interfaces page */
 .list-group-item {
   background: transparent;
