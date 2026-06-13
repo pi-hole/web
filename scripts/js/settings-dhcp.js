@@ -415,7 +415,12 @@ $(document).on("click", ".add-static-row", function () {
 $(() => {
   processDHCPConfig();
   renderStaticDHCPTable();
-  $("#dhcp-hosts").on("input", renderStaticDHCPTable);
+  $("#dhcp-hosts").on("input", function () {
+    // Don't rebuild the table while a row is being edited (a Save button exists),
+    // otherwise unsaved cell edits would be silently destroyed by tbody.empty()
+    if ($("#StaticDHCPTable .save-static-row").length > 0) return;
+    renderStaticDHCPTable();
+  });
 });
 
 // When editing a cell, disable all action buttons except the save button in the current row
@@ -515,6 +520,17 @@ function renderStaticDHCPTable() {
 
 // Copy button for each lease row copies the lease as a new static lease line
 $(document).on("click", ".copy-to-static", function () {
+  // Refuse while a static row is being edited, to not discard unsaved changes
+  if ($("#StaticDHCPTable .save-static-row").length > 0) {
+    utils.showAlert(
+      "warning",
+      "",
+      "Finish editing first",
+      "Please confirm or cancel the row you are editing before copying a lease."
+    );
+    return;
+  }
+
   const hwaddr = $(this).data("hwaddr") || "";
   const ip = $(this).data("ip") || "";
   const hostname = $(this).data("hostname") || "";
