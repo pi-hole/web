@@ -18,7 +18,9 @@ module.exports = defineConfig([
         ...globals.jquery,
       },
     },
-    prettier: true,
+    // Disable rules that conflict with Prettier, but do not enforce XO's own
+    // built-in Prettier style
+    prettier: "compat",
     space: 2,
     ignores: ["**/vendor/**"],
     rules: {
@@ -67,6 +69,13 @@ module.exports = defineConfig([
       "unicorn/prefer-string-raw": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/switch-case-braces": "off",
+    },
+  },
+  // Must be a separate config item so it lands after the prettier-compat
+  // config that XO injects (which otherwise re-enables single-quote enforcement).
+  {
+    rules: {
+      "@stylistic/quotes": ["error", "double", { avoidEscape: true}],
     },
   },
 ]);
