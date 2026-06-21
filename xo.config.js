@@ -1,5 +1,6 @@
 "use strict";
 
+
 const globals = require("globals");
 const { defineConfig } = require("eslint/config");
 const compatPlugin = require("eslint-plugin-compat");
@@ -8,6 +9,9 @@ module.exports = defineConfig([
   {
     extends: [compatPlugin.configs["flat/recommended"]],
     languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {},
+      },
       sourceType: "script",
       globals: {
         ...globals.browser,
