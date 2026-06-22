@@ -83,7 +83,9 @@ function fillDNSupstreams(value, servers) {
         removeFromArray(upstreams, title);
       }
 
-      if (upstreams.includes(title)) customServers--;
+      if (upstreams.includes(title)) {
+        customServers--;
+      }
     });
     // The variable will contain a negative value, we need to add the length to
     // get the correct number of custom servers

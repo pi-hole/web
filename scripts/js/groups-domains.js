@@ -272,10 +272,12 @@ function initTable() {
           // Restore values if drop-down menu is closed without clicking the
           // Apply button (e.g. by clicking outside) and re-disable the Apply
           // button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
+
+          $(this).val(data.groups).selectpicker("refresh");
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         })
         .selectpicker()
         .siblings(".dropdown-menu")
@@ -504,7 +506,9 @@ function addDomain() {
   if (kind === "exact" && wildcardChecked) {
     for (const [index, domain] of domains.entries()) {
       // Strip leading "*." if specified by user in wildcard mode
-      if (domain.startsWith("*.")) domains[index] = domain.substr(2);
+      if (domain.startsWith("*.")) {
+        domains[index] = domain.substr(2);
+      }
 
       // Transform domain into a wildcard regex
       domains[index] = "(\\.|^)" + domains[index].replaceAll(".", "\\.") + "$";
@@ -565,8 +569,8 @@ function editDomain() {
     .val()
     .map(Number);
 
-  const oldType = oldTypeStr.split("/")[0];
-  const oldKind = oldTypeStr.split("/")[1];
+  const oldType = oldTypeStr.split("/", 1)[0];
+  const oldKind = oldTypeStr.split("/", 2)[1];
 
   let done = "edited";
   let notDone = "editing";
@@ -603,7 +607,7 @@ function editDomain() {
   }
 
   utils.disableAll();
-  const domainDecoded = utils.hexDecode(domain.split("_")[0]);
+  const domainDecoded = utils.hexDecode(domain.split("_", 1)[0]);
   utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
     url:

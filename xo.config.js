@@ -1,6 +1,5 @@
 "use strict";
 
-
 const globals = require("globals");
 const { defineConfig } = require("eslint/config");
 const compatPlugin = require("eslint-plugin-compat");

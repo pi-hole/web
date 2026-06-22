@@ -131,7 +131,9 @@ function saveSettings() {
     }
 
     // If this is a radio button, skip all but the checked one
-    if ($(this).is(":radio") && !$(this).is(":checked")) return;
+    if ($(this).is(":radio") && !$(this).is(":checked")) {
+      return;
+    }
 
     // If this is a string array, split the value into an array
     if ($(this).is("textarea")) {

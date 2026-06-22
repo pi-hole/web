@@ -309,7 +309,6 @@ function updateTopClientsTable(blocked) {
   $.getJSON(api, data => {
     // Clear tables before filling them with data
     tablecontent.remove();
-    let url;
     let percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
@@ -331,8 +330,10 @@ function updateTopClientsTable(blocked) {
     for (const client of data.clients) {
       // Sanitize client
       let clientname = client.name;
-      if (clientname.length === 0) clientname = client.ip;
-      url =
+      if (clientname.length === 0) {
+        clientname = client.ip;
+      }
+      const url =
         '<a href="queries?client_ip=' +
         encodeURIComponent(client.ip) +
         (blocked ? "&upstream=blocklist" : "") +
@@ -384,9 +385,7 @@ function updateTopDomainsTable(blocked) {
   $.getJSON(api, data => {
     // Clear tables before filling them with data
     tablecontent.remove();
-    let url;
     let domain;
-    let percentage;
     let urlText;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
@@ -410,14 +409,14 @@ function updateTopDomainsTable(blocked) {
       domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
       urlText = domain === "" ? "." : domain;
-      url =
+      const url =
         '<a href="queries?domain=' +
         domain +
         (blocked ? "&upstream=blocklist" : "&upstream=permitted") +
         '">' +
         urlText +
         "</a>";
-      percentage = (item.count / sum) * 100;
+      const percentage = (item.count / sum) * 100;
       domaintable.append(
         "<tr> " +
           utils.addTD(url) +
@@ -506,7 +505,9 @@ function updateSummaryData(runOnce = false) {
     firstSummaryUpdate = false;
   })
     .done(() => {
-      if (!runOnce) utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
+      if (!runOnce) {
+        utils.setTimer(updateSummaryData, REFRESH_INTERVAL.summary);
+      }
     })
     .fail(data => {
       utils.setTimer(updateSummaryData, 3 * REFRESH_INTERVAL.summary);
@@ -519,9 +520,13 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   // current dataset
   let sum = 0;
   for (const [key, value] of Object.entries(tooltipLabel.parsed._stacks.y)) {
-    if (key.startsWith("_") || value === undefined) continue;
+    if (key.startsWith("_") || value === undefined) {
+      continue;
+    }
     const num = Number.parseInt(value, 10);
-    if (num) sum += num;
+    if (num) {
+      sum += num;
+    }
   }
 
   let percentage = 0;
@@ -530,7 +535,9 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
     percentage = (100 * data) / sum;
   }
 
-  if (skipZero && data === 0) return undefined;
+  if (skipZero && data === 0) {
+    return undefined;
+  }
   return (
     tooltipLabel.dataset.label +
     ": " +
@@ -547,8 +554,11 @@ $(() => {
 
   // On click of the "Reset zoom" buttons, the closest chart to the button is reset
   $(".zoom-reset").on("click", function () {
-    if ($(this).data("sel") === "reset-clients") clientsChart.resetZoom();
-    else timeLineChart.resetZoom();
+    if ($(this).data("sel") === "reset-clients") {
+      clientsChart.resetZoom();
+    } else {
+      timeLineChart.resetZoom();
+    }
 
     // Show the closest info icon to the current chart
     $(this).parent().find(".zoom-info").show();
@@ -848,7 +858,7 @@ $(() => {
       //get value by index
       const from = label / 1000 - 300;
       const until = label / 1000 + 300;
-      globalThis.location.href = "queries?from=" + from + "&until=" + until;
+      location.assign("queries?from=" + from + "&until=" + until);
     }
 
     return false;
@@ -871,7 +881,7 @@ $(() => {
       //get value by index
       const from = label / 1000 - 300;
       const until = label / 1000 + 300;
-      globalThis.location.href = "queries?from=" + from + "&until=" + until;
+      location.assign("queries?from=" + from + "&until=" + until);
     }
 
     return false;

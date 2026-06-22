@@ -20,10 +20,10 @@ $(() => {
 });
 
 /**
- * Decode a base64 string to UTF-8 text using native browser APIs
- * This is the replacement for the deprecated atob() function
- * @param {string} base64 - Base64 encoded string
- * @returns {string} Decoded UTF-8 string
+Decode a base64 string to UTF-8 text using native browser APIs
+This is the replacement for the deprecated atob() function
+@param {string} base64 - Base64 encoded string
+@returns {string} Decoded UTF-8 string
  */
 // eslint-disable-next-line no-unused-vars -- Used by other scripts (e.g., footer.js)
 function base64ToString(base64) {
@@ -41,8 +41,12 @@ function base64ToString(base64) {
 
     /* eslint-disable no-bitwise -- Bitwise operations required for base64 decoding */
     bytes.push((encoded1 << 2) | (encoded2 >> 4));
-    if (encoded3 !== -1) bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
-    if (encoded4 !== -1) bytes.push(((encoded3 & 3) << 6) | encoded4);
+    if (encoded3 !== -1) {
+      bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
+    }
+    if (encoded4 !== -1) {
+      bytes.push(((encoded3 & 3) << 6) | encoded4);
+    }
     /* eslint-enable no-bitwise */
   }
 
@@ -61,7 +65,9 @@ function escapeHtml(text) {
   };
 
   // Return early when text is not a string
-  if (typeof text !== "string") return text;
+  if (typeof text !== "string") {
+    return text;
+  }
 
   return text.replaceAll(/[&<>"']/gu, m => map[m]);
 }
@@ -82,7 +88,9 @@ function unescapeHtml(text) {
     "&szlig;": "ß",
   };
 
-  if (text === null) return null;
+  if (text === null) {
+    return null;
+  }
 
   return text.replaceAll(
     /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/gu,
@@ -124,8 +132,10 @@ function showAlert(type, icon, title, message, toast) {
       break;
     case "error":
       options.icon = "fas fa-times";
-      if (title.length === 0)
+      if (title.length === 0) {
         options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      }
+
       settings.delay *= 2;
 
       // If the message is an API object, nicely format the error message
@@ -136,7 +146,9 @@ function showAlert(type, icon, title, message, toast) {
         if (data.error !== undefined) {
           options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
 
-          if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
+          if (data.error.hint !== null) {
+            options.message = escapeHtml(data.error.hint);
+          }
         }
       } catch {
         // Do nothing
@@ -266,7 +278,9 @@ function validateIPv6(ip) {
 function validateIPv6Brackets(ip) {
   const trimmedIp = ip.trim();
   // Check if the IPv6 is enclosed in brackets and return in case of failure
-  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) return false;
+  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) {
+    return false;
+  }
 
   // Strip brackets before validating the IPv6
   const ipWithoutBrackets = trimmedIp.slice(1, -1);
@@ -558,22 +572,46 @@ function changeTableButtonStates(table) {
 
   if (selectedRows === 0) {
     // Nothing selected
-    for (const el of selectAllElements) el.classList.remove("hidden");
-    for (const el of selectMoreElements) el.classList.add("hidden");
-    for (const el of removeAllElements) el.classList.add("hidden");
-    for (const el of deleteSelectedElements) el.classList.add("hidden");
+    for (const el of selectAllElements) {
+      el.classList.remove("hidden");
+    }
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
+    }
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
+    }
+    for (const el of deleteSelectedElements) {
+      el.classList.add("hidden");
+    }
   } else if (selectedRows >= pageLength || selectedRows === allRows) {
     // Whole page is selected (or all available messages were selected)
-    for (const el of selectAllElements) el.classList.add("hidden");
-    for (const el of selectMoreElements) el.classList.add("hidden");
-    for (const el of removeAllElements) el.classList.remove("hidden");
-    for (const el of deleteSelectedElements) el.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
+    }
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
+    }
+    for (const el of removeAllElements) {
+      el.classList.remove("hidden");
+    }
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
+    }
   } else {
     // Some rows are selected, but not all
-    for (const el of selectAllElements) el.classList.add("hidden");
-    for (const el of selectMoreElements) el.classList.remove("hidden");
-    for (const el of removeAllElements) el.classList.add("hidden");
-    for (const el of deleteSelectedElements) el.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
+    }
+    for (const el of selectMoreElements) {
+      el.classList.remove("hidden");
+    }
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
+    }
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
+    }
   }
 }
 
@@ -585,21 +623,27 @@ function getCSSval(cssclass, cssproperty) {
 }
 
 function parseQueryString() {
-  const params = new URLSearchParams(globalThis.location.search);
-  return Object.fromEntries(params.entries());
+  const params = new URLSearchParams(location.search);
+  return Object.fromEntries(params);
 }
 
 function hexEncode(text) {
-  if (typeof text !== "string" || text.length === 0) return "";
+  if (typeof text !== "string" || text.length === 0) {
+    return "";
+  }
 
   return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
 }
 
 function hexDecode(text) {
-  if (typeof text !== "string" || text.length === 0) return "";
+  if (typeof text !== "string" || text.length === 0) {
+    return "";
+  }
 
   const hexes = text.match(/.{1,4}/gu);
-  if (!hexes || hexes.length === 0) return "";
+  if (!hexes || hexes.length === 0) {
+    return "";
+  }
 
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
@@ -746,26 +790,36 @@ function setInter(func, interval) {
 }
 
 /**
- * Toggle or set the collapse state of a box element
- * @param {HTMLElement} box - The box element
- * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
- */
+Toggle or set the collapse state of a box element
+@param {HTMLElement} box - The box element
+@param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
+*/
 // Not using the AdminLTE API so that the expansion is not animated
 // Otherwise, we could use `$(customBox).boxWidget("expand")`
 function toggleBoxCollapse(box, expand = true) {
-  if (!box) return;
+  if (!box) {
+    return;
+  }
 
   const icon = box.querySelector(".btn-box-tool > i");
   const body = box.querySelector(".box-body");
 
   if (expand) {
     box.classList.remove("collapsed-box");
-    if (icon) icon.classList.replace("fa-plus", "fa-minus");
-    if (body) body.style = "";
+    if (icon) {
+      icon.classList.replace("fa-plus", "fa-minus");
+    }
+    if (body) {
+      body.style = "";
+    }
   } else {
     box.classList.add("collapsed-box");
-    if (icon) icon.classList.replace("fa-minus", "fa-plus");
-    if (body) body.style.display = "none";
+    if (icon) {
+      icon.classList.replace("fa-minus", "fa-plus");
+    }
+    if (body) {
+      body.style.display = "none";
+    }
   }
 }
 

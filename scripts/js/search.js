@@ -28,12 +28,11 @@ function doSearch() {
   const q = $("input[id^='domain']:visible").val().trim().toLowerCase();
   const N = $("#number").val();
   // Partial matching?
-  const partial = $("#partialMatch").is(":checked");
-
   if (q.length === 0) {
     return;
   }
 
+  const partial = $("#partialMatch").is(":checked");
   const verb = partial ? "partially" : "exactly";
 
   $.ajax({

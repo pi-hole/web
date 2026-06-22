@@ -89,9 +89,9 @@ function getData() {
   // Check if file parameter exists
   if (!queryParams.file) {
     // Add default file parameter and redirect
-    const url = new URL(globalThis.location.href);
+    const url = new URL(location.href);
     url.searchParams.set("file", "dnsmasq");
-    globalThis.location.href = url.toString();
+    location.assign(url.toString());
     return;
   }
 

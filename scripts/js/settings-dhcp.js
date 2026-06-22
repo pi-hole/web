@@ -240,21 +240,26 @@ function parseStaticDHCPLine(line) {
   // Returns null if advanced/invalid, or {hwaddr, ipaddr, hostname}
 
   // If the line is empty, return an object with empty fields
-  if (!line.trim())
+  if (!line.trim()) {
     return {
       hwaddr: "",
       ipaddr: "",
       hostname: "",
     };
+  }
 
   // Advanced if line contains id:, set:, tag, or "*":
-  if (/id:|set:|tag:\*/u.test(line)) return "advanced";
+  if (/id:|set:|tag:\*/u.test(line)) {
+    return "advanced";
+  }
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
 
   // Advanced if there are more than 3 parts
-  if (parts.length > 3) return "advanced";
+  if (parts.length > 3) {
+    return "advanced";
+  }
 
   let hwaddr = "";
   let ipaddr = "";
@@ -262,31 +267,41 @@ function parseStaticDHCPLine(line) {
 
   for (const part of parts) {
     // Advanced if the part is "infinite", "ignore" or a lease time value
-    if (/^(infinite|ignore|\d+(w|W|d|D|h|H|m|M|s|S))$/u.test(part)) return "advanced";
+    if (/^(infinite|ignore|\d+([DHMSWdhmsw]))$/u.test(part)) {
+      return "advanced";
+    }
 
     if (part.includes(":")) {
       if (part.startsWith("[") && part.endsWith("]")) {
         // Advanced if more than one IP was found
-        if (ipaddr) return "advanced";
+        if (ipaddr) {
+          return "advanced";
+        }
 
         // Potentially an IPv6 (we allow invalid values here. The table will highlight them)
         ipaddr = part;
       } else {
         // Advanced if more than one MAC Address was found
-        if (hwaddr) return "advanced";
+        if (hwaddr) {
+          return "advanced";
+        }
 
         // Potentially a MAC Address (we allow invalid values here. The table will highlight them)
         hwaddr = part;
       }
     } else if (/^[.0-9]+$/u.test(part)) {
       // Advanced if more than one IP was found
-      if (ipaddr) return "advanced";
+      if (ipaddr) {
+        return "advanced";
+      }
 
       // Potentially an IPv4 (we allow invalid values here. The table will highlight them)
       ipaddr = part;
     } else {
       // Advanced if more than one hostname was found
-      if (hostname) return "advanced";
+      if (hostname) {
+        return "advanced";
+      }
 
       // Potentially a hostname (we allow invalid values here. The table will highlight them)
       hostname = part;
@@ -415,10 +430,12 @@ $(document).on("click", ".add-static-row", function () {
 $(() => {
   processDHCPConfig();
   renderStaticDHCPTable();
-  $("#dhcp-hosts").on("input", function () {
+  $("#dhcp-hosts").on("input", () => {
     // Don't rebuild the table while a row is being edited (a Save button exists),
     // otherwise unsaved cell edits would be silently destroyed by tbody.empty()
-    if ($("#StaticDHCPTable .save-static-row").length > 0) return;
+    if ($("#StaticDHCPTable .save-static-row").length > 0) {
+      return;
+    }
     renderStaticDHCPTable();
   });
 });
@@ -551,12 +568,18 @@ function updateLineNumbers(force) {
   const linesElem = document.getElementById("dhcp-hosts-lines");
   updateLineNumbers.lastLineCount ||= 0;
 
-  if (!textarea || !linesElem) return;
+  if (!textarea || !linesElem) {
+    return;
+  }
   const lines = textarea.value.split("\n").length || 1;
-  if (!force && lines === updateLineNumbers.lastLineCount) return;
+  if (!force && lines === updateLineNumbers.lastLineCount) {
+    return;
+  }
   updateLineNumbers.lastLineCount = lines;
   let html = "";
-  for (let i = 1; i <= lines; i++) html += i + "<br>";
+  for (let i = 1; i <= lines; i++) {
+    html += i + "<br>";
+  }
   linesElem.innerHTML = html;
   // Apply the same styles to the lines element as the textarea
   for (const property of [
@@ -581,11 +604,11 @@ function syncScroll() {
 
 document.getElementById("dhcp-hosts").addEventListener("scroll", syncScroll);
 
-document.getElementById("dhcp-hosts").addEventListener("input", function () {
+document.getElementById("dhcp-hosts").addEventListener("input", () => {
   updateLineNumbers(false);
 });
 
-window.addEventListener("resize", function () {
+window.addEventListener("resize", () => {
   updateLineNumbers(true);
 });
 

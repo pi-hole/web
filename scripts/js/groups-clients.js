@@ -51,14 +51,18 @@ function reloadClientSuggestions() {
         }
 
         if (client.macVendor !== null && client.macVendor.length > 0) {
-          if (extraInfo.length > 0) extraInfo += "; ";
+          if (extraInfo.length > 0) {
+            extraInfo += "; ";
+          }
           extraInfo += "vendor: " + utils.escapeHtml(client.macVendor);
         }
 
         // Do not add addresses for mock devices as their address is already
         // the hwaddr
         if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
-          if (extraInfo.length > 0) extraInfo += "; ";
+          if (extraInfo.length > 0) {
+            extraInfo += "; ";
+          }
           // Count number of "," in client.addresses to determine number of addresses
           const numAddresses = client.addresses.split(",").length;
           const pluralAddresses = numAddresses > 1 ? "es" : "";
@@ -66,7 +70,9 @@ function reloadClientSuggestions() {
             numAddresses + " address" + pluralAddresses + ": " + utils.escapeHtml(client.addresses);
         }
 
-        if (extraInfo.length > 0) text += " (" + extraInfo + ")";
+        if (extraInfo.length > 0) {
+          text += " (" + extraInfo + ")";
+        }
 
         sel.append($("<option />").val(key).text(text));
       }
@@ -149,7 +155,7 @@ function initTable() {
         '" class="breakall">' +
         utils.escapeHtml(data.client) +
         "</code>";
-      if (data.name !== null && data.name.length > 0)
+      if (data.name !== null && data.name.length > 0) {
         ipName +=
           '<br><code id="name_' +
           dataId +
@@ -158,6 +164,8 @@ function initTable() {
           '" class="breakall">' +
           utils.escapeHtml(data.name) +
           "</code>";
+      }
+
       $("td:eq(1)", row).html(ipName);
 
       $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
@@ -213,10 +221,12 @@ function initTable() {
         })
         .on("hide.bs.select", function () {
           // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
+
+          $(this).val(data.groups).selectpicker("refresh");
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         })
         .selectpicker()
         .siblings(".dropdown-menu")

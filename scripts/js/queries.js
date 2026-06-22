@@ -477,7 +477,9 @@ function addSelectSuggestion(name, dict, data) {
   // Add GET parameter as first suggestion (if present and not already included)
   if (name in dict) {
     value = decodeURIComponent(dict[name]);
-    if (!data.includes(value)) data.unshift(value);
+    if (!data.includes(value)) {
+      data.unshift(value);
+    }
   }
 
   // Add data obtained from API
@@ -516,7 +518,9 @@ function getAPIURL(filters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
   for (const [key, filter] of Object.entries(filters)) {
     if (filterOn(key, filters)) {
-      if (!apiurl.endsWith("?")) apiurl += "&";
+      if (!apiurl.endsWith("?")) {
+        apiurl += "&";
+      }
       apiurl += `${key}=${encodeURIComponent(filter)}`;
     }
   }
@@ -524,10 +528,16 @@ function getAPIURL(filters) {
   // Omit from/until filtering if we cannot reach these times. This will speed
   // up the database lookups notably on slow devices. The API accepts timestamps
   // in seconds since epoch
-  if (from > beginningOfTime) apiurl += "&from=" + from;
-  if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
+  if (from > beginningOfTime) {
+    apiurl += "&from=" + from;
+  }
+  if (until > beginningOfTime && until < endOfTime) {
+    apiurl += "&until=" + until;
+  }
 
-  if ($("#disk").prop("checked")) apiurl += "&disk=true";
+  if ($("#disk").prop("checked")) {
+    apiurl += "&disk=true";
+  }
 
   return encodeURI(apiurl);
 }
@@ -579,7 +589,9 @@ $(() => {
       error: handleAjaxError,
       dataSrc: "queries",
       data(d) {
-        if (cursor !== null) d.cursor = cursor;
+        if (cursor !== null) {
+          d.cursor = cursor;
+        }
       },
       dataFilter(d) {
         const json = JSON.parse(d);
@@ -637,7 +649,9 @@ $(() => {
     stateLoadCallback() {
       const state = utils.stateLoadCallback("query_log_table");
       // Default to 25 entries if "All" was previously selected
-      if (state) state.length = state.length === -1 ? 25 : state.length;
+      if (state) {
+        state.length = state.length === -1 ? 25 : state.length;
+      }
       return state;
     },
     rowCallback(row, data) {

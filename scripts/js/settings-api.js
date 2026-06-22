@@ -210,11 +210,15 @@ function deleteMultipleSessions(ids) {
   // trash button is clicked
 
   // Check input validity
-  if (!Array.isArray(ids)) return;
+  if (!Array.isArray(ids)) {
+    return;
+  }
 
   // Exploit prevention: return early for non-numeric IDs
   for (const id of ids) {
-    if (!Number.isInteger(id)) return;
+    if (!Number.isInteger(id)) {
+      return;
+    }
   }
 
   // Convert all ids to integers
@@ -250,10 +254,14 @@ function deleteOneSession(id, len, ownSessionDelete) {
   })
     .done(() => {
       // Do not reload page when deleting multiple sessions
-      if (++deleted < len) return;
+      if (++deleted < len) {
+        return;
+      }
 
       // All other sessions have been deleted, now delete own session
-      if (ownSessionDelete) deleteOneSession(ownSessionID, 1, false);
+      if (ownSessionDelete) {
+        deleteOneSession(ownSessionID, 1, false);
+      }
 
       if (id !== ownSessionID) {
         // Reload table to remove session
@@ -280,7 +288,9 @@ function processWebServerConfig() {
         $("#apppw_submit").text("Replace app password");
         $("#apppw_submit").removeClass("btn-success");
         $("#apppw_submit").addClass("btn-warning");
-      } else $("#apppw_clear").hide();
+      } else {
+        $("#apppw_clear").hide();
+      }
     })
     .fail(data => {
       apiFailure(data);
@@ -478,7 +488,10 @@ $(() => {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
   }).done(data => {
-    if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
-    else $("#button-disable-totp").removeClass("hidden");
+    if (data.session.totp === false) {
+      $("#button-enable-totp").removeClass("hidden");
+    } else {
+      $("#button-disable-totp").removeClass("hidden");
+    }
   });
 });

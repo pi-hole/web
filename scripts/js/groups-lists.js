@@ -320,10 +320,12 @@ function initTable() {
         })
         .on("hide.bs.select", function () {
           // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
+
+          $(this).val(data.groups).selectpicker("refresh");
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         })
         .selectpicker()
         .siblings(".dropdown-menu")
