@@ -212,7 +212,7 @@ function createRevServerTable() {
     ],
     drawCallback() {
       $(".deleteRevServers").on("click", deleteRecord);
-      $(".saveRevServers").on("click", saveRecord);
+      $("tbody .saveRevServers").on("click", saveRecord);
       $(".cancelRevServers").on("click", restoreRecord);
     },
     rowCallback(row, data, displayNum, displayIndex, dataIndex) {
