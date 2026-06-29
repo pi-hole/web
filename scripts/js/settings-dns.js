@@ -429,6 +429,11 @@ function saveRevServerData(msg) {
 // This will use CSS rules to show/hide buttons
 $(document).on("focus input", "#revServers-table [contenteditable]", function () {
   $(this).closest("tr").addClass("editing");
+
+  // Make sure the placeholder text is shown when a contenteditable cell is empty (or only contains spaces)
+  if ($(this).text().trim() === "") {
+    $(this).empty();
+  }
 });
 $(document).on("change", "#revServers-table .revserver-chkbox input", function () {
   $(this).closest("tr").addClass("editing");

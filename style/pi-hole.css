@@ -1598,6 +1598,10 @@ table.dataTable tbody > tr > .selected {
   display: unset;
 }
 
+#revServers-table {
+  table-layout: fixed; /* Ensures that column widths remain the same when the content is edited */
+}
+
 #revServers-table tbody td {
   vertical-align: middle;
 }
@@ -1608,6 +1612,22 @@ table.dataTable tbody > tr > .selected {
 
 #revServers-table tfoot ol {
   padding: 0.5em 0 0 1em;
+}
+
+/* Add placeholder text to the footer cells, when empty */
+#revServers-table :is(td, tfoot th):empty::before {
+  color: rgba(127, 127, 127, 0.5);
+  pointer-events: none; /* Allow clicks on the parent element (cell) */
+  display: block;
+}
+#network-revServers:empty::before {
+  content: "Enter a network range (CIDR notation)";
+}
+#ip-revServers:empty::before {
+  content: "Enter the server IP";
+}
+#domain-revServers:empty::before {
+  content: "Domain name (optional)";
 }
 
 /* Used in interfaces page */
