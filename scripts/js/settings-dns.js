@@ -163,15 +163,6 @@ function getRevServerArray() {
 }
 
 function createRevServerTable() {
-  // The Conditional Forwarding option will be disabled when this option was set via ENV VAR.
-  // Check if the textarea is disabled.
-  if ($(".revServers").prop("disabled")) {
-    // In this case, we don't show the table because the values can't be changed.
-    // Show the disabled textarea and return
-    $(".revServers").show();
-    return;
-  }
-
   // Get the data
   const tableRows = getRevServerArray();
 
@@ -376,7 +367,16 @@ function processDNSConfig() {
     })
     .done(() => {
       // This will be executed only after the done block above is executed
-      createRevServerTable();
+
+      // If Conditional Forwarding option is set via ENV VAR, the textarea will be disabled and no values can be edited
+      if ($(".revServers").prop("disabled")) {
+        // In this case, we hide the table and show the textarea
+        $("#revServers-table").hide();
+        $(".revServers").show().attr("title", "Disabled: Set by environment variable");
+      } else {
+        // We only populate the table when the textarea is enabled
+        createRevServerTable();
+      }
     })
     .fail(data => {
       apiFailure(data);
