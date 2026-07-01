@@ -64,6 +64,7 @@ module.exports = defineConfig([
       // prevents all JS from executing. None of our regexes use v-exclusive
       // features, so u is fully equivalent and broadly compatible.
       "require-unicode-regexp": ["error", { requireFlag: "u" }],
+      "unicorn/max-nested-calls": "off",
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
       "unicorn/no-negated-condition": "off",
@@ -76,11 +77,13 @@ module.exports = defineConfig([
       "unicorn/switch-case-braces": "off",
     },
   },
-  // Must be a separate config item so it lands after the prettier-compat
-  // config that XO injects (which otherwise re-enables single-quote enforcement).
+  // Must be a separate config item so it lands after the prettier-compat config that XO injects
+  //  - enforce double quotes
+  //  - disable no-mixed-operators because it conflicts with Prettier's formatting
   {
     rules: {
       "@stylistic/quotes": ["error", "double", { avoidEscape: true}],
+      "@stylistic/no-mixed-operators": "off",
     },
   },
 ]);

@@ -82,7 +82,7 @@ function updateQueriesOverTime() {
 
     // Add data for each dataset that is available
     for (const item of data.history) {
-      const timestamp = new Date(1000 * Number.parseInt(item.timestamp, 10));
+      const timestamp = new Date(1000 * Math.trunc(Number(item.timestamp)));
 
       timeLineChart.data.labels.push(timestamp);
       const other = item.total - (item.blocked + item.cached + item.forwarded);
@@ -202,7 +202,7 @@ function updateClientsOverTime() {
 
     // Extract data timestamps
     for (const item of data.history) {
-      const d = new Date(1000 * Number.parseInt(item.timestamp, 10));
+      const d = new Date(1000 * Math.trunc(Number(item.timestamp)));
       clientsChart.data.labels.push(d);
     }
 
@@ -309,7 +309,6 @@ function updateTopClientsTable(blocked) {
   $.getJSON(api, data => {
     // Clear tables before filling them with data
     tablecontent.remove();
-    let percentage;
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // When there is no data...
@@ -333,6 +332,7 @@ function updateTopClientsTable(blocked) {
       if (clientname.length === 0) {
         clientname = client.ip;
       }
+
       const url =
         '<a href="queries?client_ip=' +
         encodeURIComponent(client.ip) +
@@ -340,7 +340,7 @@ function updateTopClientsTable(blocked) {
         '">' +
         utils.escapeHtml(clientname) +
         "</a>";
-      percentage = (client.count / sum) * 100;
+      const percentage = (client.count / sum) * 100;
 
       // Add row to table
       clienttable.append(
@@ -385,8 +385,7 @@ function updateTopDomainsTable(blocked) {
   $.getJSON(api, data => {
     // Clear tables before filling them with data
     tablecontent.remove();
-    let domain;
-    let urlText;
+
     const sum = blocked ? data.blocked_queries : data.total_queries;
 
     // When there is no data...
@@ -406,9 +405,9 @@ function updateTopDomainsTable(blocked) {
     // Populate table with content
     for (const item of data.domains) {
       // Sanitize domain
-      domain = encodeURIComponent(item.domain);
+      const domain = encodeURIComponent(item.domain);
       // Substitute "." for empty domain lookups
-      urlText = domain === "" ? "." : domain;
+      const urlText = domain === "" ? "." : domain;
       const url =
         '<a href="queries?domain=' +
         domain +
@@ -454,20 +453,20 @@ let firstSummaryUpdate = true;
 function updateSummaryData(runOnce = false) {
   $.getJSON(document.body.dataset.apiurl + "/stats/summary", data => {
     const intl = new Intl.NumberFormat();
-    const newCount = Number.parseInt(data.queries.total, 10);
+    const newCount = Math.trunc(Number(data.queries.total));
 
     $("span#dns_queries").text(intl.format(newCount));
-    $("span#active_clients").text(intl.format(Number.parseInt(data.clients.active, 10)));
+    $("span#active_clients").text(intl.format(Math.trunc(Number(data.clients.active))));
     $("a#total_clients").attr(
       "title",
-      intl.format(Number.parseInt(data.clients.total, 10)) + " total clients"
+      intl.format(Math.trunc(Number(data.clients.total))) + " total clients"
     );
-    $("span#blocked_queries").text(intl.format(Number.parseFloat(data.queries.blocked)));
+    $("span#blocked_queries").text(intl.format(Math.trunc(Number(data.queries.blocked))));
     const formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
     updateQueryFrequency(intl, data.queries.frequency);
 
-    const lastupdate = Number.parseInt(data.gravity.last_update, 10);
+    const lastupdate = Math.trunc(Number(data.gravity.last_update));
     let updatetxt = "Lists were never updated";
     if (lastupdate > 0) {
       updatetxt =
@@ -478,7 +477,7 @@ function updateSummaryData(runOnce = false) {
         ")";
     }
 
-    const gravityCount = Number.parseInt(data.gravity.domains_being_blocked, 10);
+    const gravityCount = Math.trunc(Number(data.gravity.domains_being_blocked));
     if (gravityCount < 0) {
       // Error. Change the title text and show the error code in parentheses
       updatetxt = "Error! Update gravity to reset this value.";
@@ -523,14 +522,15 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
     if (key.startsWith("_") || value === undefined) {
       continue;
     }
-    const num = Number.parseInt(value, 10);
+
+    const num = Math.trunc(Number(value));
     if (num) {
       sum += num;
     }
   }
 
   let percentage = 0;
-  const data = Number.parseInt(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex], 10);
+  const data = Math.trunc(Number(tooltipLabel.parsed._stacks.y[tooltipLabel.datasetIndex]));
   if (sum > 0) {
     percentage = (100 * data) / sum;
   }
@@ -538,6 +538,7 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
   if (skipZero && data === 0) {
     return undefined;
   }
+
   return (
     tooltipLabel.dataset.label +
     ": " +
@@ -657,9 +658,9 @@ $(() => {
           callbacks: {
             title(tooltipTitle) {
               const label = tooltipTitle[0].label;
-              const time = label.match(/(\d?\d):?(\d?\d?)/u);
-              const h = Number.parseInt(time[1], 10);
-              const m = Number.parseInt(time[2], 10) || 0;
+              const time = label.match(/(?<hours>\d{1,2}):?(?<minutes>\d{0,2})/u);
+              const h = Math.trunc(Number(time.groups.hours));
+              const m = Math.trunc(Number(time.groups.minutes)) || 0;
               const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
               const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
               return "Queries from " + from + " to " + to;
@@ -761,9 +762,9 @@ $(() => {
             callbacks: {
               title(tooltipTitle) {
                 const label = tooltipTitle[0].label;
-                const time = label.match(/(\d?\d):?(\d?\d?)/u);
-                const h = Number.parseInt(time[1], 10);
-                const m = Number.parseInt(time[2], 10) || 0;
+                const time = label.match(/(?<hours>\d{1,2}):?(?<minutes>\d{0,2})/u);
+                const h = Math.trunc(Number(time.groups.hours));
+                const m = Math.trunc(Number(time.groups.minutes)) || 0;
                 const from = utils.padNumber(h) + ":" + utils.padNumber(m - 5) + ":00";
                 const to = utils.padNumber(h) + ":" + utils.padNumber(m + 4) + ":59";
                 return "Client activity from " + from + " to " + to;
