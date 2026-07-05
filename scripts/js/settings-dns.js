@@ -136,6 +136,225 @@ function updateDNSserversTextfield(upstreams, customServers) {
   );
 }
 
+function getRevServerLines() {
+  // Return the lines from the textarea (array of lines)
+  return $(".revServers")
+    .val()
+    .split(/\r?\n/u)
+    .filter(line => line.trim() !== "");
+}
+
+// Return an array of objects containing the current values from the textarea
+function getRevServerArray() {
+  const items = [];
+
+  const lines = getRevServerLines();
+  for (const line of lines) {
+    const cols = line.split(",").map(s => s.trim());
+    items.push({
+      enabled: cols[0] ?? "",
+      network: cols[1] ?? "",
+      ip: cols[2] ?? "",
+      domain: cols[3] ?? "",
+    });
+  }
+
+  return items;
+}
+
+function createRevServerTable() {
+  // Get the data
+  const tableRows = getRevServerArray();
+
+  $("#revServers-table").DataTable({
+    data: tableRows,
+    autoWidth: false,
+    columns: [
+      { data: "enabled", width: "54px", className: "revserver-chkbox text-center" },
+      { data: "network", className: "revserver-network" },
+      { data: "ip", className: "revserver-ip" },
+      { data: "domain", className: "revserver-domain" },
+      { data: null, width: "82px", className: "actions" },
+    ],
+    ordering: false,
+    columnDefs: [
+      {
+        targets: 0,
+        // eslint-disable-next-line no-unused-vars
+        createdCell(td, cellData, rowData, row, col) {
+          $(td).attr("data-initial-value", cellData);
+        },
+        render(data, type, row, meta) {
+          const name = "enabled_" + meta.row;
+          const ckbox =
+            `<input type="checkbox" name="${name}" id="${name}" class="no-icheck" ` +
+            (data === "true" ? "checked " : "") +
+            ">";
+          return ckbox;
+        },
+      },
+      {
+        targets: [1, 2, 3],
+        // eslint-disable-next-line no-unused-vars
+        createdCell(td, cellData, rowData, row, col) {
+          $(td).attr("contenteditable", "true").attr("data-initial-value", cellData);
+        },
+      },
+    ],
+    drawCallback() {
+      $(".deleteRevServers").on("click", deleteRecord);
+      $("tbody .saveRevServers").on("click", saveRecord);
+      $(".cancelRevServers").on("click", restoreRecord);
+    },
+    rowCallback(row, data, displayNum, displayIndex, dataIndex) {
+      $(row).attr("data-index", dataIndex);
+      const bt = '<button type="button" class="btn btn-xs"></button>';
+      const btDel = $(bt)
+        .addClass("btn-danger deleteRevServers")
+        .attr("title", "Delete")
+        .append('<span class="fa fa-trash"></span>');
+      const btSave = $(bt)
+        .addClass("btn-success saveRevServers")
+        .attr("title", "Confirm changes")
+        .append('<span class="fa fa-check"></span>');
+      const btCancel = $(bt)
+        .addClass("btn-warning cancelRevServers")
+        .attr("title", "Undo changes")
+        .append('<span class="fa fa-undo"></span>');
+
+      $("td:eq(4)", row).html(btSave).append(" ", btCancel, " ", btDel);
+    },
+    dom:
+      "<'row'<'col-sm-12 text-right'l>>" +
+      "<'row'<'col-sm-12'<'table-responsive'tr>>><'row'<'col-sm-12'i>>",
+    lengthMenu: [
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, "All"],
+    ],
+    language: {
+      emptyTable: "No revese DNS servers defined.",
+    },
+    stateSave: true,
+    stateDuration: 0,
+    processing: true,
+    stateSaveCallback(settings, data) {
+      utils.stateSaveCallback("revServers-records-table", data);
+    },
+    stateLoadCallback() {
+      const data = utils.stateLoadCallback("revServers-records-table");
+      // Return if not available
+      if (data === null) return null;
+
+      // Apply loaded state to table
+      return data;
+    },
+  });
+}
+
+function addRevServer() {
+  const values = [];
+  values[0] = $("#enabled-revServers input").prop("checked") ? "true" : "false";
+  values[1] = $("#network-revServers").text();
+  values[2] = $("#ip-revServers").text();
+  values[3] = $("#domain-revServers").text();
+
+  // Reject empty network range and server IP
+  if (values[1] === "" || values[2] === "") {
+    // Show error message
+    utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
+    return;
+  }
+
+  // Domain is optional: if empty, remove it from the array
+  if (values[3] === "") values.pop();
+
+  // Add the new values to the textarea
+  $(".revServers").val($(".revServers").val() + "\n" + values.join(","));
+
+  // Clear the table footer fields
+  $("#revServers-table tfoot [contenteditable]").text("");
+  $("#revServers-table tfoot input[type=checkbox]").prop("checked", false);
+
+  // Save changes with message
+  saveRevServerData("Added values: " + values.join(", "));
+}
+
+// Button to add a new reverse server
+$("#btnAddRevServers").on("click", addRevServer);
+
+function saveRecord() {
+  // Find the row and its index number
+  const row = $(this).closest("tr");
+  const index = row.attr("data-index");
+
+  // Get the edited values from each field
+  const values = [];
+  values[0] = $(".revserver-chkbox input", row).prop("checked") ? "true" : "false";
+  values[1] = $(".revserver-network", row).text();
+  values[2] = $(".revserver-ip", row).text();
+  values[3] = $(".revserver-domain", row).text();
+
+  // Remove "editing" class from the row. Buttons will be shown/hidden via CSS
+  row.removeClass("editing");
+
+  // Reject empty network range and server IP
+  if (values[1] === "" || values[2] === "") {
+    // Show error message
+    utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
+    return;
+  }
+
+  // Domain is optional: if empty, remove it from the array
+  if (values[3] === "") values.pop();
+
+  // Get the values from the textarea
+  const lines = getRevServerLines();
+
+  // Update the edited line on the textarea
+  lines[index] = values.join(",");
+  $(".revServers").val(lines.join("\n"));
+
+  // Save changes with message
+  saveRevServerData("Updated values: " + values.join(", "));
+}
+
+function restoreRecord() {
+  // Find the row and its index number
+  const row = $(this).closest("tr");
+
+  // Reset values using "data-initial-value"
+  $(".revserver-chkbox input", row).prop(
+    "checked",
+    $(".revserver-chkbox input", row).attr("data-initial-value")
+  );
+  $('[contenteditable="true"]', row).text(function () {
+    return $(this).attr("data-initial-value");
+  });
+
+  // Show cancellation message
+  utils.showAlert("info", "fas fa-undo", "Canceled", "Original values restored");
+
+  // Make sure all highlighted cells are restored
+  // Remove "editing" class from the row. The buttons will be shown/hidden via CSS
+  row.find(".table-danger").removeClass("table-danger");
+  row.removeClass("editing");
+}
+
+function deleteRecord() {
+  // Find the row index (this is also the index of the deleted row)
+  const index = $(this).closest("tr").attr("data-index");
+
+  // Get the current lines from the textarea
+  const lines = getRevServerLines();
+
+  // Remove the deleted line and update the textearea
+  lines.splice(index, 1);
+  $(".revServers").val(lines.join("\n"));
+
+  // Save changes with message
+  saveRevServerData("Line successfully deleted");
+}
+
 function processDNSConfig() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dns?detailed=true", // We need the detailed output to get the DNS server list
@@ -146,6 +365,19 @@ function processDNSConfig() {
       setInterfaceName(data.config.dns.interface.value);
       setConfigValues("dns", "dns", data.config.dns);
     })
+    .done(() => {
+      // This will be executed only after the done block above is executed
+
+      // If Conditional Forwarding option is set via ENV VAR, the textarea will be disabled and no values can be edited
+      if ($(".revServers").prop("disabled")) {
+        // In this case, we hide the table and show the textarea
+        $("#revServers-table").hide();
+        $(".revServers").show().attr("title", "Disabled: Set by environment variable");
+      } else {
+        // We only populate the table when the textarea is enabled
+        createRevServerTable();
+      }
+    })
     .fail(data => {
       apiFailure(data);
     });
@@ -153,4 +385,95 @@ function processDNSConfig() {
 
 $(() => {
   processDNSConfig();
+});
+
+// Save the Reverse Servers data via API and recreate the table with updated values
+function saveRevServerData(msg) {
+  // Get the data from the textarea
+  const data = getRevServerLines();
+
+  // Call the API to save only the dns.revServers option
+  $.ajax({
+    url: document.body.dataset.apiurl + "/config",
+    method: "PATCH",
+    dataType: "json",
+    processData: false,
+    data: JSON.stringify({ config: { dns: { revServers: data } } }),
+    contentType: "application/json; charset=utf-8",
+  })
+    .done(() => {
+      utils.enableAll();
+      utils.showAlert(
+        "success",
+        "fa-solid fa-fw fa-floppy-disk",
+        "Conditional Forwarding settings successfully saved",
+        msg
+      );
+      // Show loading overlay (without reloading the page)
+      utils.loadingOverlay(false);
+
+      // Reset the table to show the updated data
+      // Remove all rows from the table, then create rows with the updated data and finally redraw the table
+      const table = $("#revServers-table").DataTable();
+      table.clear().rows.add(getRevServerArray()).draw();
+    })
+    .fail((data, exception) => {
+      utils.enableAll();
+      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      console.log(exception); // eslint-disable-line no-console
+      apiFailure(data);
+    });
+}
+
+// Mark the row with "editing" class when an editable cell or checkbox is focused/edited
+// This will use CSS rules to show/hide buttons
+$(document).on("focus input", "#revServers-table [contenteditable]", function () {
+  $(this).closest("tr").addClass("editing");
+
+  // Make sure the placeholder text is shown when a contenteditable cell is empty (or only contains spaces)
+  if ($(this).text().trim() === "") {
+    $(this).empty();
+  }
+});
+$(document).on("change", "#revServers-table .revserver-chkbox input", function () {
+  $(this).closest("tr").addClass("editing");
+});
+
+// Validate data entered on the table
+// If a cell contains an invalid value, it will be highlighted and the save button will be disabled
+$(document).on("input blur paste", ".revserver-network", function () {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
+    $(this).addClass("table-danger");
+    $(this).attr("title", "Invalid network range");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
+  } else {
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", false);
+  }
+});
+$(document).on("input blur paste", ".revserver-ip", function () {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4WithPort(val) || utils.validateIPv6WithPort(val))) {
+    $(this).addClass("table-danger");
+    $(this).attr("title", "Invalid server IP");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
+  } else {
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", false);
+  }
+});
+$(document).on("input blur paste", ".revserver-domain", function () {
+  const val = $(this).text().trim();
+  if (val && !utils.validateHostnameStrict(val)) {
+    $(this).addClass("table-danger");
+    $(this).attr("title", "Invalid domain");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
+  } else {
+    $(this).removeClass("table-danger");
+    $(this).attr("title", "");
+    $(this).siblings(".actions").find(".saveRevServers").prop("disabled", false);
+  }
 });

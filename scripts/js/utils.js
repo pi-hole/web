@@ -274,6 +274,43 @@ function validateIPv6Brackets(ip) {
   return validateIPv6(ipWithoutBrackets);
 }
 
+function validatePort(port) {
+  // Ports containing spaces are not valid
+  if (port.trim() !== port) return false;
+
+  // Check if the port is an integer and within the valid network port range
+  const portNum = Number(port);
+  return Number.isInteger(portNum) && portNum >= 1 && portNum <= 65_535;
+}
+
+function validateIPv4WithPort(ip) {
+  // The port is optional
+  // If no "#" is present, validate just the IP
+  if (!ip.includes("#")) return validateIPv4(ip);
+
+  const parts = ip.split("#");
+  if (parts.length !== 2) return false;
+
+  const [ipv4, port] = parts;
+
+  // Validate IP part and port
+  return validateIPv4(ipv4) && validatePort(port);
+}
+
+function validateIPv6WithPort(ip) {
+  // The port is optional
+  // If no "#" is present, validate just the IP
+  if (!ip.includes("#")) return validateIPv6(ip);
+
+  const parts = ip.split("#");
+  if (parts.length !== 2) return false;
+
+  const [ipv6, port] = parts;
+
+  // Validate IP part and port
+  return validateIPv6(ipv6) && validatePort(port);
+}
+
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
@@ -647,7 +684,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
       if (reloadAfterTimeout) {
         location.reload();
       } else {
-        waitMe.hideAll();
+        waitMe.hide();
       }
     })
     .fail(() => {
@@ -747,6 +784,9 @@ globalThis.utils = (function () {
     validateIPv6CIDR,
     validateIPv6,
     validateIPv6Brackets,
+    validatePort,
+    validateIPv4WithPort,
+    validateIPv6WithPort,
     setBsSelectDefaults,
     stateSaveCallback,
     stateLoadCallback,
