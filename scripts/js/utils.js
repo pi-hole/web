@@ -233,6 +233,13 @@ function validateIPv4CIDR(ip) {
   return ipv4validator.test(ip);
 }
 
+function validateIPv4(ip) {
+  // Add pseudo-CIDR to the IPv4
+  const ipv4WithCIDR = ip.includes("/") ? ip : ip + "/32";
+  // Validate the IPv4/CIDR
+  return validateIPv4CIDR(ipv4WithCIDR);
+}
+
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
@@ -249,14 +256,78 @@ function validateIPv6CIDR(ip) {
   return ipv6validator.test(ip);
 }
 
+function validateIPv6(ip) {
+  // Add pseudo-CIDR to the IPv6
+  const ipv6WithCIDR = ip.includes("/") ? ip : ip + "/128";
+  // Validate the IPv6/CIDR
+  return validateIPv6CIDR(ipv6WithCIDR);
+}
+
+function validateIPv6Brackets(ip) {
+  const trimmedIp = ip.trim();
+  // Check if the IPv6 is enclosed in brackets and return in case of failure
+  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) return false;
+
+  // Strip brackets before validating the IPv6
+  const ipWithoutBrackets = trimmedIp.slice(1, -1);
+  // Validate the ip
+  return validateIPv6(ipWithoutBrackets);
+}
+
+function validatePort(port) {
+  // Ports containing spaces are not valid
+  if (port.trim() !== port) return false;
+
+  // Check if the port is an integer and within the valid network port range
+  const portNum = Number(port);
+  return Number.isInteger(portNum) && portNum >= 1 && portNum <= 65_535;
+}
+
+function validateIPv4WithPort(ip) {
+  // The port is optional
+  // If no "#" is present, validate just the IP
+  if (!ip.includes("#")) return validateIPv4(ip);
+
+  const parts = ip.split("#");
+  if (parts.length !== 2) return false;
+
+  const [ipv4, port] = parts;
+
+  // Validate IP part and port
+  return validateIPv4(ipv4) && validatePort(port);
+}
+
+function validateIPv6WithPort(ip) {
+  // The port is optional
+  // If no "#" is present, validate just the IP
+  if (!ip.includes("#")) return validateIPv6(ip);
+
+  const parts = ip.split("#");
+  if (parts.length !== 2) return false;
+
+  const [ipv6, port] = parts;
+
+  // Validate IP part and port
+  return validateIPv6(ipv6) && validatePort(port);
+}
+
 function validateMAC(mac) {
-  const macvalidator = /^([\da-fA-F]{2}:){5}([\da-fA-F]{2})$/u;
-  return macvalidator.test(mac);
+  // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
+  // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
+  const macvalidator = /^(?:[\da-f]{2}([:-]))(?:[\da-f]{2}\1){4}[\da-f]{2}$/iu;
+  return macvalidator.test(mac.trim());
 }
 
 function validateHostname(name) {
   const namevalidator = /[^<>;"]/u;
-  return namevalidator.test(name);
+  return namevalidator.test(name.trim());
+}
+
+function validateHostnameStrict(name) {
+  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
+  const hostnameValidator =
+    /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
+  return hostnameValidator.test(name.trim());
 }
 
 // set bootstrap-select defaults
@@ -613,7 +684,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
       if (reloadAfterTimeout) {
         location.reload();
       } else {
-        waitMe.hideAll();
+        waitMe.hide();
       }
     })
     .fail(() => {
@@ -709,12 +780,19 @@ globalThis.utils = (function () {
     disableAll,
     enableAll,
     validateIPv4CIDR,
+    validateIPv4,
     validateIPv6CIDR,
+    validateIPv6,
+    validateIPv6Brackets,
+    validatePort,
+    validateIPv4WithPort,
+    validateIPv6WithPort,
     setBsSelectDefaults,
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
     validateHostname,
+    validateHostnameStrict,
     addFromQueryLog,
     addTD,
     toPercent,

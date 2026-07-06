@@ -80,10 +80,27 @@ function initDateRangePicker(data) {
 
   const minDateMoment = moment.unix(beginningOfTime);
   const maxDateMoment = moment.unix(endOfTime);
-  const earliestDateStr = minDateMoment.format(dateformat);
-  $("#querytime-note").text(`Earliest date: ${earliestDateStr}`);
+  const buildRanges = () => ({
+    "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
+    "Last Hour": [moment().subtract(1, "hours"), moment()],
+    Today: [moment().startOf("day"), maxDateMoment],
+    Yesterday: [
+      moment().subtract(1, "days").startOf("day"),
+      moment().subtract(1, "days").endOf("day"),
+    ],
+    "Last 7 Days": [moment().subtract(6, "days").startOf("day"), maxDateMoment],
+    "Last 30 Days": [moment().subtract(29, "days").startOf("day"), maxDateMoment],
+    "This Month": [moment().startOf("month"), maxDateMoment],
+    "Last Month": [
+      moment().subtract(1, "month").startOf("month"),
+      moment().subtract(1, "month").endOf("month"),
+    ],
+    "This Year": [moment().startOf("year"), maxDateMoment],
+    "All Time": [minDateMoment, maxDateMoment],
+  });
 
-  $("#querytime").daterangepicker(
+  const querytime = $("#querytime");
+  querytime.daterangepicker(
     {
       timePicker: true,
       timePickerIncrement: 5,
@@ -91,24 +108,7 @@ function initDateRangePicker(data) {
       locale: { format: dateformat },
       startDate: moment(from * 1000), // convert to milliseconds since epoch
       endDate: moment(until * 1000), // convert to milliseconds since epoch
-      ranges: {
-        "Last 10 Minutes": [moment().subtract(10, "minutes"), moment()],
-        "Last Hour": [moment().subtract(1, "hours"), moment()],
-        Today: [moment().startOf("day"), maxDateMoment],
-        Yesterday: [
-          moment().subtract(1, "days").startOf("day"),
-          moment().subtract(1, "days").endOf("day"),
-        ],
-        "Last 7 Days": [moment().subtract(6, "days").startOf("day"), maxDateMoment],
-        "Last 30 Days": [moment().subtract(29, "days").startOf("day"), maxDateMoment],
-        "This Month": [moment().startOf("month"), maxDateMoment],
-        "Last Month": [
-          moment().subtract(1, "month").startOf("month"),
-          moment().subtract(1, "month").endOf("month"),
-        ],
-        "This Year": [moment().startOf("year"), maxDateMoment],
-        "All Time": [minDateMoment, maxDateMoment],
-      },
+      ranges: buildRanges(),
       // Don't allow selecting dates outside the database range
       minDate: minDateMoment,
       maxDate: maxDateMoment,
@@ -123,6 +123,13 @@ function initDateRangePicker(data) {
       until = moment(endt).utc().valueOf() / 1000;
     }
   );
+
+  querytime.on("show.daterangepicker", (_, picker) => {
+    // Refresh relative ranges so options like "Last 10 Minutes" are based on now.
+    picker.ranges = buildRanges();
+    picker.updateView();
+    picker.updateCalendars();
+  });
 }
 
 function handleAjaxError(xhr, textStatus) {

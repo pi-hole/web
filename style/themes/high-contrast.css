@@ -386,9 +386,12 @@ select:-webkit-autofill {
   background-color: #fcfcfc;
 }
 
+#StaticDHCPTable .table-danger,
 .blocked-row td {
   background-color: rgba(230, 160, 160, 0.3);
 }
+
+#StaticDHCPTable .table-success,
 .allowed-row td {
   background-color: rgba(236, 255, 246, 0.3);
 }
