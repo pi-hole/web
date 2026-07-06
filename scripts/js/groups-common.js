@@ -19,20 +19,15 @@ function populateGroupSelect(selectEl) {
 
   // Add all known groups
   for (const group of groups) {
-    const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
+    const label = group.enabled ? group.name : group.name + " (disabled)";
 
-    selectEl.append(
-      $("<option " + dataSub + "/>")
-        .val(group.id)
-        .text(group.name)
-    );
+    selectEl.append($("<option/>").val(group.id).text(label));
   }
 
-  // Initialize selectpicker
-  selectEl.val([0]);
+  // Default Group is pre-selected
+  selectEl.val(["0"]);
 
-  // Refresh selectpicker
-  selectEl.selectpicker("refresh");
+  utils.createGroupSelect(selectEl);
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -44,8 +39,8 @@ function getGroups(groupSelector) {
     success(data) {
       groups = data.groups;
 
-      // Get all all <select> elements with the class "selectpicker"
-      groupSelector = $(".selectpicker");
+      // Get all <select> elements with the class "group-select"
+      const groupSelector = $(".group-select");
       // Populate the groupSelector with the groups
       for (const element of groupSelector) {
         populateGroupSelect($(element));

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false */
 
 "use strict";
 
@@ -356,24 +356,45 @@ function validateHostnameStrict(name) {
   return hostnameValidator.test(name.trim());
 }
 
-// set bootstrap-select defaults
-function setBsSelectDefaults() {
-  const bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
-  bsSelectDefaults.noneSelectedText = "none selected";
-  bsSelectDefaults.selectedTextFormat = "count > 1";
-  bsSelectDefaults.actionsBox = true;
-  bsSelectDefaults.width = "fit";
-  bsSelectDefaults.container = "body";
-  bsSelectDefaults.dropdownAlignRight = "auto";
-  bsSelectDefaults.selectAllText = "All";
-  bsSelectDefaults.deselectAllText = "None";
-  bsSelectDefaults.countSelectedText = function (num, total) {
-    if (num === total) {
-      return "All selected (" + num + ")";
-    }
+/**
+ * Create a Tom Select multi-select out of a <select multiple> element, with
+ * "Select all"/"Select none" actions injected into the dropdown (bootstrap-
+ * select used to provide this via its actionsBox option).
+ * @param {HTMLElement|jQuery} selectEl - The <select multiple> element (or a jQuery wrapper around it)
+ * @param {object} [options] - Extra options merged into the Tom Select config
+ * @returns {TomSelect} The created Tom Select instance
+ */
+function createGroupSelect(selectEl, options = {}) {
+  const el = selectEl instanceof HTMLElement ? selectEl : selectEl[0];
+  const allValues = [...el.options].map(option => option.value);
 
-    return num + " selected";
-  };
+  const ts = new TomSelect(el, {
+    plugins: ["remove_button"],
+    create: false,
+    hideSelected: false,
+    placeholder: "none selected",
+    // Render the dropdown into <body> instead of nesting it in the table
+    // cell, since ancestors like .table-responsive/.card clip overflow and
+    // would otherwise cut it off (bootstrap-select used container: "body"
+    // for the same reason).
+    dropdownParent: "body",
+    ...options,
+  });
+
+  const actionsBox = document.createElement("div");
+  actionsBox.className = "ts-actions-box";
+  actionsBox.innerHTML =
+    '<button type="button" class="btn btn-link btn-sm select-all">All</button>' +
+    '<button type="button" class="btn btn-link btn-sm select-none">None</button>';
+  actionsBox.querySelector(".select-all").addEventListener("click", () => {
+    ts.setValue(allValues);
+  });
+  actionsBox.querySelector(".select-none").addEventListener("click", () => {
+    ts.clear();
+  });
+  ts.dropdown.prepend(actionsBox);
+
+  return ts;
 }
 
 const backupStorage = {};
@@ -761,7 +782,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
 
 function loadingOverlay(reloadAfterTimeout = false) {
   NProgress.start();
-  waitMe = new WaitMe(".wrapper", {
+  waitMe = new WaitMe(".app-wrapper", {
     effect: "bounce",
     text: "Pi-hole is currently applying your changes...",
     bg: "rgba(0,0,0,0.7)",
@@ -844,7 +865,7 @@ globalThis.utils = (function () {
     validatePort,
     validateIPv4WithPort,
     validateIPv6WithPort,
-    setBsSelectDefaults,
+    createGroupSelect,
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,

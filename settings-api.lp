@@ -248,7 +248,7 @@ mg.include('scripts/lua/settings_header.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.jquery.min.js')?>"></script>
 <script src="<?=pihole.fileversion('vendor/jquery-confirm/jquery.confirm.min.js')?>"></script>
 <script src="<?=pihole.fileversion('vendor/qrious/qrious.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/settings-api.js')?>"></script>

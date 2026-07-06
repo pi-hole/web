@@ -571,6 +571,7 @@ $(() => {
 
   for (const [sel, element] of Object.entries(filters)) {
     $(`#${element}_filter`).select2({
+      theme: "bootstrap-5",
       width: "100%",
       tags: sel < 4, // Only the first four (client(IP/name), domain, upstream) are allowed to freely specify input
       placeholder: "Select...",

@@ -79,8 +79,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/tom-select/tom-select.complete.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.jquery.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/groups.js')?>"></script>
 

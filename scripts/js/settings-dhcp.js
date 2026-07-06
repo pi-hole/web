@@ -81,9 +81,6 @@ $(() => {
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.ip);

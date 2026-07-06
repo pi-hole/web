@@ -85,13 +85,13 @@ function reloadClientSuggestions() {
 $(() => {
   $("#btnAdd").on("click", addClient);
   $("#select").select2({
+    theme: "bootstrap-5",
     tags: true,
     placeholder: "Select client...",
     allowClear: true,
   });
 
   reloadClientSuggestions();
-  utils.setBsSelectDefaults();
   getGroups();
 
   $("#select").on("change", () => {
@@ -136,8 +136,6 @@ function initTable() {
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteClient_"]').on("click", deleteClient);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       const dataId = utils.hexEncode(data.client);
@@ -177,40 +175,23 @@ function initTable() {
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
+        const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize bootstrap-select
-      selectEl
-        // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", () => {
-          const winWidth = $(globalThis).width();
-          const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
-          }
-        })
-        .on("changed.bs.select", () => {
+      // Initialize Tom Select
+      const ts = utils.createGroupSelect(selectEl, {
+        onChange() {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
@@ -220,20 +201,18 @@ function initTable() {
                 editClient.call(selectEl);
               });
           }
-        })
-        .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the Apply button
-          if ($(applyBtn).prop("disabled")) {
-            return;
+        },
+        onDropdownClose() {
+          // Restore values if the dropdown is closed without clicking the Apply button
+          if (!$(applyBtn).prop("disabled")) {
+            ts.setValue(data.groups);
+            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
           }
-
-          $(this).val(data.groups).selectpicker("refresh");
-          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-        })
-        .selectpicker()
-        .siblings(".dropdown-menu")
-        .find(".bs-actionsbox")
-        .prepend(
+        },
+      });
+      $(ts.dropdown)
+        .find(".ts-actions-box")
+        .append(
           '<button type="button" id=btn_apply_' +
             dataId +
             ' class="btn btn-block btn-sm" disabled>Apply</button>'

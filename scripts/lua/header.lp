@@ -103,16 +103,17 @@ is_authenticated = mg.request_info.is_authenticated
 
 <? if is_authenticated then ?>
     <? if startsWith(scriptname, 'groups') then ?>
-        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
+        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/tom-select/tom-select.bootstrap5.min.css')?>">
     <? end ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/datatables.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/dataTables.bootstrap5.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/buttons.bootstrap5.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/select.bootstrap5.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe-js/waitMe.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2-bootstrap-5-theme.min.css')?>">
 <? end ?>
 
     <!-- Theme styles (<?= theme.name ?>) -->

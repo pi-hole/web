@@ -260,8 +260,6 @@ $(() => {
 
     drawCallback() {
       $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     lengthMenu: [
       [10, 25, 50, 100, -1],

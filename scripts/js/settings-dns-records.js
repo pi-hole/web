@@ -93,9 +93,6 @@ function populateDataTable(endpoint) {
     ],
     drawCallback() {
       $(`button[id^="delete${endpoint}"]`).on("click", deleteRecord);
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data);

@@ -336,15 +336,6 @@ td.lookatme {
   cursor: pointer;
 }
 
-.bootstrap-select.bs-container.align-right {
-  left: unset !important;
-  right: 10px;
-}
-
-.input-group-addon {
-  padding: 0 12px;
-}
-
 .user-panel {
   display: flex;
   align-items: center;
@@ -419,6 +410,19 @@ tfoot.add-new-item > tr > th {
 
 .select2-container--default .select2-results > .select2-results__options {
   max-height: 400px;
+}
+
+/* Tom Select "Select all / Select none" actions, injected above the
+   options list to replace bootstrap-select's actionsBox feature */
+.ts-actions-box {
+  display: flex;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.ts-actions-box .btn {
+  flex: 1 1 auto;
 }
 
 .sidebar-menu li > a > .nav-arrow.fa-angle-left {

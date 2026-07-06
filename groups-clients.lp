@@ -40,7 +40,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <div class="form-group col-lg-3 col-md-6">
                         <label for="new_group">Group assignment:</label>
-                        <div><select class="selectpicker form-control" id="new_group" multiple></select></div>
+                        <div><select class="group-select" id="new_group" multiple></select></div>
                     </div>
                 </div>
                 <div class="row">
@@ -95,8 +95,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div>
 </div>
 
-<script src="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.js')?>"></script>
-<script src="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/tom-select/tom-select.complete.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.jquery.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/ip-address-sorting.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/groups-clients.js')?>"></script>
