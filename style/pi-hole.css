@@ -1307,6 +1307,9 @@ table.dataTable tbody > tr > .selected {
 }
 
 #advanced-settings-menu ul > li a {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid rgba(127, 127, 127, 0.2);
   border-radius: 3px;
 }
@@ -1346,12 +1349,6 @@ table.dataTable tbody > tr > .selected {
   padding: 14px 0 0;
   order: 2;
   font-size: 18px;
-}
-
-/* Hide the checkbox used for settings level selector */
-#expert-settings,
-#only-changed {
-  display: none;
 }
 
 .app-footer {
