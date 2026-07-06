@@ -441,7 +441,7 @@ function deleteDomains(encodedIds) {
 
 function addDomain() {
   const action = this.id;
-  const tabHref = $('a[data-bs-toggle="tab"][aria-expanded="true"]').attr("href");
+  const tabHref = $('a[data-bs-toggle="tab"].active').attr("href");
   const wildcardEl = $("#wildcard_checkbox");
   const wildcardChecked = wildcardEl.prop("checked");
 

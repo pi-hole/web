@@ -29,7 +29,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active" role="presentation">
-                            <a href="#tab_domain" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
+                            <a href="#tab_domain" class="active" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
                         </li>
                         <li role="presentation">
                             <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-bs-toggle="tab">RegEx filter</a>
@@ -37,7 +37,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </ul>
                     <div class="tab-content">
                         <!-- Domain tab -->
-                        <div id="tab_domain" class="tab-pane active fade in">
+                        <div id="tab_domain" class="tab-pane active fade show">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">

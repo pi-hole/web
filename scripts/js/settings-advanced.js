@@ -324,8 +324,12 @@ function createDynamicConfigTabs() {
 
       $("#advanced-overlay").hide();
 
-      // Select the first tab and show the content
+      // Select the first tab and show the content. Bootstrap 5's Tab
+      // component tracks the active tab via the "active" class on the link
+      // itself (not the surrounding <li>), so that's what needs to be set
+      // here for tab switching to correctly deactivate this initial tab.
       $("#advanced-settings-menu ul li:first-child").addClass("active");
+      $("#advanced-settings-menu ul li:first-child > a").addClass("active");
       $("#advanced-settings-tabs > div:first-child").addClass("active show");
 
       applyOnlyChanged();
@@ -383,7 +387,9 @@ function applyOnlyChanged() {
     // Show the tabs menu and activate only the first button (deactivate other buttons)
     $("#advanced-settings-menu").show();
     $("#advanced-settings-menu ul li").removeClass("active");
+    $("#advanced-settings-menu ul li > a").removeClass("active");
     $("#advanced-settings-menu ul li:first-child").addClass("active");
+    $("#advanced-settings-menu ul li:first-child > a").addClass("active");
 
     // Hide all tabs, except the first one (removing the classes used by Boostrap3)
     $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("show active");
