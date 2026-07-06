@@ -7,7 +7,7 @@
 *    Please see LICENSE file for your rights under this license.
 */ ]]-- ?>
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="app-sidebar bg-body-secondary shadow">
+    <aside class="app-sidebar bg-dark shadow" data-bs-theme="dark">
         <div class="sidebar-wrapper">
             <!-- Sidebar user panel -->
             <div class="user-panel">
@@ -45,7 +45,7 @@
                         <a href="<?=webhome?>groups" class="nav-link<? if scriptname == 'groups' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-user-friends"></i>
                             <p>Groups
-                                <span class="nav-badge badge text-bg-primary me-3" id="num_groups" title="Number of enabled groups"></span>
+                                <span class="badge text-bg-primary float-end" id="num_groups" title="Number of enabled groups"></span>
                             </p>
                         </a>
                     </li>
@@ -53,7 +53,7 @@
                         <a href="<?=webhome?>groups/clients" class="nav-link<? if scriptname == 'groups/clients' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-laptop"></i>
                             <p>Clients
-                                <span class="nav-badge badge text-bg-primary me-3" id="num_clients" title="Number of defined clients"></span>
+                                <span class="badge text-bg-primary float-end" id="num_clients" title="Number of defined clients"></span>
                             </p>
                         </a>
                     </li>
@@ -61,8 +61,8 @@
                         <a href="<?=webhome?>groups/domains" class="nav-link<? if scriptname == 'groups/domains' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-list"></i>
                             <p>Domains
-                                <span class="nav-badge badge text-bg-danger me-1" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
-                                <span class="nav-badge badge text-bg-success me-3" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
+                                <span class="badge text-bg-danger float-end" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
+                                <span class="badge text-bg-success float-end me-1" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
                             </p>
                         </a>
                     </li>
@@ -70,8 +70,8 @@
                         <a href="<?=webhome?>groups/lists" class="nav-link<? if scriptname == 'groups/lists' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-shield-alt"></i>
                             <p>Lists
-                                <span class="nav-badge badge text-bg-primary me-1" id="num_lists" title="Number of subscribed and enabled lists"></span>
-                                <span class="nav-badge badge text-bg-warning me-3" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
+                                <span class="badge text-bg-primary float-end" id="num_lists" title="Number of subscribed and enabled lists"></span>
+                                <span class="badge text-bg-warning float-end me-1" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
                             </p>
                         </a>
                     </li>
@@ -79,41 +79,41 @@
                     <li class="nav-header text-uppercase">DNS Control</li>
                     <!-- Enable/Disable Blocking -->
                     <li id="pihole-disable" class="nav-item">
-                        <a href="<?=webhome?>#" class="nav-link">
+                        <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-fw fa-stop"></i> <p>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                             <i class="nav-arrow fa fa-angle-left"></i></p>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="<?=webhome?>#" id="pihole-disable-indefinitely" class="nav-link">
+                                <a href="#" id="pihole-disable-indefinitely" class="nav-link">
                                     <i class="nav-icon fa fa-fw fa-infinity"></i> <p>Indefinitely</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?=webhome?>#" id="pihole-disable-10s" class="nav-link">
+                                <a href="#" id="pihole-disable-10s" class="nav-link">
                                     <i class="nav-icon fa fa-fw fa-clock"></i> <p>For 10 seconds</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?=webhome?>#" id="pihole-disable-30s" class="nav-link">
+                                <a href="#" id="pihole-disable-30s" class="nav-link">
                                     <i class="nav-icon fa fa-fw fa-clock"></i> <p>For 30 seconds</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?=webhome?>#" id="pihole-disable-5m" class="nav-link">
+                                <a href="#" id="pihole-disable-5m" class="nav-link">
                                     <i class="nav-icon fa fa-fw fas fa-clock"></i> <p>For 5 minutes</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?=webhome?>#" id="pihole-disable-cst" class="nav-link" data-bs-toggle="modal" data-bs-target="#customDisableModal">
+                                <a href="#" id="pihole-disable-cst" class="nav-link" data-bs-toggle="modal" data-bs-target="#customDisableModal">
                                     <i class="nav-icon fa fa-fw fa-user-clock"></i> <p>Custom time</p>
                                 </a>
                             </li>
                         </ul>
-                        <!-- <a href="<?=webhome?>#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
+                        <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                     </li>
                     <li id="pihole-enable" class="nav-item" style="display: none;">
-                        <a href="<?=webhome?>#" class="nav-link">
+                        <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-fw fa-play"></i>
                             <p id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
                                 <span id="flip-status-enable"></span>
@@ -123,7 +123,7 @@
                     <li class="nav-header text-uppercase">System</li>
                     <!-- Settings -->
                     <li class="nav-item<? if startsWith(scriptname, 'settings/') then ?> menu-open<? end ?>">
-                        <a href="<?=webhome?>#" class="nav-link<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
+                        <a href="#" class="nav-link<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-cogs"></i> <p>Settings
                             <i class="nav-arrow fa fa-angle-left"></i></p>
                         </a>
@@ -172,7 +172,7 @@
                     </li>
                     <!-- Tools -->
                     <li class="nav-item<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> menu-open<? end ?>">
-                        <a href="<?=webhome?>#" class="nav-link<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
+                        <a href="#" class="nav-link<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-tools"></i> <p>Tools
                             <span class="warning-count hidden"></span>
                             <i class="nav-arrow fa fa-angle-left"></i></p>
@@ -187,7 +187,7 @@
                             </li>
                             <!-- Tail log files -->
                             <li class="nav-item<? if scriptname == 'taillog' then ?> menu-open<? end ?>">
-                                <a href="<?=webhome?>#" class="nav-link<? if scriptname == 'taillog' then ?> active<? end ?>">
+                                <a href="#" class="nav-link<? if scriptname == 'taillog' then ?> active<? end ?>">
                                     <i class="nav-icon fa-fw fa-solid fa-list-ul"></i> <p>Tail log files
                                     <i class="nav-arrow fa fa-angle-left"></i></p>
                                 </a>

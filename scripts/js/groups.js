@@ -89,8 +89,8 @@ $(() => {
       );
       const enabledEl = $("#enabled_" + dataId, row);
       enabledEl.bootstrapToggle({
-        on: "Enabled",
-        off: "Disabled",
+        onlabel: "Enabled",
+        offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",

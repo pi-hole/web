@@ -204,8 +204,8 @@ function initTable() {
       );
       const statusEl = $("#enabled_" + dataId, row);
       statusEl.bootstrapToggle({
-        on: "Enabled",
-        off: "Disabled",
+        onlabel: "Enabled",
+        offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",

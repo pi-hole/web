@@ -667,8 +667,8 @@ function initSettingsLevel() {
 
   // Init the settings level toggle
   $(expertSettingsElement).bootstrapToggle({
-    on: "Expert",
-    off: "Basic",
+    onlabel: "Expert",
+    offlabel: "Basic",
     size: "small",
     offstyle: "success",
     onstyle: "danger",

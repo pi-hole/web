@@ -227,28 +227,29 @@ h4 {
 .card.card-danger {
   border-top-color: #dd4b39;
 }
-.app-header .navbar {
+.app-header.navbar {
   background-color: #272c30;
 }
-.app-header .navbar .nav > li > a,
-.app-header .navbar .nav > li > .navbar-text {
+.app-header.navbar .nav > li > a,
+.app-header.navbar .nav > li > .navbar-text {
   color: #bec5cb;
-  max-height: 50px;
+  height: 50px;
+  padding: 15px;
 }
-.app-header .navbar .nav > li > a:hover,
-.app-header .navbar .nav > li > a:active,
-.app-header .navbar .nav > li > a:focus,
-.app-header .navbar .nav .open > a,
-.app-header .navbar .nav .open > a:hover,
-.app-header .navbar .nav .open > a:focus,
-.app-header .navbar .nav > .active > a {
+.app-header.navbar .nav > li > a:hover,
+.app-header.navbar .nav > li > a:active,
+.app-header.navbar .nav > li > a:focus,
+.app-header.navbar .nav .open > a,
+.app-header.navbar .nav .open > a:hover,
+.app-header.navbar .nav .open > a:focus,
+.app-header.navbar .nav > .active > a {
   background-color: rgba(0, 0, 0, 0.1);
   color: #f6f6f6;
 }
-.app-header .navbar .sidebar-toggle {
+.app-header.navbar .sidebar-toggle {
   color: #bec5cb;
 }
-.app-header .navbar .sidebar-toggle:hover {
+.app-header.navbar .sidebar-toggle:hover {
   color: #f6f6f6;
   background-color: rgba(0, 0, 0, 0.1);
 }

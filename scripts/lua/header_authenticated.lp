@@ -42,7 +42,7 @@ mg.include('header.lp','r')
 <!-- Send token to JS -->
 <div id="enableTimer" hidden></div>
 <div class="app-wrapper">
-    <nav class="app-header navbar navbar-expand bg-body">
+    <nav class="app-header navbar navbar-expand">
         <div class="container-fluid">
             <!-- Sidebar toggle button + logo -->
             <ul class="navbar-nav">

@@ -62,9 +62,18 @@ hostname = sanitize_hostname(hostname)
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
+local bs_theme = theme.dark and 'dark' or 'light'
+if theme.name == 'default-auto' then
+    bs_theme = 'auto'
+elseif theme.name == 'default-light' then
+    bs_theme = 'light'
+elseif theme.name == 'default-dark' or theme.name == 'lcars' then
+    bs_theme = 'dark'
+end
 ?>
-<html lang="en">
+<html lang="en" data-bs-theme="<?=bs_theme?>">
 <head>
+    <script src="<?=pihole.fileversion('scripts/js/theme.js')?>"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pi-hole <?=hostname?></title>
@@ -88,9 +97,19 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/source-sans-pro/source-sans-pro.css')?>">
 <? end ?>
 
-<? if theme.dark then ?>
+<? if bs_theme == 'dark' then ?>
     <style>
         html { background-color: #000; }
+    </style>
+<? elseif bs_theme == 'auto' then ?>
+    <!-- The "auto" theme's actual light/dark resolution only happens once
+         theme.js runs and the CSS finishes loading, so use a media query
+         here (evaluated immediately, no JS/network wait) to avoid a flash
+         of white background on every navigation when the OS prefers dark. -->
+    <style>
+        @media (prefers-color-scheme: dark) {
+            html { background-color: #000; }
+        }
     </style>
 <? end ?>
 

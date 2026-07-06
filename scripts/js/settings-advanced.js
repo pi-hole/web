@@ -350,8 +350,8 @@ function initOnlyChanged() {
   elem.prop("checked", localStorage.getItem("only-changed") === "true");
 
   elem.bootstrapToggle({
-    on: "Modified settings",
-    off: "All settings",
+    onlabel: "Only modified",
+    offlabel: "Show all",
     onstyle: "primary",
     offstyle: "success",
     size: "small",

@@ -36,6 +36,13 @@
 .layout-boxed {
   background: url("../img/boxed-bg.png") repeat fixed;
 }
+.layout-boxed .app-wrapper {
+  max-width: 1250px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  background-color: var(--bs-body-bg);
+}
 
 @keyframes Pulse {
   from {
@@ -243,13 +250,8 @@ td.lookatme {
   vertical-align: text-top;
 }
 
-#query-types-pie .box-body,
-#forward-destinations-pie .box-body {
-  display: flex;
-}
-
-#query-types-pie .box-body,
-#forward-destinations-pie .box-body,
+#query-types-pie .card-body,
+#forward-destinations-pie .card-body,
 #cache-metrics-chart {
   display: flex;
 }
@@ -360,6 +362,7 @@ td.lookatme {
   flex: 1 1 auto;
   left: auto;
   width: 138px;
+  color: #fff;
 }
 
 .user-panel > .info > p {
@@ -382,7 +385,13 @@ td.lookatme {
 .sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .info {
   display: none;
 }
-
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image > img {
+  max-width: 45px;
+  height: auto;
+}
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image {
+  margin: 0 auto;
+}
 .row-centered > div[class^="col-"] {
   display: inline-block;
   float: none;
@@ -412,6 +421,30 @@ tfoot.add-new-item > tr > th {
   max-height: 400px;
 }
 
+/* Pi-hole's webserver sends a strict CSP with img-src 'self', which blocks
+   the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
+   normally ship with for checkboxes/radios, the modal close button, and the
+   select2 dropdown arrow. Re-host those exact icons as local files and point
+   the same CSS custom properties (or, for select2, the same rule) at them
+   instead - this changes nothing visually, only where the icon loads from.
+
+   Note: a url() stored in a custom property resolves relative to the
+   stylesheet that consumes it via var() - here that's always
+   vendor/adminLTE/adminlte.min.css, not this file - so these paths go up
+   from vendor/adminLTE/ rather than from style/. */
+.form-check-input:checked[type="checkbox"] {
+  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-checked.svg");
+}
+.form-check-input:checked[type="radio"] {
+  --bs-form-check-bg-image: url("../../style/icons/form-check-radio-checked.svg");
+}
+.form-check-input[type="checkbox"]:indeterminate {
+  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-indeterminate.svg");
+}
+.btn-close {
+  --bs-btn-close-bg: url("../../style/icons/btn-close.svg");
+}
+
 /* Tom Select "Select all / Select none" actions, injected above the
    options list to replace bootstrap-select's actionsBox feature */
 .ts-actions-box {
@@ -425,8 +458,17 @@ tfoot.add-new-item > tr > th {
   flex: 1 1 auto;
 }
 
+.sidebar-menu .nav-link p {
+  width: 100%;
+}
+
 .sidebar-menu li > a > .nav-arrow.fa-angle-left {
   height: 1em;
+}
+
+.sidebar-menu .badge {
+  margin-top: 2px;
+  padding: 0.25em 0.6em 0.35em;
 }
 
 .sidebar-toggle-svg {
@@ -459,7 +501,7 @@ tfoot.add-new-item > tr > th {
 .sidebar-mini.sidebar-collapse .app-header .logo-mini {
   visibility: hidden;
 }
-.sidebar-mini.sidebar-collapse .app-header .navbar {
+.sidebar-mini.sidebar-collapse .app-header.navbar {
   margin-left: 0;
 }
 
@@ -468,9 +510,9 @@ tfoot.add-new-item > tr > th {
   padding: 5px;
 }
 
-.app-header .navbar .nav > li.user > a > .fa,
-.app-header .navbar .nav > li.user > a > .glyphicon,
-.app-header .navbar .nav > li.user > a > .ion {
+.app-header.navbar .nav > li.user > a > .fa,
+.app-header.navbar .nav > li.user > a > .glyphicon,
+.app-header.navbar .nav > li.user > a > .ion {
   margin-right: 0;
 }
 
@@ -829,12 +871,12 @@ li:not(.menu-open) .nav-treeview .warning-count {
 }
 
 /* Domains table: filter by type */
-#domains-list .box-header {
+#domains-list .card-header {
   display: flex;
   flex-wrap: wrap;
   padding: 5px 10px;
 }
-#domains-list .box-header h3 {
+#domains-list .card-header h3 {
   flex: 1 1 auto;
   margin: 5px 0;
   width: auto;
@@ -1222,7 +1264,7 @@ table.dataTable tbody > tr > .selected {
   flex-wrap: wrap;
   gap: var(--gap);
 }
-.settings-container > .box {
+.settings-container > .card {
   margin: 0;
   width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
   border: none;
@@ -1234,7 +1276,9 @@ table.dataTable tbody > tr > .selected {
 }
 
 /* Settings containers without modified items and with hidden boxes will display this text */
-.settings-container:not(:has(h3[data-modified="true"])):has(.box[style*="display: none;"])::before {
+.settings-container:not(:has(h3[data-modified="true"])):has(
+    .card[style*="display: none;"]
+  )::before {
   content: "No modified settings to display";
   opacity: 0.7;
   font-style: italic;
