@@ -381,7 +381,7 @@ td.lookatme {
 }
 
 /* AdminLTE 4 only knows how to hide nav-link text in mini/collapsed sidebar
-   mode; the user-panel is pi-hole's own block, so it needs the same rule. */
+  mode; the user-panel is pi-hole's own block, so it needs the same rule. */
 .sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .info {
   display: none;
 }
@@ -422,17 +422,17 @@ tfoot.add-new-item > tr > th {
 }
 
 /* Pi-hole's webserver sends a strict CSP with img-src 'self', which blocks
-   the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
-   normally ship with for checkboxes/radios, the modal close button, select
-   dropdown arrows, and the select2 dropdown arrow. Re-host those exact icons
-   as local files and point the same CSS custom properties (or, for select2,
-   the same rule) at them instead - this changes nothing visually, only where
-   the icon loads from.
+  the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
+  normally ship with for checkboxes/radios, the modal close button, select
+  dropdown arrows, and the select2 dropdown arrow. Re-host those exact icons
+  as local files and point the same CSS custom properties (or, for select2,
+  the same rule) at them instead - this changes nothing visually, only where
+  the icon loads from.
 
-   Note: a url() stored in a custom property resolves relative to the
-   stylesheet that consumes it via var() - here that's always
-   vendor/adminLTE/adminlte.min.css, not this file - so these paths go up
-   from vendor/adminLTE/ rather than from style/. */
+  Note: a url() stored in a custom property resolves relative to the
+  stylesheet that consumes it via var() - here that's always
+  vendor/adminLTE/adminlte.min.css, not this file - so these paths go up
+  from vendor/adminLTE/ rather than from style/. */
 .form-check-input:checked[type="checkbox"] {
   --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-checked.svg");
 }
@@ -453,7 +453,7 @@ tfoot.add-new-item > tr > th {
 }
 
 /* Tom Select "Select all / Select none" actions, injected above the
-   options list to replace bootstrap-select's actionsBox feature */
+  options list to replace bootstrap-select's actionsBox feature */
 .ts-actions-box {
   display: flex;
   gap: 4px;
@@ -495,7 +495,7 @@ tfoot.add-new-item > tr > th {
 }
 
 /* AdminLTE 4 no longer ships a default mini/full logo swap for the header
-   (that concept now only exists for the sidebar-brand), so we provide it. */
+  (that concept now only exists for the sidebar-brand), so we provide it. */
 .app-header .logo-mini {
   display: none;
 }
@@ -572,7 +572,7 @@ tfoot.add-new-item > tr > th {
 }
 
 /* AdminLTE 4 dropped its font-icon corner icon (it now expects an inline SVG),
-   so pi-hole keeps styling its own Font Awesome version here. */
+  so pi-hole keeps styling its own Font Awesome version here. */
 .small-box .icon {
   position: absolute;
   top: auto;
@@ -691,9 +691,9 @@ td.details-control {
 }
 
 /* Bootstrap 3's form validation state classes (.has-error/.has-warning/
-   .has-success) were removed in Bootstrap 5 (replaced by .is-invalid/
-   .is-valid on the input itself), but a few pages still toggle them via JS
-   for simple color-coded feedback, so pi-hole defines them itself here. */
+  .has-success) were removed in Bootstrap 5 (replaced by .is-invalid/
+  .is-valid on the input itself), but a few pages still toggle them via JS
+  for simple color-coded feedback, so pi-hole defines them itself here. */
 .has-error .form-control,
 .has-error .form-control:focus {
   border-color: #a94442;

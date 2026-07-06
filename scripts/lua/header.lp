@@ -103,9 +103,9 @@ end
     </style>
 <? elseif bs_theme == 'auto' then ?>
     <!-- The "auto" theme's actual light/dark resolution only happens once
-         theme.js runs and the CSS finishes loading, so use a media query
-         here (evaluated immediately, no JS/network wait) to avoid a flash
-         of white background on every navigation when the OS prefers dark. -->
+    theme.js runs and the CSS finishes loading, so use a media query
+    here (evaluated immediately, no JS/network wait) to avoid a flash
+    of white background on every navigation when the OS prefers dark. -->
     <style>
         @media (prefers-color-scheme: dark) {
             html { background-color: #000; }

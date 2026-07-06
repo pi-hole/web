@@ -24,7 +24,7 @@ function populateGroupSelect(selectEl) {
     selectEl.append($("<option/>").val(group.id).text(label));
   }
 
-  // Default Group is pre-selected
+  // Default Group is preselected
   selectEl.val(["0"]);
 
   utils.createGroupSelect(selectEl);
