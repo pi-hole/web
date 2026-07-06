@@ -16,11 +16,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <!-- Alerts -->
 <div id="alertInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="btn-close" data-hide="alert" aria-label="Close"></button>
     Updating... this may take a while. <strong>Please do not navigate away from or close this page.</strong>
 </div>
 <div id="alertSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
-    <button type="button" class="close" data-hide="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="btn-close" data-hide="alert" aria-label="Close"></button>
     Success!
 </div>
 

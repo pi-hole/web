@@ -207,7 +207,7 @@ $(".confirm-restartdns").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
+  cancelButtonClass: "btn-secondary",
   dialogClass: "modal-dialog",
 });
 
@@ -231,7 +231,7 @@ $(".confirm-flushlogs").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
+  cancelButtonClass: "btn-secondary",
   dialogClass: "modal-dialog",
 });
 
@@ -255,7 +255,7 @@ $(".confirm-flusharp").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
+  cancelButtonClass: "btn-secondary",
   dialogClass: "modal-dialog",
 });
 
@@ -276,7 +276,7 @@ $(() => {
       maintainAspectRatio: true,
       elements: {
         arc: {
-          borderColor: $(".box").css("background-color"),
+          borderColor: $(".card").css("background-color"),
         },
       },
       plugins: {

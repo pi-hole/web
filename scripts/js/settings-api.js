@@ -427,7 +427,7 @@ $("#totp_code").on("keyup", function () {
     $("#totp_div").addClass("has-success");
     $("#totp_code").prop("disabled", true);
     $("#totp_submit").prop("disabled", false);
-    $("#totp_submit").removeClass("btn-default");
+    $("#totp_submit").removeClass("btn-secondary");
     $("#totp_submit").addClass("btn-success");
   }
 });

@@ -18,7 +18,7 @@ $(() => {
 
   // Tabs: Domain/Regex handling
   // sync description fields, reset inactive inputs on tab change
-  $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
+  $('a[data-bs-toggle="tab"]').on("shown.bs.tab", function () {
     const tabHref = $(this).attr("href");
     let val;
     if (tabHref === "#tab_domain") {
@@ -463,7 +463,7 @@ function deleteDomains(encodedIds) {
 
 function addDomain() {
   const action = this.id;
-  const tabHref = $('a[data-toggle="tab"][aria-expanded="true"]').attr("href");
+  const tabHref = $('a[data-bs-toggle="tab"][aria-expanded="true"]').attr("href");
   const wildcardEl = $("#wildcard_checkbox");
   const wildcardChecked = wildcardEl.prop("checked");
 

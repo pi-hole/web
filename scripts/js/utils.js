@@ -812,39 +812,18 @@ function setInter(func, interval) {
 }
 
 /**
- * Toggle or set the collapse state of a box element
- * @param {HTMLElement} box - The box element
- * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
+ * Toggle or set the collapse state of a card element
+ * @param {HTMLElement} card - The card element
+ * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the card
  */
 // Not using the AdminLTE API so that the expansion is not animated
-// Otherwise, we could use `$(customBox).boxWidget("expand")`
-function toggleBoxCollapse(box, expand = true) {
-  if (!box) {
+// Otherwise, we could use `CardWidget.getOrCreateInstance(customCard).expand()`
+function toggleBoxCollapse(card, expand = true) {
+  if (!card) {
     return;
   }
 
-  const icon = box.querySelector(":scope .btn-box-tool > i");
-  const body = box.querySelector(".box-body");
-
-  if (expand) {
-    box.classList.remove("collapsed-box");
-    if (icon) {
-      icon.classList.replace("fa-plus", "fa-minus");
-    }
-
-    if (body) {
-      body.style = "";
-    }
-  } else {
-    box.classList.add("collapsed-box");
-    if (icon) {
-      icon.classList.replace("fa-minus", "fa-plus");
-    }
-
-    if (body) {
-      body.style.display = "none";
-    }
-  }
+  card.classList.toggle("collapsed-card", !expand);
 }
 
 globalThis.utils = (function () {

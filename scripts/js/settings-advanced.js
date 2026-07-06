@@ -270,9 +270,9 @@ function generateRow(topic, key, value) {
 
   // else: we have a setting we can display
   const box =
-    '<div class="box settings-box">' +
-    '<div class="box-header with-border">' +
-    '<h3 class="box-title" data-key="' +
+    '<div class="card settings-box">' +
+    '<div class="card-header">' +
+    '<h3 class="card-title" data-key="' +
     key +
     '" data-modified="' +
     (value.modified ? "true" : "false") +
@@ -281,10 +281,10 @@ function generateRow(topic, key, value) {
     boxIcons(value) +
     "</h3>" +
     "</div>" +
-    '<div class="box-body">' +
+    '<div class="card-body">' +
     utils.escapeHtml(value.description).replaceAll("\n", "<br>") +
     "</div>" +
-    '<div class="box-footer">' +
+    '<div class="card-footer">' +
     valueDetails(key, value) +
     "</div></div> ";
 
@@ -304,7 +304,7 @@ function createDynamicConfigTabs() {
           <div id="advanced-content-${topic.name}" role="tabpanel" class="tab-pane fade">
             <h3 class="page-header">${topic.description} (<code>${topic.name}</code>)</h3>
             <div class="row" id="advanced-content-${topic.name}-body">
-              <div class="col-xs-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
+              <div class="col-12 settings-container" id="advanced-content-${topic.name}-flex"></div>
             </div>
           </div>
         `);
@@ -312,7 +312,7 @@ function createDynamicConfigTabs() {
         // Dynamically create the settings menu
         $("#advanced-settings-menu ul").append(`
           <li role="presentation">
-            <a href="#advanced-content-${topic.name}" class="btn btn-default" aria-controls="advanced-content-${topic.name}" role="tab" data-toggle="pill">${topic.description.replace(" settings", "")}</a>
+            <a href="#advanced-content-${topic.name}" class="btn btn-secondary" aria-controls="advanced-content-${topic.name}" role="tab" data-bs-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
         `);
       }
@@ -326,7 +326,7 @@ function createDynamicConfigTabs() {
 
       // Select the first tab and show the content
       $("#advanced-settings-menu ul li:first-child").addClass("active");
-      $("#advanced-settings-tabs > div:first-child").addClass("active in");
+      $("#advanced-settings-tabs > div:first-child").addClass("active show");
 
       applyCheckboxRadioStyle();
       applyOnlyChanged();
@@ -373,13 +373,13 @@ function applyOnlyChanged() {
 
     // Show all tabs, except the ones containing "data-modified='true'" attribute
     // to prevent empty tabs (using the same classes used by Boostrap3)
-    $("#advanced-settings-tabs > .tab-pane").addClass("in active");
+    $("#advanced-settings-tabs > .tab-pane").addClass("show active");
     $("#advanced-settings-tabs > .tab-pane:not(:has(h3[data-modified='true']))").removeClass(
-      "in active"
+      "show active"
     );
 
     // Hide all boxes with data-key attribute, except the ones with "data-modified='true'" attribute
-    $(".box-title[data-key]").not("[data-modified='true']").closest(".box").hide();
+    $(".card-title[data-key]").not("[data-modified='true']").closest(".card").hide();
   } else {
     // Show the tabs menu and activate only the first button (deactivate other buttons)
     $("#advanced-settings-menu").show();
@@ -387,10 +387,10 @@ function applyOnlyChanged() {
     $("#advanced-settings-menu ul li:first-child").addClass("active");
 
     // Hide all tabs, except the first one (removing the classes used by Boostrap3)
-    $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("in active");
+    $("#advanced-settings-tabs > .tab-pane:not(:first-child)").removeClass("show active");
 
     // Show all boxes with data-key attribute
-    $(".box-title[data-key]").closest(".box").show();
+    $(".card-title[data-key]").closest(".card").show();
   }
 }
 

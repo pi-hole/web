@@ -15,15 +15,15 @@ mg.include('scripts/lua/settings_header.lp','r')
 ?>
 <div class="row">
     <div class="col-md-12 col-lg-6">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="box-title">List of local DNS records</h3>
-                            <!-- /.box-header -->
+                        <h3 class="card-title">List of local DNS records</h3>
+                            <!-- /.card-header -->
                         <table id="hosts-Table" class="table table-striped table-bordered" width="100%">
                             <thead>
                                 <tr>
@@ -49,22 +49,22 @@ mg.include('scripts/lua/settings_header.lp','r')
                     </div>
                 </div>
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
                 <strong>Note:</strong>
                 <p>Adding/removing local DNS records will flush the cache but does not require a restart of the DNS server.</p>
             </div>
         </div>
     </div>
     <div class="col-md-12 col-lg-6">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records</h3>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" id="title-cnameRecords" data-configkeys="dns.cnameRecords">Local CNAME records</h3>
             </div>
-            <div class="box-body">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <h3 class="box-title">List of local CNAME records</h3>
-                            <!-- /.box-header -->
+                        <h3 class="card-title">List of local CNAME records</h3>
+                            <!-- /.card-header -->
                         <table id="cnameRecords-Table" class="table table-striped table-bordered" width="100%">
                             <thead>
                                 <tr>
@@ -94,7 +94,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                     </div>
                 </div>
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
                 <strong>Note:</strong>
                 <p>The target of a <code>CNAME</code> must be a domain that the Pi-hole already has in its cache or is authoritative for. This is a universal limitation of <code>CNAME</code> records.</p>
                 <p>The reason for this is that Pi-hole will not send additional queries upstream when serving <code>CNAME</code> replies. As consequence, if you set a target that isn't already known, the reply to the client may be incomplete. Pi-hole just returns the information it knows at the time of the query. This results in certain limitations for <code>CNAME</code> targets,

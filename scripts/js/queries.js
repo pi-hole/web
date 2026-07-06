@@ -158,7 +158,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       blocked = true;
       break;
     case "FORWARDED":
@@ -168,21 +168,21 @@ function parseQueryStatus(data) {
         (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
         utils.escapeHtml(data.upstream);
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "CACHE":
       colorClass = "text-green";
       icon = "fa-solid fa-database";
       fieldtext = "Served from cache";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "REGEX":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       blocked = true;
       break;
     case "DENYLIST":
@@ -190,7 +190,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (exact)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       blocked = true;
       break;
     case "EXTERNAL_BLOCKED_IP":
@@ -226,7 +226,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity, CNAME)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
       blocked = true;
       break;
@@ -235,7 +235,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex denied, CNAME)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
       blocked = true;
       break;
@@ -244,7 +244,7 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (exact denied, CNAME)";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
       isCNAME = true;
       blocked = true;
       break;
@@ -265,14 +265,14 @@ function parseQueryStatus(data) {
       icon = "fa-solid fa-hourglass-half";
       fieldtext = "Already forwarded, awaiting reply";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "CACHE_STALE":
       colorClass = "text-green";
       icon = "fa-solid fa-infinity";
       fieldtext = "Served by cache optimizer";
       buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+        '<button type="button" class="btn btn-secondary btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
       break;
     case "SPECIAL_DOMAIN":
       colorClass = "text-red";

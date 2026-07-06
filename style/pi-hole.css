@@ -637,6 +637,40 @@ td.details-control {
   flex: 1 0 auto;
 }
 
+/* Bootstrap 3's form validation state classes (.has-error/.has-warning/
+   .has-success) were removed in Bootstrap 5 (replaced by .is-invalid/
+   .is-valid on the input itself), but a few pages still toggle them via JS
+   for simple color-coded feedback, so pi-hole defines them itself here. */
+.has-error .form-control,
+.has-error .form-control:focus {
+  border-color: #a94442;
+}
+
+.has-warning .form-control,
+.has-warning .form-control:focus {
+  border-color: #8a6d3b;
+}
+
+.has-success .form-control,
+.has-success .form-control:focus {
+  border-color: #3c763d;
+}
+
+.has-error label,
+.has-error .control-label {
+  color: #a94442;
+}
+
+.has-warning label,
+.has-warning .control-label {
+  color: #8a6d3b;
+}
+
+.has-success label,
+.has-success .control-label {
+  color: #3c763d;
+}
+
 .login-footer a {
   text-align: center;
   min-width: 28%;

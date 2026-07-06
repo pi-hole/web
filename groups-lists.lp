@@ -18,15 +18,15 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <!-- Domain Input -->
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="add-group">
-            <!-- /.box-header -->
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card" id="add-group">
+            <!-- /.card-header -->
+            <div class="card-header">
+                <h3 class="card-title">
                     Add a new subscribed list
                 </h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label for="new_address">Address:</label>
@@ -42,18 +42,18 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                 </div>
             </div>
-            <div class="box-footer clearfix">
+            <div class="card-footer">
                 <strong>Hints:</strong>
                 <ol>
                     <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your lists.</li>
                     <li>Multiple lists can be added by separating each <em>unique</em> URL with a space or comma</li>
                 </ol>
-                <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
+                <div class="btn-toolbar float-end" role="toolbar" aria-label="Toolbar with buttons">
                     <div class="btn-group" role="group">
-                        <button type="button" id="btnAddBlock" class="btn btn-danger pull-right">Add blocklist</button>
+                        <button type="button" id="btnAddBlock" class="btn btn-danger float-end">Add blocklist</button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" id="btnAddAllow" class="btn btn-success pull-right">Add allowlist</button>
+                        <button type="button" id="btnAddAllow" class="btn btn-success float-end">Add allowlist</button>
                     </div>
                 </div>
             </div>
@@ -62,14 +62,14 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="lists-list">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card" id="lists-list">
+            <div class="card-header">
+                <h3 class="card-title">
                     Subscribed lists
                 </h3>
-            </div><!-- /.box-header -->
+            </div><!-- /.card-header -->
 
-            <div class="box-body">
+            <div class="card-body">
                 <table id="listsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -85,12 +85,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
-            </div><!-- /.box-body -->
+                <button type="button" id="resetButton" class="btn btn-secondary btn-sm text-red hidden">Reset sorting</button>
+            </div><!-- /.card-body -->
 
-            <div class="box-footer clearfix">
+            <div class="card-footer">
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-12">
                         <p><strong>Hint:</strong> Click on the icons (first and second columns) to get additional information about your lists. The icons correspond to the health of the list.</p>
                     </div>
                 </div>
@@ -116,9 +116,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         </div>
                     </div>
                 </div>
-            </div><!-- /.box-footer -->
+            </div><!-- /.card-footer -->
 
-        </div><!-- /.box -->
+        </div><!-- /.card -->
     </div>
 </div>
 

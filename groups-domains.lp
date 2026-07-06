@@ -18,21 +18,21 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <!-- Domain Input -->
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="add-group">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card" id="add-group">
+            <div class="card-header">
+                <h3 class="card-title">
                     Add a new domain or regex filter
                 </h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="active" role="presentation">
-                            <a href="#tab_domain" aria-controls="tab_domain" aria-expanded="true" role="tab" data-toggle="tab">Domain</a>
+                            <a href="#tab_domain" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
                         </li>
                         <li role="presentation">
-                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-toggle="tab">RegEx filter</a>
+                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-bs-toggle="tab">RegEx filter</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -98,7 +98,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         You can add multiple entries at once by separating them with spaces (e.g. <code>example.com example.org</code>).
                     </p>
                 </div>
-                <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
+                <div class="btn-toolbar float-end" role="toolbar" aria-label="Toolbar with buttons">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-danger" id="add_deny">Add to denied domains</button>
                     </div>
@@ -107,18 +107,18 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                 </div>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
-        <!-- /.box -->
+        <!-- /.card -->
     </div>
 </div>
 
 <!-- Domain List -->
 <div class="row">
     <div class="col-md-12">
-        <div class="box" id="domains-list">
-            <div class="box-header with-border">
-                <h3 class="box-title">
+        <div class="card" id="domains-list">
+            <div class="card-header">
+                <h3 class="card-title">
                     List of domains
                 </h3>
                 <div class="filter_types">
@@ -132,8 +132,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                 </div>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <table id="domainsTable" class="table table-striped table-bordered" width="100%">
                     <thead>
                         <tr>
@@ -148,11 +148,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         </tr>
                     </thead>
                 </table>
-                <button type="button" id="resetButton" class="btn btn-default btn-sm text-red hidden">Reset sorting</button>
+                <button type="button" id="resetButton" class="btn btn-secondary btn-sm text-red hidden">Reset sorting</button>
             </div>
-            <!-- /.box-body -->
+            <!-- /.card-body -->
         </div>
-        <!-- /.box -->
+        <!-- /.card -->
     </div>
 </div>
 

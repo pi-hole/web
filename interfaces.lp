@@ -15,8 +15,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="box">
-            <div class="box-body">
+        <div class="card">
+            <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="text-center">

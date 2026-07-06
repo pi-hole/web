@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues: false, apiFailure: false, bootstrap: false */
 
 "use strict";
 
@@ -13,7 +13,22 @@ let dhcpLeaesTable = null;
 const toasts = {};
 
 // DHCP leases tooltips
-$("body").tooltip({ selector: '[data-toggle="tooltip"]', container: "body" });
+// Bootstrap 5 has no jQuery-plugin tooltip delegation, so lazily instantiate
+// tooltips the first time a matching element is hovered/focused - this covers
+// tooltip-triggering elements added dynamically (e.g. DHCP lease row buttons).
+for (const evt of ["mouseenter", "focus"]) {
+  document.body.addEventListener(
+    evt,
+    e => {
+      const el = e.target.closest ? e.target.closest('[data-bs-toggle="tooltip"]') : null;
+      if (el && !bootstrap.Tooltip.getInstance(el)) {
+        // eslint-disable-next-line no-new
+        new bootstrap.Tooltip(el, { container: "body" });
+      }
+    },
+    true
+  );
+}
 
 function renderHostnameCLID(data, type) {
   // Display and search content
@@ -79,12 +94,12 @@ $(() => {
         .attr("id", "deleteLease_" + data.ip)
         .attr("data-del-ip", data.ip)
         .attr("title", "Delete lease")
-        .attr("data-toggle", "tooltip");
+        .attr("data-bs-toggle", "tooltip");
       const $copyBtn = $(
         '<button type="button" class="btn btn-secondary btn-xs copy-to-static"><span class="fa fa-fw fa-copy"></span></button>'
       )
         .attr("title", "Copy to static leases")
-        .attr("data-toggle", "tooltip")
+        .attr("data-bs-toggle", "tooltip")
         .data("hwaddr", data.hwaddr || "")
         .data("ip", data.ip || "")
         .data("hostname", data.name || "");
@@ -347,8 +362,11 @@ $(document).on("click", ".save-static-row", function () {
   row.attr("data-original-line", lines[rowIdx]);
 
   // Hide the tooltips and remove Save and Cancel buttons
-  $(this).siblings(".cancel-static-row").tooltip("hide").remove();
-  $(this).tooltip("hide").remove();
+  const $cancelBtn = $(this).siblings(".cancel-static-row");
+  bootstrap.Tooltip.getInstance($cancelBtn[0])?.dispose();
+  $cancelBtn.remove();
+  bootstrap.Tooltip.getInstance(this)?.dispose();
+  $(this).remove();
   // then remove highlight colors from all cells on this row
   $("td", row).blur();
 
@@ -385,8 +403,11 @@ $(document).on("click", ".cancel-static-row", function () {
   row.find(".static-hwaddr, .static-ipaddr, .static-hostname").blur();
 
   // Then hide the tooltip and remove Save and Cancel buttons
-  $(this).siblings(".save-static-row").tooltip("hide").remove();
-  $(this).tooltip("hide").remove();
+  const $saveBtn = $(this).siblings(".save-static-row");
+  bootstrap.Tooltip.getInstance($saveBtn[0])?.dispose();
+  $saveBtn.remove();
+  bootstrap.Tooltip.getInstance(this)?.dispose();
+  $(this).remove();
 
   // Check if all rows were already saved or canceled (no rows are still being edited)
   if ($("#StaticDHCPTable .save-static-row").length === 0) {
@@ -404,7 +425,7 @@ $(document).on("click", ".delete-static-row", function () {
   lines.splice(rowIdx, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
-  $(this).tooltip("hide");
+  bootstrap.Tooltip.getInstance(this)?.hide();
   renderStaticDHCPTable();
 });
 
@@ -415,7 +436,7 @@ $(document).on("click", ".add-static-row", function () {
   lines.splice(rowIdx + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
-  $(this).tooltip("hide");
+  bootstrap.Tooltip.getInstance(this)?.hide();
   renderStaticDHCPTable();
   // Focus the new row after render
   setTimeout(() => {
@@ -455,13 +476,13 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
     )
       .attr("data-row", idx)
       .attr("title", "Confirm changes to this line")
-      .attr("data-toggle", "tooltip");
+      .attr("data-bs-toggle", "tooltip");
     const cancelBtn = $(
       '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><span class="fa fa-fw fa-undo"></span></button>'
     )
       .attr("data-row", idx)
       .attr("title", "Cancel changes and restore original values")
-      .attr("data-toggle", "tooltip");
+      .attr("data-bs-toggle", "tooltip");
 
     // Add the save button to the actions column
     row.find("td").last().prepend(saveBtn, " ", cancelBtn, " ");
@@ -484,14 +505,14 @@ function renderStaticDHCPTable() {
     )
       .attr("data-row", idx)
       .attr("title", "Delete this line")
-      .attr("data-toggle", "tooltip");
+      .attr("data-bs-toggle", "tooltip");
 
     const addBtn = $(
       '<button type="button" class="btn btn-primary btn-xs add-static-row"><span class="fa fa-fw fa-plus"></span></button>'
     )
       .attr("data-row", idx)
       .attr("title", "Add new line after this")
-      .attr("data-toggle", "tooltip");
+      .attr("data-bs-toggle", "tooltip");
 
     // Create the new row - store the original data, in case we need to restore the values
     const tr = $("<tr></tr>").attr("data-row", idx).attr("data-original-line", line);
