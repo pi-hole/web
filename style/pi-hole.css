@@ -524,11 +524,8 @@ tfoot.add-new-item > tr > th {
 }
 
 .card {
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
-  margin: 0 0 1em;
-  padding: 0.5em;
-  border: 1px solid color-mix(currentColor 15%, transparent);
 }
 
 .small-box {
