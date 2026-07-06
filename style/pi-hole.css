@@ -524,8 +524,11 @@ tfoot.add-new-item > tr > th {
 }
 
 .card {
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
+  margin: 0 0 1em;
+  padding: 0.5em;
+  border: 1px solid color-mix(currentColor 15%, transparent);
 }
 
 .small-box {
@@ -1656,13 +1659,6 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
 }
 .advanced-help li {
   margin: 0 0 1em;
-}
-
-.card {
-  border-radius: 6px;
-  margin: 0 0 1em;
-  padding: 0.5em;
-  border: 1px solid color-mix(currentColor 15%, transparent);
 }
 
 /* Used in query log page */

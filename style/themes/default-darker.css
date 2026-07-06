@@ -1911,14 +1911,6 @@ button.list-group-item-danger.active:hover {
   background-color: rgb(135, 54, 53);
   border-color: rgb(133, 53, 52);
 }
-.card {
-  background-color: rgb(24, 26, 27);
-  border-color: transparent;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 1px 1px;
-}
-.card-header {
-  border-bottom-color: transparent;
-}
 .card-header > .dropdown .dropdown-toggle {
   color: inherit;
 }
@@ -1931,10 +1923,6 @@ button.list-group-item-danger.active:hover {
 .card-title > small,
 .card-title > small > a {
   color: inherit;
-}
-.card-footer {
-  background-color: rgb(30, 32, 33);
-  border-top-color: rgb(58, 62, 65);
 }
 .card > .list-group:first-child .list-group-item:first-child,
 .card > .panel-collapse > .list-group:first-child .list-group-item:first-child {
@@ -2916,6 +2904,7 @@ a:focus {
 .card {
   background-color: rgb(24, 26, 27);
   background-image: none;
+  border-color: transparent;
   border-top-color: rgb(59, 64, 66);
   box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px;
 }
@@ -3058,6 +3047,7 @@ a:focus {
   background-image: none;
 }
 .card-header {
+  border-bottom-color: transparent;
   color: rgb(189, 183, 175);
 }
 .card-header.with-border {
