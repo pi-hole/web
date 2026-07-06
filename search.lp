@@ -27,9 +27,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div>
-                            <input type="checkbox" id="partialMatch" data-key="partialMatch">
-                            <label for="partialMatch"><strong>Use partial matching</strong> (may not find complex regex entries)</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="partialMatch" data-key="partialMatch">
+                            <label class="form-check-label" for="partialMatch"><strong>Use partial matching</strong> (may not find complex regex entries)</label>
                         </div>
                     </div>
                     <br class="hidden-md hidden-lg">

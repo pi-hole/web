@@ -105,7 +105,6 @@ is_authenticated = mg.request_info.is_authenticated
     <? if startsWith(scriptname, 'groups') then ?>
         <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
     <? end ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/icheck/icheck-bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/datatables.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.css')?>">

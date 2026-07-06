@@ -25,9 +25,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="row">
                             <div class="col-lg-12">
                                 <p>The currently configured logging file is <code id="files.log.dnsmasq"></code></p>
-                                <div>
-                                    <input type="checkbox" id="dns.queryLogging" data-key="dns.queryLogging" title="log-queries">
-                                    <label for="dns.queryLogging"><strong>Log DNS queries and replies</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="dns.queryLogging" data-key="dns.queryLogging" title="log-queries">
+                                    <label class="form-check-label" for="dns.queryLogging"><strong>Log DNS queries and replies</strong></label>
                                 </div>
                             </div>
                         </div>
@@ -43,9 +43,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="row">
                             <div class="col-lg-12">
                                     <p>Pi-hole's long-term database is stored at <code id="files.database"></code></p>
-                                <div>
-                                    <input type="checkbox" id="database.DBimport" data-key="database.DBimport" title="log-queries">
-                                    <label for="database.DBimport"><strong>Should FTL load queries from the database on (re)start?</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="database.DBimport" data-key="database.DBimport" title="log-queries">
+                                    <label class="form-check-label" for="database.DBimport"><strong>Should FTL load queries from the database on (re)start?</strong></label>
                                 </div>
                                 <br>
                                 <div class="row-flex">
@@ -73,24 +73,24 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <div class="row">
                     <div class="col-lg-12">
                         <p>Specify if DNS queries should be anonymized, available options are:</p>
-                        <div>
-                            <input type="radio" id="misc.privacylevel-0" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="0">
-                            <label for="misc.privacylevel-0"><strong>Show everything and record everything</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="misc.privacylevel-0" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="0">
+                            <label class="form-check-label" for="misc.privacylevel-0"><strong>Show everything and record everything</strong></label>
                             <p class="help-block">Gives maximum amount of statistics</p>
                         </div>
-                        <div>
-                            <input type="radio" id="misc.privacylevel-1" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="1">
-                            <label for="misc.privacylevel-1"><strong>Hide domains: Display and store all domains as <code>hidden</code></strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="misc.privacylevel-1" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="1">
+                            <label class="form-check-label" for="misc.privacylevel-1"><strong>Hide domains: Display and store all domains as <code>hidden</code></strong></label>
                             <p class="help-block">This disables the Top Permitted Domains and Top Blocked Domains tables on the dashboard</p>
                         </div>
-                        <div>
-                            <input type="radio" id="misc.privacylevel-2" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="2">
-                            <label for="misc.privacylevel-2"><strong> Hide domains and clients: Display and store all domains as <code>hidden</code> and all clients as <code>0.0.0.0</code> </strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="misc.privacylevel-2" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="2">
+                            <label class="form-check-label" for="misc.privacylevel-2"><strong> Hide domains and clients: Display and store all domains as <code>hidden</code> and all clients as <code>0.0.0.0</code> </strong></label>
                             <p class="help-block">This disables all tables on the dashboard</p>
                         </div>
-                        <div>
-                            <input type="radio" id="misc.privacylevel-3" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="3">
-                            <label for="misc.privacylevel-3"><strong> Anonymous mode: This disables basically everything except the live anonymous statistics</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="misc.privacylevel-3" name="misc.privacylevel" data-key="misc.privacylevel" data-type="integer" value="3">
+                            <label class="form-check-label" for="misc.privacylevel-3"><strong> Anonymous mode: This disables basically everything except the live anonymous statistics</strong></label>
                             <p class="help-block">No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists. Note that this also largely disabled regex capabilities.</p>
                         </div>
                         <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>

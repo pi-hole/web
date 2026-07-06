@@ -57,9 +57,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div>
-                                        <input type="checkbox" id="wildcard_checkbox">
-                                        <label for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="wildcard_checkbox">
+                                        <label class="form-check-label" for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
                                         <p>Check this box if you want to involve all subdomains. The entered domain will be converted to a RegEx filter while adding.</p>
                                     </div>
                                 </div>
@@ -123,12 +123,12 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 </h3>
                 <div class="filter_types">
                     <div class="line">
-                        <span><input type="checkbox" name="typ" value="allow/exact" id="typ0" checked><label for="typ0">Exact allow</label></span>
-                        <span><input type="checkbox" name="typ" value="allow/regex" id="typ2" checked><label for="typ2">Regex allow</label></span>
+                        <span class="form-check"><input class="form-check-input" type="checkbox" name="typ" value="allow/exact" id="typ0" checked><label class="form-check-label" for="typ0">Exact allow</label></span>
+                        <span class="form-check"><input class="form-check-input" type="checkbox" name="typ" value="allow/regex" id="typ2" checked><label class="form-check-label" for="typ2">Regex allow</label></span>
                     </div>
                     <div class="line">
-                        <span><input type="checkbox" name="typ" value="deny/exact" id="typ1" checked><label for="typ1">Exact deny</label></span>
-                        <span><input type="checkbox" name="typ" value="deny/regex" id="typ3" checked><label for="typ3">Regex deny</label></span>
+                        <span class="form-check"><input class="form-check-input" type="checkbox" name="typ" value="deny/exact" id="typ1" checked><label class="form-check-label" for="typ1">Exact deny</label></span>
+                        <span class="form-check"><input class="form-check-input" type="checkbox" name="typ" value="deny/regex" id="typ3" checked><label class="form-check-label" for="typ3">Regex deny</label></span>
                     </div>
                 </div>
             </div>

@@ -68,7 +68,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         <small id="querytime-note" class="form-text text-muted" style="margin-top: 5px;"></small>
                     </div>
                     <div class="form-group col-md-6">
-                        <div><input type="checkbox" id="disk"><label for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours. This option disables live update.</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="disk"><label class="form-check-label" for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours. This option disables live update.</label></div>
                     </div>
                 </div>
                 <div class="row">
@@ -156,7 +156,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="card-header">
                 <h3 class="card-title">Recent Queries</h3>
                 <div class="float-end align-click-options">
-                    <span><input type="checkbox" id="live"><label for="live">Live update</label></span>
+                    <span class="form-check"><input class="form-check-input" type="checkbox" id="live"><label class="form-check-label" for="live">Live update</label></span>
                     <button type="button" id="refresh" class="btn btn-sm btn-info btn-flat">Refresh</button>
                 </div>
             </div>

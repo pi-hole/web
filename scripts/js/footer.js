@@ -177,22 +177,6 @@ function testCookies() {
   return ret;
 }
 
-function applyCheckboxRadioStyle() {
-  // Get all radio/checkboxes for theming, with the exception of:
-  // - the two radio buttons on the custom disable timer,
-  // - radio/checkboxes elements with class "no-icheck",
-  // - every element with an id that starts with "status_"
-  const sel = $("input[type='radio'],input[type='checkbox']")
-    .not("#selSec")
-    .not("#selMin")
-    .not("#expert-settings")
-    .not("#only-changed")
-    .not(".no-icheck")
-    .not("[id^=status_]");
-  sel.parent().removeClass();
-  sel.parent().addClass("icheck-primary");
-}
-
 let systemTimer;
 let versionTimer;
 function updateInfo() {
@@ -624,9 +608,6 @@ $(() => {
   if (!testCookies() && $("#cookieInfo").length > 0) {
     $("#cookieInfo").show();
   }
-
-  // Apply icheckbox/iradio style
-  applyCheckboxRadioStyle();
 
   if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...

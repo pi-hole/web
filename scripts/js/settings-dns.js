@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues: false, apiFailure: false */
 
 "use strict";
 
@@ -60,9 +60,9 @@ function fillDNSupstreams(value, servers) {
     }
 
     return `<td title="${address}">
-              <div>
-                <input type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
-                <label for="DNSupstreams-${i++}"></label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
+                <label class="form-check-label" for="DNSupstreams-${i++}"></label>
               </div>
             </td>`;
   }
@@ -135,9 +135,6 @@ function fillDNSupstreams(value, servers) {
 
   // Hide the loading animation
   $("#dns-upstreams-overlay").hide();
-
-  // Apply styling to the new checkboxes
-  applyCheckboxRadioStyle();
 }
 
 function setInterfaceName(name) {

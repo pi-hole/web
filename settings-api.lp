@@ -36,9 +36,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                     <div class="col-lg-12">
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <div>
-                                    <input type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
-                                    <label for="webserver.interface.boxed"><strong>Use the boxed layout</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
+                                    <label class="form-check-label" for="webserver.interface.boxed"><strong>Use the boxed layout</strong></label>
                                     <p class="help-block">The boxed layout is helpful when working on large screens because it prevents the site from stretching very wide.</p>
                                 </div>
                             </div>
@@ -57,16 +57,16 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div>
-                            <input type="checkbox" id="webserver.api.prettyJSON" data-key="webserver.api.prettyJSON">
-                            <label for="webserver.api.prettyJSON"><strong>Prettify API output for human-readability</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="webserver.api.prettyJSON" data-key="webserver.api.prettyJSON">
+                            <label class="form-check-label" for="webserver.api.prettyJSON"><strong>Prettify API output for human-readability</strong></label>
                             <p class="help-block">This will make the API output more human-readable, but will increase the size of the output and make the API a bit slower.</p>
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <div>
-                            <input type="checkbox" id="webserver.api.allow_destructive" data-key="webserver.api.allow_destructive">
-                            <label for="webserver.api.allow_destructive"><strong>Permit destructive actions via API</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="webserver.api.allow_destructive" data-key="webserver.api.allow_destructive">
+                            <label class="form-check-label" for="webserver.api.allow_destructive"><strong>Permit destructive actions via API</strong></label>
                             <p class="help-block">This will allow clients to perform destructive actions via the API, such as rebooting or shutting down the system Pi-hole is running on.</p>
                         </div>
                     </div>

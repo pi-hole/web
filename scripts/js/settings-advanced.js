@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, apiFailure: false, applyCheckboxRadioStyle: false */
+/* global utils:false, apiFailure: false */
 
 "use strict";
 
@@ -103,7 +103,7 @@ function valueDetails(key, value) {
     case "boolean": {
       content +=
         '<div class="col-sm-12">' +
-        '<div><input type="checkbox" ' +
+        '<div class="form-check"><input class="form-check-input" type="checkbox" ' +
         (value.value ? " checked" : "") +
         ' id="' +
         key +
@@ -111,7 +111,7 @@ function valueDetails(key, value) {
         key +
         '"' +
         extraAttributes +
-        '><label for="' +
+        '><label class="form-check-label" for="' +
         key +
         '-checkbox">Enabled ' +
         defaultValueHint +
@@ -212,14 +212,14 @@ function valueDetails(key, value) {
       content += '<div class="col-sm-12">';
       for (const [i, option] of value.allowed.entries()) {
         content +=
-          "<div>" +
+          '<div class="form-check">' +
           // Radio button
-          '<input type="radio" class="form-control" ' +
+          '<input type="radio" class="form-check-input" ' +
           `value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}` +
           (option.item === value.value ? " checked" : "") +
           ">" +
           // Label
-          `<label for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
+          `<label class="form-check-label" for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
           (option.item === value.default ? " <em>(default)</em>" : "") +
           "</strong></label>" +
           // Paragraph with description
@@ -328,7 +328,6 @@ function createDynamicConfigTabs() {
       $("#advanced-settings-menu ul li:first-child").addClass("active");
       $("#advanced-settings-tabs > div:first-child").addClass("active show");
 
-      applyCheckboxRadioStyle();
       applyOnlyChanged();
     })
     .fail(data => {

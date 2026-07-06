@@ -116,9 +116,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                             </div>
                         </div>
                         <p>The DNS domains for your Pi-hole. This DNS domain is purely local. FTL may answer queries from its local cache and configuration but *never* forwards any requests upstream *unless* you have configured a dns.revServer exactly for this domain. If no domain is specified and you are using Pi-hole's DHCP server, then any hostnames with a domain part (i.e., with a period) will be disallowed. If a domain is specified, then hostnames with a domain parts matching the domain here are allowed. In addition, when a suffix is set then hostnames without a domain part have the suffix added as an optional domain part.</p>
-                        <div>
-                            <input type="checkbox" id="dns.expandHosts" data-key="dns.expandHosts" title="domain-needed">
-                            <label for="dns.expandHosts"><strong>Expand hostnames</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="dns.expandHosts" data-key="dns.expandHosts" title="domain-needed">
+                            <label class="form-check-label" for="dns.expandHosts"><strong>Expand hostnames</strong></label>
                             <p class="help-block">If set, the domain is added to simple names (without a period) in /etc/hosts in the same way as for DHCP-derived names.</p>
                         </div>
                     </div>
@@ -159,25 +159,25 @@ mg.include('scripts/lua/settings_header.lp','r')
                         <div class="form-group">
                             <div class="no-danger-area">
                                 <h4>Recommended setting</h4>
-                                <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
-                                    <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
+                                    <label class="form-check-label" for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong></label>
                                     <p class="help-block">Allows only queries from devices that are at most one hop away (local devices)</p>
                                 </div>
                             </div>
                             <div class="danger-area">
                                 <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
-                                <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE" data-key="dns.listeningMode" value="single">
-                                    <label for="dns.listeningMode-SINGLE"><strong>Respond only on interface <code id="interface-name-1"></code></strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE" data-key="dns.listeningMode" value="single">
+                                    <label class="form-check-label" for="dns.listeningMode-SINGLE"><strong>Respond only on interface <code id="interface-name-1"></code></strong></label>
                                 </div>
-                                <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-BIND" data-key="dns.listeningMode" value="bind">
-                                    <label for="dns.listeningMode-BIND"><strong>Bind only to interface <code id="interface-name-2"></code></strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="DNSinterface" id="dns.listeningMode-BIND" data-key="dns.listeningMode" value="bind">
+                                    <label class="form-check-label" for="dns.listeningMode-BIND"><strong>Bind only to interface <code id="interface-name-2"></code></strong></label>
                                 </div>
-                                <div>
-                                    <input type="radio" name="DNSinterface" id="dns.listeningMode-ALL" data-key="dns.listeningMode" value="all">
-                                    <label for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="DNSinterface" id="dns.listeningMode-ALL" data-key="dns.listeningMode" value="all">
+                                    <label class="form-check-label" for="dns.listeningMode-ALL"><strong>Permit all origins</strong></label>
                                 </div>
                                 <p class="help-block">These options are dangerous on devices
                                     directly connected to the Internet such as cloud instances and are only safe if your
@@ -198,9 +198,9 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div>
-                            <input type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
-                            <label for="dns.domainNeeded"><strong>Never forward non-FQDN queries</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="dns.domainNeeded" data-key="dns.domainNeeded" title="domain-needed">
+                            <label class="form-check-label" for="dns.domainNeeded"><strong>Never forward non-FQDN queries</strong></label>
                             <p class="help-block">Tells Pi-hole to never forward queries for plain
                                 names, without dots or domain parts, to upstream nameservers. If
                                 the name is not known from <code>/etc/hosts</code> or DHCP then a "not found"
@@ -209,9 +209,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 DNS loop under certain circumstances (e.g. if a client would send TLD DNSSEC queries).</p>
                         </div>
                         <br>
-                        <div>
-                            <input type="checkbox" id="dns.bogusPriv" data-key="dns.bogusPriv" title="bogus-priv">
-                            <label for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="dns.bogusPriv" data-key="dns.bogusPriv" title="bogus-priv">
+                            <label class="form-check-label" for="dns.bogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
                             <p class="help-block">All reverse lookups for private IP ranges (i.e., <code>192.168.0.x/24</code>, etc.)
                                 which are not found in <code>/etc/hosts</code> or the DHCP leases are answered
                                 with "no such domain" rather than being forwarded upstream. The set
@@ -221,9 +221,9 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 Make sure you have set up conditional forwarding in this case.</p>
                         </div>
                         <br>
-                        <div>
-                            <input type="checkbox" id="dns.dnssec" data-key="dns.dnssec">
-                            <label for="dns.dnssec"><strong>Use DNSSEC</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="dns.dnssec" data-key="dns.dnssec">
+                            <label class="form-check-label" for="dns.dnssec"><strong>Use DNSSEC</strong></label>
                             <p class="help-block">Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                 queries, Pi-hole requests the DNSSEC records needed to validate
                                 the replies. If a domain fails validation or the upstream does not
