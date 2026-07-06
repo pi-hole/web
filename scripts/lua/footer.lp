@@ -17,47 +17,46 @@ for k,v in pairs(mg.request_info.http_headers) do
 end
 ?>
 
-        </section>
-        <!-- /.content -->
-    </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /.app-content -->
+    </main>
+    <!-- /.app-main -->
     <!-- Modal for custom disable time -->
     <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="customDisableModalLabel">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="customDisableModalLabel">Custom disable timeout</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group">
                         <input id="customTimeout" class="form-control" type="number" value="60">
-                        <div class="input-group-btn" data-toggle="buttons">
-                            <label class="btn btn-default">
-                                <input id="selSec" type="radio"> Secs
-                            </label>
-                            <label id="btnMins" class="btn btn-default active">
-                                <input id="selMin" type="radio"> Mins
-                            </label>
-                        </div>
+                        <input type="radio" class="btn-check" id="selSec" autocomplete="off">
+                        <label class="btn btn-outline-secondary" for="selSec">Secs</label>
+                        <input type="radio" class="btn-check" id="selMin" autocomplete="off" checked>
+                        <label id="btnMins" class="btn btn-outline-secondary" for="selMin">Mins</label>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="pihole-disable-custom" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="pihole-disable-custom" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
                 </div>
             </div>
         </div>
-    </div> <!-- /.content-wrapper -->
+    </div>
 
-    <footer class="main-footer">
+    <footer class="app-footer">
         <div class="row row-centered text-center">
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-12 col-sm-6">
                 <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
             </div>
         </div>
 
         <div class="row row-centered text-center version-info">
-            <div class="col-xs-12 col-sm-12 col-md-10">
+            <div class="col-12 col-sm-12 col-md-10">
                 <ul class="list-inline" id="versions"></ul>
                 <p style="margin: 15px 0 0;" id="update-hint"></p>
             </div>
@@ -65,7 +64,7 @@ end
     </footer>
 
 </div>
-<!-- ./wrapper -->
+<!-- ./app-wrapper -->
 <script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>
 
 <div id="advanced-info-data" style="display: none;" data-starttime="<?=starttime?>" data-endtime="<?=mg.time(true)?>" data-client-ip="<?=mg.request_info.remote_addr?>" data-xff="<?=x_forwarded_for?>"></div>

@@ -309,10 +309,9 @@ td.lookatme {
   cursor: pointer; /* Pointer cursor only for clickable items */
 }
 
-/* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
-.sidebar-menu > li > a > .fab,
-.sidebar-menu > li > a > .far,
-.sidebar-menu > li > a > .fas {
+.sidebar-menu > li > a > .nav-icon.fab,
+.sidebar-menu > li > a > .nav-icon.far,
+.sidebar-menu > li > a > .nav-icon.fas {
   width: 20px;
 }
 
@@ -387,6 +386,12 @@ td.lookatme {
   margin-right: 3px;
 }
 
+/* AdminLTE 4 only knows how to hide nav-link text in mini/collapsed sidebar
+   mode; the user-panel is pi-hole's own block, so it needs the same rule. */
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .info {
+  display: none;
+}
+
 .row-centered > div[class^="col-"] {
   display: inline-block;
   float: none;
@@ -416,13 +421,7 @@ tfoot.add-new-item > tr > th {
   max-height: 400px;
 }
 
-/*Work around code that expects icon fonts rather than SVG.
-  Newer versions of AdminLTE have support for SVG icons,
-  https://github.com/ColorlibHQ/AdminLTE/pull/2920
-  so this code will only be needed temporarily. */
-
-.sidebar-menu li > a > .fa-angle-left,
-.sidebar-menu li > a > .pull-right-container > .fa-angle-left {
+.sidebar-menu li > a > .nav-arrow.fa-angle-left {
   height: 1em;
 }
 
@@ -442,30 +441,36 @@ tfoot.add-new-item > tr > th {
   background: #367fa9;
 }
 
+/* AdminLTE 4 no longer ships a default mini/full logo swap for the header
+   (that concept now only exists for the sidebar-brand), so we provide it. */
+.app-header .logo-mini {
+  display: none;
+}
+
 /* Hide the "Ph" and move the toggle to the left */
-.sidebar-mini.sidebar-collapse .main-header .logo {
+.sidebar-mini.sidebar-collapse .app-header .logo {
   width: 0;
   position: absolute;
 }
-.sidebar-mini.sidebar-collapse .main-header .logo-mini {
+.sidebar-mini.sidebar-collapse .app-header .logo-mini {
   visibility: hidden;
 }
-.sidebar-mini.sidebar-collapse .main-header .navbar {
+.sidebar-mini.sidebar-collapse .app-header .navbar {
   margin-left: 0;
 }
 
-.sidebar-menu > li.header {
+.sidebar-menu > li.nav-header {
   color: transparent;
   padding: 5px;
 }
 
-.main-header .navbar .nav > li.user > a > .fa,
-.main-header .navbar .nav > li.user > a > .glyphicon,
-.main-header .navbar .nav > li.user > a > .ion {
+.app-header .navbar .nav > li.user > a > .fa,
+.app-header .navbar .nav > li.user > a > .glyphicon,
+.app-header .navbar .nav > li.user > a > .ion {
   margin-right: 0;
 }
 
-.box {
+.card {
   border-radius: 8px;
   overflow: hidden;
 }
@@ -513,7 +518,14 @@ tfoot.add-new-item > tr > th {
   font-size: 13px;
 }
 
+/* AdminLTE 4 dropped its font-icon corner icon (it now expects an inline SVG),
+   so pi-hole keeps styling its own Font Awesome version here. */
 .small-box .icon {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  color: rgba(0, 0, 0, 0.15);
   font-size: 76px;
   z-index: -1; /* sends the icon behind the text */
 }
@@ -663,7 +675,7 @@ td.details-control {
   margin: 0;
 }
 
-.treeview-menu .warning-count {
+.nav-treeview .warning-count {
   margin-right: 0;
   font-size: 10px;
 }
@@ -673,7 +685,7 @@ td.details-control {
 }
 
 /* hide submenu warning count during animation */
-li:not(.menu-open) .treeview-menu .warning-count {
+li:not(.menu-open) .nav-treeview .warning-count {
   display: none;
 }
 
@@ -1295,7 +1307,7 @@ table.dataTable tbody > tr > .selected {
   display: none;
 }
 
-.main-footer {
+.app-footer {
   padding-bottom: 0px;
 }
 

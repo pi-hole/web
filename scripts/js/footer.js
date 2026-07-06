@@ -661,7 +661,7 @@ $("#pihole-disable-5m").on("click", e => {
 $("#pihole-disable-custom").on("click", e => {
   e.preventDefault();
   let custVal = $("#customTimeout").val();
-  custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
+  custVal = $("#selMin").is(":checked") ? custVal * 60 : custVal;
   piholeChange("disable", custVal);
 });
 

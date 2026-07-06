@@ -902,8 +902,8 @@ $(() => {
         maintainAspectRatio: true,
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color"),
-            hoverBorderColor: $(".box").css("background-color"),
+            borderColor: $(".card").css("background-color"),
+            hoverBorderColor: $(".card").css("background-color"),
             hoverOffset: 10,
           },
         },
@@ -953,8 +953,8 @@ $(() => {
         maintainAspectRatio: true,
         elements: {
           arc: {
-            borderColor: $(".box").css("background-color"),
-            hoverBorderColor: $(".box").css("background-color"),
+            borderColor: $(".card").css("background-color"),
+            hoverBorderColor: $(".card").css("background-color"),
             hoverOffset: 10,
           },
         },
@@ -998,5 +998,8 @@ window.addEventListener("resize", () => {
 
 // Tooltips
 $(() => {
-  $('[data-toggle="tooltip"]').tooltip({ html: true, container: "body" });
+  for (const el of document.querySelectorAll('[data-bs-toggle="tooltip"]')) {
+    // eslint-disable-next-line no-new
+    new bootstrap.Tooltip(el, { html: true, container: "body" });
+  }
 });

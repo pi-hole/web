@@ -95,11 +95,11 @@ is_authenticated = mg.request_info.is_authenticated
 <? end ?>
 
     <!-- Common styles -->
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
+    <!-- AdminLTE.min.css already bundles Bootstrap 5, so no separate Bootstrap CSS is needed -->
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
 <? if is_authenticated then ?>
     <? if startsWith(scriptname, 'groups') then ?>
@@ -129,7 +129,7 @@ is_authenticated = mg.request_info.is_authenticated
 
     <!-- scripts -->
     <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
