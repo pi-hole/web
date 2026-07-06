@@ -423,10 +423,11 @@ tfoot.add-new-item > tr > th {
 
 /* Pi-hole's webserver sends a strict CSP with img-src 'self', which blocks
    the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
-   normally ship with for checkboxes/radios, the modal close button, and the
-   select2 dropdown arrow. Re-host those exact icons as local files and point
-   the same CSS custom properties (or, for select2, the same rule) at them
-   instead - this changes nothing visually, only where the icon loads from.
+   normally ship with for checkboxes/radios, the modal close button, select
+   dropdown arrows, and the select2 dropdown arrow. Re-host those exact icons
+   as local files and point the same CSS custom properties (or, for select2,
+   the same rule) at them instead - this changes nothing visually, only where
+   the icon loads from.
 
    Note: a url() stored in a custom property resolves relative to the
    stylesheet that consumes it via var() - here that's always
@@ -443,6 +444,12 @@ tfoot.add-new-item > tr > th {
 }
 .btn-close {
   --bs-btn-close-bg: url("../../style/icons/btn-close.svg");
+}
+.form-select {
+  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow.svg");
+}
+[data-bs-theme="dark"] .form-select {
+  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow-dark.svg");
 }
 
 /* Tom Select "Select all / Select none" actions, injected above the
