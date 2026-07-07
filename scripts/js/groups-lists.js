@@ -27,6 +27,7 @@ function format(data) {
   // Generate human-friendly status string
   const statusText = setStatusText(data, true);
   let numbers = true;
+  // eslint-disable-next-line unicorn/prefer-ternary
   if (data.status === 0 || data.status === 4) {
     numbers = false;
   }
@@ -42,17 +43,13 @@ function format(data) {
         ")"
       : "N/A";
   const numberOfEntries =
-    (data.number !== null && numbers === true
-      ? Number.parseInt(data.number, 10).toLocaleString()
-      : "N/A") +
-    (data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true
-      ? " (out of which " +
-        Number.parseInt(data.abp_entries, 10).toLocaleString() +
-        " are in ABP-style)"
+    (data.number !== null && numbers === true ? Math.trunc(data.number).toLocaleString() : "N/A") +
+    (data.abp_entries !== null && Math.trunc(data.abp_entries) > 0 && numbers === true
+      ? " (out of which " + Math.trunc(data.abp_entries).toLocaleString() + " are in ABP-style)"
       : "");
   const nonDomains =
     data.invalid_domains !== null && numbers === true
-      ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
+      ? Math.trunc(data.invalid_domains).toLocaleString()
       : "N/A";
 
   return `<table>
@@ -87,7 +84,7 @@ function format(data) {
 
 // Define the status icon element
 function setStatusIcon(data) {
-  const statusCode = Number.parseInt(data.status, 10);
+  const statusCode = Math.trunc(data.status);
   const statusTitle = setStatusText(data) + "\nClick for details about this list";
   let statusIcon;
 
@@ -117,7 +114,7 @@ function setStatusText(data, showdetails = false) {
   let statusText = "Unknown";
   let statusDetails = "";
   if (data.status !== null) {
-    switch (Number.parseInt(data.status, 10)) {
+    switch (Math.trunc(data.status)) {
       case 0:
         statusText =
           data.enabled === 0
@@ -144,8 +141,7 @@ function setStatusText(data, showdetails = false) {
 
       default:
         statusText = "Unknown";
-        statusDetails =
-          ' (<span class="list-status-0">' + Number.parseInt(data.status, 10) + "</span>)";
+        statusDetails = ' (<span class="list-status-0">' + Math.trunc(data.status) + "</span>)";
         break;
     }
   }
@@ -221,8 +217,9 @@ function initTable() {
       let statusCode = 0;
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
+      // eslint-disable-next-line unicorn/prefer-ternary
       if (data.status !== null && data.enabled) {
-        statusCode = Number.parseInt(data.status, 10);
+        statusCode = Math.trunc(data.status);
       }
 
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
@@ -337,7 +334,7 @@ function initTable() {
         );
 
       // Highlight row (if url parameter "listid=" is used)
-      if ("listid" in GETDict && data.id === Number.parseInt(GETDict.listid, 10)) {
+      if ("listid" in GETDict && data.id === Math.trunc(GETDict.listid)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -424,15 +421,14 @@ function initTable() {
       return data;
     },
     initComplete() {
-      if ("listid" in GETDict) {
-        const pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(Number.parseInt(GETDict.listid, 10));
-        if (pos !== -1) {
-          const page = Math.floor(pos / table.page.info().length);
-          table.page(page).draw(false);
-        }
+      if (!("listid" in GETDict)) {
+        return;
+      }
+
+      const pos = table.column(0, { order: "current" }).data().indexOf(Math.trunc(GETDict.listid));
+      if (pos !== -1) {
+        const page = Math.floor(pos / table.page.info().length);
+        table.page(page).draw(false);
       }
     },
   });
