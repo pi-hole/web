@@ -27,7 +27,6 @@ function format(data) {
   // Generate human-friendly status string
   const statusText = setStatusText(data, true);
   let numbers = true;
-  // eslint-disable-next-line unicorn/prefer-ternary
   if (data.status === 0 || data.status === 4) {
     numbers = false;
   }
@@ -217,7 +216,6 @@ function initTable() {
       let statusCode = 0;
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
-      // eslint-disable-next-line unicorn/prefer-ternary
       if (data.status !== null && data.enabled) {
         statusCode = Math.trunc(data.status);
       }

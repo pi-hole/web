@@ -420,7 +420,6 @@ function formatInfo(data) {
 
   // Show long-term database information if applicable
   let dbInfo = "";
-  // eslint-disable-next-line unicorn/prefer-ternary
   if (data.dbid !== false) {
     dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
   }

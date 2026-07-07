@@ -73,6 +73,7 @@ module.exports = defineConfig([
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
       "unicorn/prefer-string-raw": "off",
+      "unicorn/prefer-ternary": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/switch-case-braces": "off",
     },
