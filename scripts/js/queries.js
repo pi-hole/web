@@ -420,6 +420,7 @@ function formatInfo(data) {
 
   // Show long-term database information if applicable
   let dbInfo = "";
+  // eslint-disable-next-line unicorn/prefer-ternary
   if (data.dbid !== false) {
     dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
   }
@@ -475,7 +476,7 @@ function addSelectSuggestion(name, dict, data) {
   obj.append($("<option />"));
 
   // Add GET parameter as first suggestion (if present and not already included)
-  if (name in dict) {
+  if (dict[name] === true) {
     value = decodeURIComponent(dict[name]);
     if (!data.includes(value)) {
       data.unshift(value);
@@ -488,7 +489,7 @@ function addSelectSuggestion(name, dict, data) {
   }
 
   // Select GET parameter (if present)
-  if (name in dict) {
+  if (dict[name] === true) {
     obj.val(value);
   }
 }
@@ -511,16 +512,17 @@ function parseFilters() {
 
 function filterOn(param, dict) {
   const typ = typeof dict[param];
-  return param in dict && (typ === "number" || (typ === "string" && dict[param].length > 0));
+  return dict[param] && (typ === "number" || (typ === "string" && dict[param].length > 0));
 }
 
-function getAPIURL(filters) {
+function getAPIURL(queryFilters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
-  for (const [key, filter] of Object.entries(filters)) {
-    if (filterOn(key, filters)) {
+  for (const [key, filter] of Object.entries(queryFilters)) {
+    if (filterOn(key, queryFilters)) {
       if (!apiurl.endsWith("?")) {
         apiurl += "&";
       }
+
       apiurl += `${key}=${encodeURIComponent(filter)}`;
     }
   }
@@ -531,6 +533,7 @@ function getAPIURL(filters) {
   if (from > beginningOfTime) {
     apiurl += "&from=" + from;
   }
+
   if (until > beginningOfTime && until < endOfTime) {
     apiurl += "&until=" + until;
   }
@@ -652,6 +655,7 @@ $(() => {
       if (state) {
         state.length = state.length === -1 ? 25 : state.length;
       }
+
       return state;
     },
     rowCallback(row, data) {
@@ -719,7 +723,8 @@ $(() => {
       }
     },
     initComplete() {
-      this.api()
+      //eslint-disable-next-line no-void
+      void this.api()
         .columns()
         .every(function () {
           // Skip columns that are not searchable
@@ -766,13 +771,13 @@ $(() => {
 
   // Add event listener for opening and closing details, except on rows with "details-row" class
   $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
-    const tr = $(this);
-    const row = table.row(tr);
-
-    if (globalThis.getSelection().toString().length > 0) {
+    if (getSelection().toString().length > 0) {
       // This event was triggered by a selection, so don't open the row
       return;
     }
+
+    const tr = $(this);
+    const row = table.row(tr);
 
     if (row.child.isShown()) {
       // This row is already open - close it
@@ -807,9 +812,9 @@ function refreshTable() {
   table.clear();
 
   // Source data from API
-  const filters = parseFilters();
-  filters.from = from;
-  filters.until = until;
-  const apiUrl = getAPIURL(filters);
+  const activeFilters = parseFilters();
+  activeFilters.from = from;
+  activeFilters.until = until;
+  const apiUrl = getAPIURL(activeFilters);
   table.ajax.url(apiUrl).draw();
 }
