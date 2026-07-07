@@ -267,7 +267,7 @@ function parseStaticDHCPLine(line) {
 
   for (const part of parts) {
     // Advanced if the part is "infinite", "ignore" or a lease time value
-    if (/^(infinite|ignore|\d+([DHMSWdhmsw]))$/u.test(part)) {
+    if (/^(?:infinite|ignore|\d+[DHMSWdhmsw])$/u.test(part)) {
       return "advanced";
     }
 
@@ -317,7 +317,7 @@ function parseStaticDHCPLine(line) {
 
 // Save button for each row updates only that line in the textarea
 $(document).on("click", ".save-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const row = $(`tr[data-row="${rowIdx}"]`);
   const hwaddr = row.find(".static-hwaddr").text().trim();
   const ipaddr = row.find(".static-ipaddr").text().trim();
@@ -363,7 +363,7 @@ $(document).on("click", ".save-static-row", function () {
 
 // Cancel button: restores the original line value when editing a row
 $(document).on("click", ".cancel-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const row = $(`tr[data-row="${rowIdx}"]`);
 
   // Get the original values
@@ -399,7 +399,7 @@ $(document).on("click", ".cancel-static-row", function () {
 
 // Delete button for each row removes that line from the textarea and updates the table
 $(document).on("click", ".delete-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   lines.splice(rowIdx, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
@@ -410,7 +410,7 @@ $(document).on("click", ".delete-static-row", function () {
 
 // Add button for each row inserts a new empty line after this row
 $(document).on("click", ".add-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   lines.splice(rowIdx + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
@@ -436,6 +436,7 @@ $(() => {
     if ($("#StaticDHCPTable .save-static-row").length > 0) {
       return;
     }
+
     renderStaticDHCPTable();
   });
 });
@@ -571,15 +572,18 @@ function updateLineNumbers(force) {
   if (!textarea || !linesElem) {
     return;
   }
+
   const lines = textarea.value.split("\n").length || 1;
   if (!force && lines === updateLineNumbers.lastLineCount) {
     return;
   }
+
   updateLineNumbers.lastLineCount = lines;
   let html = "";
   for (let i = 1; i <= lines; i++) {
     html += i + "<br>";
   }
+
   linesElem.innerHTML = html;
   // Apply the same styles to the lines element as the textarea
   for (const property of [
@@ -590,7 +594,7 @@ function updateLineNumbers(force) {
     "lineHeight",
     "padding",
   ]) {
-    linesElem.style[property] = globalThis.getComputedStyle(textarea)[property];
+    linesElem.style[property] = getComputedStyle(textarea)[property];
   }
 
   // Update "--num-lines" variable and let CSS handle the height
