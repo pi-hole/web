@@ -143,12 +143,12 @@ function saveSettings() {
 
     // If this is an integer number, parse it accordingly
     if ($(this).data("type") === "integer") {
-      value = Math.trunc(value);
+      value = value === "" ? NaN : Math.trunc(value);
     }
 
     // If this is a floating point value, parse it accordingly
     if ($(this).data("type") === "float") {
-      value = Number(value);
+      value = value === "" ? NaN : Number(value);
     }
 
     // Build deep object

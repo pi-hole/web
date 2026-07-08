@@ -92,7 +92,9 @@ $("#GETTeleporter").on("click", () => {
       const url = URL.createObjectURL(data);
 
       a.href = url;
-      a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="[^"]*"/u)[1];
+      a.download = xhr
+        .getResponseHeader("Content-Disposition")
+        .match(/filename="(?<filename>[^"]*)"/u).groups.filename;
       document.body.append(a);
       a.click();
       a.remove();

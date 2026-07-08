@@ -106,7 +106,10 @@ function doLogin(password) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ password, totp: Math.trunc($("#totp").val()) }),
+    data: JSON.stringify({
+      password,
+      totp: $("#totp").val() === "" ? NaN : Math.trunc($("#totp").val()),
+    }),
   })
     .done(data => {
       wrongPassword(false, true, data);

@@ -24,7 +24,7 @@ module.exports = defineConfig([
     ignores: ["**/vendor/**"],
     rules: {
       "@stylistic/spaced-comment": "off",
-      camelcase: [
+      "camelcase": [
         "error",
         {
           properties: "never",
@@ -53,7 +53,7 @@ module.exports = defineConfig([
         },
       ],
       // This should be reverted to "error" later
-      strict: ["error", "global"],
+      "strict": ["error", "global"],
       "regexp/sort-character-class-elements": "off",
       "regexp/prefer-d": "off",
       "regexp/prefer-question-quantifier": "off",
@@ -83,9 +83,11 @@ module.exports = defineConfig([
   //  - enforce double quotes
   //  - disable no-mixed-operators because it conflicts with Prettier's formatting
   {
+    files: ["**/*.js"],
     rules: {
       "@stylistic/quotes": ["error", "double", { avoidEscape: true}],
       "@stylistic/no-mixed-operators": "off",
+      "jsdoc/require-asterisk-prefix": ["error", "always"],
     },
   },
 ]);

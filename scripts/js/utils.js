@@ -20,10 +20,10 @@ $(() => {
 });
 
 /**
-Decode a base64 string to UTF-8 text using native browser APIs
-This is the replacement for the deprecated atob() function
-@param {string} base64 - Base64 encoded string
-@returns {string} Decoded UTF-8 string
+ * Decode a base64 string to UTF-8 text using native browser APIs
+ * This is the replacement for the deprecated atob() function
+ * @param {string} base64 - Base64 encoded string
+ * @returns {string} Decoded UTF-8 string
  */
 function base64ToString(base64) {
   // Remove padding and whitespace
@@ -812,10 +812,10 @@ function setInter(func, interval) {
 }
 
 /**
-Toggle or set the collapse state of a box element
-@param {HTMLElement} box - The box element
-@param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
-*/
+ * Toggle or set the collapse state of a box element
+ * @param {HTMLElement} box - The box element
+ * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
+ */
 // Not using the AdminLTE API so that the expansion is not animated
 // Otherwise, we could use `$(customBox).boxWidget("expand")`
 function toggleBoxCollapse(box, expand = true) {

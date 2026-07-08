@@ -475,7 +475,7 @@ function addSelectSuggestion(name, dict, data) {
   obj.append($("<option />"));
 
   // Add GET parameter as first suggestion (if present and not already included)
-  if (dict[name] === true) {
+  if (Object.hasOwn(dict, name)) {
     value = decodeURIComponent(dict[name]);
     if (!data.includes(value)) {
       data.unshift(value);
@@ -488,7 +488,7 @@ function addSelectSuggestion(name, dict, data) {
   }
 
   // Select GET parameter (if present)
-  if (dict[name] === true) {
+  if (Object.hasOwn(dict, name)) {
     obj.val(value);
   }
 }

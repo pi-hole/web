@@ -258,7 +258,8 @@ $(() => {
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
     let elem = $("#Cdomain").val().trim() + "," + $("#Ctarget").val().trim();
-    const ttlVal = Math.trunc($("#Cttl").val());
+    const ttlInput = $("#Cttl").val();
+    const ttlVal = ttlInput === "" ? NaN : Math.trunc(ttlInput);
     // TODO Fix eslint
     // eslint-disable-next-line unicorn/prefer-number-properties
     if (isFinite(ttlVal) && ttlVal >= 0) {
