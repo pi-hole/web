@@ -67,6 +67,7 @@ module.exports = defineConfig([
       "unicorn/max-nested-calls": "off",
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
+      "unicorn/no-global-object-property-assignment": "off",
       "unicorn/no-negated-condition": "off",
       "unicorn/prefer-minimal-ternary": "off",
       "unicorn/prefer-module": "off",

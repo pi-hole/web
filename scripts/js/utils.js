@@ -837,7 +837,7 @@ function toggleBoxCollapse(box, expand = true) {
   }
 }
 
-const utils = (function () {
+globalThis.utils = (function () {
   return {
     escapeHtml,
     unescapeHtml,
@@ -882,9 +882,3 @@ const utils = (function () {
     base64ToString,
   };
 })();
-
-Object.defineProperty(globalThis, "utils", {
-  value: utils,
-  writable: true,
-  configurable: true,
-});

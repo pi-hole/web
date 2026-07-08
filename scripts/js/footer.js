@@ -9,6 +9,8 @@
 
 "use strict";
 
+globalThis._isLoginPage = false;
+
 const REFRESH_INTERVAL = {
   logs: 500, // 0.5 sec (logs page)
   summary: 1000, // 1 sec (dashboard)
@@ -608,11 +610,7 @@ function updateVersionInfo() {
 }
 
 $(() => {
-  const isLoginPage = $("#loginform").length > 0;
-
-  if (!isLoginPage) {
-    updateInfo();
-  }
+  if (!globalThis._isLoginPage) updateInfo();
 
   const enaT = $("#enableTimer");
   const target = new Date(Math.trunc(enaT.text()));
@@ -628,7 +626,7 @@ $(() => {
   // Apply icheckbox/iradio style
   applyCheckboxRadioStyle();
 
-  if (!isLoginPage) {
+  if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
     // ... and then periodically

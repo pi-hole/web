@@ -9,6 +9,8 @@
 
 "use strict";
 
+globalThis._isLoginPage = true;
+
 function redirect() {
   // Login succeeded or not needed (empty password)
   // Default: Send back to dashboard
