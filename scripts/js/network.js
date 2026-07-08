@@ -51,10 +51,12 @@ function mixColors(ratio, rgb1, rgb2) {
 }
 
 function parseColor(input) {
-  const match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/iu);
+  const match = input.match(
+    /^rgb\s*\(\s*(?<red>\d+)\s*,\s*(?<green>\d+)\s*,\s*(?<blue>\d+)\s*\)$/iu
+  );
 
   if (match) {
-    return [match[1], match[2], match[3]];
+    return [match.groups.red, match.groups.green, match.groups.blue];
   }
 }
 
@@ -97,7 +99,7 @@ $(() => {
     rowCallback(row, data) {
       let color;
       let iconClasses;
-      const lastQuery = Number.parseInt(data.lastQuery, 10);
+      const lastQuery = Math.trunc(data.lastQuery);
       const diff = getTimestamp() - lastQuery;
       const networkRecent = $(".network-recent").css("background-color");
       const networkOld = $(".network-old").css("background-color");
@@ -156,7 +158,7 @@ $(() => {
         let iptext = ip;
 
         if (name !== null && name.length > 0) {
-          iptext = `${iptext} (${name})`;
+          iptext += ` (${name})`;
         }
 
         iptitles.push(iptext);
