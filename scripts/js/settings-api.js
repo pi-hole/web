@@ -156,7 +156,7 @@ $(() => {
           const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(Number.parseInt($(this).attr("data-id"), 10));
+            ids.push(Math.trunc($(this).attr("data-id")));
           });
           // Delete all selected rows at once
           deleteMultipleSessions(ids);
@@ -200,7 +200,7 @@ $(() => {
 function deleteThisSession() {
   // This function is called when a red trash button is clicked
   // We get the ID of the current item from the data-del-id attribute
-  const thisID = Number.parseInt($(this).attr("data-del-id"), 10);
+  const thisID = Math.trunc($(this).attr("data-del-id"));
   deleted = 0;
   deleteOneSession(thisID, 1, false);
 }
@@ -216,13 +216,13 @@ function deleteMultipleSessions(ids) {
 
   // Exploit prevention: return early for non-numeric IDs
   for (const id of ids) {
-    if (!Number.isInteger(id)) {
+    if (!Number.isSafeInteger(id)) {
       return;
     }
   }
 
   // Convert all ids to integers
-  ids = ids.map(value => Number.parseInt(value, 10));
+  ids = ids.map(value => Math.trunc(value));
 
   // Check if own session is selected and remove it when deleting multiple
   // We need this only when multiple sessions are removed to ensure we do not
@@ -421,7 +421,7 @@ $("#totp_code").on("paste", event => {
 });
 
 $("#totp_code").on("keyup", function () {
-  const code = Number.parseInt($(this).val(), 10);
+  const code = Math.trunc($(this).val());
   if (TOTPdata.codes.includes(code)) {
     $("#totp_div").removeClass("has-error");
     $("#totp_div").addClass("has-success");
