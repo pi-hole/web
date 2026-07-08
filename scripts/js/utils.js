@@ -291,20 +291,26 @@ function validateIPv6Brackets(ip) {
 
 function validatePort(port) {
   // Ports containing spaces are not valid
-  if (port.trim() !== port) return false;
+  if (port.trim() !== port) {
+    return false;
+  }
 
   // Check if the port is an integer and within the valid network port range
   const portNum = Number(port);
-  return Number.isInteger(portNum) && portNum >= 1 && portNum <= 65_535;
+  return Number.isSafeInteger(portNum) && portNum >= 1 && portNum <= 65_535;
 }
 
 function validateIPv4WithPort(ip) {
   // The port is optional
   // If no "#" is present, validate just the IP
-  if (!ip.includes("#")) return validateIPv4(ip);
+  if (!ip.includes("#")) {
+    return validateIPv4(ip);
+  }
 
   const parts = ip.split("#");
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) {
+    return false;
+  }
 
   const [ipv4, port] = parts;
 
@@ -315,10 +321,14 @@ function validateIPv4WithPort(ip) {
 function validateIPv6WithPort(ip) {
   // The port is optional
   // If no "#" is present, validate just the IP
-  if (!ip.includes("#")) return validateIPv6(ip);
+  if (!ip.includes("#")) {
+    return validateIPv6(ip);
+  }
 
   const parts = ip.split("#");
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) {
+    return false;
+  }
 
   const [ipv6, port] = parts;
 
