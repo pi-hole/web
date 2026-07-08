@@ -130,7 +130,7 @@ function parseLines(outputElement, text) {
         return closingTags;
       }
 
-      if (ansiMappings[match] === true) {
+      if (Object.hasOwn(ansiMappings, match)) {
         // Opening span
         spanCount++;
         return `<span class="${ansiMappings[match]}">`;

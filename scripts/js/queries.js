@@ -510,8 +510,12 @@ function parseFilters() {
 }
 
 function filterOn(param, dict) {
+  if (!Object.hasOwn(dict, param)) {
+    return false;
+  }
+
   const typ = typeof dict[param];
-  return dict[param] && (typ === "number" || (typ === "string" && dict[param].length > 0));
+  return typ === "number" || (typ === "string" && dict[param].length > 0);
 }
 
 function getAPIURL(queryFilters) {

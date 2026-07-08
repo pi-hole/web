@@ -121,7 +121,7 @@ function findMasterInterface({ iface, masterInterfaces, interfacesData }) {
   }
 
   const masterName = masterObj.name;
-  if (masterInterfaces[masterName] === true) {
+  if (Array.isArray(masterInterfaces[masterName])) {
     masterInterfaces[masterName].push(iface.name);
   } else {
     masterInterfaces[masterName] = [iface.name];
@@ -485,7 +485,7 @@ function sortInterfaces(interfaces, masterInterfaces) {
 
   // Add slave interfaces next to master interfaces
   for (const master of interfaceList) {
-    if (masterInterfaces[master] === true) {
+    if (Array.isArray(masterInterfaces[master])) {
       for (const slave of masterInterfaces[master]) {
         ifaces.splice(ifaces.indexOf(slave), 1);
         interfaceList.splice(interfaceList.indexOf(master) + 1, 0, slave);
