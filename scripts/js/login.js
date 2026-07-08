@@ -106,7 +106,7 @@ function doLogin(password) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ password, totp: Number.parseInt($("#totp").val(), 10) }),
+    data: JSON.stringify({ password, totp: Math.trunc($("#totp").val()) }),
   })
     .done(data => {
       wrongPassword(false, true, data);
@@ -205,6 +205,7 @@ $(() => {
       if (data.https_port !== 443) {
         url += ":" + data.https_port;
       }
+
       url += location.pathname + location.search + location.hash;
 
       $("#https-link").attr("href", url);

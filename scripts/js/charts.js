@@ -351,6 +351,7 @@ function positionTooltip(tooltipEl, tooltip, context) {
         } else if (tooltip.xAlign === "right") {
           tooltipX -= arrowSize;
         }
+
         break;
       }
 

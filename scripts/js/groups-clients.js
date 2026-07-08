@@ -54,6 +54,7 @@ function reloadClientSuggestions() {
           if (extraInfo.length > 0) {
             extraInfo += "; ";
           }
+
           extraInfo += "vendor: " + utils.escapeHtml(client.macVendor);
         }
 
@@ -63,6 +64,7 @@ function reloadClientSuggestions() {
           if (extraInfo.length > 0) {
             extraInfo += "; ";
           }
+
           // Count number of "," in client.addresses to determine number of addresses
           const numAddresses = client.addresses.split(",").length;
           const pluralAddresses = numAddresses > 1 ? "es" : "";

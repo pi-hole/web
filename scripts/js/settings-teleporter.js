@@ -61,8 +61,8 @@ function importZIP() {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
         let text = "<p>Processed files:</p><ul>";
-        for (const file of data.files) {
-          text += "<li>" + utils.escapeHtml(file) + "</li>";
+        for (const importedFile of data.files) {
+          text += "<li>" + utils.escapeHtml(importedFile) + "</li>";
         }
 
         text += "</ul>";
@@ -92,7 +92,7 @@ $("#GETTeleporter").on("click", () => {
       const url = URL.createObjectURL(data);
 
       a.href = url;
-      a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/u)[1];
+      a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="[^"]*"/u)[1];
       document.body.append(a);
       a.click();
       a.remove();

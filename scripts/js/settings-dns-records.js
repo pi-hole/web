@@ -258,12 +258,13 @@ $(() => {
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
     let elem = $("#Cdomain").val().trim() + "," + $("#Ctarget").val().trim();
-    const ttlVal = Number.parseInt($("#Cttl").val(), 10);
+    const ttlVal = Math.trunc($("#Cttl").val());
     // TODO Fix eslint
     // eslint-disable-next-line unicorn/prefer-number-properties
     if (isFinite(ttlVal) && ttlVal >= 0) {
       elem += "," + ttlVal;
     }
+
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);

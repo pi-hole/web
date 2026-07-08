@@ -83,17 +83,17 @@ function getData() {
   }
 
   const queryParams = utils.parseQueryString();
-  const outputElement = document.getElementById("output");
-  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
-
   // Check if file parameter exists
   if (!queryParams.file) {
     // Add default file parameter and redirect
     const url = new URL(location.href);
     url.searchParams.set("file", "dnsmasq");
-    location.assign(url.toString());
+    location.assign(url.href);
     return;
   }
+
+  const outputElement = document.getElementById("output");
+  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
 
   // Validate that file parameter is one of the allowed values
   if (!allowedFileParams.includes(queryParams.file)) {
@@ -255,7 +255,7 @@ document.getElementById("output").addEventListener(
 
     const { scrollHeight, clientHeight, scrollTop } = output;
     // Add a tolerance of four line heights
-    const tolerance = 4 * Number.parseFloat(getComputedStyle(output).lineHeight);
+    const tolerance = 4 * Number(getComputedStyle(output).lineHeight);
 
     // Determine if the output is scrolled to the bottom within the tolerance
     const isAtBottom = scrollHeight - clientHeight - scrollTop <= tolerance;

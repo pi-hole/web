@@ -116,8 +116,8 @@ function parseLines(outputElement, text) {
     };
 
     // Create a regex that matches all ANSI codes (including reset)
-    /* eslint-disable-next-line no-control-regex */
-    const ansiRegex = /(\u{1B}\[(?:1|90|91|32|33|94|95|96|0)m)/gu;
+    /* eslint-disable-next-line regexp/no-control-character, no-control-regex */
+    const ansiRegex = /\u{1B}\[(?:1|90|91|32|33|94|95|96|0)m/gu;
 
     // Process the line sequentially, replacing ANSI codes with their corresponding HTML spans
     // we use a counter to keep track of how many spans are open and close the correct number of spans when we encounter a reset code
@@ -130,7 +130,7 @@ function parseLines(outputElement, text) {
         return closingTags;
       }
 
-      if (ansiMappings[match]) {
+      if (ansiMappings[match] === true) {
         // Opening span
         spanCount++;
         return `<span class="${ansiMappings[match]}">`;

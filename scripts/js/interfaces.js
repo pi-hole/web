@@ -121,7 +121,7 @@ function findMasterInterface({ iface, masterInterfaces, interfacesData }) {
   }
 
   const masterName = masterObj.name;
-  if (masterName in masterInterfaces) {
+  if (masterInterfaces[masterName] === true) {
     masterInterfaces[masterName].push(iface.name);
   } else {
     masterInterfaces[masterName] = [iface.name];
@@ -485,7 +485,7 @@ function sortInterfaces(interfaces, masterInterfaces) {
 
   // Add slave interfaces next to master interfaces
   for (const master of interfaceList) {
-    if (master in masterInterfaces) {
+    if (masterInterfaces[master] === true) {
       for (const slave of masterInterfaces[master]) {
         ifaces.splice(ifaces.indexOf(slave), 1);
         interfaceList.splice(interfaceList.indexOf(master) + 1, 0, slave);
@@ -514,6 +514,27 @@ function renderTreeView(json) {
   document.getElementById("spinner").classList.add("d-none");
 }
 
+function expandGatewayInterfaceDiv(div, gw) {
+  if (!div.textContent.includes(gw)) {
+    return;
+  }
+
+  div.classList.remove("collapsed");
+  const nextDiv = div.nextElementSibling;
+  if (nextDiv) {
+    $(nextDiv).collapse("show");
+  }
+
+  // Change expand icon to collapse icon
+  const icon = div.querySelector("i");
+  if (!icon) {
+    return;
+  }
+
+  icon.classList.remove("fa-angle-right");
+  icon.classList.add("fa-angle-down");
+}
+
 function expandGatewayInterfaces(gateways) {
   // Expand gateway interfaces by default
   const tree = document.getElementById("tree");
@@ -525,24 +546,7 @@ function expandGatewayInterfaces(gateways) {
     // Find all divs containing the gateway name
     const divs = tree.querySelectorAll("div");
     for (const div of divs) {
-      if (!div.textContent.includes(gw)) {
-        continue;
-      }
-
-      div.classList.remove("collapsed");
-      const nextDiv = div.nextElementSibling;
-      if (nextDiv) {
-        $(nextDiv).collapse("show");
-      }
-
-      // Change expand icon to collapse icon
-      const icon = div.querySelector("i");
-      if (!icon) {
-        continue;
-      }
-
-      icon.classList.remove("fa-angle-right");
-      icon.classList.add("fa-angle-down");
+      expandGatewayInterfaceDiv(div, gw);
     }
   }
 }

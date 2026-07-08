@@ -29,6 +29,7 @@ function updateCachePie(data) {
 
   // Compute total number of cache entries
   cacheEntries = 0;
+  //eslint-disable-next-line unicorn/prefer-object-iterable-methods
   for (const item of Object.keys(data)) {
     cacheEntries += data[item].valid;
     cacheEntries += data[item].stale;
