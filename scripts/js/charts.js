@@ -181,7 +181,10 @@ function getOrCreateTooltipElement(canvasId, options, context) {
 
   // Avoid browser's font-zoom since we know that <body>'s
   // font-size was set to 14px by Bootstrap's CSS
-  const fontZoom = Number(getComputedStyle(document.body).fontSize) / 14;
+  // Use Number.parseFloat to convert the line height from a string (like "16px") to a number
+  // Using Number only would return NaN if the string contains non-numeric characters
+  //eslint-disable-next-line unicorn/prefer-number-coercion
+  const fontZoom = Number.parseFloat(getComputedStyle(document.body).fontSize) / 14;
 
   // Set styles and font
   tooltipEl.style.cssText = `

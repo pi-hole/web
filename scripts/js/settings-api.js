@@ -421,8 +421,8 @@ $("#totp_code").on("paste", event => {
 });
 
 $("#totp_code").on("keyup", function () {
-  const code = Math.trunc($(this).val());
-  if (TOTPdata.codes.includes(code)) {
+  const code = $(this).val() === "" ? NaN : Math.trunc($(this).val());
+  if (Number.isFinite(code) && TOTPdata.codes.includes(code)) {
     $("#totp_div").removeClass("has-error");
     $("#totp_div").addClass("has-success");
     $("#totp_code").prop("disabled", true);

@@ -255,7 +255,10 @@ document.getElementById("output").addEventListener(
 
     const { scrollHeight, clientHeight, scrollTop } = output;
     // Add a tolerance of four line heights
-    const tolerance = 4 * Number(getComputedStyle(output).lineHeight);
+    // Use Number.parseFloat to convert the line height from a string (like "16px") to a number
+    // Using Number only would return NaN if the string contains non-numeric characters
+    //eslint-disable-next-line unicorn/prefer-number-coercion
+    const tolerance = 4 * Number.parseFloat(getComputedStyle(output).lineHeight);
 
     // Determine if the output is scrolled to the bottom within the tolerance
     const isAtBottom = scrollHeight - clientHeight - scrollTop <= tolerance;
