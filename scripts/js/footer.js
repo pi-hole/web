@@ -611,7 +611,6 @@ function updateVersionInfo() {
 
 $(() => {
   if (!globalThis._isLoginPage) updateInfo();
-
   const enaT = $("#enableTimer");
   const target = new Date(Math.trunc(enaT.text()));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);

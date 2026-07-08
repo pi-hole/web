@@ -14,6 +14,7 @@ function removeFromArray(arr, what) {
   let found = arr.indexOf(what);
 
   while (found !== -1) {
+    //eslint-disable-next-line unicorn/no-array-splice
     arr.splice(found, 1);
     found = arr.indexOf(what);
   }
@@ -72,7 +73,7 @@ function fillDNSupstreams(value, servers) {
   // Add event listener to checkboxes
   $("input[id^='DNSupstreams-']").on("change", () => {
     const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
-    let customServers = 0;
+    let customServerCount = 0;
     $("#DNSupstreamsTable input").each(function () {
       const title = $(this).closest("td").attr("title");
       if (this.checked && !upstreams.includes(title)) {
@@ -84,13 +85,13 @@ function fillDNSupstreams(value, servers) {
       }
 
       if (upstreams.includes(title)) {
-        customServers--;
+        customServerCount--;
       }
     });
     // The variable will contain a negative value, we need to add the length to
     // get the correct number of custom servers
-    customServers += upstreams.length;
-    updateDNSserversTextfield(upstreams, customServers);
+    customServerCount += upstreams.length;
+    updateDNSserversTextfield(upstreams, customServerCount);
   });
 
   // Initialize textfield
@@ -245,7 +246,9 @@ function createRevServerTable() {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("revServers-records-table");
       // Return if not available
-      if (data === null) return null;
+      if (data === null) {
+        return null;
+      }
 
       // Apply loaded state to table
       return data;
@@ -268,7 +271,9 @@ function addRevServer() {
   }
 
   // Domain is optional: if empty, remove it from the array
-  if (values[3] === "") values.pop();
+  if (values[3] === "") {
+    values.pop();
+  }
 
   // Add the new values to the textarea
   $(".revServers").val($(".revServers").val() + "\n" + values.join(","));
@@ -307,7 +312,9 @@ function saveRecord() {
   }
 
   // Domain is optional: if empty, remove it from the array
-  if (values[3] === "") values.pop();
+  if (values[3] === "") {
+    values.pop();
+  }
 
   // Get the values from the textarea
   const lines = getRevServerLines();
@@ -419,11 +426,11 @@ function saveRevServerData(msg) {
       const table = $("#revServers-table").DataTable();
       table.clear().rows.add(getRevServerArray()).draw();
     })
-    .fail((data, exception) => {
+    .fail((response, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      utils.showAlert("error", "", "Error while applying settings", response.responseText);
       console.log(exception); // eslint-disable-line no-console
-      apiFailure(data);
+      apiFailure(response);
     });
 }
 
