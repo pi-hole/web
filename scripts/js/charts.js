@@ -181,7 +181,7 @@ function getOrCreateTooltipElement(canvasId, options, context) {
 
   // Avoid browser's font-zoom since we know that <body>'s
   // font-size was set to 14px by Bootstrap's CSS
-  const fontZoom = Number.parseFloat(getComputedStyle(document.body).fontSize) / 14;
+  const fontZoom = Number(getComputedStyle(document.body).fontSize) / 14;
 
   // Set styles and font
   tooltipEl.style.cssText = `
@@ -348,8 +348,7 @@ function positionTooltip(tooltipEl, tooltip, context) {
         tooltipY -= tooltipHeight / 2;
         if (tooltip.xAlign === "left") {
           tooltipX += arrowSize;
-        }
-        if (tooltip.xAlign === "right") {
+        } else if (tooltip.xAlign === "right") {
           tooltipX -= arrowSize;
         }
         break;
