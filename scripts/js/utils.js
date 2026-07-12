@@ -823,7 +823,7 @@ function toggleBoxCollapse(box, expand = true) {
     return;
   }
 
-  const icon = box.querySelector(":scope > .btn-box-tool > i");
+  const icon = box.querySelector(":scope .btn-box-tool > i");
   const body = box.querySelector(".box-body");
 
   if (expand) {
