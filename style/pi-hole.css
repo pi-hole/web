@@ -66,6 +66,22 @@
   padding-top: 1rem;
 }
 
+/* DataTables renders its pager as a Bootstrap `.pagination` but no longer
+   right-aligns it, so it drifted to the middle of its column. Restore the
+   conventional right-aligned position. */
+.dataTables_wrapper ul.pagination,
+.dt-container ul.pagination,
+.card ul.pagination {
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
+/* AdminLTE 4's card title is 1.1rem, which looks oversized for the longer
+   headings on the settings pages. Nudge it down a touch. */
+.card-title {
+  font-size: 1rem;
+}
+
 /* Bootstrap 5 dropped `.btn-block`; restore it so buttons that are meant to
    fill their grid column (e.g. the settings "Actions" and gravity buttons)
    stretch to full width instead of collapsing to their intrinsic size. */
@@ -1157,26 +1173,43 @@ div.dt-buttons {
   }
 }
 
-/* Datatables Select - checkbox outline */
+/* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
+   draws the checkbox box itself (it only nudges the margin), so the outline was
+   invisible and the bulk-select column looked empty. Draw the box and the
+   checkmark here so the selection control is visible again. */
+table.dataTable tbody td.select-checkbox,
+table.dataTable tbody th.select-checkbox {
+  position: relative;
+}
+
 table.dataTable tbody td.select-checkbox::before,
 table.dataTable tbody th.select-checkbox::before {
-  border-color: currentColor;
-  border-radius: 2px;
-  border-width: 2px;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 13px;
   height: 13px;
+  margin-top: -7px;
+  margin-left: -7px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+  box-sizing: border-box;
 }
 
 table.dataTable tr.selected td.select-checkbox::after,
 table.dataTable tr.selected th.select-checkbox::after {
-  color: currentColor;
   content: "";
-  text-shadow: none;
-  border-bottom: 2px solid currentColor;
-  border-right: 2px solid currentColor;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 4px;
   height: 8px;
-  transform: rotate(45deg) translate(7px, 3px);
+  margin-top: -7px;
+  margin-left: -2px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
 }
 
 .datatable-bt {
