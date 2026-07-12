@@ -217,6 +217,27 @@ h5,
 h6 {
   color: inherit;
 }
+/* Bootstrap 5 / AdminLTE 4 colour the filled card headers through the
+   `--lte-card-variant-*` variables and use `.page-item`/`.page-link` markup,
+   neither of which this theme's older Bootstrap 3 rules match. Recolour them
+   here so the query-log "Advanced filtering" box and active pagination are not
+   left with Bootstrap's over-bright defaults. */
+.card-info {
+  --lte-card-variant-bg: rgb(37, 92, 105);
+  --lte-card-variant-bg-rgb: 37, 92, 105;
+  --lte-card-variant-color: rgb(232, 230, 227);
+  --lte-card-variant-color-rgb: 232, 230, 227;
+}
+.card-primary {
+  --lte-card-variant-bg: rgb(41, 98, 146);
+  --lte-card-variant-bg-rgb: 41, 98, 146;
+  --lte-card-variant-color: rgb(232, 230, 227);
+  --lte-card-variant-color-rgb: 232, 230, 227;
+}
+.page-item.active > .page-link {
+  background-color: rgb(41, 98, 146);
+  border-color: rgb(41, 98, 146);
+}
 .h1 .small,
 .h1 small,
 .h2 .small,

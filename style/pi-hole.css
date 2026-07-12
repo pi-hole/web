@@ -59,6 +59,13 @@
   margin-bottom: 1rem;
 }
 
+/* AdminLTE 4's `.app-content` has no vertical padding in this build, so page
+   content sits flush against the header. Add consistent top spacing so every
+   page has breathing room below the header. */
+.app-content {
+  padding-top: 1rem;
+}
+
 /* Bootstrap 5 dropped `.btn-block`; restore it so buttons that are meant to
    fill their grid column (e.g. the settings "Actions" and gravity buttons)
    stretch to full width instead of collapsing to their intrinsic size. */
@@ -412,13 +419,13 @@ td.lookatme {
 }
 
 .user-panel .image {
-  flex: 1 0 25%;
-  margin: 0 10px;
+  flex: 0 0 auto;
+  margin: 0 8px;
   text-align: center;
 }
 
 .user-panel > .image > img {
-  max-width: 60px;
+  max-width: 52px;
   min-width: 30px;
 }
 
@@ -428,7 +435,7 @@ td.lookatme {
   line-height: 1.05;
   flex: 1 1 auto;
   left: auto;
-  width: 138px;
+  min-width: 0;
   color: #fff;
 }
 
