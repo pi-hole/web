@@ -28,11 +28,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             <div class="card-body">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="active" role="presentation">
-                            <a href="#tab_domain" class="active" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
+                        <li class="nav-item" role="presentation">
+                            <a href="#tab_domain" class="nav-link active" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
                         </li>
-                        <li role="presentation">
-                            <a href="#tab_regex" aria-controls="tab_regex" aria-expanded="false" role="tab" data-bs-toggle="tab">RegEx filter</a>
+                        <li class="nav-item" role="presentation">
+                            <a href="#tab_regex" class="nav-link" aria-controls="tab_regex" aria-expanded="false" role="tab" data-bs-toggle="tab">RegEx filter</a>
                         </li>
                     </ul>
                     <div class="tab-content">

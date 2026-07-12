@@ -373,6 +373,10 @@ function createGroupSelect(selectEl, options = {}) {
     create: false,
     hideSelected: false,
     placeholder: "none selected",
+    // Tom Select keeps the placeholder visible on multi-selects by default;
+    // hide it once at least one group is selected so the "none selected"
+    // hint does not sit below the selected item chips.
+    hidePlaceholder: true,
     // Render the dropdown into <body> instead of nesting it in the table
     // cell, since ancestors like .table-responsive/.card clip overflow and
     // would otherwise cut it off (bootstrap-select used container: "body"

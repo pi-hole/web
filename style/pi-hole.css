@@ -44,6 +44,48 @@
   background-color: var(--bs-body-bg);
 }
 
+/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
+   provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
+   login field, the diagnosis warning-count badge and the "reset sorting"
+   buttons - so restore it here, otherwise those elements are always shown. */
+.hidden {
+  display: none !important;
+}
+
+/* AdminLTE 4 resets `.card` bottom margin to 0 and expects per-card spacing
+   utilities. Restore the vertical rhythm between stacked cards that AdminLTE
+   2's `.box` used to provide, unless a card opts out with its own `mb-*`. */
+.app-content .card {
+  margin-bottom: 1rem;
+}
+
+/* Bootstrap 5 dropped `.btn-block`; restore it so buttons that are meant to
+   fill their grid column (e.g. the settings "Actions" and gravity buttons)
+   stretch to full width instead of collapsing to their intrinsic size. */
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* Space out the button groups inside a toolbar (Bootstrap 5's `.btn-toolbar`
+   no longer adds a gap between adjacent groups). */
+.btn-toolbar {
+  gap: 0.5rem;
+}
+
+/* AdminLTE 4 no longer swaps the mini/full logo in the header when the sidebar
+   is collapsed, so the full "Pi-hole" wordmark stays and wraps in the narrow
+   header. Show the compact "Ph" mark while collapsed instead. */
+.logo-mini {
+  display: none;
+}
+.sidebar-collapse .app-header .logo-lg {
+  display: none;
+}
+.sidebar-collapse .app-header .logo-mini {
+  display: inline;
+}
+
 @keyframes Pulse {
   from {
     opacity: 0;
