@@ -22,17 +22,60 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">IPv4</th>
-                                    <th colspan="2">IPv6</th>
-                                    <th>Name</th>
-                                </tr>
-                            </thead>
-                            <tbody id="DNSupstreamsTable">
-                            </tbody>
-                        </table>
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="active" role="presentation">
+                                    <a href="#tab-upstreams-plain" aria-controls="tab-upstreams-plain" aria-expanded="true" role="tab" data-toggle="tab">Plain <span class="label label-primary" id="upstreams-count-plain" style="display: none;"></span></a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#tab-upstreams-dot" aria-controls="tab-upstreams-dot" aria-expanded="false" role="tab" data-toggle="tab">DoT <span class="label label-primary" id="upstreams-count-dot" style="display: none;"></span></a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#tab-upstreams-doh" aria-controls="tab-upstreams-doh" aria-expanded="false" role="tab" data-toggle="tab">DoH <span class="label label-primary" id="upstreams-count-doh" style="display: none;"></span></a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-upstreams-plain" class="tab-pane active fade in">
+                                    <table class="table table-striped table-bordered upstream-servers-table">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">IPv4</th>
+                                                <th colspan="2">IPv6</th>
+                                                <th class="server-names">Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="DNSupstreamsTable-plain">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="tab-upstreams-dot" class="tab-pane fade">
+                                    <table class="table table-striped table-bordered upstream-servers-table">
+                                        <thead>
+                                            <tr>
+                                                <th>IPv4</th>
+                                                <th>IPv6</th>
+                                                <th class="server-names">Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="DNSupstreamsTable-dot">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="tab-upstreams-doh" class="tab-pane fade">
+                                    <table class="table table-striped table-bordered upstream-servers-table">
+                                        <thead>
+                                            <tr>
+                                                <th>IPv4</th>
+                                                <th>IPv6</th>
+                                                <th class="server-names">Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="DNSupstreamsTable-doh">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         <p>ECS (Extended Client Subnet) defines a mechanism for recursive resolvers to send partial client IP address information to authoritative DNS name servers. Content Delivery Networks (CDNs) and latency-sensitive services use this to give geo-located responses when responding to name lookups coming through public DNS resolvers. <em>Note that ECS may result in reduced privacy.</em></p>
                     </div>
                     <div class="col-sm-12">
