@@ -25,7 +25,7 @@
     "testpr": "npm run prefix && npm run prettier:fix && git diff --ws-error-highlight=all --color=always --exit-code && npm run xo:check"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "6.7.2",
+    "@fortawesome/fontawesome-free": "7.0.0",
     "admin-lte": "2.4.18",
     "animate.css": "4.1.1",
     "bootstrap": "3.4.1",
