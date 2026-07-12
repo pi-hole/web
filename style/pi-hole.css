@@ -45,30 +45,30 @@
 }
 
 /* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
-   provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
-   login field, the diagnosis warning-count badge and the "reset sorting"
-   buttons - so restore it here, otherwise those elements are always shown. */
+  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
+  login field, the diagnosis warning-count badge and the "reset sorting"
+  buttons - so restore it here, otherwise those elements are always shown. */
 .hidden {
   display: none !important;
 }
 
 /* AdminLTE 4 resets `.card` bottom margin to 0 and expects per-card spacing
-   utilities. Restore the vertical rhythm between stacked cards that AdminLTE
-   2's `.box` used to provide, unless a card opts out with its own `mb-*`. */
+  utilities. Restore the vertical rhythm between stacked cards that AdminLTE
+  2's `.box` used to provide, unless a card opts out with its own `mb-*`. */
 .app-content .card {
   margin-bottom: 1rem;
 }
 
 /* AdminLTE 4's `.app-content` has no vertical padding in this build, so page
-   content sits flush against the header. Add consistent top spacing so every
-   page has breathing room below the header. */
+  content sits flush against the header. Add consistent top spacing so every
+  page has breathing room below the header. */
 .app-content {
   padding-top: 1rem;
 }
 
 /* DataTables renders its pager as a Bootstrap `.pagination` but no longer
-   right-aligns it, so it drifted to the middle of its column. Restore the
-   conventional right-aligned position. */
+  right-aligns it, so it drifted to the middle of its column. Restore the
+  conventional right-aligned position. */
 .dataTables_wrapper ul.pagination,
 .dt-container ul.pagination,
 .card ul.pagination {
@@ -77,29 +77,29 @@
 }
 
 /* AdminLTE 4's card title is 1.1rem, which looks oversized for the longer
-   headings on the settings pages. Nudge it down a touch. */
+  headings on the settings pages. Nudge it down a touch. */
 .card-title {
   font-size: 1rem;
 }
 
 /* Bootstrap 5 dropped `.btn-block`; restore it so buttons that are meant to
-   fill their grid column (e.g. the settings "Actions" and gravity buttons)
-   stretch to full width instead of collapsing to their intrinsic size. */
+  fill their grid column (e.g. the settings "Actions" and gravity buttons)
+  stretch to full width instead of collapsing to their intrinsic size. */
 .btn-block {
   display: block;
   width: 100%;
 }
 
 /* Space out the button groups inside a toolbar (Bootstrap 5's `.btn-toolbar`
-   no longer adds a gap between adjacent groups). */
+  no longer adds a gap between adjacent groups). */
 .btn-toolbar {
   gap: 0.5rem;
 }
 
 /* Bootstrap 5 removed `.form-group` (which carried the bottom margin between
-   form rows) and `.help-block` (muted helper text). The templates still use
-   both throughout, so restore their spacing/appearance rather than rewrite
-   every form to `.mb-3`/`.form-text`. */
+  form rows) and `.help-block` (muted helper text). The templates still use
+  both throughout, so restore their spacing/appearance rather than rewrite
+  every form to `.mb-3`/`.form-text`. */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -110,8 +110,8 @@
 }
 
 /* AdminLTE 4 no longer swaps the mini/full logo in the header when the sidebar
-   is collapsed, so the full "Pi-hole" wordmark stays and wraps in the narrow
-   header. Show the compact "Ph" mark while collapsed instead. */
+  is collapsed, so the full "Pi-hole" wordmark stays and wraps in the narrow
+  header. Show the compact "Ph" mark while collapsed instead. */
 .logo-mini {
   display: none;
 }
@@ -174,8 +174,8 @@ td.lookatme {
 .table-responsive {
   -webkit-overflow-scrolling: touch;
   /* Keep the horizontal scrollbar visible on wide tables (e.g. the network
-     overview) instead of relying on overlay scrollbars that stay hidden until
-     scrolling, which made it look like content was simply cut off. */
+    overview) instead of relying on overlay scrollbars that stay hidden until
+    scrolling, which made it look like content was simply cut off. */
   scrollbar-width: thin;
   scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
 }
@@ -1174,9 +1174,9 @@ div.dt-buttons {
 }
 
 /* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
-   draws the checkbox box itself (it only nudges the margin), so the outline was
-   invisible and the bulk-select column looked empty. Draw the box and the
-   checkmark here so the selection control is visible again. */
+  draws the checkbox box itself (it only nudges the margin), so the outline was
+  invisible and the bulk-select column looked empty. Draw the box and the
+  checkmark here so the selection control is visible again. */
 table.dataTable tbody td.select-checkbox,
 table.dataTable tbody th.select-checkbox {
   position: relative;
@@ -1781,4 +1781,12 @@ td.dnssec {
 td.dnssec i {
   text-indent: 0;
   margin-left: -0.5rem;
+}
+
+/* Keep the two single-icon columns (list status and list type) on the
+  subscribed-lists table the same width, and centre their icons. */
+#listsTable td.details-control,
+#listsTable th.details-control {
+  min-width: 3.5rem;
+  text-align: center;
 }

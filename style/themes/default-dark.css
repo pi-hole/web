@@ -36,8 +36,8 @@ h4 {
   color: #3c8dbc;
 }
 /* Tone down Bootstrap's bright accent fills, which are too saturated on the
-   dark background (the active page link and the filled coloured card headers
-   such as the query-log "Advanced filtering" box). */
+  dark background (the active page link and the filled coloured card headers
+  such as the query-log "Advanced filtering" box). */
 .page-item.active > .page-link {
   background-color: #3c8dbc;
   border-color: #3c8dbc;
