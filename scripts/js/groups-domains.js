@@ -606,11 +606,16 @@ function editDomain() {
   const domainDecoded = utils.hexDecode(domain.split("_")[0]);
   utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
+    // Identify the item with an "item" query parameter rather than a path
+    // segment. A segment equal to "." or ".." is a WHATWG URL dot segment that
+    // the browser strips while resolving the URL, so it could never be sent in
+    // the path. Using the query form for every edit keeps a single code path
+    // (requires the FTL "?item=" fallback, pi-hole/FTL#2953).
     url:
       document.body.dataset.apiurl +
       "/domains/" +
       newTypestr +
-      "/" +
+      "?item=" +
       encodeURIComponent(domainDecoded),
     method: "put",
     dataType: "json",
