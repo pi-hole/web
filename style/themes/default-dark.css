@@ -35,6 +35,25 @@ body {
 h4 {
   color: #3c8dbc;
 }
+/* Tone down Bootstrap's bright accent fills, which are too saturated on the
+   dark background (the active page link and the filled coloured card headers
+   such as the query-log "Advanced filtering" box). */
+.page-item.active > .page-link {
+  background-color: #3c8dbc;
+  border-color: #3c8dbc;
+}
+.card-info {
+  --lte-card-variant-bg: #256170;
+  --lte-card-variant-bg-rgb: 37, 97, 112;
+  --lte-card-variant-color: #d6eef5;
+  --lte-card-variant-color-rgb: 214, 238, 245;
+}
+.card-primary {
+  --lte-card-variant-bg: #285a7a;
+  --lte-card-variant-bg-rgb: 40, 90, 122;
+  --lte-card-variant-color: #d6e5f2;
+  --lte-card-variant-color-rgb: 214, 229, 242;
+}
 .callout h4 {
   color: inherit;
 }

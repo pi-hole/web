@@ -73,6 +73,19 @@
   gap: 0.5rem;
 }
 
+/* Bootstrap 5 removed `.form-group` (which carried the bottom margin between
+   form rows) and `.help-block` (muted helper text). The templates still use
+   both throughout, so restore their spacing/appearance rather than rewrite
+   every form to `.mb-3`/`.form-text`. */
+.form-group {
+  margin-bottom: 1rem;
+}
+.help-block {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--bs-secondary-color);
+}
+
 /* AdminLTE 4 no longer swaps the mini/full logo in the header when the sidebar
    is collapsed, so the full "Pi-hole" wordmark stays and wraps in the narrow
    header. Show the compact "Ph" mark while collapsed instead. */

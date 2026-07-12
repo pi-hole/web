@@ -200,7 +200,7 @@ function createRevServerTable() {
     data: tableRows,
     autoWidth: false,
     columns: [
-      { data: "enabled", width: "54px", className: "revserver-chkbox text-center" },
+      { data: "enabled", width: "76px", className: "revserver-chkbox text-center" },
       { data: "network", className: "revserver-network" },
       { data: "ip", className: "revserver-ip" },
       { data: "domain", className: "revserver-domain" },
