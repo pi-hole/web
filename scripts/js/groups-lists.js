@@ -104,7 +104,12 @@ function setStatusIcon(data) {
       break;
   }
 
-  return "<span class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></span>";
+  // Match the coloured `list-status-N` classes used by the legend so the
+  // table icons are coloured the same way instead of the default text colour.
+  const statusClass = [1, 2, 3, 4].includes(statusCode)
+    ? `list-status-${statusCode}`
+    : "list-status-0";
+  return `<span class='fa fa-fw ${statusIcon} ${statusClass}' title='${statusTitle}'></span>`;
 }
 
 // Define human-friendly status string
