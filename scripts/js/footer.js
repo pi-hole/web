@@ -615,7 +615,7 @@ $(() => {
   }
 
   const enaT = $("#enableTimer");
-  const target = new Date(Math.trunc(enaT.text()));
+  const target = new Date(Math.trunc(Number(enaT.text())));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
