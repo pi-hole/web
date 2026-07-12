@@ -44,7 +44,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                     <th scope="row">Kernel:</th>
                                     <td><span id="sysinfo-kernel"></span></td>
                                 </tr>
-                                <tr>
+                                <tr title="The machine uptime. For containers, this will match the host uptime">
                                     <th scope="row">Uptime:</th>
                                     <td><span id="sysinfo-uptime"></span></td>
                                 </tr>

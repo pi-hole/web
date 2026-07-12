@@ -9,7 +9,8 @@
 
 mg.include('scripts/lua/header.lp','r')
 ?>
-<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(mg.request_info.request_uri)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
+</head>
+<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
 <div class="box login-box" id="login-box">
     <section style="padding: 15px;">
         <div class="login-logo">
@@ -50,9 +51,13 @@ mg.include('scripts/lua/header.lp','r')
                             </span>
                         </div>
                     </div>
-                    <div class="form-group has-feedback hidden" id="totp_input">
-                        <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="off">
-                        <span class="fa fa-clock-rotate-left pwd-field form-control-feedback"></span>
+                    <div class="form-group hidden" id="totp_input">
+                        <div class="input-group">
+                            <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="off">
+                            <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verification code">
+                                <i class="fa fa-clock-rotate-left"></i>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>

@@ -180,7 +180,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <h4 class="modal-title">Enable two-factor authentication</h4>
             </div>
             <div class="modal-body">
-                <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or BitWarden, etc. to get 2FA codes when prompted during login.</p>
+                <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or Bitwarden, etc. to get 2FA codes when prompted during login.</p>
                 <p>1. Scan the QR code below with your app or enter the secret manually.</p>
                 <div class="text-center">
                     <i id="qrcode-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
@@ -192,11 +192,15 @@ mg.include('scripts/lua/settings_header.lp','r')
                 <p>2. Enter the 2FA code from your app below to confirm that you have set up 2FA correctly.</p>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                        <div id="totp_div" class="has-feedback has-error">
-                            <div class="pwd-field form-group">
-                                <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
+                        <div id="totp_div">
+                            <div class="pwd-field form-group has-error">
+                                <div class="input-group">
+                                    <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
+                                    <div class="input-group-addon" data-toggle="tooltip" data-placement="auto" title="TOTP verification code">
+                                        <i class="fa fa-clock-rotate-left"></i>
+                                    </div>
+                                </div>
                             </div>
-                            <i class="fa-solid fa-clock-rotate-left pwd-field form-control-feedback"></i>
                         </div>
                     </div>
                 </div>

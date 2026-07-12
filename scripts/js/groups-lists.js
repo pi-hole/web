@@ -515,12 +515,12 @@ function addList(event) {
   }
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/lists",
+    url: document.body.dataset.apiurl + "/lists?type=" + encodeURIComponent(type),
     method: "post",
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ address: addresses, comment, type, groups: group }),
+    data: JSON.stringify({ address: addresses, comment, groups: group }),
     success(data) {
       utils.enableAll();
       utils.listsAlert(type + "list", addresses, data);
