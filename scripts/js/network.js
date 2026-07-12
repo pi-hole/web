@@ -125,8 +125,10 @@ $(() => {
         iconClasses = "fas fa-times";
       }
 
-      // Set determined background color
-      $(row).css("background-color", color);
+      // Set determined background color. Bootstrap 5 paints the cell
+      // backgrounds from `--bs-table-bg`, so colour the row through that
+      // variable instead of `background-color` (which the cells cover).
+      $(row).css("--bs-table-bg", color);
       $("td:eq(6)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have

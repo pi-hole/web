@@ -150,6 +150,18 @@ td.lookatme {
 
 .table-responsive {
   -webkit-overflow-scrolling: touch;
+  /* Keep the horizontal scrollbar visible on wide tables (e.g. the network
+     overview) instead of relying on overlay scrollbars that stay hidden until
+     scrolling, which made it look like content was simply cut off. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
+}
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.6);
+  border-radius: 4px;
 }
 
 /* Optimize Queries-Table for small screens */

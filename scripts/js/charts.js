@@ -196,8 +196,16 @@ function getOrCreateTooltipElement(canvasId, options, context) {
     font-style: ${options.bodyFont.style};
   `;
 
-  // Append Tooltip next to canvas-containing card
+  // Append Tooltip next to canvas-containing card. positionTooltip() computes
+  // the tooltip's offset relative to this ancestor, so the ancestor must be
+  // the tooltip's offset parent - otherwise (e.g. in the boxed layout, whose
+  // .app-wrapper is the nearest positioned element) the tooltip is shifted by
+  // the ancestor's own left offset. Ensure the ancestor is positioned.
   tooltipEl.ancestor = context.chart.canvas.closest(".card[id]").parentNode;
+  if (getComputedStyle(tooltipEl.ancestor).position === "static") {
+    tooltipEl.ancestor.style.position = "relative";
+  }
+
   tooltipEl.ancestor.append(tooltipEl);
 
   return tooltipEl;

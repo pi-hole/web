@@ -18,7 +18,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="network-entries" class="table table-striped table-bordered" width="100%">
+                <table id="network-entries" class="table table-bordered" width="100%">
                     <thead>
                         <tr>
                             <th>ID</th>
