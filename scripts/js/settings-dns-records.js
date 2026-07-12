@@ -260,9 +260,7 @@ $(() => {
     let elem = $("#Cdomain").val().trim() + "," + $("#Ctarget").val().trim();
     const ttlInput = $("#Cttl").val();
     const ttlVal = ttlInput === "" ? NaN : Math.trunc(ttlInput);
-    // TODO Fix eslint
-    // eslint-disable-next-line unicorn/prefer-number-properties
-    if (isFinite(ttlVal) && ttlVal >= 0) {
+    if (Number.isFinite(ttlVal) && ttlVal >= 0) {
       elem += "," + ttlVal;
     }
 
