@@ -109,7 +109,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "2rem" },
       { data: "domain" },
       { data: null, searchable: false },
       { data: "enabled", searchable: false },
