@@ -27,7 +27,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini sidebar-expand-lg <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
+<body class="<?=theme.name?> hold-transition sidebar-mini sidebar-expand-lg bg-body-secondary <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>" data-bs-theme="<?= bs_theme ?>">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -42,7 +42,7 @@ mg.include('header.lp','r')
 <!-- Send token to JS -->
 <div id="enableTimer" hidden></div>
 <div class="app-wrapper">
-    <nav class="app-header navbar navbar-expand">
+    <nav class="app-header navbar navbar-expand" data-bs-theme="dark">
         <div class="container-fluid">
             <!-- Sidebar toggle button + logo -->
             <ul class="navbar-nav">
@@ -50,14 +50,6 @@ mg.include('header.lp','r')
                     <a class="nav-link sidebar-toggle-svg" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle Navigation">
                         <i aria-hidden="true" class="fa fa-angle-double-left"></i>
                         <span class="warning-count hidden" id="top-warning-count"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?=webhome?>" class="nav-link logo">
-                        <!-- mini logo for sidebar mini 50x50 pixels -->
-                        <span class="logo-mini">P<strong>h</strong></span>
-                        <!-- logo for regular state and mobile devices -->
-                        <span class="logo-lg">Pi-<strong>hole</strong></span>
                     </a>
                 </li>
             </ul>
@@ -75,7 +67,7 @@ mg.include('header.lp','r')
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa fa-bars"></i>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="<?= bs_theme ?>">
                         <!-- User image -->
                         <li class="user-header">
                             <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">

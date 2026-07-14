@@ -17,6 +17,19 @@
   --blocked-color: #b00000;
   --cached-color: #9be;
   --other-color: #908878;
+
+  /* AdminLTE root variables */
+  --bs-body-font-size: 15px;
+}
+
+/* AdminLTE Color variables */
+.navbar[data-bs-theme="dark"] {
+  --bs-navbar-color: rgb(255, 255, 255);
+  --bs-border-color: var(--bs-gray-300);
+}
+
+html {
+  font-size: var(--bs-body-font-size);
 }
 
 /* Dashboard graphic bars */
@@ -41,7 +54,7 @@
   margin: 0 auto;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   position: relative;
-  background-color: var(--bs-body-bg);
+  background-color: var(--bs-secondary-bg);
 }
 
 /* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
@@ -109,17 +122,31 @@
   color: var(--bs-secondary-color);
 }
 
-/* AdminLTE 4 no longer swaps the mini/full logo in the header when the sidebar
-  is collapsed, so the full "Pi-hole" wordmark stays and wraps in the narrow
-  header. Show the compact "Ph" mark while collapsed instead. */
-.logo-mini {
-  display: none;
+/* AdminLTE 4 moved the logo to the sidebar (.sidebar-brand class).
+  By default, AdminLTE expects an image and a text for the logo, but we only use
+  "Pi-hole" text as logo.
+  AdminLTE 4 automatically hides the text when the sidebar is collapsed, rsulting
+  in an empty brand.
+  To avoid this issue, we use ::before and ::after pseudo elements to show a
+  smaller text, so the full "Pi-hole" wordmark is always shown. */
+.sidebar-brand .brand-text {
+  margin: 0;
+  font-size: 1.35em;
 }
-.sidebar-collapse .app-header .logo-lg {
-  display: none;
+.sidebar-collapse .sidebar-brand .brand-link::before {
+  content: "Pi-";
+  color: var(--lte-sidebar-menu-active-color);
+  font-size: 15px;
 }
-.sidebar-collapse .app-header .logo-mini {
-  display: inline;
+.sidebar-collapse .sidebar-brand .brand-link::after {
+  content: "hole";
+  color: var(--lte-sidebar-menu-active-color);
+  font-size: 15px;
+  font-weight: bold;
+}
+.sidebar-collapse .app-sidebar:hover .brand-link::before,
+.sidebar-collapse .app-sidebar:hover .brand-link::after {
+  content: none;
 }
 
 @keyframes Pulse {
@@ -566,40 +593,6 @@ tfoot.add-new-item > tr > th {
 .sidebar-menu .badge {
   margin-top: 2px;
   padding: 0.25em 0.6em 0.35em;
-}
-
-.sidebar-toggle-svg {
-  position: relative;
-  color: #fff;
-  float: left;
-  background-color: transparent;
-  border: none;
-  padding: 15px;
-  width: 50px;
-  text-align: center;
-}
-
-.sidebar-toggle-svg:hover {
-  color: #f6f6f6;
-  background: #367fa9;
-}
-
-/* AdminLTE 4 no longer ships a default mini/full logo swap for the header
-  (that concept now only exists for the sidebar-brand), so we provide it. */
-.app-header .logo-mini {
-  display: none;
-}
-
-/* Hide the "Ph" and move the toggle to the left */
-.sidebar-mini.sidebar-collapse .app-header .logo {
-  width: 0;
-  position: absolute;
-}
-.sidebar-mini.sidebar-collapse .app-header .logo-mini {
-  visibility: hidden;
-}
-.sidebar-mini.sidebar-collapse .app-header.navbar {
-  margin-left: 0;
 }
 
 .sidebar-menu > li.nav-header {
@@ -1063,10 +1056,6 @@ li:not(.menu-open) .nav-treeview .warning-count {
 .flex-header h1 {
   margin: 10px 30px 10px 0;
   flex: 1 0 auto;
-}
-
-.navbar-nav {
-  height: 50px;
 }
 
 .navbar-nav > .user-menu {

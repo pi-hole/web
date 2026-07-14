@@ -7,14 +7,19 @@
 *    Please see LICENSE file for your rights under this license.
 */ ]]-- ?>
     <!-- Left side column. contains the logo and sidebar -->
-    <aside class="app-sidebar bg-dark shadow" data-bs-theme="dark">
+    <aside class="app-sidebar bg-body-tertiary shadow" data-bs-theme="dark">
+        <div class="sidebar-brand">
+            <a href="<?=webhome?>" class="brand-link">
+                <span class="brand-text fw-light">Pi-<strong>hole</strong></span>
+            </a>
+        </div>
         <div class="sidebar-wrapper">
             <!-- Sidebar user panel -->
             <div class="user-panel">
-                <div class="pull-left image">
+                <div class="image">
                     <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" width="60" height="87">
                 </div>
-                <div class="pull-left info">
+                <div class="info">
                     <p>Status</p>
                     <span id="status"></span><br>
                     <span id="query_frequency"></span><br>
@@ -45,7 +50,7 @@
                         <a href="<?=webhome?>groups" class="nav-link<? if scriptname == 'groups' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-user-friends"></i>
                             <p>Groups
-                                <span class="badge text-bg-primary float-end" id="num_groups" title="Number of enabled groups"></span>
+                                <span class="nav-badge badge text-bg-primary float-end" id="num_groups" title="Number of enabled groups"></span>
                             </p>
                         </a>
                     </li>
@@ -53,7 +58,7 @@
                         <a href="<?=webhome?>groups/clients" class="nav-link<? if scriptname == 'groups/clients' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-laptop"></i>
                             <p>Clients
-                                <span class="badge text-bg-primary float-end" id="num_clients" title="Number of defined clients"></span>
+                                <span class="nav-badge badge text-bg-primary float-end" id="num_clients" title="Number of defined clients"></span>
                             </p>
                         </a>
                     </li>
@@ -61,8 +66,10 @@
                         <a href="<?=webhome?>groups/domains" class="nav-link<? if scriptname == 'groups/domains' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-list"></i>
                             <p>Domains
-                                <span class="badge text-bg-danger float-end" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
-                                <span class="badge text-bg-success float-end me-1" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
+                                <span class="nav-badge">
+                                    <span class="badge text-bg-danger float-end" id="num_denied" title="Number of enabled deny rules (domains and regex)"></span>
+                                    <span class="badge text-bg-success float-end me-1" id="num_allowed" title="Number of enabled allow rules (domains and regex)"></span>
+                                </span>
                             </p>
                         </a>
                     </li>
@@ -70,8 +77,10 @@
                         <a href="<?=webhome?>groups/lists" class="nav-link<? if scriptname == 'groups/lists' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-shield-alt"></i>
                             <p>Lists
-                                <span class="badge text-bg-primary float-end" id="num_lists" title="Number of subscribed and enabled lists"></span>
-                                <span class="badge text-bg-warning float-end me-1" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
+                                <span class="nav-badge">
+                                    <span class="badge text-bg-primary float-end" id="num_lists" title="Number of subscribed and enabled lists"></span>
+                                    <span class="badge text-bg-warning float-end me-1" id="num_gravity" title="Total number of domains subscribed by your Pi-hole"></span>
+                                </span>
                             </p>
                         </a>
                     </li>

@@ -62,7 +62,7 @@ hostname = sanitize_hostname(hostname)
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
-local bs_theme = theme.dark and 'dark' or 'light'
+bs_theme = theme.dark and 'dark' or 'light'
 if theme.name == 'default-auto' then
     bs_theme = 'auto'
 elseif theme.name == 'default-light' then
