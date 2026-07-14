@@ -89,14 +89,6 @@ html {
   margin-bottom: 0;
 }
 
-/* Bootstrap 5 dropped `.btn-block`; restore it so buttons that are meant to
-  fill their grid column (e.g. the settings "Actions" and gravity buttons)
-  stretch to full width instead of collapsing to their intrinsic size. */
-.btn-block {
-  display: block;
-  width: 100%;
-}
-
 /* Space out the button groups inside a toolbar (Bootstrap 5's `.btn-toolbar`
   no longer adds a gap between adjacent groups). */
 .btn-toolbar {
@@ -567,13 +559,20 @@ tfoot.add-new-item > tr > th {
   options list to replace bootstrap-select's actionsBox feature */
 .ts-actions-box {
   display: flex;
-  gap: 4px;
-  padding: 4px 8px;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  padding: 0.5em;
   border-bottom: 1px solid var(--bs-border-color);
 }
 
 .ts-actions-box .btn {
-  flex: 1 1 auto;
+  flex: 1 0 auto;
+}
+
+.ts-actions-box .btn-group {
+  display: flex;
+  gap: 2px;
+  width: 100%;
 }
 
 .sidebar-menu .nav-link p {
@@ -1761,4 +1760,37 @@ td.dnssec i {
 #listsTable th.details-control {
   min-width: 3.5rem;
   text-align: center;
+}
+
+/* Tom Select general styles */
+.ts-control,
+.ts-control input,
+.ts-dropdown {
+  font-size: 12px;
+}
+
+/* Tom Select - Dark theme colors */
+/* Dropdown menu background and border alignment */
+[data-bs-theme="dark"] .ts-dropdown {
+  color: var(--bs-dropdown-link-color);
+}
+
+/* Dropdown individual option items */
+[data-bs-theme="dark"] .ts-dropdown .option {
+  color: var(--bs-dropdown-link-color);
+}
+
+/* Selected multi-select pills (Tags) */
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div {
+  background-color: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+
+/* Remove button X inside multi-select pills */
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove {
+  border-left-color: var(--bs-border-color);
+}
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

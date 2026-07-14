@@ -389,8 +389,10 @@ function createGroupSelect(selectEl, options = {}) {
   const actionsBox = document.createElement("div");
   actionsBox.className = "ts-actions-box";
   actionsBox.innerHTML =
-    '<button type="button" class="btn btn-link btn-sm select-all">All</button>' +
-    '<button type="button" class="btn btn-link btn-sm select-none">None</button>';
+    '<div class="btn-group btn-group-sm btn-block">' +
+    '<button type="button" class="btn btn-secondary btn-sm select-all">All</button>' +
+    '<button type="button" class="btn btn-secondary btn-sm select-none">None</button>' +
+    "</div>";
   actionsBox.querySelector(".select-all").addEventListener("click", () => {
     ts.setValue(allValues);
   });
