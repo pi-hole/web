@@ -49,16 +49,16 @@ end
     </div>
 
     <footer class="app-footer">
-        <div class="row row-centered text-center">
-            <div class="col-12 col-sm-6">
+        <div class="row">
+            <div class="col-12 text-center">
                 <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
             </div>
         </div>
 
-        <div class="row row-centered text-center version-info">
-            <div class="col-12 col-sm-12 col-md-10">
-                <ul class="list-inline" id="versions"></ul>
-                <p style="margin: 15px 0 0;" id="update-hint"></p>
+        <div class="row version-info">
+            <div class="col-12 text-center d-flex justify-content-center flex-wrap">
+                <ul class="list-inline small m-0" id="versions"></ul>
+                <p class="mt-3 mb-0" id="update-hint"></p>
             </div>
         </div>
     </footer>

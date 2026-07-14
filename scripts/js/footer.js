@@ -555,7 +555,7 @@ function updateVersionInfo() {
         // Display update information of individual components only if we are not running in a Docker container
         if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
           $("#versions").append(
-            "<li><strong>" +
+            '<li class="list-inline-item"><strong>' +
               v.name +
               "</strong> " +
               localVersion +
@@ -566,7 +566,9 @@ function updateVersionInfo() {
           // if at least one component can be updated, display the update-hint footer
           updateAvailable = true;
         } else {
-          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+          $("#versions").append(
+            '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
+          );
         }
       }
     }
@@ -579,13 +581,17 @@ function updateVersionInfo() {
     }
 
     if (dockerUpdate) {
-      $("#update-hint").html(
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
-      );
+      $("#update-hint")
+        .html(
+          'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
+        )
+        .addClass("w-100");
     } else if (updateAvailable) {
-      $("#update-hint").html(
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
-      );
+      $("#update-hint")
+        .html(
+          'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
+        )
+        .addClass("w-100");
     }
 
     clearTimeout(versionTimer);

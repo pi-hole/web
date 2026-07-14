@@ -1462,10 +1462,6 @@ table.dataTable tbody > tr > .selected {
   font-size: 18px;
 }
 
-.app-footer {
-  padding-bottom: 0px;
-}
-
 @keyframes error-border {
   0%,
   100% {
