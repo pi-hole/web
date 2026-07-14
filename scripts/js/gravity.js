@@ -105,7 +105,7 @@ function parseLines(outputElement, text) {
 
     // Mapping of ANSI escape codes to their corresponding CSS class names.
     const ansiMappings = {
-      "\u{1B}[1m": "text-bold", //COL_BOLD
+      "\u{1B}[1m": "fw-bold", //COL_BOLD
       "\u{1B}[90m": "log-gray", //COL_GRAY
       "\u{1B}[91m": "log-red", //COL_RED
       "\u{1B}[32m": "log-green", //COL_GREEN
