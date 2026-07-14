@@ -28,9 +28,7 @@ function addAllowedValues(allowed) {
 function boxIcons(value) {
   return (
     '<span class="box-icons">' +
-    (value.modified
-      ? '<i class="far fa-edit text-light-blue" title="Modified from default"></i>'
-      : "") +
+    (value.modified ? '<i class="far fa-edit text-info" title="Modified from default"></i>' : "") +
     (value.flags.restart_dnsmasq
       ? '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
@@ -312,7 +310,7 @@ function createDynamicConfigTabs() {
         // Dynamically create the settings menu
         $("#advanced-settings-menu ul").append(`
           <li role="presentation">
-            <a href="#advanced-content-${topic.name}" class="btn btn-secondary" aria-controls="advanced-content-${topic.name}" role="tab" data-bs-toggle="pill">${topic.description.replace(" settings", "")}</a>
+            <a href="#advanced-content-${topic.name}" class="btn btn-primary" aria-controls="advanced-content-${topic.name}" role="tab" data-bs-toggle="pill">${topic.description.replace(" settings", "")}</a>
           </li>
         `);
       }

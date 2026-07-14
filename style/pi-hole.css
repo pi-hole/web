@@ -89,12 +89,6 @@ html {
   margin-bottom: 0;
 }
 
-/* AdminLTE 4's card title is 1.1rem, which looks oversized for the longer
-  headings on the settings pages. Nudge it down a touch. */
-.card-title {
-  font-size: 1rem;
-}
-
 /* Bootstrap 5 dropped `.btn-block`; restore it so buttons that are meant to
   fill their grid column (e.g. the settings "Actions" and gravity buttons)
   stretch to full width instead of collapsing to their intrinsic size. */
@@ -1377,10 +1371,20 @@ table.dataTable tbody > tr > .selected {
 }
 .settings-container > .card {
   margin: 0;
+  --bs-card-spacer-y: 0.7rem;
+  --bs-card-spacer-x: 1rem;
   width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
   border: none;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px var(--bs-border-color-translucent);
 }
+.settings-container .card-header {
+  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+}
+.settings-container .card-footer {
+  background-color: var(--bs-card-bg);
+}
+
 .settings-box .control-label small {
   font-weight: normal;
   display: block;
@@ -1400,36 +1404,19 @@ table.dataTable tbody > tr > .selected {
 }
 
 #advanced-settings-menu ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
   gap: 0.5em;
-}
-#advanced-settings-menu ul:before,
-#advanced-settings-menu ul:after {
-  content: none;
 }
 
 #advanced-settings-menu ul > li {
-  margin: 0;
   min-width: 112px;
   flex: 1 1 auto;
-  text-align: center;
 }
 
 #advanced-settings-menu ul > li a {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid rgba(127, 127, 127, 0.2);
   border-radius: 3px;
-}
-#advanced-settings-menu ul > li:not(.active) a {
-  color: inherit;
-}
-#advanced-settings-menu ul > li:not(.active) a:hover,
-#advanced-settings-menu ul > li:not(.active) a:focus {
-  background: rgba(127, 127, 127, 0.1);
 }
 
 #advanced-settings-tabs > .tab-pane {
