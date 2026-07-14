@@ -112,6 +112,7 @@ function showAlert(type, icon, title, message, toast) {
   const settings = {
     type,
     delay: 5000, // default value
+    z_index: 9999, // increased to avoid overlapping issues with the AdminLTE header
     mouse_over: "pause",
     animate: {
       enter: "animate__animated animate__fadeInDown",
