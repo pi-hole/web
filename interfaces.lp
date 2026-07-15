@@ -9,26 +9,37 @@
 
 mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
-<!-- Title -->
-<div class="page-header">
-    <h1>Pi-hole interface overview</h1>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="text-center">
-                            <i id="spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
-                        </div>
-                        <div id="tree"></div>
-                    </div>
-                </div>
+<!-- Title/Header -->
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-0">Pi-hole interface overview</h1>
             </div>
         </div>
     </div>
 </div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-center">
+                                    <i id="spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
+                                </div>
+                                <div id="tree"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</div><!-- /.app-content -->
 
 <script src="<?=pihole.fileversion('scripts/js/interfaces.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>

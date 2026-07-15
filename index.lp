@@ -10,274 +10,280 @@
 indexpage = true
 mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
-<!-- Small boxes (Stat box) -->
-<div class="row">
-    <div class="col-lg-3 col-sm-6">
-        <!-- small box -->
-        <div class="small-box text-bg-info no-user-select" id="total_queries" title="Total number of queries">
-            <div class="inner">
-                <p>Total Queries</p>
-                <h3 class="statistic"><span id="dns_queries">---</span></h3>
-            </div>
-            <div class="icon">
-                <i class="fas fa-globe-americas"></i>
-            </div>
-            <a href="network" class="small-box-footer" id="total_clients">
-                <span id="active_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-sm-6">
-        <!-- small box -->
-        <div class="small-box text-bg-danger no-user-select">
-            <div class="inner">
-                <p>Queries Blocked</p>
-                <h3 class="statistic"><span id="blocked_queries">---</span></h3>
-            </div>
-            <div class="icon">
-                <i class="fas fa-hand-paper"></i>
-            </div>
-            <a href="queries?upstream=blocklist" class="small-box-footer">
-                List blocked queries <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-sm-6">
-        <!-- small box -->
-        <div class="small-box text-bg-warning no-user-select">
-            <div class="inner">
-                <p>Percentage Blocked</p>
-                <h3 class="statistic"><span id="percent_blocked">---</span></h3>
-            </div>
-            <div class="icon">
-                <i class="fas fa-chart-pie"></i>
-            </div>
-            <a href="queries" class="small-box-footer">
-                List all queries <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-sm-6">
-        <!-- small box -->
-        <div class="small-box text-bg-success no-user-select">
-            <div class="inner">
-                <p>Domains on Lists</p>
-                <h3 class="statistic"><span id="gravity_size">---</span></h3>
-            </div>
-            <div class="icon">
-                <i class="fas fa-list-alt"></i>
-            </div>
-            <a href="groups-lists" class="small-box-footer">
-                Manage lists <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
-    <!-- ./col -->
-</div>
+<div class="app-content">
+    <div class="container-fluid">
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card" id="queries-over-time">
-            <div class="card-header">
-                <h3 class="card-title">Total queries</h3>
-                <button class="btn btn-sm btn-secondary float-end zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="float-end zoom-info" data-bs-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
-            </div>
-            <div class="card-body">
-                <div class="chart" style="width: 100%; height: 180px">
-                    <canvas id="queryOverTimeChart"></canvas>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <!-- small box -->
+                <div class="small-box text-bg-info no-user-select" id="total_queries" title="Total number of queries">
+                    <div class="inner">
+                        <p>Total Queries</p>
+                        <h3 class="statistic"><span id="dns_queries">---</span></h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <a href="network" class="small-box-footer" id="total_clients">
+                        <span id="active_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
+                    </a>
                 </div>
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card" id="clients">
-            <div class="card-header">
-                <h3 class="card-title">Client activity</h3>
-                <button class="btn btn-sm btn-secondary float-end zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
-                <span class="float-end zoom-info" data-bs-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
-            </div>
-            <div class="card-body">
-                <div class="chart" style="width: 100%; height: 180px">
-                    <canvas id="clientsChart" class="no-user-select"></canvas>
+            <!-- ./col -->
+            <div class="col-lg-3 col-sm-6">
+                <!-- small box -->
+                <div class="small-box text-bg-danger no-user-select">
+                    <div class="inner">
+                        <p>Queries Blocked</p>
+                        <h3 class="statistic"><span id="blocked_queries">---</span></h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <a href="queries?upstream=blocklist" class="small-box-footer">
+                        List blocked queries <i class="fa fa-arrow-circle-right"></i>
+                    </a>
                 </div>
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
+            <!-- ./col -->
+            <div class="col-lg-3 col-sm-6">
+                <!-- small box -->
+                <div class="small-box text-bg-warning no-user-select">
+                    <div class="inner">
+                        <p>Percentage Blocked</p>
+                        <h3 class="statistic"><span id="percent_blocked">---</span></h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <a href="queries" class="small-box-footer">
+                        List all queries <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
             </div>
-            <!-- /.card-body -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-sm-6">
+                <!-- small box -->
+                <div class="small-box text-bg-success no-user-select">
+                    <div class="inner">
+                        <p>Domains on Lists</p>
+                        <h3 class="statistic"><span id="gravity_size">---</span></h3>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <a href="groups-lists" class="small-box-footer">
+                        Manage lists <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <!-- ./col -->
         </div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card" id="query-types-pie">
-            <div class="card-header">
-                <h3 class="card-title">Query Types</h3>
-            </div>
-            <div class="card-body">
-                <div style="width:50%">
-                    <canvas id="queryTypePieChart" width="280" height="280"></canvas>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="queries-over-time">
+                    <div class="card-header">
+                        <h3 class="card-title">Total queries</h3>
+                        <button class="btn btn-sm btn-secondary float-end zoom-reset" data-sel="reset-history"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                        <span class="float-end zoom-info" data-bs-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart" style="width: 100%; height: 180px">
+                            <canvas id="queryOverTimeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-                <div class="chart-legend" style="width:50%" id="query-types-legend" ></div>
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card" id="forward-destinations-pie">
-            <div class="card-header">
-                <h3 class="card-title">Upstream servers</h3>
-            </div>
-            <div class="card-body">
-                <div style="width:50%">
-                    <canvas id="forwardDestinationPieChart" width="280" height="280" class="no-user-select"></canvas>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="clients">
+                    <div class="card-header">
+                        <h3 class="card-title">Client activity</h3>
+                        <button class="btn btn-sm btn-secondary float-end zoom-reset" data-sel="reset-clients"><i class="fas fa-undo"></i>&nbsp;Reset zoom</button>
+                        <span class="float-end zoom-info" data-bs-toggle="tooltip" title="You can zoom this graph by either holding down the [Ctrl] key and using your mouse wheel or by using the &quot;pinch&quot; multi-touch gesture. You can furthermore click and drag to pan the graph."><i class="fa fa-info-circle"></i></span>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart" style="width: 100%; height: 180px">
+                            <canvas id="clientsChart" class="no-user-select"></canvas>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-                <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
         </div>
-    </div>
-</div>
 
-<? if pihole.boxedlayout() then tablelayout = 'col-md-6' else  tablelayout = 'col-md-6 col-lg-6' end ?>
-<div class="row">
-    <div class="<?=tablelayout?>">
-        <div class="card" id="domain-frequency">
-            <div class="card-header">
-                <h3 class="card-title">Top Permitted Domains</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                            <th>Domain</th>
-                            <th>Hits</th>
-                            <th>Frequency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card" id="query-types-pie">
+                    <div class="card-header">
+                        <h3 class="card-title">Query Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="width:50%">
+                            <canvas id="queryTypePieChart" width="280" height="280"></canvas>
+                        </div>
+                        <div class="chart-legend" style="width:50%" id="query-types-legend" ></div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-    </div>
-    <!-- /.col -->
-    <div class="<?=tablelayout?>">
-        <div class="card" id="ad-frequency">
-            <div class="card-header">
-                <h3 class="card-title">Top Blocked Domains</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                            <th>Domain</th>
-                            <th>Hits</th>
-                            <th>Frequency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+            <div class="col-md-6">
+                <div class="card" id="forward-destinations-pie">
+                    <div class="card-header">
+                        <h3 class="card-title">Upstream servers</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="width:50%">
+                            <canvas id="forwardDestinationPieChart" width="280" height="280" class="no-user-select"></canvas>
+                        </div>
+                        <div class="chart-legend" style="width:50%" id="forward-destinations-legend"></div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
-    </div>
-</div>
-<div class="row">
-    <!-- /.col -->
-    <div class="<?=tablelayout?>">
-        <div class="card" id="client-frequency">
-            <div class="card-header">
-                <h3 class="card-title">Top Clients (total)</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                            <th>Client</th>
-                            <th>Requests</th>
-                            <th>Frequency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+
+        <? if pihole.boxedlayout() then tablelayout = 'col-md-6' else  tablelayout = 'col-md-6 col-lg-6' end ?>
+        <div class="row">
+            <div class="<?=tablelayout?>">
+                <div class="card" id="domain-frequency">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Permitted Domains</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                    <th>Domain</th>
+                                    <th>Hits</th>
+                                    <th>Frequency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
+                <!-- /.card -->
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-    </div>
-    <!-- /.col -->
-    <div class="<?=tablelayout?>">
-        <div class="card" id="client-frequency-blocked">
-            <div class="card-header">
-                <h3 class="card-title">Top Clients (blocked only)</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                            <th>Client</th>
-                            <th>Requests</th>
-                            <th>Frequency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+            <!-- /.col -->
+            <div class="<?=tablelayout?>">
+                <div class="card" id="ad-frequency">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Blocked Domains</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                    <th>Domain</th>
+                                    <th>Hits</th>
+                                    <th>Frequency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
+                <!-- /.card -->
             </div>
-            <div class="overlay">
-                <i class="fa fa-sync fa-spin"></i>
-            </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
-    </div>
-    <!-- /.col -->
-</div>
-<!-- /.row -->
+        <div class="row">
+            <!-- /.col -->
+            <div class="<?=tablelayout?>">
+                <div class="card" id="client-frequency">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Clients (total)</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                    <th>Client</th>
+                                    <th>Requests</th>
+                                    <th>Frequency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+            <div class="<?=tablelayout?>">
+                <div class="card" id="client-frequency-blocked">
+                    <div class="card-header">
+                        <h3 class="card-title">Top Clients (blocked only)</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                    <th>Client</th>
+                                    <th>Requests</th>
+                                    <th>Frequency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="overlay">
+                        <i class="fa fa-sync fa-spin"></i>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+    </div><!-- /.container-fluid -->
+</div><!-- /.app-content -->
 
 <script src="<?=pihole.fileversion('scripts/js/charts.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/index.js')?>"></script>

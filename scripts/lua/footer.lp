@@ -17,12 +17,8 @@ for k,v in pairs(mg.request_info.http_headers) do
 end
 ?>
 
-            </div>
-            <!-- /.container-fluid -->
-        </div>
-        <!-- /.app-content -->
-    </main>
-    <!-- /.app-main -->
+    </main><!-- /.app-main -->
+
     <!-- Modal for custom disable time -->
     <div class="modal fade" id="customDisableModal" tabindex="-1" role="dialog" aria-labelledby="customDisableModalLabel">
         <div class="modal-dialog modal-sm" role="document">

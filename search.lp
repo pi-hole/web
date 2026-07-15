@@ -9,43 +9,55 @@
 
 mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
-<!-- Title -->
-<div class="page-header">
-    <h1>Find Domains In Lists</h1>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <div id="domain-search-block" class="input-group">
-                    <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                    <span class="input-group-btn">
-                        <button type="button" id="btnSearch" class="btn btn-secondary">Search</button>
-                    </span>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="partialMatch" data-key="partialMatch">
-                            <label class="form-check-label" for="partialMatch"><strong>Use partial matching</strong> (may not find complex regex entries)</label>
-                        </div>
-                    </div>
-                    <br class="hidden-md hidden-lg">
-                    <div class="col-md-6">
-                        <div id="domain-limitbox-block" class="form-inline">
-                            <label for="number">Maximum number of results to be returned:&nbsp;</label>
-                            <input class="form-control input-sm" type="number" min="0" value="20" id="number">
-                        </div>
-                    </div>
-                </div>
+<!-- Title/Header -->
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-0">Find Domains In Lists</h1>
             </div>
         </div>
     </div>
 </div>
 
-<pre id="output" class="bg-body-tertiary text-body p-3 border rounded" style="display: none"></pre>
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div id="domain-search-block" class="input-group">
+                            <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                            <span class="input-group-btn">
+                                <button type="button" id="btnSearch" class="btn btn-secondary">Search</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="partialMatch" data-key="partialMatch">
+                                    <label class="form-check-label" for="partialMatch"><strong>Use partial matching</strong> (may not find complex regex entries)</label>
+                                </div>
+                            </div>
+                            <br class="hidden-md hidden-lg">
+                            <div class="col-md-6">
+                                <div id="domain-limitbox-block" class="form-inline">
+                                    <label for="number">Maximum number of results to be returned:&nbsp;</label>
+                                    <input class="form-control input-sm" type="number" min="0" value="20" id="number">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <pre id="output" class="bg-body-tertiary text-body p-3 border rounded" style="display: none"></pre>
+
+    </div><!-- /.container-fluid -->
+</div><!-- /.app-content -->
 
 <script src="<?=pihole.fileversion('scripts/js/search.js')?>"></script>
 <? mg.include('scripts/lua/footer.lp','r')?>

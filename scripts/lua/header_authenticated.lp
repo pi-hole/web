@@ -97,7 +97,5 @@ mg.include('header.lp','r')
         </div>
     </nav>
 <? mg.include('sidebar.lp', 'r') ?>
-    <!-- Main content -->
-    <main class="app-main">
-        <div class="app-content">
-            <div class="container-fluid">
+<!-- Main content -->
+<main class="app-main">

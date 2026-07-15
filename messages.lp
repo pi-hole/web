@@ -9,37 +9,46 @@
 
 mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
-
-<!-- Title -->
-<div class="page-header">
-    <h1>Pi-hole diagnosis</h1>
-    <small>On this page, you can see messages from your Pi-hole concerning possible issues.</small>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card" id="messages-list">
-            <!-- /.card-header -->
-            <div class="card-body">
-                <table id="messagesTable" class="table table-striped table-bordered" width="100%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>&nbsp;</th>
-                            <th>Time</th>
-                            <th>Type</th>
-                            <th>Message</th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                </table>
-                <p>Note: If errors are shown, you generate a debug log (use <code>pihole -d</code>), which will do a thorough Pi-hole evaluation.</p>
+<!-- Title/Header -->
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-0">Pi-hole diagnosis</h1>
+                <small>On this page, you can see messages from your Pi-hole concerning possible issues.</small>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
 </div>
+
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" id="messages-list">
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="messagesTable" class="table table-striped table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>&nbsp;</th>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th>Message</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <p>Note: If errors are shown, you generate a debug log (use <code>pihole -d</code>), which will do a thorough Pi-hole evaluation.</p>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</div><!-- /.app-content -->
 
 <script src="<?=pihole.fileversion('scripts/js/messages.js')?>"></script>
 

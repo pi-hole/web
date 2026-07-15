@@ -11,27 +11,32 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 -- Page title and level selector
 PageTitle = "All Settings"
-mg.include('scripts/lua/settings_header.lp','r')
 ?>
-<div class="row" id="advanced-content">
-    <div class="overlay" id="advanced-overlay">
-        <i class="fa fa-sync fa-spin"></i>
-    </div>
+<? mg.include('scripts/lua/settings_header.lp','r') ?>
+<div class="app-content">
+    <div class="container-fluid">
+        <div class="row" id="advanced-content">
+            <div class="overlay" id="advanced-overlay">
+                <i class="fa fa-sync fa-spin"></i>
+            </div>
 
-    <div class="col-sm-12" id="advanced-settings-menu">
-        <ul class="nav nav-pills" role="tablist">
-            <!-- dynamically filled with content -->
-        </ul>
-    </div>
+            <div class="col-sm-12" id="advanced-settings-menu">
+                <ul class="nav nav-pills" role="tablist">
+                    <!-- dynamically filled with content -->
+                </ul>
+            </div>
 
-    <div class="col-sm-12 tab-content" id="advanced-settings-tabs">
-        <!-- dynamically filled with content -->
-    </div>
+            <div class="col-sm-12 tab-content" id="advanced-settings-tabs">
+                <!-- dynamically filled with content -->
+            </div>
 
-    <div class="col-sm-12 save-button-container">
-        <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
-    </div>
-</div>
+            <div class="col-sm-12 save-button-container">
+                <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</div><!-- /.app-content -->
+
 <script src="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.jquery.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/settings-advanced.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/settings.js')?>"></script>
