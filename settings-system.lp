@@ -252,13 +252,13 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-warning confirm-restartdns btn-block button-pad destructive_action" disabled>Restart DNS resolver</button>
+                        <button type="button" class="btn btn-warning confirm-restartdns w-100 button-pad destructive_action" disabled>Restart DNS resolver</button>
                     </div>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-danger confirm-flusharp btn-block button-pad destructive_action" disabled>Flush network table</button>
+                        <button type="button" class="btn btn-danger confirm-flusharp w-100 button-pad destructive_action" disabled>Flush network table</button>
                     </div>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-danger confirm-flushlogs btn-block button-pad destructive_action" disabled>Flush logs (last 24 hours)</button>
+                        <button type="button" class="btn btn-danger confirm-flushlogs w-100 button-pad destructive_action" disabled>Flush logs (last 24 hours)</button>
                     </div>
                 </div>
             </div>

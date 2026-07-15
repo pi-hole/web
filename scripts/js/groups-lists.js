@@ -311,7 +311,7 @@ function initTable() {
         .append(
           '<button type="button" id=btn_apply_' +
             dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+            ' class="btn btn-sm" disabled>Apply</button>'
         );
 
       // Highlight row (if url parameter "listid=" is used)

@@ -372,7 +372,6 @@ function createGroupSelect(selectEl, options = {}) {
   const ts = new TomSelect(el, {
     plugins: ["remove_button"],
     create: false,
-    hideSelected: false,
     placeholder: "none selected",
     // Tom Select keeps the placeholder visible on multi-selects by default;
     // hide it once at least one group is selected so the "none selected"
@@ -389,7 +388,7 @@ function createGroupSelect(selectEl, options = {}) {
   const actionsBox = document.createElement("div");
   actionsBox.className = "ts-actions-box";
   actionsBox.innerHTML =
-    '<div class="btn-group btn-group-sm btn-block">' +
+    '<div class="btn-group btn-group-sm">' +
     '<button type="button" class="btn btn-secondary btn-sm select-all">All</button>' +
     '<button type="button" class="btn btn-secondary btn-sm select-none">None</button>' +
     "</div>";
