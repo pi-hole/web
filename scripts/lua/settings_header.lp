@@ -6,7 +6,7 @@
                     <h1><?= PageTitle ?></h1>
                 </div>
                 <div class="col-sm-6">
-                    <div class="settings-selector">
+                    <div class="settings-selector d-flex align-items-center justify-content-end h-100">
 <? if scriptname ~= 'settings/all' then
     -- Show the level selector, except in All Settings page
 ?>

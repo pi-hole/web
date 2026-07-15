@@ -1441,13 +1441,6 @@ table.dataTable tbody > tr > .selected {
   }
 }
 
-/* Global settings level selector container */
-.settings-selector {
-  padding: 14px 0 0;
-  order: 2;
-  font-size: 18px;
-}
-
 @keyframes error-border {
   0%,
   100% {
