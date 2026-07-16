@@ -42,8 +42,8 @@ function piholeChanged(blocking, timer = null) {
   const dis = $("#pihole-disable");
   const enaT = $("#enableTimer");
 
-  if (timer !== null && Number.parseFloat(timer) > 0) {
-    enaT.text(Date.now() + Number.parseFloat(timer) * 1000);
+  if (timer !== null && Number(timer) > 0) {
+    enaT.text(Date.now() + Number(timer) * 1000);
     setTimeout(countDown, 100);
   }
 
@@ -85,15 +85,16 @@ function piholeChanged(blocking, timer = null) {
 
 function countDown() {
   const ena = $("#enableLabel");
-  const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.text(), 10));
-  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   //Stop and remove timer when user enabled early
   if ($("#pihole-enable").is(":hidden")) {
     ena.text("Enable Blocking");
     return;
   }
+
+  const enaT = $("#enableTimer");
+  const target = new Date(Math.trunc(Number(enaT.text())));
+  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
@@ -145,14 +146,16 @@ function piholeChange(action, duration) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       blocking: action === "enable",
-      timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
+      timer: Math.trunc(Number(duration)) > 0 ? Math.trunc(Number(duration)) : null,
     }),
   })
     .done(data => {
-      if (data.blocking === action + "d") {
-        btnStatus.html("");
-        piholeChanged(data.blocking, data.timer);
+      if (data.blocking !== action + "d") {
+        return;
       }
+
+      btnStatus.html("");
+      piholeChanged(data.blocking, data.timer);
     })
     .fail(data => {
       apiFailure(data);
@@ -200,7 +203,7 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(intl, frequency) {
-  let freq = Number.parseFloat(frequency) * 60;
+  let freq = Number(frequency) * 60;
   let unit = "q/min";
   let title = "Queries per minute";
   if (freq > 100) {
@@ -401,7 +404,7 @@ function updateSystemInfo() {
 function apiFailure(data) {
   if (data.status === 401) {
     // Unauthorized, reload page
-    globalThis.location.reload();
+    location.reload();
   }
 }
 
@@ -436,8 +439,13 @@ function versionCompare(v1, v2) {
       j++;
     }
 
-    if (vnum1 > vnum2) return 1;
-    if (vnum2 > vnum1) return -1;
+    if (vnum1 > vnum2) {
+      return 1;
+    }
+
+    if (vnum2 > vnum1) {
+      return -1;
+    }
 
     // if equal, reset variables and go for next numeric part
     vnum1 = 0;
@@ -511,7 +519,7 @@ function updateVersionInfo() {
         let localVersion = v.local;
         if (v.branch !== null && v.hash !== null) {
           if (v.branch === "master") {
-            localVersion = v.local.split("-")[0];
+            localVersion = v.local.split("-", 1)[0];
             localVersion =
               '<a href="' +
               v.url +
@@ -534,7 +542,7 @@ function updateVersionInfo() {
               // hash differ > Update available
               updateComponentAvailable = true;
               // link to the commit history instead of release page
-              v.url = v.url.replace("releases", "commits/" + v.branch);
+              v.url = v.url.replace("releases", () => "commits/" + v.branch);
             }
           }
         }
@@ -586,14 +594,15 @@ function updateVersionInfo() {
       );
     }
 
-    if (dockerUpdate)
+    if (dockerUpdate) {
       $("#update-hint").html(
         'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
       );
-    else if (updateAvailable)
+    } else if (updateAvailable) {
       $("#update-hint").html(
         'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
       );
+    }
 
     clearTimeout(versionTimer);
     versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
@@ -601,9 +610,12 @@ function updateVersionInfo() {
 }
 
 $(() => {
-  if (!globalThis._isLoginPage) updateInfo();
+  if (!globalThis._isLoginPage) {
+    updateInfo();
+  }
+
   const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.text(), 10));
+  const target = new Date(Math.trunc(Number(enaT.text())));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
@@ -660,7 +672,9 @@ function initSettingsLevel() {
   const expertSettingsElement = document.getElementById("expert-settings");
 
   // Skip init if element is not present (e.g. on login page)
-  if (!expertSettingsElement) return;
+  if (!expertSettingsElement) {
+    return;
+  }
 
   // Restore settings level from local storage (if available) or default to "false"
   const storedExpertSettings = localStorage.getItem("expert_settings");
@@ -692,12 +706,18 @@ function initSettingsLevel() {
 // If "expert_settings" is not set, we default to !"true"
 function applyExpertSettings() {
   const expertSettingsNodes = document.querySelectorAll(".settings-level-expert");
-  if (expertSettingsNodes.length === 0) return;
+  if (expertSettingsNodes.length === 0) {
+    return;
+  }
 
   if (localStorage.getItem("expert_settings") === "true") {
-    for (const element of expertSettingsNodes) element.classList.remove("d-none");
+    for (const element of expertSettingsNodes) {
+      element.classList.remove("d-none");
+    }
   } else {
-    for (const element of expertSettingsNodes) element.classList.toggle("d-none", true);
+    for (const element of expertSettingsNodes) {
+      element.classList.toggle("d-none", true);
+    }
 
     // If we left with an empty page (no visible boxes) after switching from
     // Expert to Basic settings, redirect to admin/settings/system instead
@@ -707,7 +727,7 @@ function applyExpertSettings() {
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
     if (document.querySelector(".settings-selector") && $(".box:visible").length === 0) {
-      globalThis.location.href = `${document.body.dataset.webhome}settings/system`;
+      location.assign(`${document.body.dataset.webhome}settings/system`);
     }
   }
 }
@@ -719,8 +739,8 @@ function addAdvancedInfo() {
   const clientIP = advancedInfoSource.data("client-ip");
   const xffData = advancedInfoSource.data("xff") || "";
   const XForwardedFor = xffData ? utils.base64ToString(xffData) : null;
-  const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
-  const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
+  const starttime = Number(advancedInfoSource.data("starttime"));
+  const endtime = Number(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
 
   // Show advanced info

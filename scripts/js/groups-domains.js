@@ -67,12 +67,12 @@ function showSuggestDomains(value) {
 
   try {
     const parts = new URL(value).hostname.split(".");
-    const table = $("<table>");
+    const suggestTable = $("<table>");
 
     for (let i = 0; i < parts.length - 1; ++i) {
       const hostname = parts.slice(i).join(".");
 
-      table.append(
+      suggestTable.append(
         $("<tr>")
           .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
           .append($("<td>").append(createButton(hostname)))
@@ -80,7 +80,7 @@ function showSuggestDomains(value) {
     }
 
     suggestDomainEl.slideUp("fast", () => {
-      suggestDomainEl.html(table);
+      suggestDomainEl.html(suggestTable);
       suggestDomainEl.slideDown("fast");
     });
   } catch (error) {
@@ -272,10 +272,12 @@ function initTable() {
           // Restore values if drop-down menu is closed without clicking the
           // Apply button (e.g. by clicking outside) and re-disable the Apply
           // button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
+
+          $(this).val(data.groups).selectpicker("refresh");
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         })
         .selectpicker()
         .siblings(".dropdown-menu")
@@ -287,7 +289,7 @@ function initTable() {
         );
 
       // Highlight row (if url parameter "domainid=" is used)
-      if ("domainid" in GETDict && data.id === Number.parseInt(GETDict.domainid, 10)) {
+      if ("domainid" in GETDict && data.id === Math.trunc(GETDict.domainid)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -375,15 +377,17 @@ function initTable() {
       return data;
     },
     initComplete() {
-      if ("domainid" in GETDict) {
-        const pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(Number.parseInt(GETDict.domainid, 10));
-        if (pos !== -1) {
-          const page = Math.floor(pos / table.page.info().length);
-          table.page(page).draw(false);
-        }
+      if (!("domainid" in GETDict)) {
+        return;
+      }
+
+      const pos = table
+        .column(0, { order: "current" })
+        .data()
+        .indexOf(Math.trunc(GETDict.domainid));
+      if (pos !== -1) {
+        const page = Math.floor(pos / table.page.info().length);
+        table.page(page).draw(false);
       }
     },
   });
@@ -504,7 +508,9 @@ function addDomain() {
   if (kind === "exact" && wildcardChecked) {
     for (const [index, domain] of domains.entries()) {
       // Strip leading "*." if specified by user in wildcard mode
-      if (domain.startsWith("*.")) domains[index] = domain.substr(2);
+      if (domain.startsWith("*.")) {
+        domains[index] = domain.substr(2);
+      }
 
       // Transform domain into a wildcard regex
       domains[index] = "(\\.|^)" + domains[index].replaceAll(".", "\\.") + "$";
@@ -565,8 +571,8 @@ function editDomain() {
     .val()
     .map(Number);
 
-  const oldType = oldTypeStr.split("/")[0];
-  const oldKind = oldTypeStr.split("/")[1];
+  const oldType = oldTypeStr.split("/", 1)[0];
+  const oldKind = oldTypeStr.split("/", 2)[1];
 
   let done = "edited";
   let notDone = "editing";
@@ -603,7 +609,7 @@ function editDomain() {
   }
 
   utils.disableAll();
-  const domainDecoded = utils.hexDecode(domain.split("_")[0]);
+  const domainDecoded = utils.hexDecode(domain.split("_", 1)[0]);
   utils.showAlert("info", "", "Editing domain...", domainDecoded);
   $.ajax({
     url:

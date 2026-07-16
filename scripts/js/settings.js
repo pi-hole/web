@@ -46,13 +46,13 @@ function setConfigValues(topic, key, value) {
     envTitle.find(".expert-warning").length === 0
   ) {
     envTitle.append(
-      `<span class="expert-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>`
+      '<span class="expert-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>'
     );
   }
 
   if (value.flags.restart_dnsmasq && envTitle.find(".restart-warning").length === 0) {
     envTitle.append(
-      `<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>`
+      '<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>'
     );
   }
 
@@ -60,7 +60,7 @@ function setConfigValues(topic, key, value) {
     // If this setting has been set by environment variable, display a padlock in the section title
     if (envTitle.find(".env-warning").length === 0) {
       envTitle.append(
-        `<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>`
+        '<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>'
       );
     }
 
@@ -131,7 +131,9 @@ function saveSettings() {
     }
 
     // If this is a radio button, skip all but the checked one
-    if ($(this).is(":radio") && !$(this).is(":checked")) return;
+    if ($(this).is(":radio") && !$(this).is(":checked")) {
+      return;
+    }
 
     // If this is a string array, split the value into an array
     if ($(this).is("textarea")) {
@@ -141,12 +143,12 @@ function saveSettings() {
 
     // If this is an integer number, parse it accordingly
     if ($(this).data("type") === "integer") {
-      value = Number.parseInt(value, 10);
+      value = value === "" ? NaN : Math.trunc(value);
     }
 
     // If this is a floating point value, parse it accordingly
     if ($(this).data("type") === "float") {
-      value = Number.parseFloat(value);
+      value = value === "" ? NaN : Number(value);
     }
 
     // Build deep object

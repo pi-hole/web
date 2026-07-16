@@ -111,13 +111,17 @@ function determineStateText(iface) {
 }
 
 function findMasterInterface({ iface, masterInterfaces, interfacesData }) {
-  if (iface.master === undefined) return null;
+  if (iface.master === undefined) {
+    return null;
+  }
 
   const masterObj = interfacesData.find(obj => obj.index === iface.master);
-  if (!masterObj) return null;
+  if (!masterObj) {
+    return null;
+  }
 
   const masterName = masterObj.name;
-  if (masterName in masterInterfaces) {
+  if (Array.isArray(masterInterfaces[masterName])) {
     masterInterfaces[masterName].push(iface.name);
   } else {
     masterInterfaces[masterName] = [iface.name];
@@ -163,7 +167,9 @@ function addFlagsDetails(obj, iface) {
 }
 
 function addHardwareAddressDetails(obj, iface) {
-  if (iface.address === undefined) return;
+  if (iface.address === undefined) {
+    return;
+  }
 
   const extra =
     iface.perm_address !== undefined && iface.perm_address !== iface.address
@@ -177,7 +183,9 @@ function addHardwareAddressDetails(obj, iface) {
 }
 
 function addAddressDetails(obj, iface, intl) {
-  if (iface.addresses === undefined) return;
+  if (iface.addresses === undefined) {
+    return;
+  }
 
   const count = iface.addresses.length;
   const label = count === 1 ? " address" : " addresses";
@@ -288,7 +296,9 @@ function createAddressNode(addr, intl) {
 }
 
 function addStatisticsDetails(obj, iface, intl) {
-  if (iface.stats === undefined) return;
+  if (iface.stats === undefined) {
+    return;
+  }
 
   const stats = {
     text: "Statistics",
@@ -475,7 +485,7 @@ function sortInterfaces(interfaces, masterInterfaces) {
 
   // Add slave interfaces next to master interfaces
   for (const master of interfaceList) {
-    if (master in masterInterfaces) {
+    if (Array.isArray(masterInterfaces[master])) {
       for (const slave of masterInterfaces[master]) {
         ifaces.splice(ifaces.indexOf(slave), 1);
         interfaceList.splice(interfaceList.indexOf(master) + 1, 0, slave);
@@ -504,27 +514,39 @@ function renderTreeView(json) {
   document.getElementById("spinner").classList.add("d-none");
 }
 
+function expandGatewayInterfaceDiv(div, gw) {
+  if (!div.textContent.includes(gw)) {
+    return;
+  }
+
+  div.classList.remove("collapsed");
+  const nextDiv = div.nextElementSibling;
+  if (nextDiv) {
+    $(nextDiv).collapse("show");
+  }
+
+  // Change expand icon to collapse icon
+  const icon = div.querySelector("i");
+  if (!icon) {
+    return;
+  }
+
+  icon.classList.remove("fa-angle-right");
+  icon.classList.add("fa-angle-down");
+}
+
 function expandGatewayInterfaces(gateways) {
   // Expand gateway interfaces by default
   const tree = document.getElementById("tree");
-  if (!tree) return;
+  if (!tree) {
+    return;
+  }
 
   for (const gw of gateways) {
     // Find all divs containing the gateway name
     const divs = tree.querySelectorAll("div");
     for (const div of divs) {
-      if (!div.textContent.includes(gw)) continue;
-
-      div.classList.remove("collapsed");
-      const nextDiv = div.nextElementSibling;
-      if (nextDiv) $(nextDiv).collapse("show");
-
-      // Change expand icon to collapse icon
-      const icon = div.querySelector("i");
-      if (!icon) continue;
-
-      icon.classList.remove("fa-angle-right");
-      icon.classList.add("fa-angle-down");
+      expandGatewayInterfaceDiv(div, gw);
     }
   }
 }

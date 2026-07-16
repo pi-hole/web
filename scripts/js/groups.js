@@ -244,7 +244,7 @@ function addGroup() {
     .escapeHtml($("#new_name"))
     .val()
     .match(/(?:[^\s"]+|"[^"]*")+/gu)
-    .map(name => name.replaceAll(/(^"|"$)/gu, ""));
+    .map(name => name.replaceAll(/^"|"$/gu, ""));
   // Remove empty elements
   names = names.filter(el => el !== "");
   const groupStr = JSON.stringify(names);

@@ -240,21 +240,26 @@ function parseStaticDHCPLine(line) {
   // Returns null if advanced/invalid, or {hwaddr, ipaddr, hostname}
 
   // If the line is empty, return an object with empty fields
-  if (!line.trim())
+  if (!line.trim()) {
     return {
       hwaddr: "",
       ipaddr: "",
       hostname: "",
     };
+  }
 
   // Advanced if line contains id:, set:, tag, or "*":
-  if (/id:|set:|tag:\*/u.test(line)) return "advanced";
+  if (/id:|set:|tag:\*/u.test(line)) {
+    return "advanced";
+  }
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
 
   // Advanced if there are more than 3 parts
-  if (parts.length > 3) return "advanced";
+  if (parts.length > 3) {
+    return "advanced";
+  }
 
   let hwaddr = "";
   let ipaddr = "";
@@ -262,31 +267,41 @@ function parseStaticDHCPLine(line) {
 
   for (const part of parts) {
     // Advanced if the part is "infinite", "ignore" or a lease time value
-    if (/^(infinite|ignore|\d+(w|W|d|D|h|H|m|M|s|S))$/u.test(part)) return "advanced";
+    if (/^(?:infinite|ignore|\d+[DHMSWdhmsw])$/u.test(part)) {
+      return "advanced";
+    }
 
     if (part.includes(":")) {
       if (part.startsWith("[") && part.endsWith("]")) {
         // Advanced if more than one IP was found
-        if (ipaddr) return "advanced";
+        if (ipaddr) {
+          return "advanced";
+        }
 
         // Potentially an IPv6 (we allow invalid values here. The table will highlight them)
         ipaddr = part;
       } else {
         // Advanced if more than one MAC Address was found
-        if (hwaddr) return "advanced";
+        if (hwaddr) {
+          return "advanced";
+        }
 
         // Potentially a MAC Address (we allow invalid values here. The table will highlight them)
         hwaddr = part;
       }
     } else if (/^[.0-9]+$/u.test(part)) {
       // Advanced if more than one IP was found
-      if (ipaddr) return "advanced";
+      if (ipaddr) {
+        return "advanced";
+      }
 
       // Potentially an IPv4 (we allow invalid values here. The table will highlight them)
       ipaddr = part;
     } else {
       // Advanced if more than one hostname was found
-      if (hostname) return "advanced";
+      if (hostname) {
+        return "advanced";
+      }
 
       // Potentially a hostname (we allow invalid values here. The table will highlight them)
       hostname = part;
@@ -302,7 +317,7 @@ function parseStaticDHCPLine(line) {
 
 // Save button for each row updates only that line in the textarea
 $(document).on("click", ".save-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const row = $(`tr[data-row="${rowIdx}"]`);
   const hwaddr = row.find(".static-hwaddr").text().trim();
   const ipaddr = row.find(".static-ipaddr").text().trim();
@@ -348,7 +363,7 @@ $(document).on("click", ".save-static-row", function () {
 
 // Cancel button: restores the original line value when editing a row
 $(document).on("click", ".cancel-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const row = $(`tr[data-row="${rowIdx}"]`);
 
   // Get the original values
@@ -384,7 +399,7 @@ $(document).on("click", ".cancel-static-row", function () {
 
 // Delete button for each row removes that line from the textarea and updates the table
 $(document).on("click", ".delete-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   lines.splice(rowIdx, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
@@ -395,7 +410,7 @@ $(document).on("click", ".delete-static-row", function () {
 
 // Add button for each row inserts a new empty line after this row
 $(document).on("click", ".add-static-row", function () {
-  const rowIdx = Number.parseInt($(this).data("row"), 10);
+  const rowIdx = Math.trunc($(this).data("row"));
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   lines.splice(rowIdx + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
@@ -415,10 +430,13 @@ $(document).on("click", ".add-static-row", function () {
 $(() => {
   processDHCPConfig();
   renderStaticDHCPTable();
-  $("#dhcp-hosts").on("input", function () {
+  $("#dhcp-hosts").on("input", () => {
     // Don't rebuild the table while a row is being edited (a Save button exists),
     // otherwise unsaved cell edits would be silently destroyed by tbody.empty()
-    if ($("#StaticDHCPTable .save-static-row").length > 0) return;
+    if ($("#StaticDHCPTable .save-static-row").length > 0) {
+      return;
+    }
+
     renderStaticDHCPTable();
   });
 });
@@ -551,12 +569,21 @@ function updateLineNumbers(force) {
   const linesElem = document.getElementById("dhcp-hosts-lines");
   updateLineNumbers.lastLineCount ||= 0;
 
-  if (!textarea || !linesElem) return;
+  if (!textarea || !linesElem) {
+    return;
+  }
+
   const lines = textarea.value.split("\n").length || 1;
-  if (!force && lines === updateLineNumbers.lastLineCount) return;
+  if (!force && lines === updateLineNumbers.lastLineCount) {
+    return;
+  }
+
   updateLineNumbers.lastLineCount = lines;
   let html = "";
-  for (let i = 1; i <= lines; i++) html += i + "<br>";
+  for (let i = 1; i <= lines; i++) {
+    html += i + "<br>";
+  }
+
   linesElem.innerHTML = html;
   // Apply the same styles to the lines element as the textarea
   for (const property of [
@@ -567,7 +594,7 @@ function updateLineNumbers(force) {
     "lineHeight",
     "padding",
   ]) {
-    linesElem.style[property] = globalThis.getComputedStyle(textarea)[property];
+    linesElem.style[property] = getComputedStyle(textarea)[property];
   }
 
   // Update "--num-lines" variable and let CSS handle the height
@@ -581,11 +608,11 @@ function syncScroll() {
 
 document.getElementById("dhcp-hosts").addEventListener("scroll", syncScroll);
 
-document.getElementById("dhcp-hosts").addEventListener("input", function () {
+document.getElementById("dhcp-hosts").addEventListener("input", () => {
   updateLineNumbers(false);
 });
 
-window.addEventListener("resize", function () {
+window.addEventListener("resize", () => {
   updateLineNumbers(true);
 });
 
