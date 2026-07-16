@@ -700,11 +700,26 @@ td.details-control {
   padding: 2px 5px;
 }
 
-.blocked-row td {
+/* Query Log - Allow and Deny buttons */
+.btn-whitelist {
+  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-color: var(--bs-success);
+  --bs-btn-hover-bg: var(--bs-success);
+  --bs-btn-hover-color: #fff;
+}
+.btn-blacklist {
+  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-color: var(--bs-danger);
+  --bs-btn-hover-bg: var(--bs-danger);
+  --bs-btn-hover-color: #fff;
+}
+
+/* Query Log - Allow and Deny row background colors */
+table.dataTable .blocked-row td {
   background-color: rgb(229, 83, 75, 0.1);
 }
 
-.allowed-row td {
+table.dataTable .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
 }
 
