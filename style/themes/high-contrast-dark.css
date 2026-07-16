@@ -157,7 +157,7 @@ h4 {
 .app-wrapper,
 .app-sidebar,
 .left-side {
-  background-color: #202830;
+  background-color: #202830 !important;
 }
 .user-panel > .info,
 .user-panel > .info > a {
@@ -245,13 +245,6 @@ h4 {
   color: var(--main-text-color);
 }
 
-.card.card-info,
-.card.card-primary,
-.card.card-success,
-.card.card-warning,
-.card.card-danger {
-  border-top-width: 3px;
-}
 .card.card-info {
   border-top-color: #00c0ef;
 }
@@ -749,10 +742,9 @@ fieldset[disabled] .form-control {
 .card,
 .card-body,
 .card-header {
-  background-color: #3e464c;
-  border-radius: 4px;
-  border: 1px solid #3c4652;
+  border-color: #3c4652;
   color: var(--main-text-color);
+  box-shadow: none;
 }
 
 .card.box-solid.card-info {

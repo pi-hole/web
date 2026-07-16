@@ -148,13 +148,6 @@ h4 {
 .card > .card-header {
   color: var(--theme-text);
 }
-.card.card-info,
-.card.card-primary,
-.card.card-success,
-.card.card-warning,
-.card.card-danger {
-  border-top-width: 3px;
-}
 .card.card-info {
   border-top-color: #00c0ef;
 }
@@ -475,9 +468,9 @@ fieldset[disabled] .form-control {
 .card-body,
 .card-header {
   background-color: #3e464c;
-  border-radius: 4px;
-  border: 1px solid var(--theme-bg);
+  border-color: var(--theme-bg);
   color: var(--theme-text);
+  box-shadow: none;
 }
 
 input[type="password"]::-webkit-caps-lock-indicator {
