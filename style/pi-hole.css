@@ -1648,8 +1648,8 @@ table.dataTable tbody > tr > .selected {
 
 #revServers-table .btn-xs,
 #StaticDHCPTable .btn-xs {
-  width: 24px;
-  height: 24px;
+  padding: 4px;
+  font-size: 13px;
 }
 .btn-xs .fa-fw {
   width: 1em;

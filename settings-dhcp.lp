@@ -217,10 +217,10 @@ PageTitle = "DHCP Settings"
                             </div>
                             <div class="col-md-6">
                                 <label>Examples:</label>
-                                <div class="card"><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code></div>
-                                <div class="card"><pre>00:20:e0:3b:13:af,laptop</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code></div>
-                                <div class="card"><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease</div>
-                                <div class="card"><pre>00:20:e0:3b:13:af,[2001:db8::1]</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>[2001:db8::1]</code></div>
+                                <div class="callout callout-light"><pre>00:20:e0:3b:13:af,192.168.0.123</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code></div><br>
+                                <div class="callout callout-light"><pre>00:20:e0:3b:13:af,laptop</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the name <code>laptop</code></div><br>
+                                <div class="callout callout-light"><pre>00:20:e0:3b:13:af,192.168.0.123,laptop,infinite</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>192.168.0.123</code>, the name <code>laptop</code>, and an infinite DHCP lease</div><br>
+                                <div class="callout callout-light"><pre>00:20:e0:3b:13:af,[2001:db8::1]</pre> tells Pi-hole to give the machine with hardware address <code>00:20:e0:3b:13:af</code> the address <code>[2001:db8::1]</code></div><br>
                             </div>
                             <div class="col-12">
                                 <div class="card card-info card-outline collapsed-card">
