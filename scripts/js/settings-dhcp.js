@@ -85,14 +85,14 @@ $(() => {
     rowCallback(row, data) {
       $(row).attr("data-id", data.ip);
       // Create buttons without data-* attributes in HTML
-      const $deleteBtn = $(
+      const $deleteButton = $(
         '<button type="button" class="btn btn-danger btn-xs"><span class="far fa-trash-alt"></span></button>'
       )
         .attr("id", "deleteLease_" + data.ip)
         .attr("data-del-ip", data.ip)
         .attr("title", "Delete lease")
         .attr("data-bs-toggle", "tooltip");
-      const $copyBtn = $(
+      const $copyButton = $(
         '<button type="button" class="btn btn-secondary btn-xs copy-to-static"><span class="fa fa-fw fa-copy"></span></button>'
       )
         .attr("title", "Copy to static leases")
@@ -100,7 +100,7 @@ $(() => {
         .data("hwaddr", data.hwaddr || "")
         .data("ip", data.ip || "")
         .data("hostname", data.name || "");
-      $("td:eq(6)", row).empty().append($deleteBtn, " ", $copyBtn);
+      $("td:eq(6)", row).empty().append($deleteButton, " ", $copyButton);
     },
     select: {
       style: "multi",
@@ -329,8 +329,8 @@ function parseStaticDHCPLine(line) {
 
 // Save button for each row updates only that line in the textarea
 $(document).on("click", ".save-static-row", function () {
-  const rowIdx = Math.trunc($(this).data("row"));
-  const row = $(`tr[data-row="${rowIdx}"]`);
+  const rowIndex = Math.trunc($(this).data("row"));
+  const row = $(`tr[data-row="${rowIndex}"]`);
   const hwaddr = row.find(".static-hwaddr").text().trim();
   const ipaddr = row.find(".static-ipaddr").text().trim();
   const hostname = row.find(".static-hostname").text().trim();
@@ -351,12 +351,12 @@ $(document).on("click", ".save-static-row", function () {
 
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
   // Only update if at least one field is non-empty
-  lines[rowIdx] =
+  lines[rowIndex] =
     hwaddr || ipaddr || hostname ? [hwaddr, ipaddr, hostname].filter(Boolean).join(",") : "";
   $("#dhcp-hosts").val(lines.join("\n"));
 
   // Update "data-original-line" to containing the new saved values
-  row.attr("data-original-line", lines[rowIdx]);
+  row.attr("data-original-line", lines[rowIndex]);
 
   // Hide the tooltips and remove Save and Cancel buttons
   const $cancelBtn = $(this).siblings(".cancel-static-row");
@@ -378,8 +378,8 @@ $(document).on("click", ".save-static-row", function () {
 
 // Cancel button: restores the original line value when editing a row
 $(document).on("click", ".cancel-static-row", function () {
-  const rowIdx = Math.trunc($(this).data("row"));
-  const row = $(`tr[data-row="${rowIdx}"]`);
+  const rowIndex = Math.trunc($(this).data("row"));
+  const row = $(`tr[data-row="${rowIndex}"]`);
 
   // Get the original values
   const originalLine = row.attr("data-original-line");
@@ -417,9 +417,9 @@ $(document).on("click", ".cancel-static-row", function () {
 
 // Delete button for each row removes that line from the textarea and updates the table
 $(document).on("click", ".delete-static-row", function () {
-  const rowIdx = Math.trunc($(this).data("row"));
+  const rowIndex = Math.trunc($(this).data("row"));
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
-  lines.splice(rowIdx, 1);
+  lines.splice(rowIndex, 1);
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
   bootstrap.Tooltip.getInstance(this)?.hide();
@@ -428,9 +428,9 @@ $(document).on("click", ".delete-static-row", function () {
 
 // Add button for each row inserts a new empty line after this row
 $(document).on("click", ".add-static-row", function () {
-  const rowIdx = Math.trunc($(this).data("row"));
+  const rowIndex = Math.trunc($(this).data("row"));
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
-  lines.splice(rowIdx + 1, 0, "");
+  lines.splice(rowIndex + 1, 0, "");
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
   bootstrap.Tooltip.getInstance(this)?.hide();
@@ -438,7 +438,7 @@ $(document).on("click", ".add-static-row", function () {
   // Focus the new row after render
   setTimeout(() => {
     $("#StaticDHCPTable tbody tr")
-      .eq(rowIdx + 1)
+      .eq(rowIndex + 1)
       .find("td:first")
       .focus();
   }, 10);
@@ -467,22 +467,22 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
 
   // Add save button (a hint asking to click on the button will be shown below the table - CSS pseudo-element)
   if (row.find(".save-static-row").length === 0) {
-    const idx = row.attr("data-row");
-    const saveBtn = $(
+    const index = row.attr("data-row");
+    const saveButton = $(
       '<button type="button" class="btn btn-success btn-xs save-static-row"><span class="fa fa-fw fa-check"></span></button>'
     )
-      .attr("data-row", idx)
+      .attr("data-row", index)
       .attr("title", "Confirm changes to this line")
       .attr("data-bs-toggle", "tooltip");
-    const cancelBtn = $(
+    const cancelButton = $(
       '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><span class="fa fa-fw fa-undo"></span></button>'
     )
-      .attr("data-row", idx)
+      .attr("data-row", index)
       .attr("title", "Cancel changes and restore original values")
       .attr("data-bs-toggle", "tooltip");
 
     // Add the save button to the actions column
-    row.find("td").last().prepend(saveBtn, " ", cancelBtn, " ");
+    row.find("td").last().prepend(saveButton, " ", cancelButton, " ");
 
     // Disable the textarea to avoid losing unsaved changes to the table
     $("#dhcp-hosts").prop("disabled", true);
@@ -494,29 +494,29 @@ function renderStaticDHCPTable() {
   const tbody = $("#StaticDHCPTable tbody");
   tbody.empty();
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
-  for (const [idx, line] of lines.entries()) {
+  for (const [index, line] of lines.entries()) {
     const parsed = parseStaticDHCPLine(line);
 
-    const delBtn = $(
+    const delButton = $(
       '<button type="button" class="btn btn-danger btn-xs delete-static-row"><span class="fa fa-fw fa-trash"></span></button>'
     )
-      .attr("data-row", idx)
+      .attr("data-row", index)
       .attr("title", "Delete this line")
       .attr("data-bs-toggle", "tooltip");
 
-    const addBtn = $(
+    const addButton = $(
       '<button type="button" class="btn btn-primary btn-xs add-static-row"><span class="fa fa-fw fa-plus"></span></button>'
     )
-      .attr("data-row", idx)
+      .attr("data-row", index)
       .attr("title", "Add new line after this")
       .attr("data-bs-toggle", "tooltip");
 
     // Create the new row - store the original data, in case we need to restore the values
-    const tr = $("<tr></tr>").attr("data-row", idx).attr("data-original-line", line);
+    const tr = $("<tr></tr>").attr("data-row", index).attr("data-original-line", line);
 
     if (parsed === "advanced") {
       tr.addClass("table-warning").append(
-        `<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ${idx + 1}</td>`
+        `<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ${index + 1}</td>`
       );
     } else {
       const cell = '<td contenteditable="true"></td>';
@@ -545,7 +545,7 @@ function renderStaticDHCPTable() {
     }
 
     // Append a last cell containing the buttons
-    tr.append($('<td class="actions"></td>').append(delBtn, " ", addBtn));
+    tr.append($('<td class="actions"></td>').append(delButton, " ", addButton));
 
     tbody.append(tr);
   }
@@ -572,8 +572,8 @@ $(document).on("click", ".copy-to-static", function () {
   const hostname = $(this).data("hostname") || "";
   const line = [hwaddr, ip, hostname].filter(Boolean).join(",");
   const textarea = $("#dhcp-hosts");
-  const val = textarea.val();
-  textarea.val(val ? val + "\n" + line : line).trigger("input");
+  const value = textarea.val();
+  textarea.val(value ? value + "\n" + line : line).trigger("input");
 });
 
 // Add line numbers to the textarea for static DHCP hosts
@@ -584,10 +584,10 @@ function showLineNumbers() {
 
 function updateLineNumbers(force) {
   const textarea = document.getElementById("dhcp-hosts");
-  const linesElem = document.getElementById("dhcp-hosts-lines");
+  const linesElement = document.getElementById("dhcp-hosts-lines");
   updateLineNumbers.lastLineCount ||= 0;
 
-  if (!textarea || !linesElem) {
+  if (!textarea || !linesElement) {
     return;
   }
 
@@ -598,11 +598,11 @@ function updateLineNumbers(force) {
 
   updateLineNumbers.lastLineCount = lines;
   let html = "";
-  for (let i = 1; i <= lines; i++) {
-    html += i + "<br>";
+  for (let index = 1; index <= lines; index++) {
+    html += index + "<br>";
   }
 
-  linesElem.innerHTML = html;
+  linesElement.innerHTML = html;
   // Apply the same styles to the lines element as the textarea
   for (const property of [
     "fontFamily",
@@ -612,7 +612,7 @@ function updateLineNumbers(force) {
     "lineHeight",
     "padding",
   ]) {
-    linesElem.style[property] = getComputedStyle(textarea)[property];
+    linesElement.style[property] = getComputedStyle(textarea)[property];
   }
 
   // Update "--num-lines" variable and let CSS handle the height
@@ -635,8 +635,8 @@ window.addEventListener("resize", () => {
 });
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function () {
-  const val = $(this).text().trim();
-  if (val && !utils.validateMAC(val)) {
+  const value = $(this).text().trim();
+  if (value && !utils.validateMAC(value)) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid MAC address format");
   } else {
@@ -646,8 +646,8 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-hwaddr", function
 });
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function () {
-  const val = $(this).text().trim();
-  if (val && !(utils.validateIPv4(val) || utils.validateIPv6Brackets(val))) {
+  const value = $(this).text().trim();
+  if (value && !(utils.validateIPv4(value) || utils.validateIPv6Brackets(value))) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid IP address format");
   } else {
@@ -657,8 +657,8 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
 });
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", function () {
-  const val = $(this).text().trim();
-  if (val && !utils.validateHostnameStrict(val)) {
+  const value = $(this).text().trim();
+  if (value && !utils.validateHostnameStrict(value)) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid hostname: only letters, digits, hyphens, and dots allowed");
   } else {

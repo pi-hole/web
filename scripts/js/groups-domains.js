@@ -20,14 +20,14 @@ $(() => {
   // sync description fields, reset inactive inputs on tab change
   $('a[data-bs-toggle="tab"]').on("shown.bs.tab", function () {
     const tabHref = $(this).attr("href");
-    let val;
+    let value;
     if (tabHref === "#tab_domain") {
-      val = $("#new_regex_comment").val();
-      $("#new_domain_comment").val(val);
+      value = $("#new_regex_comment").val();
+      $("#new_domain_comment").val(value);
       $("#new_regex").val("");
     } else if (tabHref === "#tab_regex") {
-      val = $("#new_domain_comment").val();
-      $("#new_regex_comment").val(val);
+      value = $("#new_domain_comment").val();
+      $("#new_regex_comment").val(value);
       $("#new_domain").val("");
       $("#wildcard_checkbox").prop("checked", false);
     }
@@ -40,10 +40,10 @@ $(() => {
 
   // Domain suggestion handling
   let suggestTimeout;
-  $("#new_domain").on("input", e => {
+  $("#new_domain").on("input", event => {
     hideSuggestDomains();
     clearTimeout(suggestTimeout);
-    suggestTimeout = setTimeout(showSuggestDomains, 1000, e.target.value);
+    suggestTimeout = setTimeout(showSuggestDomains, 1000, event.target.value);
   });
 
   getGroups();
@@ -51,8 +51,8 @@ $(() => {
 
 // Show a list of suggested domains based on the user's input
 function showSuggestDomains(value) {
-  const newDomainEl = $("#new_domain");
-  const suggestDomainEl = $("#suggest_domains");
+  const newDomainElement = $("#new_domain");
+  const suggestDomainElement = $("#suggest_domains");
 
   function createButton(hostname) {
     // Purposefully omit 'btn' class to save space on padding
@@ -60,7 +60,7 @@ function showSuggestDomains(value) {
       .append($("<em>").text(hostname))
       .on("click", () => {
         hideSuggestDomains();
-        newDomainEl.val(hostname);
+        newDomainElement.val(hostname);
       });
   }
 
@@ -68,19 +68,21 @@ function showSuggestDomains(value) {
     const parts = new URL(value).hostname.split(".");
     const suggestTable = $("<table>");
 
-    for (let i = 0; i < parts.length - 1; ++i) {
-      const hostname = parts.slice(i).join(".");
+    for (let index = 0; index < parts.length - 1; ++index) {
+      const hostname = parts.slice(index).join(".");
 
       suggestTable.append(
         $("<tr>")
-          .append($('<td class="text-nowrap text-right">').text(i === 0 ? "Did you mean" : "or"))
+          .append(
+            $('<td class="text-nowrap text-right">').text(index === 0 ? "Did you mean" : "or")
+          )
           .append($("<td>").append(createButton(hostname)))
       );
     }
 
-    suggestDomainEl.slideUp("fast", () => {
-      suggestDomainEl.html(suggestTable);
-      suggestDomainEl.slideDown("fast");
+    suggestDomainElement.slideUp("fast", () => {
+      suggestDomainElement.html(suggestTable);
+      suggestDomainElement.slideDown("fast");
     });
   } catch (error) {
     const { message } = error;
@@ -191,8 +193,8 @@ function initTable() {
           data.kind +
           "'>"
       );
-      const typeEl = $("#type_" + dataId, row);
-      typeEl.on("change", editDomain);
+      const typeElement = $("#type_" + dataId, row);
+      typeElement.on("change", editDomain);
 
       // Initialize bootstrap-toggle for status field (enabled/disabled)
       $("td:eq(3)", row).html(
@@ -202,49 +204,49 @@ function initTable() {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      const statusEl = $("#enabled_" + dataId, row);
-      statusEl.bootstrapToggle({
+      const statusElement = $("#enabled_" + dataId, row);
+      statusElement.bootstrapToggle({
         onlabel: "Enabled",
         offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",
       });
-      statusEl.on("change", editDomain);
+      statusElement.on("change", editDomain);
 
       // Comment field
       $("td:eq(4)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentEl = $("#comment_" + dataId, row);
-      commentEl.val(data.comment);
-      commentEl.on("change", editDomain);
+      const commentElement = $("#comment_" + dataId, row);
+      commentElement.val(data.comment);
+      commentElement.on("change", editDomain);
 
       // Group assignment field (multi-select)
       $("td:eq(5)", row).empty();
       $("td:eq(5)", row).append(
         '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
-      const selectEl = $("#multiselect_" + dataId, row);
+      const selectElement = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectEl.append($("<option/>").val(group.id).text(label));
+        selectElement.append($("<option/>").val(group.id).text(label));
       }
 
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize Tom Select
-      const applyBtn = "#btn_apply_" + dataId;
-      const ts = utils.createGroupSelect(selectEl, {
+      const applyButton = "#btn_apply_" + dataId;
+      const ts = utils.createGroupSelect(selectElement, {
         onChange() {
           // enable Apply button if changes were made to the drop-down menu
           // and have it call editDomain() on click
-          if ($(applyBtn).prop("disabled")) {
-            $(applyBtn)
+          if ($(applyButton).prop("disabled")) {
+            $(applyButton)
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", () => {
-                editDomain.call(selectEl);
+                editDomain.call(selectElement);
               });
           }
         },
@@ -252,12 +254,12 @@ function initTable() {
           // Restore values if the dropdown is closed without clicking the
           // Apply button (e.g. by clicking outside) and re-disable the Apply
           // button
-          if ($(applyBtn).prop("disabled")) {
+          if ($(applyButton).prop("disabled")) {
             return;
           }
 
           ts.setValue(data.groups);
-          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          $(applyButton).removeClass("btn-success").prop("disabled", true).off("click");
         },
       });
       $(ts.dropdown)
@@ -407,8 +409,8 @@ $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
     })
     .get();
 
-  const typeStr = rowData.type + "/" + rowData.kind;
-  return Boolean(types.includes(typeStr));
+  const typeString = rowData.type + "/" + rowData.kind;
+  return Boolean(types.includes(typeString));
 });
 $(".filter_types input:checkbox").on("change", () => {
   table.draw();
@@ -424,10 +426,10 @@ function deleteDomain() {
 
 function deleteDomains(encodedIds) {
   const decodedIds = [];
-  for (const [i, encodedId] of encodedIds.entries()) {
+  for (const [index, encodedId] of encodedIds.entries()) {
     // Decode domain, type, and kind and add to array
     const parts = encodedId.split("_");
-    decodedIds[i] = {
+    decodedIds[index] = {
       item: parts[0],
       type: parts[1],
       kind: parts[2],
@@ -440,39 +442,39 @@ function deleteDomains(encodedIds) {
 function addDomain() {
   const action = this.id;
   const tabHref = $('a[data-bs-toggle="tab"].active').attr("href");
-  const wildcardEl = $("#wildcard_checkbox");
-  const wildcardChecked = wildcardEl.prop("checked");
+  const wildcardElement = $("#wildcard_checkbox");
+  const wildcardChecked = wildcardElement.prop("checked");
 
   // current tab's inputs
   let kind;
-  let domainEl;
-  let commentEl;
-  let groupEl;
+  let domainElement;
+  let commentElement;
+  let groupElement;
   if (tabHref === "#tab_domain") {
     kind = "exact";
-    domainEl = $("#new_domain");
-    commentEl = $("#new_domain_comment");
-    groupEl = $("#new_domain_group");
+    domainElement = $("#new_domain");
+    commentElement = $("#new_domain_comment");
+    groupElement = $("#new_domain_group");
   } else if (tabHref === "#tab_regex") {
     kind = "regex";
-    domainEl = $("#new_regex");
-    commentEl = $("#new_regex_comment");
-    groupEl = $("#new_regex_group");
+    domainElement = $("#new_regex");
+    commentElement = $("#new_regex_comment");
+    groupElement = $("#new_regex_group");
   }
 
-  const comment = commentEl.val();
+  const comment = commentElement.val();
   // Convert all group IDs to integers
-  const group = groupEl.val().map(Number);
+  const group = groupElement.val().map(Number);
 
   // Check if the user wants to add multiple domains (space or newline separated)
   // If so, split the input and store it in an array
-  let domains = domainEl.val().split(/\s+/u);
+  let domains = domainElement.val().split(/\s+/u);
   // Remove empty elements
-  domains = domains.filter(el => el !== "");
-  const domainStr = JSON.stringify(domains);
+  domains = domains.filter(element => element !== "");
+  const domainString = JSON.stringify(domains);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
+  utils.showAlert("info", "", "Adding domain(s)...", domainString);
 
   if (domains.length === 0) {
     utils.enableAll();
@@ -534,11 +536,11 @@ function addDomain() {
 }
 
 function editDomain() {
-  const elem = $(this).attr("id");
+  const element = $(this).attr("id");
   const tr = $(this).closest("tr");
   const domain = tr.attr("data-id");
   const newTypestr = tr.find("#type_" + domain).val();
-  const oldTypeStr = tr.find("#old_type_" + domain).val();
+  const oldTypeString = tr.find("#old_type_" + domain).val();
   const enabled = tr.find("#enabled_" + domain).is(":checked");
   const comment = tr.find("#comment_" + domain).val();
   // Convert list of string integers to list of integers using map
@@ -547,12 +549,12 @@ function editDomain() {
     .val()
     .map(Number);
 
-  const oldType = oldTypeStr.split("/", 1)[0];
-  const oldKind = oldTypeStr.split("/", 2)[1];
+  const oldType = oldTypeString.split("/", 1)[0];
+  const oldKind = oldTypeString.split("/", 2)[1];
 
   let done = "edited";
   let notDone = "editing";
-  switch (elem) {
+  switch (element) {
     case "enabled_" + domain:
       if (!enabled) {
         done = "disabled";
@@ -580,7 +582,7 @@ function editDomain() {
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element (" + elem + ") or invalid data-id!");
+      alert("bad element (" + element + ") or invalid data-id!");
       return;
   }
 

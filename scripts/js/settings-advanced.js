@@ -45,30 +45,30 @@ function valueDetails(key, value) {
   if (value.modified) {
     defaultValueHint = "";
     if (value.default !== null) {
-      let defVal = utils.escapeHtml(JSON.stringify(value.default));
-      switch (defVal) {
+      let defaultValue = utils.escapeHtml(JSON.stringify(value.default));
+      switch (defaultValue) {
         case "true": {
-          defVal = "enabled";
+          defaultValue = "enabled";
 
           break;
         }
 
         case "false": {
-          defVal = "disabled";
+          defaultValue = "disabled";
 
           break;
         }
 
         case '""':
         case "[]": {
-          defVal = "empty";
+          defaultValue = "empty";
 
           break;
         }
         // No default
       }
 
-      defaultValueHint = "<p>Default Value: " + defVal + "</p>";
+      defaultValueHint = "<p>Default Value: " + defaultValue + "</p>";
     }
   }
 
@@ -208,16 +208,16 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      for (const [i, option] of value.allowed.entries()) {
+      for (const [index, option] of value.allowed.entries()) {
         content +=
           '<div class="form-check">' +
           // Radio button
           '<input type="radio" class="form-check-input" ' +
-          `value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}` +
+          `value="${option.item}" name="${key}" id="${key}_${index}" data-key="${key}"${extraAttributes}` +
           (option.item === value.value ? " checked" : "") +
           ">" +
           // Label
-          `<label class="form-check-label" for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
+          `<label class="form-check-label" for="${key}_${index}"><strong>${utils.escapeHtml(option.item)}` +
           (option.item === value.default ? " <em>(default)</em>" : "") +
           "</strong></label>" +
           // Paragraph with description
@@ -287,8 +287,8 @@ function generateRow(topic, key, value) {
     "</div></div> ";
 
   const topKey = key.split(".", 1)[0];
-  const elem = $("#advanced-content-" + topKey + "-flex");
-  elem.append(box);
+  const element = $("#advanced-content-" + topKey + "-flex");
+  element.append(box);
 }
 
 function createDynamicConfigTabs() {
@@ -338,16 +338,16 @@ function createDynamicConfigTabs() {
 }
 
 function initOnlyChanged() {
-  const elem = $("#only-changed");
+  const element = $("#only-changed");
 
   // Restore settings level from local storage (if available) or default to "false"
   if (localStorage.getItem("only-changed") === null) {
     localStorage.setItem("only-changed", "false");
   }
 
-  elem.prop("checked", localStorage.getItem("only-changed") === "true");
+  element.prop("checked", localStorage.getItem("only-changed") === "true");
 
-  elem.bootstrapToggle({
+  element.bootstrapToggle({
     onlabel: "Only modified",
     offlabel: "Show all",
     onstyle: "primary",
@@ -356,13 +356,13 @@ function initOnlyChanged() {
     width: "180px",
   });
 
-  elem.on("change", function () {
+  element.on("change", function () {
     localStorage.setItem("only-changed", $(this).prop("checked") ? "true" : "false");
     applyOnlyChanged();
   });
 
-  elem.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
-  elem.trigger("change");
+  element.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
+  element.trigger("change");
 }
 
 function applyOnlyChanged() {

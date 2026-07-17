@@ -30,7 +30,7 @@ globalThis.THEME_COLORS = [
 
 globalThis.htmlLegendPlugin = {
   id: "htmlLegend",
-  afterUpdate(chart, args, options) {
+  afterUpdate(chart, arguments_, options) {
     // Use the built-in legendItems generator
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
@@ -39,9 +39,9 @@ globalThis.htmlLegendPlugin = {
       options.lastLegendItems &&
       items.length === options.lastLegendItems.length &&
       items.every(
-        (item, i) =>
-          item.text === options.lastLegendItems[i].text &&
-          item.hidden === options.lastLegendItems[i].hidden
+        (item, index) =>
+          item.text === options.lastLegendItems[index].text &&
+          item.hidden === options.lastLegendItems[index].hidden
       );
 
     if (isLegendUnchanged) {
@@ -144,40 +144,40 @@ globalThis.htmlLegendPlugin = {
 globalThis.customTooltips = context => {
   const tooltip = context.tooltip;
   const canvasId = context.chart.canvas.id;
-  const tooltipEl = getOrCreateTooltipElement(canvasId, tooltip.options, context);
+  const tooltipElement = getOrCreateTooltipElement(canvasId, tooltip.options, context);
 
   // Hide if no tooltip
   if (tooltip.opacity === 0) {
-    tooltipEl.style.opacity = 0;
+    tooltipElement.style.opacity = 0;
     return;
   }
 
   // Set caret position
-  setTooltipCaretPosition(tooltipEl, tooltip);
+  setTooltipCaretPosition(tooltipElement, tooltip);
 
   // Set tooltip content
   if (tooltip.body) {
-    setTooltipContent(tooltipEl, tooltip);
+    setTooltipContent(tooltipElement, tooltip);
   }
 
   // Position tooltip
-  positionTooltip(tooltipEl, tooltip, context);
+  positionTooltip(tooltipElement, tooltip, context);
 
   // Make tooltip visible
-  tooltipEl.style.opacity = 1;
+  tooltipElement.style.opacity = 1;
 };
 
 function getOrCreateTooltipElement(canvasId, options, context) {
-  let tooltipEl = document.getElementById(`${canvasId}-customTooltip`);
-  if (tooltipEl) {
-    return tooltipEl;
+  let tooltipElement = document.getElementById(`${canvasId}-customTooltip`);
+  if (tooltipElement) {
+    return tooltipElement;
   }
 
   // Create Tooltip Element once per chart
-  tooltipEl = document.createElement("div");
-  tooltipEl.id = `${canvasId}-customTooltip`;
-  tooltipEl.className = "chartjs-tooltip";
-  tooltipEl.innerHTML = '<div class="arrow"></div> <table></table>';
+  tooltipElement = document.createElement("div");
+  tooltipElement.id = `${canvasId}-customTooltip`;
+  tooltipElement.className = "chartjs-tooltip";
+  tooltipElement.innerHTML = '<div class="arrow"></div> <table></table>';
 
   // Avoid browser's font-zoom since we know that <body>'s
   // font-size was set to 14px by Bootstrap's CSS
@@ -187,7 +187,7 @@ function getOrCreateTooltipElement(canvasId, options, context) {
   const fontZoom = Number.parseFloat(getComputedStyle(document.body).fontSize) / 14;
 
   // Set styles and font
-  tooltipEl.style.cssText = `
+  tooltipElement.style.cssText = `
     padding: ${options.padding}px ${options.padding}px;
     border-radius: ${options.cornerRadius}px;
     font: ${options.bodyFont.string};
@@ -201,22 +201,22 @@ function getOrCreateTooltipElement(canvasId, options, context) {
   // the tooltip's offset parent - otherwise (e.g. in the boxed layout, whose
   // .app-wrapper is the nearest positioned element) the tooltip is shifted by
   // the ancestor's own left offset. Ensure the ancestor is positioned.
-  tooltipEl.ancestor = context.chart.canvas.closest(".card[id]").parentNode;
+  tooltipElement.ancestor = context.chart.canvas.closest(".card[id]").parentNode;
   if (getComputedStyle(tooltipEl.ancestor).position === "static") {
     tooltipEl.ancestor.style.position = "relative";
   }
 
-  tooltipEl.ancestor.append(tooltipEl);
+  tooltipElement.ancestor.append(tooltipElement);
 
-  return tooltipEl;
+  return tooltipElement;
 }
 
-function setTooltipCaretPosition(tooltipEl, tooltip) {
-  tooltipEl.classList.remove("left", "right", "center", "top", "bottom");
-  tooltipEl.classList.add(tooltip.xAlign, tooltip.yAlign);
+function setTooltipCaretPosition(tooltipElement, tooltip) {
+  tooltipElement.classList.remove("left", "right", "center", "top", "bottom");
+  tooltipElement.classList.add(tooltip.xAlign, tooltip.yAlign);
 }
 
-function setTooltipContent(tooltipEl, tooltip) {
+function setTooltipContent(tooltipElement, tooltip) {
   const bodyLines = tooltip.body.map(bodyItem => bodyItem.lines);
   if (bodyLines.length === 0) {
     return;
@@ -234,18 +234,18 @@ function setTooltipContent(tooltipEl, tooltip) {
   const devicePixel = (1 / window.devicePixelRatio).toFixed(1);
   let printed = 0;
 
-  for (const [i, body] of bodyLines.entries()) {
-    const labelColors = tooltip.labelColors[i];
+  for (const [index, body] of bodyLines.entries()) {
+    const labelColors = tooltip.labelColors[index];
     const style =
       `background-color: ${labelColors.backgroundColor}; ` +
       `outline: 1px solid ${labelColors.backgroundColor}; ` +
       `border: ${devicePixel}px solid #fff`;
     const span = `<span class="chartjs-tooltip-key" style="${style}"></span>`;
 
-    const num = body[0].split(": ");
+    const number_ = body[0].split(": ");
     // Do not display entries with value of 0 in bar chart,
     // but pass through entries with "0.0%" (in pie charts)
-    if (num[1] !== "0") {
+    if (number_[1] !== "0") {
       tooltipHtml += `<tr><td>${span}${body}</td></tr>`;
       printed++;
     }
@@ -257,21 +257,21 @@ function setTooltipContent(tooltipEl, tooltip) {
 
   tooltipHtml += "</tbody>";
 
-  const tableRoot = tooltipEl.querySelector("table");
+  const tableRoot = tooltipElement.querySelector("table");
   tableRoot.innerHTML = tooltipHtml;
 }
 
-function positionTooltip(tooltipEl, tooltip, context) {
-  if (tooltip.opacity === 0 || tooltipEl.style.opacity === 0) {
+function positionTooltip(tooltipElement, tooltip, context) {
+  if (tooltip.opacity === 0 || tooltipElement.style.opacity === 0) {
     return;
   }
 
   const canvasPos = context.chart.canvas.getBoundingClientRect();
-  const boxPos = tooltipEl.ancestor.getBoundingClientRect();
+  const boxPos = tooltipElement.ancestor.getBoundingClientRect();
   const offsetX = canvasPos.left - boxPos.left;
   const offsetY = canvasPos.top - boxPos.top;
-  const tooltipWidth = tooltipEl.offsetWidth;
-  const tooltipHeight = tooltipEl.offsetHeight;
+  const tooltipWidth = tooltipElement.offsetWidth;
+  const tooltipHeight = tooltipElement.offsetHeight;
   const { caretX, caretY } = tooltip;
   const { caretPadding } = tooltip.options;
   const arrowMinIndent = 2 * tooltip.options.cornerRadius;
@@ -331,7 +331,7 @@ function positionTooltip(tooltipEl, tooltip, context) {
 
   // Adjust X position if tooltip is centered inside ancestor
   if (document.documentElement.clientWidth <= 2 * tooltip.width && tooltip.xAlign === "center") {
-    tooltipX = (tooltipEl.ancestor.offsetWidth - tooltipWidth) / 2;
+    tooltipX = (tooltipElement.ancestor.offsetWidth - tooltipWidth) / 2;
     tooltipX = Math.max(tooltipX, offsetX + caretX - arrowMinIndent); // Prevent left overflow
     tooltipX = Math.min(tooltipX, offsetX + caretX - tooltipWidth + arrowMinIndent); // Prevent right overflow
     arrowX = offsetX + caretX - tooltipX;
@@ -375,11 +375,11 @@ function positionTooltip(tooltipEl, tooltip, context) {
   }
 
   // Position tooltip and display
-  tooltipEl.style.top = `${tooltipY.toFixed(1)}px`;
-  tooltipEl.style.left = `${tooltipX.toFixed(1)}px`;
+  tooltipElement.style.top = `${tooltipY.toFixed(1)}px`;
+  tooltipElement.style.left = `${tooltipX.toFixed(1)}px`;
 
   // Set arrow position
-  const arrowEl = tooltipEl.querySelector(".arrow");
+  const arrowElement = tooltipElement.querySelector(".arrow");
   let arrowLeftPosition = "";
 
   if (arrowX !== undefined) {
@@ -389,7 +389,7 @@ function positionTooltip(tooltipEl, tooltip, context) {
     arrowLeftPosition = `${arrowXpercent}%`;
   }
 
-  arrowEl.style.left = arrowLeftPosition;
+  arrowElement.style.left = arrowLeftPosition;
 }
 
 globalThis.doughnutTooltip = tooltipLabel => {

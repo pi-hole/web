@@ -67,11 +67,11 @@ function updateQueriesOverTime() {
     const colors = [otherColor, blockedColor, cachedColor, permittedColor];
 
     // Collect values and colors, and labels
-    for (const [i, label] of labels.entries()) {
+    for (const [index, label] of labels.entries()) {
       timeLineChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
-        backgroundColor: colors[i],
+        backgroundColor: colors[index],
         pointRadius: 0,
         pointHitRadius: 5,
         pointHoverRadius: 5,
@@ -116,7 +116,7 @@ function updateQueryTypesPie() {
     const v = [];
     const c = [];
     const k = [];
-    let i = 0;
+    let index = 0;
     let sum = 0;
 
     // Compute total number of queries
@@ -128,11 +128,11 @@ function updateQueryTypesPie() {
     for (const [item, value] of Object.entries(data.types)) {
       if (value > 0) {
         v.push((100 * value) / sum);
-        c.push(THEME_COLORS[i % THEME_COLORS.length]);
+        c.push(THEME_COLORS[index % THEME_COLORS.length]);
         k.push(item);
       }
 
-      i++;
+      index++;
     }
 
     // Build a single dataset with the data to be pushed
@@ -162,11 +162,11 @@ function updateClientsOverTime() {
       return;
     }
 
-    let numClients = 0;
+    let numberClients = 0;
     const labels = [];
     const clients = {};
     for (const [ip, clientData] of Object.entries(data.clients)) {
-      clients[ip] = numClients++;
+      clients[ip] = numberClients++;
       labels.push(clientData.name !== null ? utils.escapeHtml(clientData.name) : ip);
     }
 
@@ -174,18 +174,18 @@ function updateClientsOverTime() {
     clientsChart.data.labels = [];
     clientsChart.data.datasets = [];
 
-    for (let i = 0; i < numClients; i++) {
+    for (let index = 0; index < numberClients; index++) {
       clientsChart.data.datasets.push({
         data: [],
         // If we ran out of colors, make a random one
         backgroundColor:
-          i < THEME_COLORS.length
-            ? THEME_COLORS[i]
+          index < THEME_COLORS.length
+            ? THEME_COLORS[index]
             : "#" + (0x1_00_00_00 + Math.random() * 0xff_ff_ff).toString(16).substr(1, 6),
         pointRadius: 0,
         pointHitRadius: 5,
         pointHoverRadius: 5,
-        label: labels[i],
+        label: labels[index],
         cubicInterpolationMode: "monotone",
       });
     }
@@ -232,7 +232,7 @@ function updateForwardDestinationsPie() {
     const v = [];
     const c = [];
     const k = [];
-    let i = 0;
+    let index = 0;
     let sum = 0;
     const values = [];
 
@@ -252,7 +252,7 @@ function updateForwardDestinationsPie() {
       upstreamIPs.push(item.port > 0 ? item.ip + "#" + item.port : item.ip);
 
       const percent = (100 * item.count) / sum;
-      values.push([label, percent, THEME_COLORS[i++ % THEME_COLORS.length]]);
+      values.push([label, percent, THEME_COLORS[index++ % THEME_COLORS.length]]);
     }
 
     // Split data into individual arrays for the graphs
@@ -523,9 +523,9 @@ function labelWithPercentage(tooltipLabel, skipZero = false) {
       continue;
     }
 
-    const num = Math.trunc(Number(value));
-    if (num) {
-      sum += num;
+    const number_ = Math.trunc(Number(value));
+    if (number_) {
+      sum += number_;
     }
   }
 
@@ -628,8 +628,8 @@ $(() => {
 
   const gridColor = utils.getCSSval("graphs-grid", "background-color");
   const ticksColor = utils.getCSSval("graphs-ticks", "color");
-  let ctx = document.getElementById("queryOverTimeChart").getContext("2d");
-  timeLineChart = new Chart(ctx, {
+  let context = document.getElementById("queryOverTimeChart").getContext("2d");
+  timeLineChart = new Chart(context, {
     type: "bar",
     data: {
       labels: [],
@@ -730,10 +730,10 @@ $(() => {
   updateQueriesOverTime();
 
   // Create / load "Top Clients over Time" only if authorized
-  const clientsChartEl = document.getElementById("clientsChart");
-  if (clientsChartEl) {
-    ctx = clientsChartEl.getContext("2d");
-    clientsChart = new Chart(ctx, {
+  const clientsChartElement = document.getElementById("clientsChart");
+  if (clientsChartElement) {
+    context = clientsChartElement.getContext("2d");
+    clientsChart = new Chart(context, {
       type: "bar",
       data: {
         labels: [],
@@ -843,9 +843,9 @@ $(() => {
     updateTopLists();
   });
 
-  $("#queryOverTimeChart").on("click", evt => {
+  $("#queryOverTimeChart").on("click", event_ => {
     const activePoints = timeLineChart.getElementsAtEventForMode(
-      evt,
+      event_,
       "nearest",
       { intersect: true },
       false
@@ -865,9 +865,9 @@ $(() => {
     return false;
   });
 
-  $("#clientsChart").on("click", evt => {
+  $("#clientsChart").on("click", event_ => {
     const activePoints = clientsChart.getElementsAtEventForMode(
-      evt,
+      event_,
       "nearest",
       { intersect: true },
       false
@@ -889,8 +889,8 @@ $(() => {
   });
 
   if (document.getElementById("queryTypePieChart")) {
-    ctx = document.getElementById("queryTypePieChart").getContext("2d");
-    queryTypePieChart = new Chart(ctx, {
+    context = document.getElementById("queryTypePieChart").getContext("2d");
+    queryTypePieChart = new Chart(context, {
       type: "doughnut",
       data: {
         labels: [],
@@ -940,8 +940,8 @@ $(() => {
   }
 
   if (document.getElementById("forwardDestinationPieChart")) {
-    ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
-    forwardDestinationPieChart = new Chart(ctx, {
+    context = document.getElementById("forwardDestinationPieChart").getContext("2d");
+    forwardDestinationPieChart = new Chart(context, {
       type: "doughnut",
       data: {
         labels: [],

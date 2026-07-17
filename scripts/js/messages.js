@@ -98,7 +98,7 @@ $(() => {
           // For each ".selected" row ...
           $("tr.selected").each(function () {
             // ... delete the row identified by "data-id".
-            delMsg($(this).attr("data-id"));
+            delMessage($(this).attr("data-id"));
           });
         },
       },
@@ -145,10 +145,10 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteMessage() {
   // Passes the button data-del-id attribute as ID
-  delMsg($(this).attr("data-del-id"));
+  delMessage($(this).attr("data-del-id"));
 }
 
-function delMsg(id) {
+function delMessage(id) {
   id = Math.trunc(Number(id));
   utils.disableAll();
   toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);

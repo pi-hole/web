@@ -82,9 +82,9 @@ function getData() {
     return;
   }
 
-  const queryParams = utils.parseQueryString();
+  const queryParameters = utils.parseQueryString();
   // Check if file parameter exists
-  if (!queryParams.file) {
+  if (!queryParameters.file) {
     // Add default file parameter and redirect
     const url = new URL(location.href);
     url.searchParams.set("file", "dnsmasq");
@@ -93,17 +93,17 @@ function getData() {
   }
 
   const outputElement = document.getElementById("output");
-  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
+  const allowedFileParameters = ["dnsmasq", "ftl", "webserver"];
 
   // Validate that file parameter is one of the allowed values
-  if (!allowedFileParams.includes(queryParams.file)) {
-    const errorMessage = `Invalid file parameter: ${queryParams.file}. Allowed values are: ${allowedFileParams.join(", ")}`;
+  if (!allowedFileParameters.includes(queryParameters.file)) {
+    const errorMessage = `Invalid file parameter: ${queryParameters.file}. Allowed values are: ${allowedFileParameters.join(", ")}`;
     outputElement.innerHTML = `<div><em class="text-danger">*** Error: ${utils.escapeHtml(errorMessage)} ***</em></div>`;
     return;
   }
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-  const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}?nextID=${nextID}`;
+  const url = `${document.body.dataset.apiurl}/logs/${queryParameters.file}?nextID=${nextID}`;
 
   fetch(url, {
     method: "GET",
@@ -171,9 +171,9 @@ function getData() {
         line.message = utils.escapeHtml(line.message);
 
         // Format line if applicable
-        if (queryParams.file === "dnsmasq") {
+        if (queryParameters.file === "dnsmasq") {
           line.message = formatDnsmasq(line.message);
-        } else if (queryParams.file === "ftl") {
+        } else if (queryParameters.file === "ftl") {
           line.message = formatFTL(line.message, line.prio);
         }
 

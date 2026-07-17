@@ -39,27 +39,27 @@ function setConfigValues(topic, key, value) {
 
   // else: we have a setting we can set
   const escapedKey = key.replaceAll(".", "\\.");
-  const envTitle = $(`[data-configkeys~='${key}']`);
+  const environmentTitle = $(`[data-configkeys~='${key}']`);
 
   if (
-    envTitle.parents().parents().hasClass("settings-level-expert") &&
-    envTitle.find(".expert-warning").length === 0
+    environmentTitle.parents().parents().hasClass("settings-level-expert") &&
+    environmentTitle.find(".expert-warning").length === 0
   ) {
-    envTitle.append(
+    environmentTitle.append(
       '<span class="expert-warning">&nbsp;&nbsp;<i class="fas fa-wrench" title="Expert level setting"></i></span>'
     );
   }
 
-  if (value.flags.restart_dnsmasq && envTitle.find(".restart-warning").length === 0) {
-    envTitle.append(
+  if (value.flags.restart_dnsmasq && environmentTitle.find(".restart-warning").length === 0) {
+    environmentTitle.append(
       '<span class="restart-warning">&nbsp;&nbsp;<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i></span>'
     );
   }
 
   if (value.flags.env_var) {
     // If this setting has been set by environment variable, display a padlock in the section title
-    if (envTitle.find(".env-warning").length === 0) {
-      envTitle.append(
+    if (environmentTitle.find(".env-warning").length === 0) {
+      environmentTitle.append(
         '<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>'
       );
     }
@@ -160,17 +160,17 @@ function saveSettings() {
     // Build deep object
     // Transform "foo.bar.baz" into {foo: {bar: {baz: value}}}
     const parts = key.split(".");
-    const obj = {};
-    let tmp = obj;
-    for (let i = 0; i < parts.length - 1; i++) {
-      tmp[parts[i]] = {};
-      tmp = tmp[parts[i]];
+    const object = {};
+    let temporary = object;
+    for (let index = 0; index < parts.length - 1; index++) {
+      temporary[parts[index]] = {};
+      temporary = temporary[parts[index]];
     }
 
-    tmp[parts.at(-1)] = value;
+    temporary[parts.at(-1)] = value;
 
     // Merge deep object into settings
-    $.extend(true, settings, obj);
+    $.extend(true, settings, object);
   });
 
   // Apply changes

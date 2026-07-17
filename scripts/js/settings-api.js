@@ -239,7 +239,7 @@ function deleteMultipleSessions(ids) {
   }
 }
 
-function deleteOneSession(id, len, ownSessionDelete) {
+function deleteOneSession(id, length_, ownSessionDelete) {
   // This function is called to delete a single session
   // If we are batch deleting, we ensure that we do not delete our own session
   // before having successfully deleted all other sessions, the deletion of
@@ -251,7 +251,7 @@ function deleteOneSession(id, len, ownSessionDelete) {
   })
     .done(() => {
       // Do not reload page when deleting multiple sessions
-      if (++deleted < len) {
+      if (++deleted < length_) {
         return;
       }
 

@@ -231,20 +231,20 @@ function initTable() {
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
-        const codeElem = document.createElement("code");
-        codeElem.id = "address_" + dataId;
-        codeElem.className = "breakall";
-        codeElem.textContent = data.address;
-        $("td:eq(3)", row).empty().append(codeElem);
+        const codeElement = document.createElement("code");
+        codeElement.id = "address_" + dataId;
+        codeElement.className = "breakall";
+        codeElement.textContent = data.address;
+        $("td:eq(3)", row).empty().append(codeElement);
       } else {
-        const aElem = document.createElement("a");
-        aElem.id = "address_" + dataId;
-        aElem.className = "breakall";
-        aElem.href = data.address;
-        aElem.target = "_blank";
-        aElem.rel = "noopener noreferrer";
-        aElem.textContent = data.address;
-        $("td:eq(3)", row).empty().append(aElem);
+        const aElement = document.createElement("a");
+        aElement.id = "address_" + dataId;
+        aElement.className = "breakall";
+        aElement.href = data.address;
+        aElement.target = "_blank";
+        aElement.rel = "noopener noreferrer";
+        aElement.textContent = data.address;
+        $("td:eq(3)", row).empty().append(aElement);
       }
 
       $("td:eq(4)", row).html(
@@ -254,58 +254,58 @@ function initTable() {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      const statusEl = $("#enabled_" + dataId, row);
-      statusEl.bootstrapToggle({
+      const statusElement = $("#enabled_" + dataId, row);
+      statusElement.bootstrapToggle({
         onlabel: "Enabled",
         offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",
       });
-      statusEl.on("change", editList);
+      statusElement.on("change", editList);
 
       $("td:eq(5)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentEl = $("#comment_" + dataId, row);
-      commentEl.val(data.comment);
-      commentEl.on("change", editList);
+      const commentElement = $("#comment_" + dataId, row);
+      commentElement.val(data.comment);
+      commentElement.on("change", editList);
 
       $("td:eq(6)", row).empty();
       $("td:eq(6)", row).append(
         '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
-      const selectEl = $("#multiselect_" + dataId, row);
+      const selectElement = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectEl.append($("<option/>").val(group.id).text(label));
+        selectElement.append($("<option/>").val(group.id).text(label));
       }
 
-      const applyBtn = "#btn_apply_" + dataId;
+      const applyButton = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize Tom Select
-      const ts = utils.createGroupSelect(selectEl, {
+      const ts = utils.createGroupSelect(selectElement, {
         onChange() {
           // enable Apply button
-          if ($(applyBtn).prop("disabled")) {
-            $(applyBtn)
+          if ($(applyButton).prop("disabled")) {
+            $(applyButton)
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", () => {
-                editList.call(selectEl);
+                editList.call(selectElement);
               });
           }
         },
         onDropdownClose() {
           // Restore values if the dropdown is closed without clicking the Apply button
-          if ($(applyBtn).prop("disabled")) {
+          if ($(applyButton).prop("disabled")) {
             return;
           }
 
           ts.setValue(data.groups);
-          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          $(applyButton).removeClass("btn-success").prop("disabled", true).off("click");
         },
       });
       $(ts.dropdown)
@@ -482,7 +482,7 @@ function addList(event) {
     .val()
     .split(/[\s,]+/u);
   // Remove empty elements
-  addresses = addresses.filter(el => el !== "");
+  addresses = addresses.filter(element => element !== "");
   const addressestr = JSON.stringify(addresses);
 
   utils.disableAll();
@@ -523,7 +523,7 @@ function addList(event) {
 }
 
 function editList() {
-  const elem = $(this).attr("id");
+  const element = $(this).attr("id");
   const tr = $(this).closest("tr");
   const type = tr.attr("data-type");
   const dataId = tr.attr("data-id");
@@ -538,7 +538,7 @@ function editList() {
 
   let done = "edited";
   let notDone = "editing";
-  switch (elem) {
+  switch (element) {
     case "enabled_" + dataId:
       if (!enabled) {
         done = "disabled";
@@ -558,7 +558,7 @@ function editList() {
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element (" + elem + ") or invalid data-id!");
+      alert("bad element (" + element + ") or invalid data-id!");
       return;
   }
 

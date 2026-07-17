@@ -84,11 +84,27 @@ module.exports = defineConfig([
   //  - enforce double quotes
   //  - disable no-mixed-operators because it conflicts with Prettier's formatting
   {
-    files: ["**/*.js"],
     rules: {
       "@stylistic/quotes": ["error", "double", { avoidEscape: true}],
       "@stylistic/no-mixed-operators": "off",
+
+    }
+  },
+  {
+    //rules that only apply to js files (cause errors on markdwon otherwise)
+    files: ["**/*.js"],
+    rules: {
       "jsdoc/require-asterisk-prefix": ["error", "always"],
-    },
+      "unicorn/name-replacements": [
+          "error",
+          {
+            replacements: {
+              slave: false,
+              master: false,
+            },
+            checkFilenames: false,
+          },
+        ],
+    }
   },
 ]);

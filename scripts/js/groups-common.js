@@ -11,8 +11,8 @@
 
 let groups = [];
 
-function populateGroupSelect(selectEl) {
-  if (selectEl.length === 0) {
+function populateGroupSelect(selectElement) {
+  if (selectElement.length === 0) {
     // No select element found, return
     return;
   }
@@ -21,13 +21,13 @@ function populateGroupSelect(selectEl) {
   for (const group of groups) {
     const label = group.enabled ? group.name : group.name + " (disabled)";
 
-    selectEl.append($("<option/>").val(group.id).text(label));
+    selectElement.append($("<option/>").val(group.id).text(label));
   }
 
   // Default Group is preselected
-  selectEl.val(["0"]);
+  selectElement.val(["0"]);
 
-  utils.createGroupSelect(selectEl);
+  utils.createGroupSelect(selectElement);
 }
 
 // eslint-disable-next-line no-unused-vars
