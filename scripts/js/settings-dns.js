@@ -20,6 +20,18 @@ function removeFromArray(arr, what) {
   }
 }
 
+// Show how many upstreams are selected on each Plain/DoT/DoH tab, so it's not
+// hidden behind whichever tab happens to be active
+function updateUpstreamTabBadges() {
+  for (const protocol of ["plain", "dot", "doh"]) {
+    const count = $("#DNSupstreamsTable-" + protocol + " input:checked").length;
+    $("#upstreams-count-" + protocol)
+      .text(count)
+      .toggle(count > 0)
+      .attr("title", "Selected servers: " + count);
+  }
+}
+
 function fillDNSupstreams(value, servers) {
   let disabledStr = "";
   if (value.flags.env_var === true) {
@@ -29,48 +41,64 @@ function fillDNSupstreams(value, servers) {
 
   let i = 0;
   let customServers = value.value.length;
-  for (const element of servers) {
-    let row = "<tr>";
-    // Build checkboxes for IPv4 and IPv6
-    const addresses = [element.v4, element.v6];
-    // Loop over address types (IPv4, IPv6)
-    for (let v = 0; v < 2; v++) {
-      const address = addresses[v];
-      // Loop over available addresses (up to 2)
-      for (let index = 0; index < 2; index++) {
-        if (address.length > index) {
-          let checkedStr = "";
-          if (
-            value.value.includes(address[index]) ||
-            value.value.includes(address[index] + "#53")
-          ) {
-            checkedStr = "checked";
-            customServers--;
-          }
 
-          row += `<td title="${address[index]}">
-                    <div>
-                      <input type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
-                      <label for="DNSupstreams-${i++}"></label>
-                    </div>
-                  </td>`;
-        } else {
-          row += "<td></td>";
-        }
-      }
+  // Build a single checkbox <td> for the given address, tracking selection
+  // state and consuming a custom-server slot when it matches. Plain v4/v6
+  // addresses also match the default-port-suffixed form; the pinned DoT/DoH
+  // URIs are matched verbatim only. Returns an empty cell when there is no
+  // address for this slot (only used within the Plain table, since a vendor
+  // may only publish one of the two plain addresses in a family).
+  function checkboxCell(address, portSuffix) {
+    if (!address) {
+      return "<td></td>";
     }
 
-    // Add server name
-    row += "<td>" + element.name + "</td>";
+    let checkedStr = "";
+    if (value.value.includes(address) || (portSuffix && value.value.includes(address + "#53"))) {
+      checkedStr = "checked";
+      customServers--;
+    }
 
-    // Close table row
-    row += "</tr>";
-
-    // Add row to table
-    $("#DNSupstreamsTable").append(row);
+    return `<td title="${address}">
+              <div>
+                <input type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
+                <label for="DNSupstreams-${i++}"></label>
+              </div>
+            </td>`;
   }
 
-  // Add event listener to checkboxes
+  for (const element of servers) {
+    // Plain IPv4/IPv6 addresses always get a row, even if a vendor only
+    // publishes one address per family
+    let plainRow = "<tr>";
+    plainRow += checkboxCell(element.v4[0], true);
+    plainRow += checkboxCell(element.v4[1], true);
+    plainRow += checkboxCell(element.v6[0], true);
+    plainRow += checkboxCell(element.v6[1], true);
+    plainRow += "<td>" + element.name + "</td></tr>";
+    $("#DNSupstreamsTable-plain").append(plainRow);
+
+    // DoT/DoH only get a row when the vendor actually publishes a pinned URI
+    // for at least one address family, so those tabs never fill up with rows
+    // that are entirely empty
+    if (element.dot && (element.dot.v4 || element.dot.v6)) {
+      let dotRow = "<tr>";
+      dotRow += checkboxCell(element.dot.v4, false);
+      dotRow += checkboxCell(element.dot.v6, false);
+      dotRow += "<td>" + element.name + "</td></tr>";
+      $("#DNSupstreamsTable-dot").append(dotRow);
+    }
+
+    if (element.doh && (element.doh.v4 || element.doh.v6)) {
+      let dohRow = "<tr>";
+      dohRow += checkboxCell(element.doh.v4, false);
+      dohRow += checkboxCell(element.doh.v6, false);
+      dohRow += "<td>" + element.name + "</td></tr>";
+      $("#DNSupstreamsTable-doh").append(dohRow);
+    }
+  }
+
+  // Add event listener to checkboxes (shared across the Plain/DoT/DoH tabs)
   $("input[id^='DNSupstreams-']").on("change", () => {
     const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
     let customServerCount = 0;
@@ -92,10 +120,12 @@ function fillDNSupstreams(value, servers) {
     // get the correct number of custom servers
     customServerCount += upstreams.length;
     updateDNSserversTextfield(upstreams, customServerCount);
+    updateUpstreamTabBadges();
   });
 
   // Initialize textfield
   updateDNSserversTextfield(value.value, customServers);
+  updateUpstreamTabBadges();
 
   // Expand the box if there are custom servers
   if (customServers > 0) {
