@@ -516,13 +516,15 @@ function filterOn(param, dict) {
 function getAPIURL(queryFilters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
   for (const [key, filter] of Object.entries(queryFilters)) {
-    if (filterOn(key, queryFilters)) {
-      if (!apiurl.endsWith("?")) {
-        apiurl += "&";
-      }
-
-      apiurl += `${key}=${encodeURIComponent(filter)}`;
+    if (!filterOn(key, queryFilters)) {
+      continue;
     }
+
+    if (!apiurl.endsWith("?")) {
+      apiurl += "&";
+    }
+
+    apiurl += `${key}=${encodeURIComponent(filter)}`;
   }
 
   // Omit from/until filtering if we cannot reach these times. This will speed
@@ -652,7 +654,8 @@ $(() => {
       const state = utils.stateLoadCallback("query_log_table");
       // Default to 25 entries if "All" was previously selected
       if (state) {
-        state.length = state.length === -1 ? 25 : state.length;
+        const pageLength = state.length;
+        state.length = pageLength === -1 ? 25 : pageLength;
       }
 
       return state;

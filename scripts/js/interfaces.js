@@ -482,9 +482,11 @@ function sortInterfaces(interfaces, masterInterfaces) {
   // masterInterfaces, it should be placed after the master interface
   const ifaces = Object.keys(interfaces);
   const interfaceList = Object.keys(masterInterfaces);
+  // Create a copy of the master interface list to iterate over so that we can modify the original list while iterating
+  const masterList = [...interfaceList];
 
   // Add slave interfaces next to master interfaces
-  for (const master of interfaceList) {
+  for (const master of masterList) {
     if (Array.isArray(masterInterfaces[master])) {
       for (const slave of masterInterfaces[master]) {
         ifaces.splice(ifaces.indexOf(slave), 1);

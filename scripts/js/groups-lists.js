@@ -149,7 +149,7 @@ function setStatusText(data, showdetails = false) {
     }
   }
 
-  return statusText + (showdetails === true ? statusDetails : "");
+  return statusText + (showdetails ? statusDetails : "");
 }
 
 // Define the type icon element
