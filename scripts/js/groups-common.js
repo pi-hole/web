@@ -31,7 +31,7 @@ function populateGroupSelect(selectEl) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function getGroups(groupSelector) {
+function getGroups() {
   $.ajax({
     url: document.body.dataset.apiurl + "/groups",
     type: "GET",

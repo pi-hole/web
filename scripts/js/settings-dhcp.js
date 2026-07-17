@@ -26,7 +26,7 @@ for (const evt of ["mouseenter", "focus"]) {
         new bootstrap.Tooltip(el, { container: "body" });
       }
     },
-    true
+    { capture: true }
   );
 }
 

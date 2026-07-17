@@ -11,7 +11,7 @@ const currentBsTheme = document.documentElement.dataset.bsTheme;
 let lockedTheme = currentBsTheme;
 
 const setAutoTheme = () => {
-  lockedTheme = globalThis.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  lockedTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   document.documentElement.dataset.bsTheme = lockedTheme;
   localStorage.setItem("theme", lockedTheme);
 };
@@ -19,7 +19,7 @@ const setAutoTheme = () => {
 if (currentBsTheme === "auto") {
   setAutoTheme();
   // Listen for OS theme changes
-  globalThis.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     setAutoTheme();
   });
 } else {

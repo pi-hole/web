@@ -714,7 +714,7 @@ function applyExpertSettings() {
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
     if (document.querySelector(".settings-selector") && $(".card:visible").length === 0) {
-      globalThis.location.href = `${document.body.dataset.webhome}settings/system`;
+      location.assign(`${document.body.dataset.webhome}settings/system`);
     }
   }
 }

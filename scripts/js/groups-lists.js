@@ -300,10 +300,12 @@ function initTable() {
         },
         onDropdownClose() {
           // Restore values if the dropdown is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            ts.setValue(data.groups);
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
+
+          ts.setValue(data.groups);
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         },
       });
       $(ts.dropdown)
