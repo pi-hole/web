@@ -73,7 +73,6 @@ end
 ?>
 <html lang="en" data-bs-theme="<?=bs_theme?>">
 <head>
-    <script src="<?=pihole.fileversion('scripts/js/theme.js')?>"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pi-hole <?=hostname?></title>
@@ -152,3 +151,4 @@ end
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/js/theme.js')?>" defer></script>

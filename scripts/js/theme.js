@@ -8,12 +8,12 @@
 "use strict";
 
 const currentBsTheme = document.documentElement.dataset.bsTheme;
-let lockedTheme = currentBsTheme;
 
 const setAutoTheme = () => {
-  lockedTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  document.documentElement.dataset.bsTheme = lockedTheme;
-  localStorage.setItem("theme", lockedTheme);
+  const systemTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+  // Set data-bs-theme attribute for specific theme elements
+  document.querySelector(".app-header .user-menu .dropdown-menu").dataset.bsTheme = systemTheme;
 };
 
 if (currentBsTheme === "auto") {
@@ -22,23 +22,4 @@ if (currentBsTheme === "auto") {
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     setAutoTheme();
   });
-} else {
-  // Sync Pi-hole's explicitly configured theme to localStorage
-  localStorage.setItem("theme", lockedTheme);
 }
-
-// Lock the theme aggressively so AdminLTE cannot override it based on OS preferences
-const observer = new MutationObserver(mutations => {
-  for (const mutation of mutations) {
-    if (
-      mutation.attributeName === "data-bs-theme" &&
-      document.documentElement.dataset.bsTheme !== lockedTheme
-    ) {
-      document.documentElement.dataset.bsTheme = lockedTheme;
-    }
-  }
-});
-observer.observe(document.documentElement, {
-  attributes: true,
-  attributeFilter: ["data-bs-theme"],
-});
