@@ -41,7 +41,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                     <label class="form-check-label" for="partialMatch"><strong>Use partial matching</strong> (may not find complex regex entries)</label>
                                 </div>
                             </div>
-                            <br class="hidden-md hidden-lg">
+                            <br class="d-md-none">
                             <div class="col-md-6">
                                 <div id="domain-limitbox-block" class="form-inline">
                                     <label for="number">Maximum number of results to be returned:&nbsp;</label>

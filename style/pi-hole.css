@@ -1529,17 +1529,6 @@ table.dataTable tbody > tr > .selected {
   inline-size: auto;
 }
 
-/* Search page options */
-#domain-limitbox-block {
-  /* Add margin to match the other component (icheck) height */
-  margin: 3px 0;
-}
-@media (min-width: 992px) {
-  #domain-limitbox-block {
-    text-align: right;
-  }
-}
-
 .box-icons {
   margin: 0 5px;
 }

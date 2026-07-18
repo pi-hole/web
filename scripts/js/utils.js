@@ -197,7 +197,7 @@ function datetime(date, html, humanReadable) {
   }
 
   const format =
-    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='d-lg-none'>]HH:mm:ss z";
   const timestr = moment.unix(Math.floor(date)).format(format).trim();
   return humanReadable
     ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
