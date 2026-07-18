@@ -124,20 +124,20 @@ function checkBlocking() {
 }
 
 function piholeChange(action, duration) {
-  let buttonStatus = null;
+  let btnStatus = null;
 
   switch (action) {
     case "enable":
-      buttonStatus = $("#flip-status-enable");
+      btnStatus = $("#flip-status-enable");
       break;
     case "disable":
-      buttonStatus = $("#flip-status-disable");
+      btnStatus = $("#flip-status-disable");
       break;
     default: // Do nothing
       break;
   }
 
-  buttonStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
+  btnStatus.html("<i class='fa fa-spinner fa-spin'> </i>");
   $.ajax({
     url: document.body.dataset.apiurl + "/dns/blocking",
     method: "POST",
@@ -154,7 +154,7 @@ function piholeChange(action, duration) {
         return;
       }
 
-      buttonStatus.html("");
+      btnStatus.html("");
       piholeChanged(data.blocking, data.timer);
     })
     .fail(data => {
@@ -169,7 +169,7 @@ function testCookies() {
 
   // set and read cookie
   document.cookie = "cookietest=1";
-  const returnValue = document.cookie.includes("cookietest=");
+  const ret = document.cookie.includes("cookietest=");
 
   // delete cookie
   document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
@@ -410,17 +410,17 @@ function versionCompare(v1, v2) {
   }
 
   // loop until both string are processed
-  for (let index = 0, index_ = 0; index < v1.length || index_ < v2.length;) {
+  for (let i = 0, j = 0; i < v1.length || j < v2.length;) {
     // storing numeric part of version 1 in vnum1
-    while (index < v1.length && v1[index] !== ".") {
-      vnum1 = vnum1 * 10 + (v1[index] - "0");
-      index++;
+    while (i < v1.length && v1[i] !== ".") {
+      vnum1 = vnum1 * 10 + (v1[i] - "0");
+      i++;
     }
 
     // storing numeric part of version 2 in vnum2
-    while (index_ < v2.length && v2[index_] !== ".") {
-      vnum2 = vnum2 * 10 + (v2[index_] - "0");
-      index_++;
+    while (j < v2.length && v2[j] !== ".") {
+      vnum2 = vnum2 * 10 + (v2[j] - "0");
+      j++;
     }
 
     if (vnum1 > vnum2) {
@@ -434,8 +434,8 @@ function versionCompare(v1, v2) {
     // if equal, reset variables and go for next numeric part
     vnum1 = 0;
     vnum2 = 0;
-    index++;
-    index_++;
+    i++;
+    j++;
   }
 
   return 0;
@@ -626,25 +626,25 @@ $(() => {
 });
 
 // Handle Enable/Disable
-$("#pihole-enable").on("click", event => {
-  event.preventDefault();
+$("#pihole-enable").on("click", e => {
+  e.preventDefault();
   localStorage.removeItem("countDownTarget");
   piholeChange("enable", "");
 });
-$("#pihole-disable-indefinitely").on("click", event => {
-  event.preventDefault();
+$("#pihole-disable-indefinitely").on("click", e => {
+  e.preventDefault();
   piholeChange("disable", "0");
 });
-$("#pihole-disable-10s").on("click", event => {
-  event.preventDefault();
+$("#pihole-disable-10s").on("click", e => {
+  e.preventDefault();
   piholeChange("disable", "10");
 });
-$("#pihole-disable-30s").on("click", event => {
-  event.preventDefault();
+$("#pihole-disable-30s").on("click", e => {
+  e.preventDefault();
   piholeChange("disable", "30");
 });
-$("#pihole-disable-5m").on("click", event => {
-  event.preventDefault();
+$("#pihole-disable-5m").on("click", e => {
+  e.preventDefault();
   piholeChange("disable", "300");
 });
 $("#pihole-disable-custom").on("click", event => {

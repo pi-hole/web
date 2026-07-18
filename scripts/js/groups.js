@@ -76,9 +76,9 @@ $(() => {
       $("td:eq(1)", row).html(
         '<input id="name_' + dataId + '" title="' + tooltip + '" class="form-control">'
       );
-      const nameElement = $("#name_" + dataId, row);
-      nameElement.val(data.name);
-      nameElement.on("change", editGroup);
+      const nameEl = $("#name_" + dataId, row);
+      nameEl.val(data.name);
+      nameEl.on("change", editGroup);
 
       $("td:eq(2)", row).html(
         '<input type="checkbox" id="enabled_' +
@@ -95,13 +95,13 @@ $(() => {
         onstyle: "success",
         width: "80px",
       });
-      enabledElement.on("change", editGroup);
+      enabledEl.on("change", editGroup);
 
       $("td:eq(3)", row).html('<input id="comment_' + dataId + '" class="form-control">');
       const comment = data.comment !== null ? data.comment : "";
-      const commentElement = $("#comment_" + dataId, row);
-      commentElement.val(comment);
-      commentElement.on("change", editGroup);
+      const commentEl = $("#comment_" + dataId, row);
+      commentEl.val(comment);
+      commentEl.on("change", editGroup);
 
       $("td:eq(4)", row).empty();
       // Show delete button for all but the default group
@@ -246,11 +246,11 @@ function addGroup() {
     .match(/(?:[^\s"]+|"[^"]*")+/gu)
     .map(name => name.replaceAll(/^"|"$/gu, ""));
   // Remove empty elements
-  names = names.filter(element => element !== "");
-  const groupString = JSON.stringify(names);
+  names = names.filter(el => el !== "");
+  const groupStr = JSON.stringify(names);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding group(s)...", groupString);
+  utils.showAlert("info", "", "Adding group(s)...", groupStr);
 
   if (names.length === 0) {
     // enable the ui elements again
@@ -291,7 +291,7 @@ function addGroup() {
 }
 
 function editGroup() {
-  const element = $(this).attr("id");
+  const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const id = tr.attr("data-id");
   const oldName = utils.hexDecode(id);
@@ -301,7 +301,7 @@ function editGroup() {
 
   let done = "edited";
   let notDone = "editing";
-  switch (element) {
+  switch (elem) {
     case "enabled_" + id:
       if (!enabled) {
         done = "disabled";
@@ -321,7 +321,7 @@ function editGroup() {
       notDone = "editing comment of";
       break;
     default:
-      alert("bad element ( " + element + " ) or invalid data-id!");
+      alert("bad element ( " + elem + " ) or invalid data-id!");
       return;
   }
 

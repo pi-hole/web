@@ -11,8 +11,8 @@
 
 let groups = [];
 
-function populateGroupSelect(selectElement) {
-  if (selectElement.length === 0) {
+function populateGroupSelect(selectEl) {
+  if (selectEl.length === 0) {
     // No select element found, return
     return;
   }

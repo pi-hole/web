@@ -231,20 +231,20 @@ function initTable() {
       if (data.address.startsWith("file://")) {
         // Local files cannot be downloaded from a distant client so don't show
         // a link to such a list here
-        const codeElement = document.createElement("code");
-        codeElement.id = "address_" + dataId;
-        codeElement.className = "breakall";
-        codeElement.textContent = data.address;
-        $("td:eq(3)", row).empty().append(codeElement);
+        const codeElem = document.createElement("code");
+        codeElem.id = "address_" + dataId;
+        codeElem.className = "breakall";
+        codeElem.textContent = data.address;
+        $("td:eq(3)", row).empty().append(codeElem);
       } else {
-        const aElement = document.createElement("a");
-        aElement.id = "address_" + dataId;
-        aElement.className = "breakall";
-        aElement.href = data.address;
-        aElement.target = "_blank";
-        aElement.rel = "noopener noreferrer";
-        aElement.textContent = data.address;
-        $("td:eq(3)", row).empty().append(aElement);
+        const aElem = document.createElement("a");
+        aElem.id = "address_" + dataId;
+        aElem.className = "breakall";
+        aElem.href = data.address;
+        aElem.target = "_blank";
+        aElem.rel = "noopener noreferrer";
+        aElem.textContent = data.address;
+        $("td:eq(3)", row).empty().append(aElem);
       }
 
       $("td:eq(4)", row).html(
@@ -262,18 +262,18 @@ function initTable() {
         onstyle: "success",
         width: "80px",
       });
-      statusElement.on("change", editList);
+      statusEl.on("change", editList);
 
       $("td:eq(5)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentElement = $("#comment_" + dataId, row);
-      commentElement.val(data.comment);
-      commentElement.on("change", editList);
+      const commentEl = $("#comment_" + dataId, row);
+      commentEl.val(data.comment);
+      commentEl.on("change", editList);
 
       $("td:eq(6)", row).empty();
       $("td:eq(6)", row).append(
         '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
-      const selectElement = $("#multiselect_" + dataId, row);
+      const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
@@ -281,7 +281,7 @@ function initTable() {
         selectElement.append($("<option/>").val(group.id).text(label));
       }
 
-      const applyButton = "#btn_apply_" + dataId;
+      const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
@@ -289,12 +289,12 @@ function initTable() {
       const ts = utils.createGroupSelect(selectElement, {
         onChange() {
           // enable Apply button
-          if ($(applyButton).prop("disabled")) {
-            $(applyButton)
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", () => {
-                editList.call(selectElement);
+                editList.call(selectEl);
               });
           }
         },
@@ -482,7 +482,7 @@ function addList(event) {
     .val()
     .split(/[\s,]+/u);
   // Remove empty elements
-  addresses = addresses.filter(element => element !== "");
+  addresses = addresses.filter(el => el !== "");
   const addressestr = JSON.stringify(addresses);
 
   utils.disableAll();
@@ -523,7 +523,7 @@ function addList(event) {
 }
 
 function editList() {
-  const element = $(this).attr("id");
+  const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const type = tr.attr("data-type");
   const dataId = tr.attr("data-id");
@@ -538,7 +538,7 @@ function editList() {
 
   let done = "edited";
   let notDone = "editing";
-  switch (element) {
+  switch (elem) {
     case "enabled_" + dataId:
       if (!enabled) {
         done = "disabled";
@@ -558,7 +558,7 @@ function editList() {
       notDone = "editing groups of";
       break;
     default:
-      alert("bad element (" + element + ") or invalid data-id!");
+      alert("bad element (" + elem + ") or invalid data-id!");
       return;
   }
 

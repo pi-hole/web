@@ -32,11 +32,11 @@ function base64ToString(base64) {
 
   // Decode base64 to bytes
   const bytes = [];
-  for (let index = 0; index < cleanBase64.length; index += 4) {
-    const encoded1 = base64Chars.indexOf(cleanBase64[index]);
-    const encoded2 = base64Chars.indexOf(cleanBase64[index + 1]);
-    const encoded3 = base64Chars.indexOf(cleanBase64[index + 2]);
-    const encoded4 = base64Chars.indexOf(cleanBase64[index + 3]);
+  for (let i = 0; i < cleanBase64.length; i += 4) {
+    const encoded1 = base64Chars.indexOf(cleanBase64[i]);
+    const encoded2 = base64Chars.indexOf(cleanBase64[i + 1]);
+    const encoded3 = base64Chars.indexOf(cleanBase64[i + 2]);
+    const encoded4 = base64Chars.indexOf(cleanBase64[i + 3]);
 
     /* eslint-disable no-bitwise -- Bitwise operations required for base64 decoding */
     bytes.push((encoded1 << 2) | (encoded2 >> 4));
@@ -98,8 +98,8 @@ function unescapeHtml(text) {
   );
 }
 
-function padNumber(number_) {
-  return ("00" + number_).substr(-2, 2);
+function padNumber(num) {
+  return ("00" + num).substr(-2, 2);
 }
 
 let showAlertBox = null;
@@ -231,7 +231,7 @@ function enableAll() {
 // Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
 function validateIPv4CIDR(ip) {
   // One IPv4 element is 8bit: 0 - 255
-  const ipv4element = "(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+  const ipv4elem = "(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
 
   // CIDR for IPv4 is 1 - 32 bit (optional)
   const v4cidr = "(?:\\/(?:[1-9]|[1-2][0-9]|3[0-2])){0,1}";
@@ -239,7 +239,7 @@ function validateIPv4CIDR(ip) {
   // Build the complete IPv4/CIDR validator
   // Format: xxx.xxx.xxx.xxx[/yy] where each xxx is 0-255 and optional yy is 1-32
   const ipv4validator = new RegExp(
-    `^${ipv4element}\\.${ipv4element}\\.${ipv4element}\\.${ipv4element}${v4cidr}$`,
+    `^${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}\\.${ipv4elem}${v4cidr}$`,
     "u"
   );
 
@@ -256,14 +256,14 @@ function validateIPv4(ip) {
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
-  const ipv6element = "[0-9a-f]{1,4}";
+  const ipv6elem = "[0-9a-f]{1,4}";
 
   // CIDR for IPv6 is 1-128 bit (optional)
   const v6cidr = "(?:\\/(?:[1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
 
   const ipv6validator = new RegExp(
     // eslint-disable-next-line regexp/no-useless-non-capturing-group, regexp/no-unused-capturing-group, regexp/prefer-named-capture-group
-    `^(((?:${ipv6element}))*((?::${ipv6element}))*::((?:${ipv6element}))*((?::${ipv6element}))*|((?:${ipv6element}))((?::${ipv6element})){7})${v6cidr}$`,
+    `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`,
     "iu"
   );
 
@@ -297,8 +297,8 @@ function validatePort(port) {
   }
 
   // Check if the port is an integer and within the valid network port range
-  const portNumber = Number(port);
-  return Number.isSafeInteger(portNumber) && portNumber >= 1 && portNumber <= 65_535;
+  const portNum = Number(port);
+  return Number.isSafeInteger(portNum) && portNum >= 1 && portNum <= 65_535;
 }
 
 // Validates the IPv4 server address used by dns.revServers, with an optional port
@@ -605,68 +605,68 @@ function changeTableButtonStates(table) {
 
   if (selectedRows === 0) {
     // Nothing selected
-    for (const element of selectAllElements) {
-      element.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.remove("hidden");
     }
 
-    for (const element of selectMoreElements) {
-      element.classList.add("hidden");
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
     }
 
-    for (const element of removeAllElements) {
-      element.classList.add("hidden");
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
     }
 
-    for (const element of deleteSelectedElements) {
-      element.classList.add("hidden");
+    for (const el of deleteSelectedElements) {
+      el.classList.add("hidden");
     }
   } else if (selectedRows >= pageLength || selectedRows === allRows) {
     // Whole page is selected (or all available messages were selected)
-    for (const element of selectAllElements) {
-      element.classList.add("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
     }
 
-    for (const element of selectMoreElements) {
-      element.classList.add("hidden");
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
     }
 
-    for (const element of removeAllElements) {
-      element.classList.remove("hidden");
+    for (const el of removeAllElements) {
+      el.classList.remove("hidden");
     }
 
-    for (const element of deleteSelectedElements) {
-      element.classList.remove("hidden");
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
     }
   } else {
     // Some rows are selected, but not all
-    for (const element of selectAllElements) {
-      element.classList.add("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
     }
 
-    for (const element of selectMoreElements) {
-      element.classList.remove("hidden");
+    for (const el of selectMoreElements) {
+      el.classList.remove("hidden");
     }
 
-    for (const element of removeAllElements) {
-      element.classList.add("hidden");
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
     }
 
-    for (const element of deleteSelectedElements) {
-      element.classList.remove("hidden");
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
     }
   }
 }
 
 function getCSSval(cssclass, cssproperty) {
-  const element = $("<div class='" + cssclass + "'></div>");
-  const value = element.appendTo("body").css(cssproperty);
-  element.remove();
-  return value;
+  const elem = $("<div class='" + cssclass + "'></div>");
+  const val = elem.appendTo("body").css(cssproperty);
+  elem.remove();
+  return val;
 }
 
 function parseQueryString() {
-  const parameters = new URLSearchParams(location.search);
-  return Object.fromEntries(parameters);
+  const params = new URLSearchParams(location.search);
+  return Object.fromEntries(params);
 }
 
 function hexEncode(text) {
@@ -799,15 +799,15 @@ function loadingOverlay(reloadAfterTimeout = false) {
 // Function that calls a function only if the page is currently visible. This is
 // useful to prevent unnecessary API calls when the page is not visible (e.g.
 // when the user is on another tab).
-function callIfVisible(function_) {
+function callIfVisible(func) {
   if (document.hidden) {
     // Page is not visible, try again in 1 second
-    setTimeout(callIfVisible, 1000, function_);
+    setTimeout(callIfVisible, 1000, func);
     return;
   }
 
   // Page is visible, call function instead
-  function_();
+  func();
 }
 
 // Timer that calls a function after <interval> milliseconds but only if the
@@ -815,21 +815,21 @@ function callIfVisible(function_) {
 // function before starting a new one to prevent multiple timers running at
 // the same time causing unnecessary identical API calls when the page is
 // visible again.
-function setTimer(function_, interval) {
+function setTimer(func, interval) {
   // Cancel possibly running timer
-  clearTimeout(function_.timer);
+  clearTimeout(func.timer);
   // Start new timer
-  function_.timer = setTimeout(callIfVisible, interval, function_);
+  func.timer = setTimeout(callIfVisible, interval, func);
 }
 
 // Same as setTimer() but calls the function every <interval> milliseconds
-function setInter(function_, interval) {
+function setInter(func, interval) {
   // Cancel possibly running timer
-  clearTimeout(function_.timer);
+  clearTimeout(func.timer);
   // Start new timer
-  function_.timer = setTimeout(callIfVisible, interval, function_);
+  func.timer = setTimeout(callIfVisible, interval, func);
   // Restart timer
-  setTimeout(setInter, interval, function_, interval);
+  setTimeout(setInter, interval, func, interval);
 }
 
 /**

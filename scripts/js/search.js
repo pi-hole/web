@@ -49,22 +49,22 @@ function doSearch() {
       ta.empty();
       ta.show();
 
-      const response = data.search;
+      const res = data.search;
       let result = "";
-      const numberDomains = response.domains.length;
+      const numDomains = res.domains.length;
       result =
         "Found " +
-        numberDomains +
+        numDomains +
         " domain" +
-        (numberDomains !== 1 ? "s" : "") +
+        (numDomains !== 1 ? "s" : "") +
         " <em>" +
         verb +
         "</em> matching '<strong class='text-primary'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
-        (numberDomains > 0 ? ":" : ".") +
+        (numDomains > 0 ? ":" : ".") +
         "<br><br>";
-      for (const domain of response.domains) {
+      for (const domain of res.domains) {
         const color = domain.type === "deny" ? "red" : "green";
         result +=
           "  - <a href='groups-domains?domainid=" +
@@ -93,9 +93,9 @@ function doSearch() {
           "<br><br>";
       }
 
-      // Group results in response.gravity by response.gravity[].address
+      // Group results in res.gravity by res.gravity[].address
       const grouped = {};
-      for (const list of response.gravity) {
+      for (const list of res.gravity) {
         if (grouped[list.address + "_" + list.type] === undefined) {
           grouped[list.address + "_" + list.type] = [];
         }
@@ -103,19 +103,19 @@ function doSearch() {
         grouped[list.address + "_" + list.type].push(list);
       }
 
-      const numberLists = Object.keys(grouped).length;
+      const numLists = Object.keys(grouped).length;
 
       result +=
         "Found " +
-        numberLists +
+        numLists +
         " list" +
-        (numberLists !== 1 ? "s" : "") +
+        (numLists !== 1 ? "s" : "") +
         " <em>" +
         verb +
         "</em> matching '<strong class='text-primary'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
-        (numberLists > 0 ? ":" : ".") +
+        (numLists > 0 ? ":" : ".") +
         "<br><br>";
       //eslint-disable-next-line unicorn/prefer-object-iterable-methods
       for (const listId of Object.keys(grouped)) {
@@ -202,8 +202,8 @@ function doSearch() {
 }
 
 // Handle enter key
-$("#domain").on("keypress", event => {
-  if (event.which === 13) {
+$("#domain").on("keypress", e => {
+  if (e.which === 13) {
     // Enter was pressed, and the input has focus
     doSearch();
   }

@@ -13,7 +13,7 @@ function eventsource() {
   const $alertInfo = $("#alertInfo");
   const $alertSuccess = $("#alertSuccess");
   const outputElement = document.getElementById("output");
-  const gravityButton = document.getElementById("gravityBtn");
+  const gravityBtn = document.getElementById("gravityBtn");
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const url = `${document.body.dataset.apiurl}/action/gravity?color=true`;
 
@@ -37,7 +37,7 @@ function eventsource() {
         response,
         outputElement,
         alertInfo: $alertInfo,
-        gravityBtn: gravityButton,
+        gravityBtn,
         alertSuccess: $alertSuccess,
       })
     )
@@ -143,10 +143,10 @@ function parseLines(outputElement, text) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const gravityButton = document.getElementById("gravityBtn");
+  const gravityBtn = document.getElementById("gravityBtn");
 
-  gravityButton.addEventListener("click", () => {
-    gravityButton.disabled = true;
+  gravityBtn.addEventListener("click", () => {
+    gravityBtn.disabled = true;
     eventsource();
   });
 

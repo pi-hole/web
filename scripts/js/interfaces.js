@@ -34,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function extractGateways(gateway) {
   // Get all objects in gateway that has family == "inet"
-  const inet = gateway.find(object => object.family === "inet");
+  const inet = gateway.find(obj => obj.family === "inet");
   // Get first object in gateway that has family == "inet6"
-  const inet6 = gateway.find(object => object.family === "inet6");
+  const inet6 = gateway.find(obj => obj.family === "inet6");
   // Create a set of the gateways when they are found
   const gateways = new Set();
 
@@ -57,14 +57,8 @@ function processInterfaces(interfacesData, gateways, intl) {
 
   // For each interface in data.interface, create a new object and push it to json
   for (const iface of interfacesData) {
-    const object = createInterfaceObject({
-      iface,
-      gateways,
-      intl,
-      masterInterfaces,
-      interfacesData,
-    });
-    interfaces[iface.name] = object;
+    const obj = createInterfaceObject({ iface, gateways, intl, masterInterfaces, interfacesData });
+    interfaces[iface.name] = obj;
   }
 
   return { interfaces, masterInterfaces };
@@ -81,23 +75,23 @@ function createInterfaceObject({ iface, gateways, intl, masterInterfaces, interf
   });
   // Show an icon for indenting slave interfaces
   const icon = master === null ? "" : '<span class="child-interface-icon">&nbsp;&rdca;</span> ';
-  const object = {
+  const obj = {
     text: `${icon + iface.name} - ${status}`,
     class: gateways.has(iface.name) ? "text-bold" : null,
     icon: master === null ? "fa fa-network-wired fa-fw" : "",
     nodes: [],
   };
 
-  addMasterDetails(object, master);
-  addSpeedDetails(object, iface, intl);
-  addTypeDetails(object, iface);
-  addFlagsDetails(object, iface);
-  addHardwareAddressDetails(object, iface);
-  addAddressDetails(object, iface, intl);
-  addStatisticsDetails(object, iface, intl);
-  addFurtherDetails(object, iface, intl);
+  addMasterDetails(obj, master);
+  addSpeedDetails(obj, iface, intl);
+  addTypeDetails(obj, iface);
+  addFlagsDetails(obj, iface);
+  addHardwareAddressDetails(obj, iface);
+  addAddressDetails(obj, iface, intl);
+  addStatisticsDetails(obj, iface, intl);
+  addFurtherDetails(obj, iface, intl);
 
-  return object;
+  return obj;
 }
 
 function determineStateText(iface) {
@@ -121,12 +115,12 @@ function findMasterInterface({ iface, masterInterfaces, interfacesData }) {
     return null;
   }
 
-  const masterObject = interfacesData.find(object => object.index === iface.master);
-  if (!masterObject) {
+  const masterObj = interfacesData.find(obj => obj.index === iface.master);
+  if (!masterObj) {
     return null;
   }
 
-  const masterName = masterObject.name;
+  const masterName = masterObj.name;
   if (Array.isArray(masterInterfaces[masterName])) {
     masterInterfaces[masterName].push(iface.name);
   } else {
@@ -136,43 +130,43 @@ function findMasterInterface({ iface, masterInterfaces, interfacesData }) {
   return masterName;
 }
 
-function addMasterDetails(object, master) {
+function addMasterDetails(obj, master) {
   if (master !== null) {
-    object.nodes.push({
+    obj.nodes.push({
       text: `Master interface: <code>${utils.escapeHtml(master)}</code>`,
       icon: "fa fa-network-wired fa-fw",
     });
   }
 }
 
-function addSpeedDetails(object, iface, intl) {
+function addSpeedDetails(obj, iface, intl) {
   if (iface.speed) {
-    object.nodes.push({
+    obj.nodes.push({
       text: `Speed: ${intl.format(iface.speed)} Mbit/s`,
       icon: "fa fa-tachometer-alt fa-fw",
     });
   }
 }
 
-function addTypeDetails(object, iface) {
+function addTypeDetails(obj, iface) {
   if (iface.type !== undefined) {
-    object.nodes.push({
+    obj.nodes.push({
       text: `Type: ${utils.escapeHtml(iface.type)}`,
       icon: "fa fa-network-wired fa-fw",
     });
   }
 }
 
-function addFlagsDetails(object, iface) {
+function addFlagsDetails(obj, iface) {
   if (iface.flags !== undefined && iface.flags.length > 0) {
-    object.nodes.push({
+    obj.nodes.push({
       text: `Flags: ${utils.escapeHtml(iface.flags.join(", "))}`,
       icon: "fa fa-flag fa-fw",
     });
   }
 }
 
-function addHardwareAddressDetails(object, iface) {
+function addHardwareAddressDetails(obj, iface) {
   if (iface.address === undefined) {
     return;
   }
@@ -182,13 +176,13 @@ function addHardwareAddressDetails(object, iface) {
       ? ` (permanent: <code>${utils.escapeHtml(iface.perm_address)}</code>)`
       : "";
 
-  object.nodes.push({
+  obj.nodes.push({
     text: `Hardware address: <code>${utils.escapeHtml(iface.address)}</code>${extra}`,
     icon: "fa fa-map-marker-alt fa-fw",
   });
 }
 
-function addAddressDetails(object, iface, intl) {
+function addAddressDetails(obj, iface, intl) {
   if (iface.addresses === undefined) {
     return;
   }
@@ -208,7 +202,7 @@ function addAddressDetails(object, iface, intl) {
     addresses.nodes.push(jaddr);
   }
 
-  object.nodes.push(addresses);
+  obj.nodes.push(addresses);
 }
 
 function createAddressNode(addr, intl) {
@@ -301,7 +295,7 @@ function createAddressNode(addr, intl) {
   return jaddr;
 }
 
-function addStatisticsDetails(object, iface, intl) {
+function addStatisticsDetails(obj, iface, intl) {
   if (iface.stats === undefined) {
     return;
   }
@@ -391,10 +385,10 @@ function addStatisticsDetails(object, iface, intl) {
     });
   }
 
-  object.nodes.push(stats);
+  obj.nodes.push(stats);
 }
 
-function addFurtherDetails(object, iface, intl) {
+function addFurtherDetails(obj, iface, intl) {
   const furtherDetails = {
     text: "Further details",
     icon: "fa fa-info-circle fa-fw",
@@ -479,7 +473,7 @@ function addFurtherDetails(object, iface, intl) {
   }
 
   if (furtherDetails.nodes.length > 0) {
-    object.nodes.push(furtherDetails);
+    obj.nodes.push(furtherDetails);
   }
 }
 

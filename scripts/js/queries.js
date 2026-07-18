@@ -414,9 +414,9 @@ function formatInfo(data) {
   }
 
   // Show long-term database information if applicable
-  let databaseInfo = "";
+  let dbInfo = "";
   if (data.dbid !== false) {
-    databaseInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
+    dbInfo = divStart + "Database ID:&nbsp;&nbsp;" + data.id + "</div>";
   }
 
   // Always show reply info, add reply delay if applicable
@@ -452,22 +452,22 @@ function formatInfo(data) {
     listInfo +
     ttlInfo +
     replyInfo +
-    databaseInfo +
+    dbInfo +
     "</div>"
   );
 }
 
 function addSelectSuggestion(name, dict, data) {
-  const object = $("#" + name + "_filter");
+  const obj = $("#" + name + "_filter");
   let value = "";
-  object.empty();
+  obj.empty();
 
   // In order for the placeholder value to appear, we have to have a blank
   // <option> as the first option in our <select> control. This is because
   // the browser tries to select the first option by default. If our first
   // option were non-empty, the browser would display this instead of the
   // placeholder.
-  object.append($("<option />"));
+  obj.append($("<option />"));
 
   // Add GET parameter as first suggestion (if present and not already included)
   if (Object.hasOwn(dict, name)) {
@@ -479,12 +479,12 @@ function addSelectSuggestion(name, dict, data) {
 
   // Add data obtained from API
   for (const text of Object.values(data)) {
-    object.append($("<option />").val(text).text(text));
+    obj.append($("<option />").val(text).text(text));
   }
 
   // Select GET parameter (if present)
   if (Object.hasOwn(dict, name)) {
-    object.val(value);
+    obj.val(value);
   }
 }
 
@@ -504,13 +504,13 @@ function parseFilters() {
   return Object.fromEntries(filters.map(filter => [filter, $(`#${filter}_filter`).val()]));
 }
 
-function filterOn(parameter, dict) {
-  if (!Object.hasOwn(dict, parameter)) {
+function filterOn(param, dict) {
+  if (!Object.hasOwn(dict, param)) {
     return false;
   }
 
-  const typ = typeof dict[parameter];
-  return typ === "number" || (typ === "string" && dict[parameter].length > 0);
+  const typ = typeof dict[param];
+  return typ === "number" || (typ === "string" && dict[param].length > 0);
 }
 
 function getAPIURL(queryFilters) {
@@ -730,8 +730,8 @@ $(() => {
         .columns()
         .every(function () {
           // Skip columns that are not searchable
-          const colIndex = this.index();
-          const bSearchable = this.context[0].aoColumns[colIndex].bSearchable;
+          const colIdx = this.index();
+          const bSearchable = this.context[0].aoColumns[colIdx].bSearchable;
           if (!bSearchable) {
             return null;
           }

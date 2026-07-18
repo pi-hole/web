@@ -25,7 +25,7 @@ function updateCachePie(data) {
   const v = [];
   const c = [];
   const k = [];
-  let index = 0;
+  let i = 0;
 
   // Compute total number of cache entries
   cacheEntries = 0;
@@ -49,12 +49,12 @@ function updateCachePie(data) {
   });
 
   // Rebuild data object
-  const temporary = {};
+  const tmp = {};
   for (const item of sorted) {
-    temporary[item] = data[item];
+    tmp[item] = data[item];
   }
 
-  data = temporary;
+  data = tmp;
 
   // Add empty space to chart
   data.empty = {};
@@ -64,14 +64,14 @@ function updateCachePie(data) {
   for (const [item, value] of Object.entries(data)) {
     if (value.valid > 0) {
       v.push((100 * value.valid) / cacheSize);
-      c.push(item !== "empty" ? THEME_COLORS[index++ % THEME_COLORS.length] : "#80808040");
+      c.push(item !== "empty" ? THEME_COLORS[i++ % THEME_COLORS.length] : "#80808040");
       k.push(item);
     }
 
     if (value.stale > 0) {
       // There are no stale empty entries
       v.push((100 * value.stale) / cacheSize);
-      c.push(THEME_COLORS[index++ % THEME_COLORS.length]);
+      c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
       k.push(item + " (stale)");
     }
   }
@@ -123,30 +123,30 @@ function updateHostInfo() {
 // to the corresponding element (add percentage for DNS replies)
 function setMetrics(data, prefix) {
   const cacheData = {};
-  for (const [key, value] of Object.entries(data)) {
+  for (const [key, val] of Object.entries(data)) {
     if (prefix === "sysinfo-dns-cache-content-") {
       // Create table row for each DNS cache entry
       // (if table exists)
       if ($("#dns-cache-table").length > 0) {
         const name =
-          value.name !== "OTHER"
-            ? "Valid " + (value.name !== null ? value.name : "TYPE " + value.type)
+          val.name !== "OTHER"
+            ? "Valid " + (val.name !== null ? val.name : "TYPE " + val.type)
             : "Other valid";
-        const tr = "<tr><th>" + name + " records in cache:</th><td>" + value.count + "</td></tr>";
+        const tr = "<tr><th>" + name + " records in cache:</th><td>" + val.count + "</td></tr>";
         // Append row to DNS cache table
         $("#dns-cache-table").append(tr);
       }
 
-      cacheData[value.name] = value.count;
-    } else if (typeof value === "object") {
-      setMetrics(value, prefix + key + "-");
+      cacheData[val.name] = val.count;
+    } else if (typeof val === "object") {
+      setMetrics(val, prefix + key + "-");
     } else if (prefix === "sysinfo-dns-replies-" && data.sum !== 0) {
       // Compute and display percentage of DNS replies in addition to the absolute value
-      const lval = value.toLocaleString();
-      const percent = (100 * value) / data.sum;
+      const lval = val.toLocaleString();
+      const percent = (100 * val) / data.sum;
       $("#" + prefix + key).text(lval + " (" + percent.toFixed(1) + "%)");
     } else {
-      const lval = value.toLocaleString();
+      const lval = val.toLocaleString();
       $("#" + prefix + key).text(lval);
     }
   }
@@ -263,8 +263,8 @@ $(() => {
   updateHostInfo();
   updateMetrics();
 
-  const context = document.getElementById("cachePieChart").getContext("2d");
-  cachePieChart = new Chart(context, {
+  const ctx = document.getElementById("cachePieChart").getContext("2d");
+  cachePieChart = new Chart(ctx, {
     type: "doughnut",
     data: {
       labels: [],
@@ -310,9 +310,9 @@ $(() => {
     .done(data => {
       const gateway = data.gateway;
       // Get first object in gateway that has family == "inet"
-      const inet = gateway.find(object => object.family === "inet");
+      const inet = gateway.find(obj => obj.family === "inet");
       // Get first object in gateway that has family == "inet6"
-      const inet6 = gateway.find(object => object.family === "inet6");
+      const inet6 = gateway.find(obj => obj.family === "inet6");
 
       $("#sysinfo-gw-v4-addr").text(inet ? inet.local.join("\n") : "N/A");
       $("#sysinfo-gw-v4-iface").text(inet ? inet.interface : "N/A");

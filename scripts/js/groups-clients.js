@@ -44,10 +44,10 @@ function reloadClientSuggestions() {
         let extraInfo = "";
         if (client.names !== null && client.names.length > 0) {
           // Count number of "," in client.names to determine number of hostnames
-          const numberHostnames = client.names.split(",").length;
-          const pluralHostnames = numberHostnames > 1 ? "s" : "";
+          const numHostnames = client.names.split(",").length;
+          const pluralHostnames = numHostnames > 1 ? "s" : "";
           extraInfo =
-            numberHostnames + " hostname" + pluralHostnames + ": " + utils.escapeHtml(client.names);
+            numHostnames + " hostname" + pluralHostnames + ": " + utils.escapeHtml(client.names);
         }
 
         if (client.macVendor !== null && client.macVendor.length > 0) {
@@ -66,14 +66,10 @@ function reloadClientSuggestions() {
           }
 
           // Count number of "," in client.addresses to determine number of addresses
-          const numberAddresses = client.addresses.split(",").length;
-          const pluralAddresses = numberAddresses > 1 ? "es" : "";
+          const numAddresses = client.addresses.split(",").length;
+          const pluralAddresses = numAddresses > 1 ? "es" : "";
           extraInfo +=
-            numberAddresses +
-            " address" +
-            pluralAddresses +
-            ": " +
-            utils.escapeHtml(client.addresses);
+            numAddresses + " address" + pluralAddresses + ": " + utils.escapeHtml(client.addresses);
         }
 
         if (extraInfo.length > 0) {
@@ -173,15 +169,15 @@ function initTable() {
       $("td:eq(1)", row).html(ipName);
 
       $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
-      const commentElement = $("#comment_" + dataId, row);
-      commentElement.val(data.comment);
-      commentElement.on("change", editClient);
+      const commentEl = $("#comment_" + dataId, row);
+      commentEl.val(data.comment);
+      commentEl.on("change", editClient);
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
         '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
-      const selectElement = $("#multiselect_" + dataId, row);
+      const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
@@ -189,7 +185,7 @@ function initTable() {
         selectElement.append($("<option/>").val(group.id).text(label));
       }
 
-      const applyButton = "#btn_apply_" + dataId;
+      const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
@@ -197,12 +193,12 @@ function initTable() {
       const ts = utils.createGroupSelect(selectElement, {
         onChange() {
           // enable Apply button
-          if ($(applyButton).prop("disabled")) {
-            $(applyButton)
+          if ($(applyBtn).prop("disabled")) {
+            $(applyBtn)
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", () => {
-                editClient.call(selectElement);
+                editClient.call(selectEl);
               });
           }
         },
@@ -357,8 +353,8 @@ function addClient() {
     .trim()
     .split(/[\s,]+/u)
     // Remove empty elements
-    .filter(element => element !== "");
-  const ipString = JSON.stringify(ips);
+    .filter(el => el !== "");
+  const ipStr = JSON.stringify(ips);
 
   // Validate input, can be:
   // - IPv4 address (with and without CIDR)
@@ -381,7 +377,7 @@ function addClient() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding client(s)...", ipString);
+  utils.showAlert("info", "", "Adding client(s)...", ipStr);
 
   if (ips.length === 0) {
     utils.enableAll();
@@ -417,7 +413,7 @@ function addClient() {
 }
 
 function editClient() {
-  const element = $(this).attr("id");
+  const elem = $(this).attr("id");
   const tr = $(this).closest("tr");
   const client = tr.attr("data-id");
   // Convert list of string integers to list of integers using map(Number)
@@ -429,7 +425,7 @@ function editClient() {
 
   let done = "edited";
   let notDone = "editing";
-  switch (element) {
+  switch (elem) {
     case "multiselect_" + client:
       done = "edited groups of";
       notDone = "editing groups of";
@@ -439,7 +435,7 @@ function editClient() {
       notDone = "editing comment of";
       break;
     default:
-      alert("bad element (" + element + ") or invalid data-id!");
+      alert("bad element (" + elem + ") or invalid data-id!");
       return;
   }
 

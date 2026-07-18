@@ -50,10 +50,10 @@ function updateUpstreamTabBadges() {
 
 // Fill the upstreams tables with the given servers, and initialize the manual upstreams textarea with the given value.
 function fillDNSupstreams(value, servers) {
-  let disabledString = "";
+  let disabledStr = "";
   if (value.flags.env_var === true) {
     $("#DNSupstreamsTextfield").prop("disabled", true);
-    disabledString = 'disabled="Disabled"';
+    disabledStr = 'disabled="Disabled"';
   }
 
   let index_ = 0;
@@ -280,7 +280,7 @@ function createRevServerTable() {
       $("tbody .saveRevServers").on("click", saveRecord);
       $(".cancelRevServers").on("click", restoreRecord);
     },
-    rowCallback(row, data, displayNumber, displayIndex, dataIndex) {
+    rowCallback(row, data, displayNum, displayIndex, dataIndex) {
       $(row).attr("data-index", dataIndex);
       const bt = '<button type="button" class="btn btn-xs"></button>';
       const btDel = $(bt)
@@ -468,7 +468,7 @@ $(() => {
 });
 
 // Save the Reverse Servers data via API and recreate the table with updated values
-function saveRevServerData(message) {
+function saveRevServerData(msg) {
   // Get the data from the textarea
   const data = getRevServerLines();
 
@@ -487,7 +487,7 @@ function saveRevServerData(message) {
         "success",
         "fa-solid fa-fw fa-floppy-disk",
         "Conditional Forwarding settings successfully saved",
-        message
+        msg
       );
       // Show loading overlay (without reloading the page)
       utils.loadingOverlay(false);
@@ -522,8 +522,8 @@ $(document).on("change", "#revServers-table .revserver-chkbox input", function (
 // Validate data entered on the table
 // If a cell contains an invalid value, it will be highlighted and the save button will be disabled
 $(document).on("input blur paste", ".revserver-network", function () {
-  const value = $(this).text().trim();
-  if (value && !(utils.validateIPv4(value) || utils.validateIPv6(value))) {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4(val) || utils.validateIPv6(val))) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid network range");
     $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
@@ -534,8 +534,8 @@ $(document).on("input blur paste", ".revserver-network", function () {
   }
 });
 $(document).on("input blur paste", ".revserver-ip", function () {
-  const value = $(this).text().trim();
-  if (value && !(utils.validateIPv4WithPort(value) || utils.validateIPv6WithPort(value))) {
+  const val = $(this).text().trim();
+  if (val && !(utils.validateIPv4WithPort(val) || utils.validateIPv6WithPort(val))) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid server IP");
     $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
@@ -546,8 +546,8 @@ $(document).on("input blur paste", ".revserver-ip", function () {
   }
 });
 $(document).on("input blur paste", ".revserver-domain", function () {
-  const value = $(this).text().trim();
-  if (value && !utils.validateHostnameStrict(value)) {
+  const val = $(this).text().trim();
+  if (val && !utils.validateHostnameStrict(val)) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid domain");
     $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);

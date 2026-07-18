@@ -45,30 +45,30 @@ function valueDetails(key, value) {
   if (value.modified) {
     defaultValueHint = "";
     if (value.default !== null) {
-      let defaultValue = utils.escapeHtml(JSON.stringify(value.default));
-      switch (defaultValue) {
+      let defVal = utils.escapeHtml(JSON.stringify(value.default));
+      switch (defVal) {
         case "true": {
-          defaultValue = "enabled";
+          defVal = "enabled";
 
           break;
         }
 
         case "false": {
-          defaultValue = "disabled";
+          defVal = "disabled";
 
           break;
         }
 
         case '""':
         case "[]": {
-          defaultValue = "empty";
+          defVal = "empty";
 
           break;
         }
         // No default
       }
 
-      defaultValueHint = "<p>Default Value: " + defaultValue + "</p>";
+      defaultValueHint = "<p>Default Value: " + defVal + "</p>";
     }
   }
 
@@ -208,7 +208,7 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      for (const [index, option] of value.allowed.entries()) {
+      for (const [i, option] of value.allowed.entries()) {
         content +=
           '<div class="form-check">' +
           // Radio button
@@ -287,8 +287,8 @@ function generateRow(topic, key, value) {
     "</div></div> ";
 
   const topKey = key.split(".", 1)[0];
-  const element = $("#advanced-content-" + topKey + "-flex");
-  element.append(box);
+  const elem = $("#advanced-content-" + topKey + "-flex");
+  elem.append(box);
 }
 
 function createDynamicConfigTabs() {
@@ -338,14 +338,14 @@ function createDynamicConfigTabs() {
 }
 
 function initOnlyChanged() {
-  const element = $("#only-changed");
+  const elem = $("#only-changed");
 
   // Restore settings level from local storage (if available) or default to "false"
   if (localStorage.getItem("only-changed") === null) {
     localStorage.setItem("only-changed", "false");
   }
 
-  element.prop("checked", localStorage.getItem("only-changed") === "true");
+  elem.prop("checked", localStorage.getItem("only-changed") === "true");
 
   element.bootstrapToggle({
     onlabel: "Only modified",
@@ -356,13 +356,13 @@ function initOnlyChanged() {
     width: "180px",
   });
 
-  element.on("change", function () {
+  elem.on("change", function () {
     localStorage.setItem("only-changed", $(this).prop("checked") ? "true" : "false");
     applyOnlyChanged();
   });
 
-  element.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
-  element.trigger("change");
+  elem.bootstrapToggle(localStorage.getItem("only-changed") === "true" ? "on" : "off");
+  elem.trigger("change");
 }
 
 function applyOnlyChanged() {
