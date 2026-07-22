@@ -12,46 +12,46 @@ mg.include('scripts/lua/header.lp','r')
 </head>
 <body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
 <div class="card login-box" id="login-box">
-    <section style="padding: 15px;">
+    <section class="p-3">
         <div class="login-logo">
             <div class="text-center">
                 <img src="<?=webhome?>img/logo.svg" alt="Pi-hole logo" class="loginpage-logo" width="140" height="202">
             </div>
-            <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
+            <div class="panel-title text-center"><span class="logo-lg fs-3">Pi-<b>hole</b></span></div>
         </div>
         <!-- /.login-logo -->
 
         <div class="card">
             <div class="card-body login-card-body">
-                <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed</div>
-                <div class="text-center form-group has-error" id="dns-failure-label" style="display: none;">
+                <div id="cookieInfo" class="panel-title text-center text-red fs-3" hidden>Verify that cookies are allowed</div>
+                <div class="text-center mb-3 alert alert-danger" id="dns-failure-label" style="display: none;">
                     <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
                 </div>
-                <div class="text-center form-group has-warning" id="insecure-box" style="display: none;">
+                <div class="text-center mb-3 has-warning" id="insecure-box" style="display: none;">
                     <div class="card card-warning card-outline">
                         <div class="card-body">
                             Consider upgrading to <a href="#" id="https-link">HTTPS</a> (end-to-end encryption)
                         </div>
                     </div>
                 </div>
-                <div class="form-group has-error login-box-msg" id="error-label" style="display: none;">
+                <div class="mb-3 has-error login-box-msg" id="error-label" style="display: none;">
                     <label class="control-label"><i class="fa fa-times-circle"></i> <span id="error-message"></span><br><span id="error-hint" style="display: none;"></span></label>
                 </div>
 
                 <form id="loginform">
                     <div class="login-options has-feedback" id="pw-field">
+                        <!-- hidden username input field to help password managers to autfill the password -->
                         <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
-                        <div class="input-group pwd-field form-group">
-                            <!-- hidden username input field to help password managers to autfill the password -->
+                        <!-- hidden label for screen readers -->
+                        <label class="visually-hidden" for="loginPassword">Password</label>
+                        <div class="input-group mb-3">
                             <input type="password" class="form-control" placeholder="Password" value="" spellcheck="false" autocomplete="current-password" id="current-password" autofocus required>
-                            <span class="input-group-btn">
-                                <button class="btn btn-secondary" id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">
-                                    <span class="fa fa-fw fa-eye field-icon"></span>
-                                </button>
-                            </span>
+                            <button class="btn btn-outline-secondary" id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">
+                                <span class="fa fa-fw fa-eye field-icon"></span>
+                            </button>
                         </div>
                     </div>
-                    <div class="form-group hidden" id="totp_input">
+                    <div class="mb-3 hidden" id="totp_input">
                         <div class="input-group">
                             <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="one-time-code">
                             <span class="input-group-text" data-bs-toggle="tooltip" data-placement="auto" title="TOTP verification code">
@@ -59,7 +59,7 @@ mg.include('scripts/lua/header.lp','r')
                             </span>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
                     </div>
                 </form>
@@ -110,7 +110,7 @@ mg.include('scripts/lua/header.lp','r')
                 </div>
             </div>
             <!-- /.login-card-body -->
-            <div class="login-footer" style="margin-top: 15px; display: flex; justify-content: space-between;">
+            <div class="login-footer m-3 d-flex justify-content-around">
                 <a class="btn btn-secondary btn-sm" role="button" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
                 <a class="btn btn-secondary btn-sm" role="button" href="https://github.com/pi-hole/" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                 <a class="btn btn-secondary btn-sm" role="button" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
@@ -120,7 +120,7 @@ mg.include('scripts/lua/header.lp','r')
 </div>
 
 <div class="login-donate">
-    <div class="text-center" style="font-size:125%">
+    <div class="text-center fs-5">
         <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
