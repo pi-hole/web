@@ -31,7 +31,7 @@
   --cached-color: #44649c;
   --other-color: #969798;
 
-  --datatable-bgcolor: rgba(18, 44, 68, 0.3);
+  --datatable-selected-bg: rgba(13, 110, 253, 0.5);
   --overlay-bgcolor: rgba(24, 28, 32, 0.8);
 }
 

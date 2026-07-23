@@ -7,7 +7,7 @@
 
 :root {
   /* Datatables Select - bgcolor */
-  --datatable-bgcolor: #e0e8ee;
+  --datatable-selected-bg: #90b6ff;
 
   /* Used in settings save button */
   --overlay-bgcolor: rgba(212, 220, 232, 0.55);
@@ -1243,10 +1243,12 @@ table.dataTable tr.selected th.select-checkbox::after {
 }
 
 /* Datatables Select - selected row bgcolor */
-table.dataTable tbody > tr.selected,
-table.dataTable tbody > tr > .selected {
-  background: none;
-  background-image: linear-gradient(var(--datatable-bgcolor), var(--datatable-bgcolor));
+table.table.dataTable > tbody > tr.selected > * {
+  color: inherit;
+  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 20%, transparent);
+}
+table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > * {
+  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 40%, transparent);
 }
 
 #messagesTable pre {

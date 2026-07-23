@@ -9,8 +9,8 @@
 *  https://github.com/anvyst/adminlte-skin-midnight */
 
 :root {
-  --datatable-bgcolor: rgba(64, 76, 88, 0.8);
-  --overlay-bgcolor: var(--datatable-bgcolor);
+  --datatable-selected-bg: rgba(60, 141, 188, 0.6);
+  --overlay-bgcolor: rgba(64, 76, 88, 0.8);
 
   /* Dashboard graphic bars */
   --allowed-color: #12b660;

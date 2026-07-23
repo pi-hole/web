@@ -10,7 +10,6 @@
   --net-recent-color: #055;
   --net-old-color: #125;
   --net-older-color: #1c2228;
-  --datatable-bgcolor: var(--net-old-color);
 
   /* Dashboard graphic bars */
   --allowed-color: #073;

@@ -115,7 +115,7 @@ embed[type="application/pdf"] {
   --darkreader-neutral-text: #d8d4cf;
   --darkreader-selection-background: #004daa;
   --darkreader-selection-text: #e8e6e3;
-  --datatable-bgcolor: rgb(35, 47, 52);
+  --datatable-selected-bg: rgb(41, 98, 146);
   --overlay-bgcolor: rgba(35, 47, 52, 0.7);
 
   /* Dashboard graphic bars */
