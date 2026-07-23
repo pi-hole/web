@@ -1076,6 +1076,7 @@ li:not(.menu-open) .nav-treeview .warning-count {
   height: auto;
   padding: 15px 15px 5px;
   font-weight: 600;
+  color: var(--bs-navbar-brand-color);
 }
 
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
