@@ -876,8 +876,8 @@ li:not(.menu-open) .nav-treeview .warning-count {
   display: none !important;
 }
 
-/* Fix some datatables layout on small screens */
-@media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
+/* Fix some Domains page datatables layout on small screens */
+@media screen and (max-width: 767px) {
   #domainsTable_wrapper .table-responsive {
     border: none;
     overflow: unset;
@@ -885,75 +885,71 @@ li:not(.menu-open) .nav-treeview .warning-count {
   #domainsTable {
     border: 0;
     box-sizing: border-box;
+    display: block;
   }
   #domainsTable thead {
     display: none;
   }
+  #domainsTable tbody {
+    display: block;
+  }
   #domainsTable tr {
     display: flex;
-    padding: 5px 0;
     flex-wrap: wrap;
-    box-sizing: border-box;
-    align-items: end;
     border: 1px solid rgba(127, 127, 127, 0.4);
-    margin: 15px 0;
+    margin: 1em 0;
     border-radius: 6px;
+    overflow: hidden;
   }
   #domainsTable td {
     flex: 1 1 auto;
-    width: 100px;
+    width: 140px;
     display: block;
     border: none;
-    box-sizing: border-box;
     order: 3;
     text-align: right;
     padding: 4px 8px;
+    align-content: end;
   }
   #domainsTable td:nth-child(2n + 1) {
-    width: calc(100% - 120px);
+    width: calc(100% - 140px);
   }
   #domainsTable td:nth-child(1) {
     width: 40px;
     order: 0;
     text-align: left;
-    padding: 5px 0 30px;
+    padding: 6px 0 30px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
-    margin-bottom: 5px;
     flex: 0 0 auto;
   }
   #domainsTable td:nth-child(2) {
-    width: calc(100% - 40px);
+    width: 100%;
     order: 1;
     text-align: left;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
-    margin-bottom: 5px;
   }
   #domainsTable td:last-child {
     width: 40px;
     order: 0;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
-    margin-bottom: 5px;
   }
   #domainsTable td:nth-child(3),
   #domainsTable td:nth-child(5) {
     text-align: left;
   }
-  #domainsTable td::before {
+  #domainsTable td:not(:first-child)::before {
     display: block;
     font-weight: bold;
     font-size: smaller;
+    margin: 4px;
   }
   #domainsTable td:nth-child(3)::before {
     content: "Type:";
   }
   #domainsTable td:nth-child(5)::before {
     content: "Comment:";
-  }
-  #domainsTable tr.selected td.select-checkbox::after,
-  #domainsTable tr.selected th.select-checkbox::after {
-    transform: rotate(45deg) translate(5px, 1px);
   }
 }
 @media screen and (min-width: 767px) {
@@ -976,7 +972,7 @@ li:not(.menu-open) .nav-treeview .warning-count {
 }
 #domains-list .card-header h3 {
   flex: 1 1 auto;
-  margin: 5px 0;
+  margin: 0.5em 0;
   width: auto;
   min-width: 130px;
 }
@@ -987,7 +983,6 @@ li:not(.menu-open) .nav-treeview .warning-count {
   margin: 5px auto;
 }
 .filter_types div {
-  flex: 0 0 auto;
   margin: 2px 0 0;
 }
 .filter_types span {
@@ -1210,8 +1205,8 @@ table.dataTable tr.selected th.select-checkbox::after {
   left: 50%;
   width: 5px;
   height: 9px;
-  margin-top: -7px;
-  margin-left: -3px;
+  margin-top: -6px;
+  margin-left: -2px;
   border-bottom: 2px solid currentColor;
   border-right: 2px solid currentColor;
   transform: rotate(45deg);
