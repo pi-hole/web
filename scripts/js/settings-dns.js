@@ -100,10 +100,16 @@ function fillDNSupstreams(value, servers) {
 
   // Add event listener to checkboxes (shared across the Plain/DoT/DoH tabs)
   $("input[id^='DNSupstreams-']").on("change", () => {
-    const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
+    const upstreams = $("#DNSupstreamsTextfield").val().split(/\r?\n/u).filter(Boolean);
     let customServerCount = 0;
-    $("#DNSupstreamsTable input").each(function () {
+    $(
+      "#DNSupstreamsTable-plain input, #DNSupstreamsTable-dot input, #DNSupstreamsTable-doh input"
+    ).each(function () {
       const title = $(this).closest("td").attr("title");
+      if (!title) {
+        return;
+      }
+
       if (this.checked && !upstreams.includes(title)) {
         // Add server to array
         upstreams.push(title);
