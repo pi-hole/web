@@ -102,9 +102,7 @@ function fillDNSupstreams(value, servers) {
   $("input[id^='DNSupstreams-']").on("change", () => {
     const upstreams = $("#DNSupstreamsTextfield").val().split(/\r?\n/u).filter(Boolean);
     let customServerCount = 0;
-    $(
-      "#DNSupstreamsTable-plain input, #DNSupstreamsTable-dot input, #DNSupstreamsTable-doh input"
-    ).each(function () {
+    $("#DNSupstreamTabs table input").each(function () {
       const title = $(this).closest("td").attr("title");
       if (!title) {
         return;

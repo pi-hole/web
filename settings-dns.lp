@@ -22,7 +22,7 @@ mg.include('scripts/lua/settings_header.lp','r')
             <div class="box-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="nav-tabs-custom">
+                        <div class="nav-tabs-custom" id="DNSupstreamTabs">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="active" role="presentation">
                                     <a href="#tab-upstreams-plain" aria-controls="tab-upstreams-plain" aria-expanded="true" role="tab" data-toggle="tab">Plain <span class="label label-primary" id="upstreams-count-plain" style="display: none;"></span></a>
