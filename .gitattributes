@@ -1,2 +1,3 @@
 # Enforce Unix newlines
 * text=auto eol=lf
+*.lp linguist-language=Lua

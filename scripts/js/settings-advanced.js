@@ -75,10 +75,7 @@ function valueDetails(key, value) {
   }
 
   // Define extraAttributes, if needed
-  let extraAttributes = "";
-  if (value.flags.env_var) {
-    extraAttributes = " disabled";
-  }
+  const extraAttributes = value.flags.env_var ? " disabled" : "";
 
   // Format the output depending on the value type
   let content = "";
@@ -291,7 +288,7 @@ function generateRow(topic, key, value) {
     valueDetails(key, value) +
     "</div></div> ";
 
-  const topKey = key.split(".")[0];
+  const topKey = key.split(".", 1)[0];
   const elem = $("#advanced-content-" + topKey + "-flex");
   elem.append(box);
 }

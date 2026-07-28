@@ -44,7 +44,9 @@ globalThis.htmlLegendPlugin = {
           item.hidden === options.lastLegendItems[i].hidden
       );
 
-    if (isLegendUnchanged) return;
+    if (isLegendUnchanged) {
+      return;
+    }
 
     // else: Update the HTML legend if it is different from last time or if it
     // did not exist
@@ -56,9 +58,7 @@ globalThis.htmlLegendPlugin = {
     const ul = getOrCreateLegendList(options.containerID);
 
     // Remove old legend items
-    while (ul.firstChild) {
-      ul.firstChild.remove();
-    }
+    ul.replaceChildren();
 
     for (const item of items) {
       const li = document.createElement("li");
@@ -124,7 +124,7 @@ globalThis.htmlLegendPlugin = {
 
             // ... and include the server name (without port) to the querystring, to match
             // the text used on the SELECT element (sent by suggestions API endpoint)
-            link.href += ` (${item.text.split("#")[0]})`;
+            link.href += ` (${item.text.split("#", 1)[0]})`;
           }
         }
       } else {
@@ -169,7 +169,9 @@ globalThis.customTooltips = context => {
 
 function getOrCreateTooltipElement(canvasId, options, context) {
   let tooltipEl = document.getElementById(`${canvasId}-customTooltip`);
-  if (tooltipEl) return tooltipEl;
+  if (tooltipEl) {
+    return tooltipEl;
+  }
 
   // Create Tooltip Element once per chart
   tooltipEl = document.createElement("div");
@@ -179,6 +181,9 @@ function getOrCreateTooltipElement(canvasId, options, context) {
 
   // Avoid browser's font-zoom since we know that <body>'s
   // font-size was set to 14px by Bootstrap's CSS
+  // Use Number.parseFloat to convert the line height from a string (like "16px") to a number
+  // Using Number only would return NaN if the string contains non-numeric characters
+  //eslint-disable-next-line unicorn/prefer-number-coercion
   const fontZoom = Number.parseFloat(getComputedStyle(document.body).fontSize) / 14;
 
   // Set styles and font
@@ -205,7 +210,9 @@ function setTooltipCaretPosition(tooltipEl, tooltip) {
 
 function setTooltipContent(tooltipEl, tooltip) {
   const bodyLines = tooltip.body.map(bodyItem => bodyItem.lines);
-  if (bodyLines.length === 0) return;
+  if (bodyLines.length === 0) {
+    return;
+  }
 
   const titleLines = tooltip.title || [];
   let tooltipHtml = "<thead>";
@@ -247,7 +254,9 @@ function setTooltipContent(tooltipEl, tooltip) {
 }
 
 function positionTooltip(tooltipEl, tooltip, context) {
-  if (tooltip.opacity === 0 || tooltipEl.style.opacity === 0) return;
+  if (tooltip.opacity === 0 || tooltipEl.style.opacity === 0) {
+    return;
+  }
 
   const canvasPos = context.chart.canvas.getBoundingClientRect();
   const boxPos = tooltipEl.ancestor.getBoundingClientRect();
@@ -340,8 +349,12 @@ function positionTooltip(tooltipEl, tooltip, context) {
 
       case "center": {
         tooltipY -= tooltipHeight / 2;
-        if (tooltip.xAlign === "left") tooltipX += arrowSize;
-        if (tooltip.xAlign === "right") tooltipX -= arrowSize;
+        if (tooltip.xAlign === "left") {
+          tooltipX += arrowSize;
+        } else if (tooltip.xAlign === "right") {
+          tooltipX -= arrowSize;
+        }
+
         break;
       }
 
@@ -372,7 +385,9 @@ function positionTooltip(tooltipEl, tooltip, context) {
 }
 
 globalThis.doughnutTooltip = tooltipLabel => {
-  if (tooltipLabel.parsed === 0) return "";
+  if (tooltipLabel.parsed === 0) {
+    return "";
+  }
 
   // tooltipLabel.chart._metasets[0].total returns the total percentage of the shown slices
   // to compensate rounding errors we round to one decimal
@@ -412,7 +427,9 @@ globalThis.doughnutTooltip = tooltipLabel => {
 function getOrCreateLegendList(id) {
   const legendContainer = document.getElementById(id);
   let listContainer = legendContainer.querySelector("ul");
-  if (listContainer) return listContainer;
+  if (listContainer) {
+    return listContainer;
+  }
 
   listContainer = document.createElement("ul");
   legendContainer.append(listContainer);

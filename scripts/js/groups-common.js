@@ -45,7 +45,7 @@ function getGroups(groupSelector) {
       groups = data.groups;
 
       // Get all all <select> elements with the class "selectpicker"
-      const groupSelector = $(".selectpicker");
+      groupSelector = $(".selectpicker");
       // Populate the groupSelector with the groups
       for (const element of groupSelector) {
         populateGroupSelect($(element));
@@ -77,7 +77,9 @@ function processGroupResult(data, type, done, notDone) {
 // eslint-disable-next-line no-unused-vars
 function delGroupItems(type, ids, table, listType = undefined) {
   // Check input validity
-  if (!Array.isArray(ids)) return;
+  if (!Array.isArray(ids)) {
+    return;
+  }
 
   const url = document.body.dataset.apiurl + "/" + type + "s:batchDelete";
 

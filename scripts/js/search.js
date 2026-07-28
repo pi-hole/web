@@ -26,14 +26,14 @@ function doSearch() {
   const ta = $("#output");
   // process with the current visible domain input field
   const q = $("input[id^='domain']:visible").val().trim().toLowerCase();
-  const N = $("#number").val();
-  // Partial matching?
-  const partial = $("#partialMatch").is(":checked");
 
+  // Partial matching?
   if (q.length === 0) {
     return;
   }
 
+  const N = $("#number").val();
+  const partial = $("#partialMatch").is(":checked");
   const verb = partial ? "partially" : "exactly";
 
   $.ajax({
@@ -117,6 +117,7 @@ function doSearch() {
         "</strong>'" +
         (numLists > 0 ? ":" : ".") +
         "<br><br>";
+      //eslint-disable-next-line unicorn/prefer-object-iterable-methods
       for (const listId of Object.keys(grouped)) {
         const list = grouped[listId][0];
         const color = list.type === "block" ? "red" : "green";

@@ -1049,6 +1049,28 @@ table.dataTable tr.selected th.select-checkbox::after {
   font-size: 17px;
 }
 
+/* DNS settings page - Upstream servers table */
+.upstream-servers-table {
+  table-layout: fixed;
+}
+.upstream-servers-table .server-names {
+  width: 210px;
+}
+.upstream-servers-table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+/* DNS settings page - selection-count label on the Plain/DoT/DoH tabs */
+.nav-tabs .label {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  font-size: 11px;
+}
+.nav-tabs > li > a:has(.label) {
+  padding-right: 30px;
+}
+
 /* Datatables Select - selected row bgcolor */
 table.dataTable tbody > tr.selected,
 table.dataTable tbody > tr > .selected {

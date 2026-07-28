@@ -25,7 +25,6 @@ $(() => {
  * @param {string} base64 - Base64 encoded string
  * @returns {string} Decoded UTF-8 string
  */
-// eslint-disable-next-line no-unused-vars -- Used by other scripts (e.g., footer.js)
 function base64ToString(base64) {
   // Remove padding and whitespace
   const cleanBase64 = base64.replaceAll(/[=\s]/gu, "");
@@ -41,8 +40,13 @@ function base64ToString(base64) {
 
     /* eslint-disable no-bitwise -- Bitwise operations required for base64 decoding */
     bytes.push((encoded1 << 2) | (encoded2 >> 4));
-    if (encoded3 !== -1) bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
-    if (encoded4 !== -1) bytes.push(((encoded3 & 3) << 6) | encoded4);
+    if (encoded3 !== -1) {
+      bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
+    }
+
+    if (encoded4 !== -1) {
+      bytes.push(((encoded3 & 3) << 6) | encoded4);
+    }
     /* eslint-enable no-bitwise */
   }
 
@@ -52,6 +56,11 @@ function base64ToString(base64) {
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
+  // Return early when text is not a string
+  if (typeof text !== "string") {
+    return text;
+  }
+
   const map = {
     "&": "&amp;",
     "<": "&lt;",
@@ -60,13 +69,14 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
 
-  // Return early when text is not a string
-  if (typeof text !== "string") return text;
-
   return text.replaceAll(/[&<>"']/gu, m => map[m]);
 }
 
 function unescapeHtml(text) {
+  if (text === null) {
+    return null;
+  }
+
   const map = {
     "&amp;": "&",
     "&lt;": "<",
@@ -81,8 +91,6 @@ function unescapeHtml(text) {
     "&ouml;": "ö",
     "&szlig;": "ß",
   };
-
-  if (text === null) return null;
 
   return text.replaceAll(
     /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/gu,
@@ -124,8 +132,10 @@ function showAlert(type, icon, title, message, toast) {
       break;
     case "error":
       options.icon = "fas fa-times";
-      if (title.length === 0)
+      if (title.length === 0) {
         options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      }
+
       settings.delay *= 2;
 
       // If the message is an API object, nicely format the error message
@@ -136,7 +146,9 @@ function showAlert(type, icon, title, message, toast) {
         if (data.error !== undefined) {
           options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
 
-          if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
+          if (data.error.hint !== null) {
+            options.message = escapeHtml(data.error.hint);
+          }
         }
       } catch {
         // Do nothing
@@ -218,10 +230,10 @@ function enableAll() {
 // Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
 function validateIPv4CIDR(ip) {
   // One IPv4 element is 8bit: 0 - 255
-  const ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+  const ipv4elem = "(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
 
   // CIDR for IPv4 is 1 - 32 bit (optional)
-  const v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
+  const v4cidr = "(?:\\/(?:[1-9]|[1-2][0-9]|3[0-2])){0,1}";
 
   // Build the complete IPv4/CIDR validator
   // Format: xxx.xxx.xxx.xxx[/yy] where each xxx is 0-255 and optional yy is 1-32
@@ -243,14 +255,15 @@ function validateIPv4(ip) {
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
-  const ipv6elem = "[0-9A-Fa-f]{1,4}";
+  const ipv6elem = "[0-9a-f]{1,4}";
 
   // CIDR for IPv6 is 1-128 bit (optional)
-  const v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
+  const v6cidr = "(?:\\/(?:[1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
 
   const ipv6validator = new RegExp(
+    // eslint-disable-next-line regexp/no-useless-non-capturing-group, regexp/no-unused-capturing-group, regexp/prefer-named-capture-group
     `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`,
-    "u"
+    "iu"
   );
 
   return ipv6validator.test(ip);
@@ -266,7 +279,9 @@ function validateIPv6(ip) {
 function validateIPv6Brackets(ip) {
   const trimmedIp = ip.trim();
   // Check if the IPv6 is enclosed in brackets and return in case of failure
-  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) return false;
+  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) {
+    return false;
+  }
 
   // Strip brackets before validating the IPv6
   const ipWithoutBrackets = trimmedIp.slice(1, -1);
@@ -276,20 +291,26 @@ function validateIPv6Brackets(ip) {
 
 function validatePort(port) {
   // Ports containing spaces are not valid
-  if (port.trim() !== port) return false;
+  if (port.trim() !== port) {
+    return false;
+  }
 
   // Check if the port is an integer and within the valid network port range
   const portNum = Number(port);
-  return Number.isInteger(portNum) && portNum >= 1 && portNum <= 65_535;
+  return Number.isSafeInteger(portNum) && portNum >= 1 && portNum <= 65_535;
 }
 
 function validateIPv4WithPort(ip) {
   // The port is optional
   // If no "#" is present, validate just the IP
-  if (!ip.includes("#")) return validateIPv4(ip);
+  if (!ip.includes("#")) {
+    return validateIPv4(ip);
+  }
 
   const parts = ip.split("#");
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) {
+    return false;
+  }
 
   const [ipv4, port] = parts;
 
@@ -300,10 +321,14 @@ function validateIPv4WithPort(ip) {
 function validateIPv6WithPort(ip) {
   // The port is optional
   // If no "#" is present, validate just the IP
-  if (!ip.includes("#")) return validateIPv6(ip);
+  if (!ip.includes("#")) {
+    return validateIPv6(ip);
+  }
 
   const parts = ip.split("#");
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) {
+    return false;
+  }
 
   const [ipv6, port] = parts;
 
@@ -314,6 +339,7 @@ function validateIPv6WithPort(ip) {
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
+  // eslint-disable-next-line regexp/no-useless-non-capturing-group, regexp/prefer-named-capture-group
   const macvalidator = /^(?:[\da-f]{2}([:-]))(?:[\da-f]{2}\1){4}[\da-f]{2}$/iu;
   return macvalidator.test(mac.trim());
 }
@@ -326,7 +352,7 @@ function validateHostname(name) {
 function validateHostnameStrict(name) {
   // Hostnames must not contain spaces, commas, or characters invalid in DNS names
   const hostnameValidator =
-    /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
+    /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
   return hostnameValidator.test(name.trim());
 }
 
@@ -503,7 +529,7 @@ function doLogout(url) {
     url: document.body.dataset.apiurl + "/auth",
     method: "DELETE",
   }).always(() => {
-    globalThis.location = url;
+    location.assign(url);
   });
 }
 
@@ -540,22 +566,55 @@ function changeTableButtonStates(table) {
 
   if (selectedRows === 0) {
     // Nothing selected
-    for (const el of selectAllElements) el.classList.remove("hidden");
-    for (const el of selectMoreElements) el.classList.add("hidden");
-    for (const el of removeAllElements) el.classList.add("hidden");
-    for (const el of deleteSelectedElements) el.classList.add("hidden");
+    for (const el of selectAllElements) {
+      el.classList.remove("hidden");
+    }
+
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of deleteSelectedElements) {
+      el.classList.add("hidden");
+    }
   } else if (selectedRows >= pageLength || selectedRows === allRows) {
     // Whole page is selected (or all available messages were selected)
-    for (const el of selectAllElements) el.classList.add("hidden");
-    for (const el of selectMoreElements) el.classList.add("hidden");
-    for (const el of removeAllElements) el.classList.remove("hidden");
-    for (const el of deleteSelectedElements) el.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of removeAllElements) {
+      el.classList.remove("hidden");
+    }
+
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
+    }
   } else {
     // Some rows are selected, but not all
-    for (const el of selectAllElements) el.classList.add("hidden");
-    for (const el of selectMoreElements) el.classList.remove("hidden");
-    for (const el of removeAllElements) el.classList.add("hidden");
-    for (const el of deleteSelectedElements) el.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of selectMoreElements) {
+      el.classList.remove("hidden");
+    }
+
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
+    }
   }
 }
 
@@ -567,21 +626,27 @@ function getCSSval(cssclass, cssproperty) {
 }
 
 function parseQueryString() {
-  const params = new URLSearchParams(globalThis.location.search);
-  return Object.fromEntries(params.entries());
+  const params = new URLSearchParams(location.search);
+  return Object.fromEntries(params);
 }
 
 function hexEncode(text) {
-  if (typeof text !== "string" || text.length === 0) return "";
+  if (typeof text !== "string" || text.length === 0) {
+    return "";
+  }
 
   return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
 }
 
 function hexDecode(text) {
-  if (typeof text !== "string" || text.length === 0) return "";
+  if (typeof text !== "string" || text.length === 0) {
+    return "";
+  }
 
   const hexes = text.match(/.{1,4}/gu);
-  if (!hexes || hexes.length === 0) return "";
+  if (!hexes || hexes.length === 0) {
+    return "";
+  }
 
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
@@ -590,7 +655,6 @@ function listsAlert(type, items, data) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
   const successLength = data.processed.success.length;
-  const errorsLength = data.processed.errors.length;
 
   if (data.processed === undefined || successLength === items.length) {
     showAlert(
@@ -601,6 +665,8 @@ function listsAlert(type, items, data) {
     );
     return;
   }
+
+  const errorsLength = data.processed.errors.length;
 
   // Show a more detailed message if there is a "processed" object in "data" and
   // not all items were processed successfully
@@ -697,7 +763,7 @@ function loadingOverlay(reloadAfterTimeout = false) {
 function callIfVisible(func) {
   if (document.hidden) {
     // Page is not visible, try again in 1 second
-    globalThis.setTimeout(callIfVisible, 1000, func);
+    setTimeout(callIfVisible, 1000, func);
     return;
   }
 
@@ -712,19 +778,19 @@ function callIfVisible(func) {
 // visible again.
 function setTimer(func, interval) {
   // Cancel possibly running timer
-  globalThis.clearTimeout(func.timer);
+  clearTimeout(func.timer);
   // Start new timer
-  func.timer = globalThis.setTimeout(callIfVisible, interval, func);
+  func.timer = setTimeout(callIfVisible, interval, func);
 }
 
 // Same as setTimer() but calls the function every <interval> milliseconds
 function setInter(func, interval) {
   // Cancel possibly running timer
-  globalThis.clearTimeout(func.timer);
+  clearTimeout(func.timer);
   // Start new timer
-  func.timer = globalThis.setTimeout(callIfVisible, interval, func);
+  func.timer = setTimeout(callIfVisible, interval, func);
   // Restart timer
-  globalThis.setTimeout(setInter, interval, func, interval);
+  setTimeout(setInter, interval, func, interval);
 }
 
 /**
@@ -735,19 +801,31 @@ function setInter(func, interval) {
 // Not using the AdminLTE API so that the expansion is not animated
 // Otherwise, we could use `$(customBox).boxWidget("expand")`
 function toggleBoxCollapse(box, expand = true) {
-  if (!box) return;
+  if (!box) {
+    return;
+  }
 
-  const icon = box.querySelector(".btn-box-tool > i");
+  const icon = box.querySelector(":scope .btn-box-tool > i");
   const body = box.querySelector(".box-body");
 
   if (expand) {
     box.classList.remove("collapsed-box");
-    if (icon) icon.classList.replace("fa-plus", "fa-minus");
-    if (body) body.style = "";
+    if (icon) {
+      icon.classList.replace("fa-plus", "fa-minus");
+    }
+
+    if (body) {
+      body.style = "";
+    }
   } else {
     box.classList.add("collapsed-box");
-    if (icon) icon.classList.replace("fa-minus", "fa-plus");
-    if (body) body.style.display = "none";
+    if (icon) {
+      icon.classList.replace("fa-minus", "fa-plus");
+    }
+
+    if (body) {
+      body.style.display = "none";
+    }
   }
 }
 

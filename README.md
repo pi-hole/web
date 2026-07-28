@@ -33,11 +33,11 @@ Pi-hole[®](https://pi-hole.net/trademark-rules-and-brand-guidelines/)'s Web int
 ---
 <br>
 
-# Installation
+## Installation
 
 The Web interface is enabled by default when you install Pi-hole.
 
-## Post-installation: access the Web interface and gain insight into your network's activity
+### Post-installation: access the Web interface and gain insight into your network's activity
 
 There are several ways to access the dashboard:
 
@@ -58,20 +58,20 @@ Once logged in, you can view your network stats to see things like:
 
 ---
 
-## Pi-hole is free, but powered by your support
+### Pi-hole is free, but powered by your support
 
 There are many reoccurring costs involved with maintaining free, open source, and privacy-respecting software; expenses which [our volunteer developers](https://github.com/orgs/pi-hole/people) pitch in to cover out-of-pocket. This is just one example of how strongly we feel about our software, as well as the importance of keeping it maintained.
 
 Make no mistake: **your support is absolutely vital to help keep us innovating!**
 
-### Donations
+#### Donations
 
 Sending a donation using our links below is **extremely helpful** in offsetting a portion of our monthly expenses:
 
 - <img src="https://pi-hole.github.io/graphics/Badges/paypal-badge-black.svg" width="20" height="20" align="absmiddle" alt="PayPal icon"> [Donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3J2L3Z4DHW9UY)
 - <img src="https://pi-hole.github.io/graphics/Badges/bitcoin-badge-black.svg" width="20" height="20" align="absmiddle" alt="Bitcoin icon"> [Bitcoin, Bitcoin Cash, Ethereum, Litecoin](https://commerce.coinbase.com/checkout/dd304d04-f324-4a77-931b-0db61c77a41b)
 
-### Alternative support
+#### Alternative support
 
 If you'd rather not [donate](https://pi-hole.net/donate/) (_which is okay!_), there are other ways you can help support us:
 
@@ -82,13 +82,13 @@ If you'd rather not [donate](https://pi-hole.net/donate/) (_which is okay!_), th
 - [DNS Made Easy](https://cp.dnsmadeeasy.com/u/133706) _affiliate link_
 - Spreading the word about our software, and how you have benefited from it
 
-### Contributing via GitHub
+#### Contributing via GitHub
 
 We welcome _everyone_ to contribute to issue reports, suggest new features, and create pull requests.
 
 If you have something to add - anything from a typo through to a whole new feature - we're happy to check it out! Just make sure to fill out our template when submitting your request; the questions that it asks will help the volunteers quickly understand what you're aiming to achieve.
 
-### Presentations about Pi-hole
+#### Presentations about Pi-hole
 
 Word-of-mouth continues to help our project grow immensely, and so we are helping make this easier for people.
 
@@ -96,7 +96,7 @@ If you are going to be presenting Pi-hole at a conference, meetup or even a scho
 
 ---
 
-## Getting in touch with us
+### Getting in touch with us
 
 While we are primarily reachable on our <a href="https://discourse.pi-hole.net/">Discourse User Forum</a>, we can also be found on a variety of social media outlets. **Please be sure to check the FAQ's** before starting a new discussion, as we do not have the spare time to reply to every request for assistance.
 
@@ -110,33 +110,33 @@ While we are primarily reachable on our <a href="https://discourse.pi-hole.net/"
 * [Gitter](https://gitter.im/pi-hole/pi-hole) (Real-time chat)
 * [YouTube](https://www.youtube.com/channel/UCT5kq9w0wSjogzJb81C9U0w)
 
-# Features
+## Features
 
-## Mobile friendly interface
+### Mobile friendly interface
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/mobile-friendly.png" height="300" alt="Mobile friendly">
 </p>
 
-## Password protection
+### Password protection
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/password_protection_v5.png" alt="Password protection">
 </p>
 
-## Detailed graphs and doughnut charts
+### Detailed graphs and doughnut charts
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_doughnut_graphics.png" alt="Pie charts">
 </p>
 
-## Top lists of domains and clients
+### Top lists of domains and clients
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/topdomains-clients.png" alt="Top domains/top clients">
 </p>
 
-## The Query Log
+### The Query Log
 
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_query_log.png" alt="Query log">
@@ -149,7 +149,7 @@ You can filter your log using the advanced filter:
 <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_advanced_filter.png" alt="Query log advanced filter">
 
 
-## Blocking and allowing domains
+### Blocking and allowing domains
 
 Lists, domains (block or allow) and regex entries can be managed through groups.
 
@@ -162,10 +162,12 @@ Lists, domains (block or allow) and regex entries can be managed through groups.
   <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_domain_management.png" alt="Domain Management">
 </p>
 
-## Settings - Manage and configure Pi-hole features
+### Settings - Manage and configure Pi-hole features
 
 
 <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_settings_system.gif" alt="System Settings - Basic and Expert" align="right" width="45%">
+
+<!-- eslint-disable markdown/no-missing-label-refs -->
 
 **System Settings:**
   - System Information
@@ -211,11 +213,13 @@ Lists, domains (block or allow) and regex entries can be managed through groups.
 **All Settings** (only visible in Expert mode):
   - Advanced settings page, containing all available options
 
+<!-- eslint-enable markdown/no-missing-label-refs -->
+
 <p align="center">
   <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_all_settings.gif" alt="All Settings">
 </p>
 
-## Tools
+### Tools
 
 - Diagnostic messages;
 - View logs in real time: `pihole.log`, `FTL.log` and `webserver.log`;
@@ -228,7 +232,7 @@ Lists, domains (block or allow) and regex entries can be managed through groups.
   <img src="https://pi-hole.github.io/graphics/Screenshots/v6/v6_search.gif" alt="Search a domain in your lists">
 </p>
 
-## API
+### API
 
 The REST API can be accessed at `/api` and it returns data in JSON format.
 

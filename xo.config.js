@@ -8,18 +8,23 @@ module.exports = defineConfig([
   {
     extends: [compatPlugin.configs["flat/recommended"]],
     languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {},
+      },
       sourceType: "script",
       globals: {
         ...globals.browser,
         ...globals.jquery,
       },
     },
-    prettier: true,
+    // Disable rules that conflict with Prettier, but do not enforce XO's own
+    // built-in Prettier style
+    prettier: "compat",
     space: 2,
     ignores: ["**/vendor/**"],
     rules: {
       "@stylistic/spaced-comment": "off",
-      camelcase: [
+      "camelcase": [
         "error",
         {
           properties: "never",
@@ -48,21 +53,41 @@ module.exports = defineConfig([
         },
       ],
       // This should be reverted to "error" later
-      strict: ["error", "global"],
+      "strict": ["error", "global"],
+      "regexp/sort-character-class-elements": "off",
+      "regexp/prefer-d": "off",
+      "regexp/prefer-question-quantifier": "off",
+      "regexp/no-useless-range": "off",
+      "regexp/no-trivially-nested-quantifier": "off",
       // Require u flag instead of v: WebKit (Safari, DuckDuckGo) does not yet
       // support the ES2024 v (Unicode Sets) flag, causing a SyntaxError that
       // prevents all JS from executing. None of our regexes use v-exclusive
       // features, so u is fully equivalent and broadly compatible.
       "require-unicode-regexp": ["error", { requireFlag: "u" }],
+      "unicorn/max-nested-calls": "off",
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",
+      "unicorn/no-global-object-property-assignment": "off",
       "unicorn/no-negated-condition": "off",
+      "unicorn/prefer-minimal-ternary": "off",
       "unicorn/prefer-module": "off",
       "unicorn/prefer-query-selector": "off",
       "unicorn/prefer-string-slice": "off",
       "unicorn/prefer-string-raw": "off",
+      "unicorn/prefer-ternary": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/switch-case-braces": "off",
+    },
+  },
+  // Must be a separate config item so it lands after the prettier-compat config that XO injects
+  //  - enforce double quotes
+  //  - disable no-mixed-operators because it conflicts with Prettier's formatting
+  {
+    files: ["**/*.js"],
+    rules: {
+      "@stylistic/quotes": ["error", "double", { avoidEscape: true}],
+      "@stylistic/no-mixed-operators": "off",
+      "jsdoc/require-asterisk-prefix": ["error", "always"],
     },
   },
 ]);
