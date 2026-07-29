@@ -417,80 +417,62 @@ function stateLoadCallback(itemName) {
 }
 
 function addFromQueryLog(domain, list) {
-  const alertModal = $("#alertModal");
-  // Exit the function here if the Modal is already shown (multiple running interlock)
-  if (alertModal.css("display") !== "none") {
-    return;
-  }
-
-  const alProcessing = alertModal.find(".alProcessing");
-  const alSuccess = alertModal.find(".alSuccess");
-  const alFailure = alertModal.find(".alFailure");
-  const alNetworkErr = alertModal.find(".alFailure #alNetErr");
-  const alCustomErr = alertModal.find(".alFailure #alCustomErr");
-  const alList = "#alList";
-  const alDomain = "#alDomain";
-
   const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
-  alProcessing.children(alDomain).text(domain);
-  alProcessing.children(alList).text(listtype);
-  alertModal.modal("show");
+  disableAll();
+  showAlert("info", "", "Adding from Query Log", `Adding ${domain} to the ${listtype}...`);
 
-  // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", () => {
-    $.ajax({
-      url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
-      method: "post",
-      dataType: "json",
-      processData: false,
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify({
-        domain,
-        comment: "Added from Query Log",
-        type: list,
-        kind: "exact",
-      }),
-      success(response) {
-        alProcessing.hide();
-        if ("domains" in response && response.domains.length > 0) {
-          // Success
-          alSuccess.children(alDomain).text(domain);
-          alSuccess.children(alList).text(listtype);
-          alSuccess.fadeIn(1000);
-          // Update domains counter in the menu
-          updateFtlInfo();
-          setTimeout(() => {
-            alertModal.modal("hide");
-          }, 2000);
-        } else {
-          // Failure
-          alNetworkErr.hide();
-          alCustomErr.html(response.message);
-          alFailure.fadeIn(1000);
-          setTimeout(() => {
-            alertModal.modal("hide");
-          }, 10_000);
+  $.ajax({
+    url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
+    method: "post",
+    dataType: "json",
+    processData: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify({
+      domain,
+      comment: "Added from Query Log",
+      type: list,
+      kind: "exact",
+    }),
+    success(response) {
+      enableAll();
+      if ("domains" in response && response.domains.length > 0) {
+        // Success
+        showAlert(
+          "success",
+          "fas fa-plus",
+          "Added from Query Log",
+          `${domain} successfully added to the ${listtype}`
+        );
+
+        // Update domains counter in the menu
+        updateFtlInfo();
+      } else {
+        // Failure
+        showAlert("error", "", `Failure adding ${domain} to ${listtype}`, response.message);
+      }
+    },
+    error(xhr) {
+      // A duplicate domain (or any other database error) comes back as an
+      // HTTP error carrying a JSON body - show its message instead of the
+      // generic network error, e.g. "The item is already present"
+      let apiError = xhr.responseJSON && xhr.responseJSON.error;
+      if (!apiError && xhr.responseText) {
+        try {
+          apiError = JSON.parse(xhr.responseText).error;
+        } catch {
+          // Not a JSON response, treat as a genuine network error
         }
-      },
-      error() {
-        // Network Error
-        alProcessing.hide();
-        alNetworkErr.show();
-        alFailure.fadeIn(1000);
-        setTimeout(() => {
-          alertModal.modal("hide");
-        }, 8000);
-      },
-    });
-  });
+      }
 
-  // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", () => {
-    alProcessing.show();
-    alSuccess.add(alFailure).hide();
-    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
-    alCustomErr.html("");
+      let errorMsg = "Timeout or Network Connection Error!";
+      if (apiError) {
+        errorMsg = apiError.hint || apiError.message;
+      }
+
+      enableAll();
+      showAlert("error", "", `Failure adding ${domain} to ${listtype}`, errorMsg);
+    },
   });
 }
 
