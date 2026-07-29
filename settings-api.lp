@@ -177,8 +177,8 @@ PageTitle = "Web Interface - API Settings"
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         <h4 class="modal-title">Enable two-factor authentication</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Use a phone app like Google Authenticator, 2FA Authenticator, FreeOTP or Bitwarden, etc. to get 2FA codes when prompted during login.</p>
@@ -187,12 +187,12 @@ PageTitle = "Web Interface - API Settings"
                             <i id="qrcode-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
                         </div>
                         <div class="text-center">
-                            <canvas id="qrcode" class="qrcode" title="QR Code" hidden="true"></canvas>
+                            <canvas id="qrcode" class="qrcode" title="QR Code"></canvas>
                         </div>
                         <p class="text-center"><code id="totp_secret"></code></p>
                         <p>2. Enter the 2FA code from your app below to confirm that you have set up 2FA correctly.</p>
                         <div class="row">
-                            <div class="col-md-6 col-md-offset-3">
+                            <div class="col-md-6 offset-md-3">
                                 <div id="totp_div">
                                     <div class="pwd-field form-group has-error">
                                         <div class="input-group">
@@ -219,8 +219,8 @@ PageTitle = "Web Interface - API Settings"
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         <h4 class="modal-title">Configure application password</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>After you turn on two-factor (2FA) verification and set up an

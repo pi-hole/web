@@ -67,8 +67,8 @@ PageTitle = "Teleporter"
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         <h4 class="modal-title">Importing Pi-hole teleporter file...</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <p>Depending on your network speed, it may take a few moments until the file is uploaded and imported. Please be patient and don't interrupt the process...</p>
