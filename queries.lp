@@ -22,41 +22,6 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
 <div class="app-content">
     <div class="container-fluid">
-
-        <!-- Alert Modal -->
-        <div id="alertModal" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="vertical-alignment-helper">
-                <div class="modal-dialog vertical-align-center">
-                    <div class="modal-content">
-                        <div class="modal-body text-center">
-                            <span class="fa-stack fa-2x" style="margin-bottom: 10px">
-                                <div class="alProcessing">
-                                    <i class="fa-stack-2x alSpinner"></i>
-                                </div>
-                                <div class="alSuccess" style="display: none">
-                                    <i class="fa fa-circle fa-stack-2x text-green"></i>
-                                    <i class="fa fa-check fa-stack-1x fa-inverse"></i>
-                                </div>
-                                <div class="alFailure" style="display: none">
-                                    <i class="fa fa-circle fa-stack-2x text-red"></i>
-                                    <i class="fa fa-times fa-stack-1x fa-inverse"></i>
-                                </div>
-                            </span>
-                            <div class="alProcessing">Adding <span id="alDomain"></span> to the <span id="alList"></span>...</div>
-                            <div class="alSuccess text-bold text-green" style="display: none"><span id="alDomain"></span> successfully added to the <span id="alList"></span></div>
-                            <div class="alFailure text-bold text-red" style="display: none">
-                                <span id="alNetErr">Timeout or Network Connection Error!</span>
-                                <span id="alCustomErr"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-info collapsed-card">
