@@ -449,7 +449,7 @@ function addFromQueryLog(domain, list) {
         updateFtlInfo();
       } else {
         // Failure
-        showAlert("error", "", `Failure adding ${listtype}`, response.message);
+        showAlert("error", "", `Failure adding ${domain} to ${listtype}`, response.message);
       }
     },
     error(xhr) {
@@ -471,7 +471,7 @@ function addFromQueryLog(domain, list) {
       }
 
       enableAll();
-      showAlert("error", "", `Failure adding ${listtype}`, errorMsg);
+      showAlert("error", "", `Failure adding ${domain} to ${listtype}`, errorMsg);
     },
   });
 }
