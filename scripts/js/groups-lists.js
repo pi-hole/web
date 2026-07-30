@@ -286,7 +286,7 @@ function initTable() {
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize group multi-select
-      const ts = utils.createGroupSelect(selectEl, {
+      const ms = utils.createGroupSelect(selectEl, {
         onChange() {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
@@ -295,7 +295,7 @@ function initTable() {
               .prop("disabled", false)
               .on("click", () => {
                 $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-                ts.close();
+                ms.close();
                 editList.call(selectEl);
               });
           }
@@ -306,11 +306,11 @@ function initTable() {
             return;
           }
 
-          ts.setValue(data.groups);
+          ms.setValue(data.groups);
           $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         },
       });
-      $(ts.dropdown)
+      $(ms.dropdown)
         .find(".multiselect-actions-box")
         .append(
           '<button type="button" id=btn_apply_' +
