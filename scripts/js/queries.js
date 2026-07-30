@@ -625,7 +625,7 @@ $(() => {
         width: "10%",
         render(data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='d-lg-none'>]HH:mm:ss z");
+            return moment.unix(data).format("Y-MM-DD [<br class='d-xl-none'>]HH:mm:ss z");
           }
 
           return data;
