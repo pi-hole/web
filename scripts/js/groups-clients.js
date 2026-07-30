@@ -189,7 +189,7 @@ function initTable() {
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize Tom Select
+      // Initialize group multi-select
       const ts = utils.createGroupSelect(selectEl, {
         onChange() {
           // enable Apply button
@@ -198,6 +198,8 @@ function initTable() {
               .addClass("btn-success")
               .prop("disabled", false)
               .on("click", () => {
+                $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+                ts.close();
                 editClient.call(selectEl);
               });
           }
@@ -213,7 +215,7 @@ function initTable() {
         },
       });
       $(ts.dropdown)
-        .find(".ts-actions-box")
+        .find(".multiselect-actions-box")
         .append(
           '<button type="button" id=btn_apply_' +
             dataId +

@@ -555,9 +555,7 @@ tfoot.add-new-item > tr > th {
   --bs-form-select-bg-img: url("../../style/icons/form-select-arrow-dark.svg");
 }
 
-/* Tom Select "Select all / Select none" actions, injected above the
-  options list to replace bootstrap-select's actionsBox feature */
-.ts-actions-box {
+.multiselect-actions-box {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em;
@@ -565,14 +563,30 @@ tfoot.add-new-item > tr > th {
   border-bottom: 1px solid var(--bs-border-color);
 }
 
-.ts-actions-box .btn {
+.multiselect-actions-box .btn {
   flex: 1 0 auto;
 }
 
-.ts-actions-box .btn-group {
+.multiselect-actions-box .btn-group {
   display: flex;
   gap: 2px;
   width: 100%;
+}
+
+.multiselect-floating-menu {
+  position: fixed;
+  inset: auto auto auto auto;
+  top: var(--multiselect-trigger-bottom);
+  left: var(--multiselect-trigger-left);
+  min-width: var(--multiselect-trigger-width);
+  max-width: calc(100vw - var(--multiselect-trigger-left) - 16px);
+  z-index: 1055;
+}
+
+.multiselect-container .dropdown-item.active,
+.multiselect-container .dropdown-item:active {
+  color: var(--bs-dropdown-link-active-color);
+  background-color: var(--bs-dropdown-link-active-bg);
 }
 
 .sidebar-menu .nav-link p {
@@ -1763,19 +1777,6 @@ td.dnssec i {
 #listsTable th.details-control {
   min-width: 3.5rem;
   text-align: center;
-}
-
-/* Tom Select general styles */
-.ts-control,
-.ts-control input,
-.ts-dropdown {
-  font-size: 12px;
-}
-
-/* Tom Select - Dark theme colors */
-/* Dropdown menu background and border alignment */
-[data-bs-theme="dark"] .ts-dropdown {
-  color: var(--bs-dropdown-link-color);
 }
 
 /* Dropdown individual option items */
