@@ -583,10 +583,19 @@ tfoot.add-new-item > tr > th {
   z-index: 1055;
 }
 
-.multiselect-container .dropdown-item.active,
-.multiselect-container .dropdown-item:active {
+.multiselect-container .multiselect-option.dropdown-item.active {
   color: var(--bs-dropdown-link-active-color);
   background-color: var(--bs-dropdown-link-active-bg);
+}
+.multiselect-container .multiselect-option.dropdown-item.active input.form-check-input {
+  filter: saturate(0) invert(1) brightness(2);
+}
+
+.multiselect-container .multiselect-option.dropdown-item:active,
+.multiselect-container .multiselect-option.dropdown-item:focus,
+.multiselect-container .multiselect-option.dropdown-item:hover {
+  color: var(--bs-dropdown-link-hover-color) !important;
+  background-color: var(--bs-dropdown-link-hover-bg) !important;
 }
 
 .sidebar-menu .nav-link p {
