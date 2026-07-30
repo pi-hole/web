@@ -1232,17 +1232,6 @@ table.table-bordered.dataTable td {
   border: none;
 }
 
-.card,
-.card-body,
-.card-header {
-  background-color: rgba(0, 0, 0, 0.85);
-  border-radius: 15px;
-  border: none;
-  color: inherit;
-  position: relative;
-  z-index: 0;
-}
-
 /*--- nav-tabs ---*/
 .nav-tabs-custom {
   background: none;

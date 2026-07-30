@@ -216,7 +216,15 @@ h4 {
 }
 
 .card,
+.card-body,
 .card-footer,
+.card-header {
+  border-color: #3c4652;
+  color: var(--main-text-color);
+  background-color: #202830;
+  box-shadow: none;
+}
+
 .info-box,
 .box-comment,
 .comment-text,
@@ -233,8 +241,7 @@ h4 {
 .card-header.with-border {
   border-bottom: 1px solid #3c4652;
 }
-.box-solid,
-.card {
+.box-solid {
   border: 1px solid #202830;
 }
 
@@ -259,6 +266,16 @@ h4 {
 }
 .card.card-danger {
   border-top-color: #dd4b39;
+}
+
+.card.box-solid.card-info {
+  border: 1px solid #367fa9;
+}
+
+.card.box-solid.card-info > .card-header {
+  color: var(--main-text-color);
+  background-color: #367fa9 !important;
+  border: 1px solid #367fa9;
 }
 
 .app-header .navbar {
@@ -685,6 +702,10 @@ fieldset[disabled] .form-control {
   appearance: textfield;
 }
 
+.navbar[data-bs-theme="dark"] {
+  --bs-border-color: var(--theme-bg);
+}
+
 .dropdown-menu {
   background-color: #22282d;
   color: var(--main-text-color);
@@ -737,24 +758,6 @@ fieldset[disabled] .form-control {
 
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
   background-color: #1d252d;
-}
-
-.card,
-.card-body,
-.card-header {
-  border-color: #3c4652;
-  color: var(--main-text-color);
-  box-shadow: none;
-}
-
-.card.box-solid.card-info {
-  border: 1px solid #367fa9;
-}
-
-.card.box-solid.card-info > .card-header {
-  color: var(--main-text-color);
-  background-color: #367fa9 !important;
-  border: 1px solid #367fa9;
 }
 
 input[type="password"]::-webkit-caps-lock-indicator {

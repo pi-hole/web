@@ -131,7 +131,14 @@ h4 {
   color: #fff;
 }
 .card,
+.card-body,
 .card-footer,
+.card-header {
+  border-color: var(--theme-bg);
+  color: var(--theme-text);
+  background-color: #272c30;
+  box-shadow: none;
+}
 .info-box {
   color: var(--theme-text);
   background-color: #272c30;
@@ -141,9 +148,6 @@ h4 {
 }
 .card-header.with-border {
   border-bottom: 1px solid var(--theme-bg);
-}
-.card {
-  border: 1px solid dimgray;
 }
 .card > .card-header {
   color: var(--theme-text);
@@ -435,6 +439,10 @@ fieldset[disabled] .form-control {
   opacity: 1;
 }
 
+.navbar[data-bs-theme="dark"] {
+  --bs-border-color: var(--theme-bg);
+}
+
 .dropdown-menu {
   background-color: #22282d;
   color: var(--theme-text);
@@ -463,14 +471,6 @@ fieldset[disabled] .form-control {
 
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
   background-color: #2d343a;
-}
-.card,
-.card-body,
-.card-header {
-  background-color: #3e464c;
-  border-color: var(--theme-bg);
-  color: var(--theme-text);
-  box-shadow: none;
 }
 
 input[type="password"]::-webkit-caps-lock-indicator {
