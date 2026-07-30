@@ -33,71 +33,79 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <div class="nav-tabs-custom">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a href="#tab_domain" class="nav-link active" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a href="#tab_regex" class="nav-link" aria-controls="tab_regex" aria-expanded="false" role="tab" data-bs-toggle="tab">RegEx filter</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <!-- Domain tab -->
-                                <div id="tab_domain" class="tab-pane active fade show">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="new_domain">Domain:</label>
-                                                <input id="new_domain" type="url" class="form-control active" placeholder="Domain to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                                                <div id="suggest_domains" class="table-responsive no-border"></div>
+                        <!-- TABS card -->
+                        <div class="card">
+                            <div class="card-header p-0 border-0 nav-tabs-custom">
+                                <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a href="#tab_domain" class="nav-link active" aria-controls="tab_domain" aria-expanded="true" role="tab" data-bs-toggle="tab">Domain</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a href="#tab_regex" class="nav-link" aria-controls="tab_regex" aria-expanded="false" role="tab" data-bs-toggle="tab">RegEx filter</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <!-- Domain tab -->
+                                    <div id="tab_domain" class="tab-pane active fade show">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="new_domain">Domain:</label>
+                                                    <input id="new_domain" type="url" class="form-control active" placeholder="Domain to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                                    <div id="suggest_domains" class="table-responsive no-border"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 form-group">
+                                                <label for="new_domain_comment">Comment:</label>
+                                                <input id="new_domain_comment" type="text" class="form-control" placeholder="Description (optional)">
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 form-group">
+                                                <label for="new_domain_group">Group assignment:</label>
+                                                <div><select class="group-select" id="new_domain_group" multiple></select></div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-6 form-group">
-                                            <label for="new_domain_comment">Comment:</label>
-                                            <input id="new_domain_comment" type="text" class="form-control" placeholder="Description (optional)">
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 form-group">
-                                            <label for="new_domain_group">Group assignment:</label>
-                                            <div><select class="group-select" id="new_domain_group" multiple></select></div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="wildcard_checkbox">
+                                                    <label class="form-check-label" for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
+                                                    <p>Check this box if you want to involve all subdomains. The entered domain will be converted to a RegEx filter while adding.</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="wildcard_checkbox">
-                                                <label class="form-check-label" for="wildcard_checkbox"><strong>Add domain as wildcard</strong></label>
-                                                <p>Check this box if you want to involve all subdomains. The entered domain will be converted to a RegEx filter while adding.</p>
+
+                                    <!-- RegEx tab -->
+                                    <div id="tab_regex" class="tab-pane fade">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="new_regex">Regular Expression:</label>
+                                                    <input id="new_regex" type="text" class="form-control active" placeholder="RegEx to be added">
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
+                                                    <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener noreferrer" target="_blank">
+                                                        regular expressions tutorial</a>.
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- RegEx tab -->
-                                <div id="tab_regex" class="tab-pane fade">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="new_regex">Regular Expression:</label>
-                                                <input id="new_regex" type="text" class="form-control active" placeholder="RegEx to be added">
+                                            <div class="col-lg-3 col-md-6 form-group">
+                                                <label for="new_regex_comment">Comment:</label>
+                                                <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
                                             </div>
-                                            <div class="form-group">
-                                                <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
-                                                <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener noreferrer" target="_blank">
-                                                    regular expressions tutorial</a>.
+                                            <div class="col-lg-3 col-md-6 form-group">
+                                                <label for="new_regex_group">Group assignment:</label>
+                                                <div><select class="group-select" id="new_regex_group" multiple></select></div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 form-group">
-                                            <label for="new_regex_comment">Comment:</label>
-                                            <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 form-group">
-                                            <label for="new_regex_group">Group assignment:</label>
-                                            <div><select class="group-select" id="new_regex_group" multiple></select></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- /.TABS card -->
+
                         <div>
                             <p><strong>Note:</strong><br>
                                 The domain or regex filter will be automatically assigned to the Default Group.<br>

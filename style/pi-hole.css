@@ -604,6 +604,14 @@ tfoot.add-new-item > tr > th {
   overflow: hidden;
 }
 
+.card-header-tabs {
+  margin: -1px;
+  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+}
+.nav-tabs-custom .nav-link {
+  border-radius: 0;
+}
+
 .small-box {
   border-radius: 8px;
   z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
