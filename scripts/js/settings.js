@@ -139,6 +139,12 @@ function saveSettings() {
     if ($(this).is("textarea")) {
       value = $(this).val();
       value = value === "" ? [] : value.split("\n");
+
+      // On DNS settings page, upstream table selections are merged at save
+      // time so the textarea can remain manual-only in the UI.
+      if (key === "dns.upstreams" && typeof globalThis.getMergedDNSupstreams === "function") {
+        value = globalThis.getMergedDNSupstreams(value);
+      }
     }
 
     // If this is an integer number, parse it accordingly

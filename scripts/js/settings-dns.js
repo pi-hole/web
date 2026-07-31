@@ -9,15 +9,31 @@
 
 "use strict";
 
-// Remove an element from an array (inline)
-function removeFromArray(arr, what) {
-  let found = arr.indexOf(what);
+// Get the manually entered upstream servers from the textarea
+function getManualDNSupstreams() {
+  return $("#DNSupstreamsTextfield")
+    .val()
+    .split(/\r?\n/u)
+    .map(line => line.trim())
+    .filter(Boolean);
+}
 
-  while (found !== -1) {
-    //eslint-disable-next-line unicorn/no-array-splice
-    arr.splice(found, 1);
-    found = arr.indexOf(what);
-  }
+// Get the upstream servers selected in the pre-filled provider tables
+function getSelectedDNSupstreams() {
+  const selectedUpstreams = [];
+  $("#DNSupstreamTabs table input:checked").each(function () {
+    const title = $(this).closest("td").attr("title");
+    if (title && !selectedUpstreams.includes(title)) {
+      selectedUpstreams.push(title);
+    }
+  });
+
+  return selectedUpstreams;
+}
+
+// Check if a manual upstream server is already covered by a selected Plain upstream server
+function isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet) {
+  return upstream.endsWith("#53") && selectedUpstreamsSet.has(upstream.slice(0, -3));
 }
 
 // Show how many upstreams are selected on each Plain/DoT/DoH tab, so it's not
@@ -32,6 +48,7 @@ function updateUpstreamTabBadges() {
   }
 }
 
+// Fill the upstreams tables with the given servers, and initialize the manual upstreams textarea with the given value.
 function fillDNSupstreams(value, servers) {
   let disabledStr = "";
   if (value.flags.env_var === true) {
@@ -40,7 +57,6 @@ function fillDNSupstreams(value, servers) {
   }
 
   let i = 0;
-  let customServers = value.value.length;
 
   // Build a single checkbox <td> for the given address, tracking selection
   // state and consuming a custom-server slot when it matches. Plain v4/v6
@@ -56,7 +72,6 @@ function fillDNSupstreams(value, servers) {
     let checkedStr = "";
     if (value.value.includes(address) || (portSuffix && value.value.includes(address + "#53"))) {
       checkedStr = "checked";
-      customServers--;
     }
 
     return `<td title="${address}">
@@ -100,39 +115,24 @@ function fillDNSupstreams(value, servers) {
 
   // Add event listener to checkboxes (shared across the Plain/DoT/DoH tabs)
   $("input[id^='DNSupstreams-']").on("change", () => {
-    const upstreams = $("#DNSupstreamsTextfield").val().split(/\r?\n/u).map(line => line.trim()).filter(Boolean);
-    let customServerCount = 0;
-    $("#DNSupstreamTabs table input").each(function () {
-      const title = $(this).closest("td").attr("title");
-      if (!title) {
-        return;
-      }
-
-      if (this.checked && !upstreams.includes(title)) {
-        // Add server to array
-        upstreams.push(title);
-      } else if (!this.checked && upstreams.includes(title)) {
-        // Remove server from array
-        removeFromArray(upstreams, title);
-      }
-
-      if (upstreams.includes(title)) {
-        customServerCount--;
-      }
-    });
-    // The variable will contain a negative value, we need to add the length to
-    // get the correct number of custom servers
-    customServerCount += upstreams.length;
-    updateDNSserversTextfield(upstreams, customServerCount);
+    updateCustomDNSserversTitle(getManualDNSupstreams().length);
     updateUpstreamTabBadges();
   });
 
+  // Keep only truly manual entries in the custom textfield
+  const selectedUpstreamsSet = new Set(getSelectedDNSupstreams());
+  const manualUpstreams = value.value.filter(
+    upstream =>
+      !selectedUpstreamsSet.has(upstream) &&
+      !isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet)
+  );
+
   // Initialize textfield
-  updateDNSserversTextfield(value.value, customServers);
+  updateDNSserversTextfield(manualUpstreams);
   updateUpstreamTabBadges();
 
   // Expand the box if there are custom servers
-  if (customServers > 0) {
+  if (manualUpstreams.length > 0) {
     const customBox = document.getElementById("custom-servers-box");
     utils.toggleBoxCollapse(customBox, true);
   }
@@ -142,6 +142,11 @@ function fillDNSupstreams(value, servers) {
 
   // Apply styling to the new checkboxes
   applyCheckboxRadioStyle();
+
+  // Keep custom server count in sync while the user edits the manual list
+  $("#DNSupstreamsTextfield").on("input", () => {
+    updateCustomDNSserversTitle(getManualDNSupstreams().length);
+  });
 }
 
 function setInterfaceName(name) {
@@ -165,13 +170,48 @@ function setInterfaceName(name) {
   $("#interface-name-2").text(name);
 }
 
-// Update the textfield with all (incl. custom) upstream servers
-function updateDNSserversTextfield(upstreams, customServers) {
-  $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
+// Update the textfield with manual upstream servers only
+function updateDNSserversTextfield(manualUpstreams) {
+  $("#DNSupstreamsTextfield").val(manualUpstreams.join("\n"));
+  updateCustomDNSserversTitle(manualUpstreams.length);
+}
+
+function updateCustomDNSserversTitle(customServerCount) {
   $("#custom-servers-title").text(
-    "(" + customServers + " custom server" + (customServers === 1 ? "" : "s") + " enabled)"
+    "(" + customServerCount + " custom server" + (customServerCount === 1 ? "" : "s") + " enabled)"
   );
 }
+
+function getMergedDNSupstreams(manualUpstreams) {
+  // Start with all upstreams selected in the pre-filled provider tables.
+  const mergedUpstreams = getSelectedDNSupstreams();
+  const selectedUpstreamsSet = new Set(mergedUpstreams);
+
+  // Append manual entries unless already covered by a selected table upstream.
+  // For plain DNS, selected "IP" also covers manual "IP#53".
+  for (const line of manualUpstreams) {
+    const upstream = line.trim();
+    if (!upstream) {
+      continue;
+    }
+
+    if (
+      selectedUpstreamsSet.has(upstream) ||
+      isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet)
+    ) {
+      continue;
+    }
+
+    // Preserve user-entered order while preventing duplicates.
+    if (!mergedUpstreams.includes(upstream)) {
+      mergedUpstreams.push(upstream);
+    }
+  }
+
+  return mergedUpstreams;
+}
+
+globalThis.getMergedDNSupstreams = getMergedDNSupstreams;
 
 function getRevServerLines() {
   // Return the lines from the textarea (array of lines)
