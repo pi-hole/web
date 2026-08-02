@@ -143,6 +143,7 @@ function fillDNSupstreams(value, servers) {
   // Keep custom server count in sync while the user edits the manual list
   $("#DNSupstreamsTextfield").on("input", () => {
     updateCustomDNSserversTitle(getManualDNSupstreams().length);
+  });
 }
 
 function setInterfaceName(name) {
