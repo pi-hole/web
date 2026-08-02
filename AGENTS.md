@@ -18,7 +18,7 @@ Pi-hole's web admin interface. Pages are Lua Pages (`.lp` files) rendered server
 - The interface cannot run standalone: it is served by a running FTL instance. Point a Pi-hole installation (or Docker container) at your checkout to test changes in a browser.
 - Run `npm install` once to set up the lint toolchain.
 - CSS vendor prefixes are generated with `npm run prefix`; do not add them by hand.
-- All data shown in the interface comes from FTL's REST API. Do not invent endpoints; check the API documentation served by FTL (`/api/docs`) or the FTL repository.
+- All data shown in the interface comes from FTL's REST API. Do not invent endpoints; check the [FTL API documentation](https://ftl.pi-hole.net/development/docs/) (or `/api/docs` on your own instance) or the FTL repository.
 
 ## Testing instructions
 
