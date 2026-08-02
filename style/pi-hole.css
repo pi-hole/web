@@ -412,6 +412,18 @@ tfoot.add-new-item > tr > th {
   vertical-align: inherit;
 }
 
+/* Local DNS records: action buttons and inline edit row */
+#hosts-Table td .btn + .btn,
+#cnameRecords-Table td .btn + .btn {
+  margin-left: 5px;
+}
+
+#hosts-Table tr.dns-record-edit-row > td,
+#cnameRecords-Table tr.dns-record-edit-row > td {
+  font-weight: normal;
+  vertical-align: inherit;
+}
+
 .select2-container--default .select2-results > .select2-results__options {
   max-height: 400px;
 }

@@ -83,7 +83,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                         <input id="Ctarget" type="url" class="form-control" data-configkeys="cnameRecords" placeholder="Target Domain" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
-                                        <input id="Cttl" type="numeric" class="form-control" data-configkeys="cnameRecords" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
+                                        <input id="Cttl" type="number" class="form-control" data-configkeys="cnameRecords" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                     </th>
                                     <th>
                                         <button type="button" id="btnAdd-cname" class="btn btn-success btn-xs" data-configkeys="cnameRecords"><i class="fa fa-plus"></i></button>
