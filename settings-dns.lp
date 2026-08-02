@@ -24,7 +24,7 @@ PageTitle = "DNS Settings"
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="nav-tabs-custom">
+                                <div class="nav-tabs-custom" id="DNSupstreamTabs">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
                                             <a href="#tab-upstreams-plain" class="nav-link active" aria-controls="tab-upstreams-plain" aria-expanded="true" role="tab" data-bs-toggle="tab">Plain <span class="badge text-bg-primary" id="upstreams-count-plain" style="display: none;"></span></a>
@@ -92,7 +92,7 @@ PageTitle = "DNS Settings"
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p>The following list contains all DNS servers selected above. Furthermore, you can add your own custom DNS servers here. The expected format is one server per line in form of <code>IP#port</code>, where the <code>port</code> is optional. If given, it has to be separated by a hash <code>#</code> from the address (e.g. <code>127.0.0.1#5335</code> for a local <code>unbound</code> instance running on port <code>5335</code>). The port defaults to 53 if omitted.</p>
+                                        <p>Use this list to add your own custom DNS servers. Servers selected in the table above are configured separately and are not shown here. The expected format is one server per line in form of <code>IP#port</code>, where the <code>port</code> is optional. If given, it has to be separated by a hash <code>#</code> from the address (e.g. <code>127.0.0.1#5335</code> for a local <code>unbound</code> instance running on port <code>5335</code>). The port defaults to 53 if omitted.</p>
                                         <textarea class="form-control" rows="3" id="DNSupstreamsTextfield" data-key="dns.upstreams" placeholder="Enter upstream DNS servers, one per line" style="resize: vertical;"></textarea>
                                     </div>
                                 </div>

@@ -301,7 +301,13 @@ function validatePort(port) {
   return Number.isSafeInteger(portNum) && portNum >= 1 && portNum <= 65_535;
 }
 
+// Validates the IPv4 server address used by dns.revServers, with an optional port
 function validateIPv4WithPort(ip) {
+  // If a slash is present, its a network range, not a server IP
+  if (ip.includes("/")) {
+    return false;
+  }
+
   // The port is optional
   // If no "#" is present, validate just the IP
   if (!ip.includes("#")) {
@@ -315,11 +321,17 @@ function validateIPv4WithPort(ip) {
 
   const [ipv4, port] = parts;
 
-  // Validate IP part and port
+  // Validate IP and port
   return validateIPv4(ipv4) && validatePort(port);
 }
 
+// Validates the IPv6 server address used by dns.revServers, with an optional port
 function validateIPv6WithPort(ip) {
+  // If a slash is present, its a network range, not a server IP
+  if (ip.includes("/")) {
+    return false;
+  }
+
   // The port is optional
   // If no "#" is present, validate just the IP
   if (!ip.includes("#")) {
@@ -333,7 +345,7 @@ function validateIPv6WithPort(ip) {
 
   const [ipv6, port] = parts;
 
-  // Validate IP part and port
+  // Validate IP and port
   return validateIPv6(ipv6) && validatePort(port);
 }
 
