@@ -344,6 +344,12 @@ function addRevServer() {
     return;
   }
 
+  // Validate server IP (reject CIDR notation, invalid IPs)
+  if (!(utils.validateIPv4WithPort(values[2]) || utils.validateIPv6WithPort(values[2]))) {
+    utils.showAlert("error", "fa fa-ban", "Invalid Server IP: " + values[2], "Server IP must be a valid IPv4 or IPv6 address (optionally with #port). Network ranges (CIDR) are not allowed.");
+    return;
+  }
+
   // Domain is optional: if empty, remove it from the array
   if (values[3] === "") {
     values.pop();
@@ -382,6 +388,12 @@ function saveRecord() {
   if (values[1] === "" || values[2] === "") {
     // Show error message
     utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
+    return;
+  }
+
+  // Validate server IP (reject CIDR notation, invalid IPs)
+  if (!(utils.validateIPv4WithPort(values[2]) || utils.validateIPv6WithPort(values[2]))) {
+    utils.showAlert("error", "fa fa-ban", "Invalid Server IP: " + values[2], "Server IP must be a valid IPv4 or IPv6 address (optionally with #port). Network ranges (CIDR) are not allowed.");
     return;
   }
 
