@@ -570,8 +570,8 @@ function updateVersionInfo() {
         updateAvailable = true;
       } else {
         $("#versions").append(
-            '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
-          );
+          '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
+        );
       }
     }
 

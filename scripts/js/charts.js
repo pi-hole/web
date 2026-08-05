@@ -201,12 +201,12 @@ function getOrCreateTooltipElement(canvasId, options, context) {
   // the tooltip's offset parent - otherwise (e.g. in the boxed layout, whose
   // .app-wrapper is the nearest positioned element) the tooltip is shifted by
   // the ancestor's own left offset. Ensure the ancestor is positioned.
-  tooltipElement.ancestor = context.chart.canvas.closest(".card[id]").parentNode;
+  tooltipEl.ancestor = context.chart.canvas.closest(".card[id]").parentNode;
   if (getComputedStyle(tooltipEl.ancestor).position === "static") {
     tooltipEl.ancestor.style.position = "relative";
   }
 
-  tooltipElement.ancestor.append(tooltipElement);
+  tooltipEl.ancestor.append(tooltipEl);
 
   return tooltipEl;
 }

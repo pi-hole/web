@@ -21,13 +21,13 @@ function populateGroupSelect(selectEl) {
   for (const group of groups) {
     const label = group.enabled ? group.name : group.name + " (disabled)";
 
-    selectElement.append($("<option/>").val(group.id).text(label));
+    selectEl.append($("<option/>").val(group.id).text(label));
   }
 
   // Default Group is preselected
-  selectElement.val(["0"]);
+  selectEl.val(["0"]);
 
-  utils.createGroupSelect(selectElement);
+  utils.createGroupSelect(selectEl);
 }
 
 // eslint-disable-next-line no-unused-vars

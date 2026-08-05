@@ -208,7 +208,7 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      for (const [i, option] of value.allowed.entries()) {
+      for (const [index, option] of value.allowed.entries()) {
         content +=
           '<div class="form-check">' +
           // Radio button
@@ -347,7 +347,7 @@ function initOnlyChanged() {
 
   elem.prop("checked", localStorage.getItem("only-changed") === "true");
 
-  element.bootstrapToggle({
+  elem.bootstrapToggle({
     onlabel: "Only modified",
     offlabel: "Show all",
     onstyle: "primary",

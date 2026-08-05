@@ -92,7 +92,7 @@ $(() => {
         .attr("data-del-ip", data.ip)
         .attr("title", "Delete lease")
         .attr("data-bs-toggle", "tooltip");
-      const $copyButton = $(
+      const $copyBtn = $(
         '<button type="button" class="btn btn-secondary btn-xs copy-to-static"><span class="fa fa-fw fa-copy"></span></button>'
       )
         .attr("title", "Copy to static leases")
@@ -474,7 +474,7 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
       .attr("data-row", idx)
       .attr("title", "Confirm changes to this line")
       .attr("data-bs-toggle", "tooltip");
-    const cancelButton = $(
+    const cancelBtn = $(
       '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><span class="fa fa-fw fa-undo"></span></button>'
     )
       .attr("data-row", idx)

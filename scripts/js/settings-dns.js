@@ -56,7 +56,7 @@ function fillDNSupstreams(value, servers) {
     disabledStr = 'disabled="Disabled"';
   }
 
-  let index_ = 0;
+  let i = 0;
 
   // Build a single checkbox <td> for the given address, tracking selection
   // state and consuming a custom-server slot when it matches. Plain v4/v6

@@ -202,8 +202,8 @@ function initTable() {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      const statusElement = $("#enabled_" + dataId, row);
-      statusElement.bootstrapToggle({
+      const statusEl = $("#enabled_" + dataId, row);
+      statusEl.bootstrapToggle({
         onlabel: "Enabled",
         offlabel: "Disabled",
         size: "small",
@@ -228,14 +228,14 @@ function initTable() {
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectElement.append($("<option/>").val(group.id).text(label));
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize Tom Select
-      const applyButton = "#btn_apply_" + dataId;
-      const ts = utils.createGroupSelect(selectElement, {
+      const applyBtn = "#btn_apply_" + dataId;
+      const ts = utils.createGroupSelect(selectEl, {
         onChange() {
           // enable Apply button if changes were made to the drop-down menu
           // and have it call editDomain() on click
@@ -257,7 +257,7 @@ function initTable() {
           }
 
           ts.setValue(data.groups);
-          $(applyButton).removeClass("btn-success").prop("disabled", true).off("click");
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         },
       });
       $(ts.dropdown)

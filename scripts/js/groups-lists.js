@@ -254,8 +254,8 @@ function initTable() {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      const statusElement = $("#enabled_" + dataId, row);
-      statusElement.bootstrapToggle({
+      const statusEl = $("#enabled_" + dataId, row);
+      statusEl.bootstrapToggle({
         onlabel: "Enabled",
         offlabel: "Disabled",
         size: "small",
@@ -278,7 +278,7 @@ function initTable() {
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectElement.append($("<option/>").val(group.id).text(label));
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       const applyBtn = "#btn_apply_" + dataId;
@@ -286,7 +286,7 @@ function initTable() {
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize Tom Select
-      const ts = utils.createGroupSelect(selectElement, {
+      const ts = utils.createGroupSelect(selectEl, {
         onChange() {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
@@ -300,12 +300,12 @@ function initTable() {
         },
         onDropdownClose() {
           // Restore values if the dropdown is closed without clicking the Apply button
-          if ($(applyButton).prop("disabled")) {
+          if ($(applyBtn).prop("disabled")) {
             return;
           }
 
           ts.setValue(data.groups);
-          $(applyButton).removeClass("btn-success").prop("disabled", true).off("click");
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
         },
       });
       $(ts.dropdown)

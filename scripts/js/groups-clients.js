@@ -182,7 +182,7 @@ function initTable() {
       for (const group of groups) {
         const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectElement.append($("<option/>").val(group.id).text(label));
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       const applyBtn = "#btn_apply_" + dataId;
@@ -190,7 +190,7 @@ function initTable() {
       // Select assigned groups
       selectEl.val(data.groups);
       // Initialize Tom Select
-      const ts = utils.createGroupSelect(selectElement, {
+      const ts = utils.createGroupSelect(selectEl, {
         onChange() {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {

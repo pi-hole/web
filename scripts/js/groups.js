@@ -87,8 +87,8 @@ $(() => {
           (data.enabled ? " checked" : "") +
           ">"
       );
-      const enabledElement = $("#enabled_" + dataId, row);
-      enabledElement.bootstrapToggle({
+      const enabledEl = $("#enabled_" + dataId, row);
+      enabledEl.bootstrapToggle({
         onlabel: "Enabled",
         offlabel: "Disabled",
         size: "small",
