@@ -410,7 +410,7 @@ function versionCompare(v1, v2) {
   }
 
   // loop until both string are processed
-  for (let i = 0, j = 0; i < v1.length || j < v2.length; ) {
+  for (let i = 0, j = 0; i < v1.length || j < v2.length;) {
     // storing numeric part of version 1 in vnum1
     while (i < v1.length && v1[i] !== ".") {
       vnum1 = vnum1 * 10 + (v1[i] - "0");
@@ -497,79 +497,81 @@ function updateVersionInfo() {
     }
 
     for (const v of versions) {
-      if (v.local !== null) {
-        // reset update status for each component
-        let updateComponentAvailable = false;
-        let localVersion = v.local;
-        if (v.branch !== null && v.hash !== null) {
-          if (v.branch === "master") {
-            localVersion = v.local.split("-", 1)[0];
-            localVersion =
-              '<a href="' +
-              v.url +
-              "/" +
-              localVersion +
-              '" rel="noopener noreferrer" target="_blank">' +
-              localVersion +
-              "</a>";
-            if (v.remote === null) {
-              // No remote version available, we cannot determine if an update is available
-              versionWarning = true;
-            } else if (versionCompare(v.local, v.remote) === -1) {
-              // Update available
-              updateComponentAvailable = true;
-            }
-          } else {
-            // non-master branch
-            localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-            if (v.hash_remote && v.hash !== v.hash_remote) {
-              // hash differ > Update available
-              updateComponentAvailable = true;
-              // link to the commit history instead of release page
-              v.url = v.url.replace("releases", () => "commits/" + v.branch);
-            }
-          }
-        }
+      if (v.local === null) {
+        continue;
+      }
 
-        if (v.name === "Docker Tag") {
+      // reset update status for each component
+      let updateComponentAvailable = false;
+      let localVersion = v.local;
+      if (v.branch !== null && v.hash !== null) {
+        if (v.branch === "master") {
+          localVersion = v.local.split("-", 1)[0];
+          localVersion =
+            '<a href="' +
+            v.url +
+            "/" +
+            localVersion +
+            '" rel="noopener noreferrer" target="_blank">' +
+            localVersion +
+            "</a>";
           if (v.remote === null) {
             // No remote version available, we cannot determine if an update is available
             versionWarning = true;
           } else if (versionCompare(v.local, v.remote) === -1) {
-            // Display update information for the docker tag
+            // Update available
             updateComponentAvailable = true;
-            dockerUpdate = true;
-          } else if (/^\d{4}\.\d{2}\.\d+/u.test(v.local)) {
-            // Display the link if the current tag is a normal date-based tag
-            localVersion =
-              '<a href="' +
-              v.url +
-              "/" +
-              localVersion +
-              '" rel="noopener noreferrer" target="_blank">' +
-              localVersion +
-              "</a>";
+          }
+        } else {
+          // non-master branch
+          localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
+          if (v.hash_remote && v.hash !== v.hash_remote) {
+            // hash differ > Update available
+            updateComponentAvailable = true;
+            // link to the commit history instead of release page
+            v.url = v.url.replace("releases", () => "commits/" + v.branch);
           }
         }
+      }
 
-        // Display update information of individual components only if we are not running in a Docker container
-        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-          $("#versions").append(
-            '<li class="list-inline-item"><strong>' +
-              v.name +
-              "</strong> " +
-              localVersion +
-              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
-              v.url +
-              '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
-          );
-          // if at least one component can be updated, display the update-hint footer
-          updateAvailable = true;
-        } else {
-          $("#versions").append(
-            '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
-          );
+      if (v.name === "Docker Tag") {
+        if (v.remote === null) {
+          // No remote version available, we cannot determine if an update is available
+          versionWarning = true;
+        } else if (versionCompare(v.local, v.remote) === -1) {
+          // Display update information for the docker tag
+          updateComponentAvailable = true;
+          dockerUpdate = true;
+        } else if (/^\d{4}\.\d{2}\.\d+/u.test(v.local)) {
+          // Display the link if the current tag is a normal date-based tag
+          localVersion =
+            '<a href="' +
+            v.url +
+            "/" +
+            localVersion +
+            '" rel="noopener noreferrer" target="_blank">' +
+            localVersion +
+            "</a>";
         }
+      }
+
+      // Display update information of individual components only if we are not running in a Docker container
+      if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
+        $("#versions").append(
+          '<li class="list-inline-item"><strong>' +
+            v.name +
+            "</strong> " +
+            localVersion +
+            '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
+            v.url +
+            '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
+        );
+        // if at least one component can be updated, display the update-hint footer
+        updateAvailable = true;
+      } else {
+        $("#versions").append(
+          '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
+        );
       }
     }
 
@@ -645,11 +647,11 @@ $("#pihole-disable-5m").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", e => {
-  e.preventDefault();
-  let custVal = $("#customTimeout").val();
-  custVal = $("#selMin").is(":checked") ? custVal * 60 : custVal;
-  piholeChange("disable", custVal);
+$("#pihole-disable-custom").on("click", event => {
+  event.preventDefault();
+  let custValue = $("#customTimeout").val();
+  custValue = $("#selMin").is(":checked") ? custValue * 60 : custValue;
+  piholeChange("disable", custValue);
 });
 
 function initSettingsLevel() {

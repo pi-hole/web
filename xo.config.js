@@ -64,6 +64,8 @@ module.exports = defineConfig([
       // prevents all JS from executing. None of our regexes use v-exclusive
       // features, so u is fully equivalent and broadly compatible.
       "require-unicode-regexp": ["error", { requireFlag: "u" }],
+      "unicorn/consistent-boolean-name": "off",
+      "unicorn/name-replacements": "off",
       "unicorn/max-nested-calls": "off",
       "unicorn/no-anonymous-default-export": "off",
       "unicorn/no-document-cookie": "off",

@@ -55,14 +55,14 @@
     "tom-select": "2.6.1"
   },
   "devDependencies": {
-    "autoprefixer": "^10.5.0",
-    "eslint": "^10.5.0",
+    "autoprefixer": "^10.5.4",
+    "eslint": "^10.7.0",
     "eslint-plugin-compat": "^7.0.2",
-    "globals": "^17.6.0",
-    "postcss": "^8.5.15",
+    "globals": "^17.7.0",
+    "postcss": "^8.5.19",
     "postcss-cli": "^11.0.1",
-    "prettier": "^3.8.4",
-    "xo": "^3.0.2"
+    "prettier": "^3.9.5",
+    "xo": "^4.0.0"
   },
   "browserslist": [
     ">= 0.5%",

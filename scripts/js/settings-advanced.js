@@ -208,16 +208,16 @@ function valueDetails(key, value) {
     case "enum (unsigned integer)": // fallthrough
     case "enum (string)": {
       content += '<div class="col-sm-12">';
-      for (const [i, option] of value.allowed.entries()) {
+      for (const [index, option] of value.allowed.entries()) {
         content +=
           '<div class="form-check">' +
           // Radio button
           '<input type="radio" class="form-check-input" ' +
-          `value="${option.item}" name="${key}" id="${key}_${i}" data-key="${key}"${extraAttributes}` +
+          `value="${option.item}" name="${key}" id="${key}_${index}" data-key="${key}"${extraAttributes}` +
           (option.item === value.value ? " checked" : "") +
           ">" +
           // Label
-          `<label class="form-check-label" for="${key}_${i}"><strong>${utils.escapeHtml(option.item)}` +
+          `<label class="form-check-label" for="${key}_${index}"><strong>${utils.escapeHtml(option.item)}` +
           (option.item === value.default ? " <em>(default)</em>" : "") +
           "</strong></label>" +
           // Paragraph with description

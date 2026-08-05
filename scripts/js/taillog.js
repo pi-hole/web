@@ -236,6 +236,7 @@ function getData() {
 
 gAutoScrolling = true;
 document.getElementById("output").addEventListener(
+  //eslint-disable-next-line unicorn/prefer-observer-apis
   "scroll",
   event => {
     const output = event.currentTarget;

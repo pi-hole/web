@@ -17,9 +17,7 @@ function eventsource() {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
   const url = `${document.body.dataset.apiurl}/action/gravity?color=true`;
 
-  if (outputElement.innerHTML.length > 0) {
-    outputElement.innerHTML = "";
-  }
+  outputElement.replaceChildren();
 
   if (!outputElement.classList.contains("d-none")) {
     outputElement.classList.add("d-none");

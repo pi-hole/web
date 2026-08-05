@@ -408,11 +408,7 @@ $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
     .get();
 
   const typeStr = rowData.type + "/" + rowData.kind;
-  if (types.includes(typeStr)) {
-    return true;
-  }
-
-  return false;
+  return Boolean(types.includes(typeStr));
 });
 $(".filter_types input:checkbox").on("change", () => {
   table.draw();
@@ -444,8 +440,8 @@ function deleteDomains(encodedIds) {
 function addDomain() {
   const action = this.id;
   const tabHref = $('a[data-bs-toggle="tab"].active').attr("href");
-  const wildcardEl = $("#wildcard_checkbox");
-  const wildcardChecked = wildcardEl.prop("checked");
+  const wildcardElement = $("#wildcard_checkbox");
+  const wildcardChecked = wildcardElement.prop("checked");
 
   // current tab's inputs
   let kind;
