@@ -18,7 +18,7 @@ $(() => {
 
   // Tabs: Domain/Regex handling
   // sync description fields, reset inactive inputs on tab change
-  $('a[data-toggle="tab"]').on("shown.bs.tab", function () {
+  $('a[data-bs-toggle="tab"]').on("shown.bs.tab", function () {
     const tabHref = $(this).attr("href");
     let val;
     if (tabHref === "#tab_domain") {
@@ -46,7 +46,6 @@ $(() => {
     suggestTimeout = setTimeout(showSuggestDomains, 1000, e.target.value);
   });
 
-  utils.setBsSelectDefaults();
   getGroups();
 });
 
@@ -110,7 +109,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "2rem" },
       { data: "domain" },
       { data: null, searchable: false },
       { data: "enabled", searchable: false },
@@ -143,8 +142,6 @@ function initTable() {
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteDomain_"]').on("click", deleteDomain);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       const dataId = utils.hexEncode(data.domain) + "_" + data.type + "_" + data.kind;
@@ -207,8 +204,8 @@ function initTable() {
       );
       const statusEl = $("#enabled_" + dataId, row);
       statusEl.bootstrapToggle({
-        on: "Enabled",
-        off: "Disabled",
+        onlabel: "Enabled",
+        offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",
@@ -224,39 +221,22 @@ function initTable() {
       // Group assignment field (multi-select)
       $("td:eq(5)", row).empty();
       $("td:eq(5)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
+        const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize bootstrap-select
+      // Initialize Tom Select
       const applyBtn = "#btn_apply_" + dataId;
-      selectEl
-        // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", () => {
-          const winWidth = $(globalThis).width();
-          const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
-          }
-        })
-        .on("changed.bs.select", () => {
+      const ts = utils.createGroupSelect(selectEl, {
+        onChange() {
           // enable Apply button if changes were made to the drop-down menu
           // and have it call editDomain() on click
           if ($(applyBtn).prop("disabled")) {
@@ -267,25 +247,25 @@ function initTable() {
                 editDomain.call(selectEl);
               });
           }
-        })
-        .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the
+        },
+        onDropdownClose() {
+          // Restore values if the dropdown is closed without clicking the
           // Apply button (e.g. by clicking outside) and re-disable the Apply
           // button
           if ($(applyBtn).prop("disabled")) {
             return;
           }
 
-          $(this).val(data.groups).selectpicker("refresh");
+          ts.setValue(data.groups);
           $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
-        })
-        .selectpicker()
-        .siblings(".dropdown-menu")
-        .find(".bs-actionsbox")
-        .prepend(
+        },
+      });
+      $(ts.dropdown)
+        .find(".ts-actions-box")
+        .append(
           '<button type="button" id=btn_apply_' +
             dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+            ' class="btn btn-sm" disabled>Apply</button>'
         );
 
       // Highlight row (if url parameter "domainid=" is used)
@@ -463,7 +443,7 @@ function deleteDomains(encodedIds) {
 
 function addDomain() {
   const action = this.id;
-  const tabHref = $('a[data-toggle="tab"][aria-expanded="true"]').attr("href");
+  const tabHref = $('a[data-bs-toggle="tab"].active').attr("href");
   const wildcardEl = $("#wildcard_checkbox");
   const wildcardChecked = wildcardEl.prop("checked");
 

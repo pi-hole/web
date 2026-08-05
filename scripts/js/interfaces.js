@@ -509,7 +509,7 @@ function renderTreeView(json) {
     expandIcon: "fa fa-angle-down fa-fw",
     collapseIcon: "fa fa-angle-right fa-fw",
     parentsMarginLeft: "0",
-    indent: 2.5,
+    indent: 1.75,
   });
   document.getElementById("spinner").classList.add("d-none");
 }

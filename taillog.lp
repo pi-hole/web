@@ -9,29 +9,46 @@
 
 mg.include('scripts/lua/header_authenticated.lp','r')
 ?>
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-warning">
-            <div class="box-header with-border">
-                <h3 class="box-title"><code>tail -F <span id="filename">...</span></code></h3>
-                <div class="pull-right">
-                    Autoscroll:&nbsp;<i class="fa fa-fw fa-check" id="autoscrolling"></i>&nbsp;&nbsp;
-                    <button class="btn btn-success" id="live-feed">
-                        <span id="title">Live</span>&nbsp;&nbsp;
-                        <i id="feed-icon" class="fa-solid fa-fw fa-play fa-fade"></i>
-                    </button>
-                </div>
+<!-- Title/Header -->
+<div class="app-content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-0">Tail Log</h1>
             </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <pre id="output" class="pre pre-scrollable pre-taillog"></pre>
+        </div>
+    </div>
+</div>
+
+<div class="app-content">
+    <div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-warning card-outline">
+                <div class="card-header">
+                    <h3 class="card-title"><code>tail -F <span id="filename">...</span></code></h3>
+                    <div class="float-end">
+                        Autoscroll:&nbsp;<i class="fa fa-fw fa-check" id="autoscrolling"></i>&nbsp;&nbsp;
+                        <button class="btn btn-success" id="live-feed">
+                            <span id="title">Live</span>&nbsp;&nbsp;
+                            <i id="feed-icon" class="fa-solid fa-fw fa-play fa-fade"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <pre id="output" class="pre pre-scrollable pre-taillog"></pre>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    </div><!-- /.container-fluid -->
+</div><!-- /.app-content -->
 
 <script src="<?=pihole.fileversion('scripts/js/taillog.js')?>"></script>
 

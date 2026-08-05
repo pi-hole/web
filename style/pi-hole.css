@@ -7,7 +7,7 @@
 
 :root {
   /* Datatables Select - bgcolor */
-  --datatable-bgcolor: #e0e8ee;
+  --datatable-selected-bg: #90b6ff;
 
   /* Used in settings save button */
   --overlay-bgcolor: rgba(212, 220, 232, 0.55);
@@ -17,6 +17,19 @@
   --blocked-color: #b00000;
   --cached-color: #9be;
   --other-color: #908878;
+
+  /* AdminLTE root variables */
+  --bs-body-font-size: 15px;
+}
+
+/* AdminLTE Color variables */
+.navbar[data-bs-theme="dark"] {
+  --bs-navbar-color: rgb(255, 255, 255);
+  --bs-border-color: var(--bs-gray-300);
+}
+
+html {
+  font-size: var(--bs-body-font-size);
 }
 
 /* Dashboard graphic bars */
@@ -35,6 +48,91 @@
 
 .layout-boxed {
   background: url("../img/boxed-bg.png") repeat fixed;
+}
+.layout-boxed .app-wrapper {
+  max-width: 1250px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+  background-color: var(--bs-secondary-bg);
+}
+
+/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
+  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
+  login field, the diagnosis warning-count badge and the "reset sorting"
+  buttons - so restore it here, otherwise those elements are always shown. */
+.hidden {
+  display: none !important;
+}
+
+/* AdminLTE 4 resets `.card` bottom margin to 0 and expects per-card spacing
+  utilities. Restore the vertical rhythm between stacked cards that AdminLTE
+  2's `.box` used to provide, unless a card opts out with its own `mb-*`. */
+.app-content .card {
+  margin-bottom: 1rem;
+}
+
+/* AdminLTE 4's `.app-content` has no vertical padding in this build, so page
+  content sits flush against the header. Add consistent top spacing so every
+  page has breathing room below the header. */
+.app-content {
+  padding-top: 1rem;
+}
+
+/* DataTables renders its pager as a Bootstrap `.pagination` but no longer
+  right-aligns it, so it drifted to the middle of its column. Restore the
+  conventional right-aligned position. */
+.dataTables_wrapper ul.pagination,
+.dt-container ul.pagination,
+.card ul.pagination {
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
+/* Space out the button groups inside a toolbar (Bootstrap 5's `.btn-toolbar`
+  no longer adds a gap between adjacent groups). */
+.btn-toolbar {
+  gap: 0.5rem;
+}
+
+/* Bootstrap 5 removed `.form-group` (which carried the bottom margin between
+  form rows) and `.help-block` (muted helper text). The templates still use
+  both throughout, so restore their spacing/appearance rather than rewrite
+  every form to `.mb-3`/`.form-text`. */
+.form-group {
+  margin-bottom: 1rem;
+}
+.help-block {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--bs-secondary-color);
+}
+
+/* AdminLTE 4 moved the logo to the sidebar (.sidebar-brand class).
+  By default, AdminLTE expects an image and a text for the logo, but we only use
+  "Pi-hole" text as logo.
+  AdminLTE 4 automatically hides the text when the sidebar is collapsed, rsulting
+  in an empty brand.
+  To avoid this issue, we use ::before and ::after pseudo elements to show a
+  smaller text, so the full "Pi-hole" wordmark is always shown. */
+.sidebar-brand .brand-text {
+  margin: 0;
+  font-size: 1.35em;
+}
+.sidebar-collapse .sidebar-brand .brand-link::before {
+  content: "Pi-";
+  color: var(--lte-sidebar-menu-active-color);
+  font-size: 15px;
+}
+.sidebar-collapse .sidebar-brand .brand-link::after {
+  content: "hole";
+  color: var(--lte-sidebar-menu-active-color);
+  font-size: 15px;
+  font-weight: bold;
+}
+.sidebar-collapse .app-sidebar:hover .brand-link::before,
+.sidebar-collapse .app-sidebar:hover .brand-link::after {
+  content: none;
 }
 
 @keyframes Pulse {
@@ -88,6 +186,18 @@ td.lookatme {
 
 .table-responsive {
   -webkit-overflow-scrolling: touch;
+  /* Keep the horizontal scrollbar visible on wide tables (e.g. the network
+    overview) instead of relying on overlay scrollbars that stay hidden until
+    scrolling, which made it look like content was simply cut off. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
+}
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.6);
+  border-radius: 4px;
 }
 
 /* Optimize Queries-Table for small screens */
@@ -243,13 +353,8 @@ td.lookatme {
   vertical-align: text-top;
 }
 
-#query-types-pie .box-body,
-#forward-destinations-pie .box-body {
-  display: flex;
-}
-
-#query-types-pie .box-body,
-#forward-destinations-pie .box-body,
+#query-types-pie .card-body,
+#forward-destinations-pie .card-body,
 #cache-metrics-chart {
   display: flex;
 }
@@ -309,10 +414,9 @@ td.lookatme {
   cursor: pointer; /* Pointer cursor only for clickable items */
 }
 
-/* These are needed because AdmintLTE 2.x doesn't support Font Awesome 5.x */
-.sidebar-menu > li > a > .fab,
-.sidebar-menu > li > a > .far,
-.sidebar-menu > li > a > .fas {
+.sidebar-menu > li > a > .nav-icon.fab,
+.sidebar-menu > li > a > .nav-icon.far,
+.sidebar-menu > li > a > .nav-icon.fas {
   width: 20px;
 }
 
@@ -337,15 +441,6 @@ td.lookatme {
   cursor: pointer;
 }
 
-.bootstrap-select.bs-container.align-right {
-  left: unset !important;
-  right: 10px;
-}
-
-.input-group-addon {
-  padding: 0 12px;
-}
-
 .user-panel {
   display: flex;
   align-items: center;
@@ -353,13 +448,13 @@ td.lookatme {
 }
 
 .user-panel .image {
-  flex: 1 0 25%;
-  margin: 0 10px;
+  flex: 0 0 auto;
+  margin: 0 8px;
   text-align: center;
 }
 
 .user-panel > .image > img {
-  max-width: 60px;
+  max-width: 52px;
   min-width: 30px;
 }
 
@@ -369,7 +464,8 @@ td.lookatme {
   line-height: 1.05;
   flex: 1 1 auto;
   left: auto;
-  width: 138px;
+  min-width: 0;
+  color: #fff;
 }
 
 .user-panel > .info > p {
@@ -387,6 +483,18 @@ td.lookatme {
   margin-right: 3px;
 }
 
+/* AdminLTE 4 only knows how to hide nav-link text in mini/collapsed sidebar
+  mode; the user-panel is pi-hole's own block, so it needs the same rule. */
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .info {
+  display: none;
+}
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image > img {
+  max-width: 45px;
+  height: auto;
+}
+.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image {
+  margin: 0 auto;
+}
 .row-centered > div[class^="col-"] {
   display: inline-block;
   float: none;
@@ -416,58 +524,92 @@ tfoot.add-new-item > tr > th {
   max-height: 400px;
 }
 
-/*Work around code that expects icon fonts rather than SVG.
-  Newer versions of AdminLTE have support for SVG icons,
-  https://github.com/ColorlibHQ/AdminLTE/pull/2920
-  so this code will only be needed temporarily. */
+/* Pi-hole's webserver sends a strict CSP with img-src 'self', which blocks
+  the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
+  normally ship with for checkboxes/radios, the modal close button, select
+  dropdown arrows, and the select2 dropdown arrow. Re-host those exact icons
+  as local files and point the same CSS custom properties (or, for select2,
+  the same rule) at them instead - this changes nothing visually, only where
+  the icon loads from.
 
-.sidebar-menu li > a > .fa-angle-left,
-.sidebar-menu li > a > .pull-right-container > .fa-angle-left {
+  Note: a url() stored in a custom property resolves relative to the
+  stylesheet that consumes it via var() - here that's always
+  vendor/adminLTE/adminlte.min.css, not this file - so these paths go up
+  from vendor/adminLTE/ rather than from style/. */
+.form-check-input:checked[type="checkbox"] {
+  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-checked.svg");
+}
+.form-check-input:checked[type="radio"] {
+  --bs-form-check-bg-image: url("../../style/icons/form-check-radio-checked.svg");
+}
+.form-check-input[type="checkbox"]:indeterminate {
+  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-indeterminate.svg");
+}
+.btn-close {
+  --bs-btn-close-bg: url("../../style/icons/btn-close.svg");
+}
+.form-select {
+  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow.svg");
+}
+[data-bs-theme="dark"] .form-select {
+  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow-dark.svg");
+}
+
+/* Tom Select "Select all / Select none" actions, injected above the
+  options list to replace bootstrap-select's actionsBox feature */
+.ts-actions-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  padding: 0.5em;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.ts-actions-box .btn {
+  flex: 1 0 auto;
+}
+
+.ts-actions-box .btn-group {
+  display: flex;
+  gap: 2px;
+  width: 100%;
+}
+
+.sidebar-menu .nav-link p {
+  width: 100%;
+}
+
+.sidebar-menu li > a > .nav-arrow.fa-angle-left {
   height: 1em;
 }
 
-.sidebar-toggle-svg {
-  position: relative;
-  color: #fff;
-  float: left;
-  background-color: transparent;
-  border: none;
-  padding: 15px;
-  width: 50px;
-  text-align: center;
+.sidebar-menu .badge {
+  margin-top: 2px;
+  padding: 0.25em 0.6em 0.35em;
 }
 
-.sidebar-toggle-svg:hover {
-  color: #f6f6f6;
-  background: #367fa9;
-}
-
-/* Hide the "Ph" and move the toggle to the left */
-.sidebar-mini.sidebar-collapse .main-header .logo {
-  width: 0;
-  position: absolute;
-}
-.sidebar-mini.sidebar-collapse .main-header .logo-mini {
-  visibility: hidden;
-}
-.sidebar-mini.sidebar-collapse .main-header .navbar {
-  margin-left: 0;
-}
-
-.sidebar-menu > li.header {
+.sidebar-menu > li.nav-header {
   color: transparent;
   padding: 5px;
 }
 
-.main-header .navbar .nav > li.user > a > .fa,
-.main-header .navbar .nav > li.user > a > .glyphicon,
-.main-header .navbar .nav > li.user > a > .ion {
+.app-header.navbar .nav > li.user > a > .fa,
+.app-header.navbar .nav > li.user > a > .glyphicon,
+.app-header.navbar .nav > li.user > a > .ion {
   margin-right: 0;
 }
 
-.box {
+.card {
   border-radius: 8px;
   overflow: hidden;
+}
+
+.card-header-tabs {
+  margin: -1px;
+  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+}
+.nav-tabs-custom .nav-link {
+  border-radius: 0;
 }
 
 .small-box {
@@ -513,7 +655,14 @@ tfoot.add-new-item > tr > th {
   font-size: 13px;
 }
 
+/* AdminLTE 4 dropped its font-icon corner icon (it now expects an inline SVG),
+  so pi-hole keeps styling its own Font Awesome version here. */
 .small-box .icon {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  color: rgba(0, 0, 0, 0.15);
   font-size: 76px;
   z-index: -1; /* sends the icon behind the text */
 }
@@ -559,11 +708,26 @@ td.details-control {
   padding: 2px 5px;
 }
 
-.blocked-row td {
+/* Query Log - Allow and Deny buttons */
+.btn-whitelist {
+  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-color: var(--bs-success);
+  --bs-btn-hover-bg: var(--bs-success);
+  --bs-btn-hover-color: #fff;
+}
+.btn-blacklist {
+  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-color: var(--bs-danger);
+  --bs-btn-hover-bg: var(--bs-danger);
+  --bs-btn-hover-color: #fff;
+}
+
+/* Query Log - Allow and Deny row background colors */
+table.dataTable .blocked-row td {
   background-color: rgb(229, 83, 75, 0.1);
 }
 
-.allowed-row td {
+table.dataTable .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
 }
 
@@ -625,6 +789,40 @@ td.details-control {
   flex: 1 0 auto;
 }
 
+/* Bootstrap 3's form validation state classes (.has-error/.has-warning/
+  .has-success) were removed in Bootstrap 5 (replaced by .is-invalid/
+  .is-valid on the input itself), but a few pages still toggle them via JS
+  for simple color-coded feedback, so pi-hole defines them itself here. */
+.has-error .form-control,
+.has-error .form-control:focus {
+  border-color: #a94442;
+}
+
+.has-warning .form-control,
+.has-warning .form-control:focus {
+  border-color: #8a6d3b;
+}
+
+.has-success .form-control,
+.has-success .form-control:focus {
+  border-color: #3c763d;
+}
+
+.has-error label,
+.has-error .control-label {
+  color: #a94442;
+}
+
+.has-warning label,
+.has-warning .control-label {
+  color: #8a6d3b;
+}
+
+.has-success label,
+.has-success .control-label {
+  color: #3c763d;
+}
+
 .login-footer a {
   text-align: center;
   min-width: 28%;
@@ -663,7 +861,7 @@ td.details-control {
   margin: 0;
 }
 
-.treeview-menu .warning-count {
+.nav-treeview .warning-count {
   margin-right: 0;
   font-size: 10px;
 }
@@ -673,7 +871,7 @@ td.details-control {
 }
 
 /* hide submenu warning count during animation */
-li:not(.menu-open) .treeview-menu .warning-count {
+li:not(.menu-open) .nav-treeview .warning-count {
   display: none;
 }
 
@@ -686,19 +884,8 @@ li:not(.menu-open) .treeview-menu .warning-count {
   display: none !important;
 }
 
-/*** Accessibility - Add focus for checkboxes and radio buttons (icheck) ***/
-[class*="icheck-"] > input:first-child:focus + label::before {
-  outline: 1px #3c8dbc solid;
-  border-color: #3c8dbc;
-}
-
-/* Fix indentation of <p> elements inside icheck elements */
-[class*="icheck-"] > label + p {
-  padding-left: 29px;
-}
-
-/* Fix some datatables layout on small screens */
-@media screen and (max-width: 660px), screen and (min-width: 767px) and (max-width: 960px) {
+/* Fix some Domains page datatables layout on small screens */
+@media screen and (max-width: 767px) {
   #domainsTable_wrapper .table-responsive {
     border: none;
     overflow: unset;
@@ -706,75 +893,71 @@ li:not(.menu-open) .treeview-menu .warning-count {
   #domainsTable {
     border: 0;
     box-sizing: border-box;
+    display: block;
   }
   #domainsTable thead {
     display: none;
   }
+  #domainsTable tbody {
+    display: block;
+  }
   #domainsTable tr {
     display: flex;
-    padding: 5px 0;
     flex-wrap: wrap;
-    box-sizing: border-box;
-    align-items: end;
     border: 1px solid rgba(127, 127, 127, 0.4);
-    margin: 15px 0;
+    margin: 1em 0;
     border-radius: 6px;
+    overflow: hidden;
   }
   #domainsTable td {
     flex: 1 1 auto;
-    width: 100px;
+    width: 140px;
     display: block;
     border: none;
-    box-sizing: border-box;
     order: 3;
     text-align: right;
     padding: 4px 8px;
+    align-content: end;
   }
   #domainsTable td:nth-child(2n + 1) {
-    width: calc(100% - 120px);
+    width: calc(100% - 140px);
   }
   #domainsTable td:nth-child(1) {
     width: 40px;
     order: 0;
     text-align: left;
-    padding: 5px 0 30px;
+    padding: 6px 0 30px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
-    margin-bottom: 5px;
     flex: 0 0 auto;
   }
   #domainsTable td:nth-child(2) {
-    width: calc(100% - 40px);
+    width: 100%;
     order: 1;
     text-align: left;
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
-    margin-bottom: 5px;
   }
   #domainsTable td:last-child {
     width: 40px;
     order: 0;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
     border-bottom: 1px solid rgba(127, 127, 127, 0.25);
-    margin-bottom: 5px;
   }
   #domainsTable td:nth-child(3),
   #domainsTable td:nth-child(5) {
     text-align: left;
   }
-  #domainsTable td::before {
+  #domainsTable td:not(:first-child)::before {
     display: block;
     font-weight: bold;
     font-size: smaller;
+    margin: 4px;
   }
   #domainsTable td:nth-child(3)::before {
     content: "Type:";
   }
   #domainsTable td:nth-child(5)::before {
     content: "Comment:";
-  }
-  #domainsTable tr.selected td.select-checkbox::after,
-  #domainsTable tr.selected th.select-checkbox::after {
-    transform: rotate(45deg) translate(5px, 1px);
   }
 }
 @media screen and (min-width: 767px) {
@@ -790,14 +973,14 @@ li:not(.menu-open) .treeview-menu .warning-count {
 }
 
 /* Domains table: filter by type */
-#domains-list .box-header {
+#domains-list .card-header {
   display: flex;
   flex-wrap: wrap;
   padding: 5px 10px;
 }
-#domains-list .box-header h3 {
+#domains-list .card-header h3 {
   flex: 1 1 auto;
-  margin: 5px 0;
+  margin: 0.5em 0;
   width: auto;
   min-width: 130px;
 }
@@ -808,7 +991,6 @@ li:not(.menu-open) .treeview-menu .warning-count {
   margin: 5px auto;
 }
 .filter_types div {
-  flex: 0 0 auto;
   margin: 2px 0 0;
 }
 .filter_types span {
@@ -818,38 +1000,14 @@ li:not(.menu-open) .treeview-menu .warning-count {
   min-height: 1.2em;
 }
 
-/* Domains table: filter by type - smaller icheck */
-body:not([class*="lcars"]) .filter_types [class*="icheck-"] > label {
-  padding-left: 1.5em !important;
-  line-height: 1.2em;
-  min-height: 1.2em;
-}
-body:not([class*="lcars"])
-  .filter_types
-  [class*="icheck-"]
-  > input:first-child
-  + input[type="hidden"]
-  + label::before,
-body:not([class*="lcars"]) .filter_types [class*="icheck-"] > input:first-child + label::before {
+/* Domains table: filter by type - smaller checkboxes */
+.filter_types .form-check-input {
   width: 1.2em;
   height: 1.2em;
-  margin-left: -1.55em;
 }
-body:not([class*="lcars"])
-  .filter_types
-  [class*="icheck-"]
-  > input:first-child:checked
-  + input[type="hidden"]
-  + label::after,
-body:not([class*="lcars"])
-  .filter_types
-  [class*="icheck-"]
-  > input:first-child:checked
-  + label::after {
-  width: 0.35em;
-  height: 0.7em;
-  top: -0.2em;
-  left: -0.18em;
+.filter_types .form-check-label {
+  line-height: 1.2em;
+  min-height: 1.2em;
 }
 
 /* reverse side menu collapse arrows when menu is closed */
@@ -911,10 +1069,6 @@ body:not([class*="lcars"])
   flex: 1 0 auto;
 }
 
-.navbar-nav {
-  height: 50px;
-}
-
 .navbar-nav > .user-menu {
   margin-left: 15px;
   width: 50px;
@@ -930,6 +1084,7 @@ body:not([class*="lcars"])
   height: auto;
   padding: 15px 15px 5px;
   font-weight: 600;
+  color: var(--bs-navbar-brand-color);
 }
 
 .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
@@ -1019,26 +1174,51 @@ div.dt-buttons {
   }
 }
 
-/* Datatables Select - checkbox outline */
+/* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
+  draws the checkbox box itself (it only nudges the margin), so the outline was
+  invisible and the bulk-select column looked empty. Draw the box and the
+  checkmark here so the selection control is visible again. */
+table.dataTable tbody td.select-checkbox,
+table.dataTable tbody th.select-checkbox {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+}
+
 table.dataTable tbody td.select-checkbox::before,
 table.dataTable tbody th.select-checkbox::before {
-  border-color: currentColor;
-  border-radius: 2px;
-  border-width: 2px;
-  width: 13px;
-  height: 13px;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  margin-left: -8px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  box-sizing: border-box;
+  opacity: 0.7;
+}
+
+table.dataTable tr.selected td.select-checkbox::before,
+table.dataTable tr.selected th.select-checkbox::before {
+  opacity: 1;
 }
 
 table.dataTable tr.selected td.select-checkbox::after,
 table.dataTable tr.selected th.select-checkbox::after {
-  color: currentColor;
   content: "";
-  text-shadow: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 9px;
+  margin-top: -6px;
+  margin-left: -2px;
   border-bottom: 2px solid currentColor;
   border-right: 2px solid currentColor;
-  width: 4px;
-  height: 8px;
-  transform: rotate(45deg) translate(7px, 3px);
+  transform: rotate(45deg);
 }
 
 .datatable-bt {
@@ -1072,10 +1252,12 @@ table.dataTable tr.selected th.select-checkbox::after {
 }
 
 /* Datatables Select - selected row bgcolor */
-table.dataTable tbody > tr.selected,
-table.dataTable tbody > tr > .selected {
-  background: none;
-  background-image: linear-gradient(var(--datatable-bgcolor), var(--datatable-bgcolor));
+table.table.dataTable > tbody > tr.selected > * {
+  color: inherit;
+  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 20%, transparent);
+}
+table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > * {
+  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 40%, transparent);
 }
 
 #messagesTable pre {
@@ -1207,19 +1389,31 @@ table.dataTable tbody > tr > .selected {
   flex-wrap: wrap;
   gap: var(--gap);
 }
-.settings-container > .box {
+.settings-container > .card {
   margin: 0;
+  --bs-card-spacer-y: 0.7rem;
+  --bs-card-spacer-x: 1rem;
   width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
   border: none;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px var(--bs-border-color-translucent);
 }
+.settings-container .card-header {
+  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+}
+.settings-container .card-footer {
+  background-color: var(--bs-card-bg);
+}
+
 .settings-box .control-label small {
   font-weight: normal;
   display: block;
 }
 
 /* Settings containers without modified items and with hidden boxes will display this text */
-.settings-container:not(:has(h3[data-modified="true"])):has(.box[style*="display: none;"])::before {
+.settings-container:not(:has(h3[data-modified="true"])):has(
+    .card[style*="display: none;"]
+  )::before {
   content: "No modified settings to display";
   opacity: 0.7;
   font-style: italic;
@@ -1230,33 +1424,19 @@ table.dataTable tbody > tr > .selected {
 }
 
 #advanced-settings-menu ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
   gap: 0.5em;
-}
-#advanced-settings-menu ul:before,
-#advanced-settings-menu ul:after {
-  content: none;
 }
 
 #advanced-settings-menu ul > li {
-  margin: 0;
   min-width: 112px;
   flex: 1 1 auto;
-  text-align: center;
 }
 
 #advanced-settings-menu ul > li a {
-  border: 1px solid rgba(127, 127, 127, 0.2);
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   border-radius: 3px;
-}
-#advanced-settings-menu ul > li:not(.active) a {
-  color: inherit;
-}
-#advanced-settings-menu ul > li:not(.active) a:hover,
-#advanced-settings-menu ul > li:not(.active) a:focus {
-  background: rgba(127, 127, 127, 0.1);
 }
 
 #advanced-settings-tabs > .tab-pane {
@@ -1280,23 +1460,6 @@ table.dataTable tbody > tr > .selected {
   .settings-container {
     --columns: 1;
   }
-}
-
-/* Global settings level selector container */
-.settings-selector {
-  padding: 14px 0 0;
-  order: 2;
-  font-size: 18px;
-}
-
-/* Hide the checkbox used for settings level selector */
-#expert-settings,
-#only-changed {
-  display: none;
-}
-
-.main-footer {
-  padding-bottom: 0px;
 }
 
 @keyframes error-border {
@@ -1325,219 +1488,6 @@ table.dataTable tbody > tr > .selected {
   font-size: 100px;
   font-weight: 600;
   padding-right: 20px;
-}
-
-.m-0 {
-  margin: 0 !important;
-}
-.m-1 {
-  margin: 0.25rem !important;
-}
-.m-2 {
-  margin: 0.5rem !important;
-}
-.m-3 {
-  margin: 1rem !important;
-}
-.m-4 {
-  margin: 1.5rem !important;
-}
-.m-5 {
-  margin: 3rem !important;
-}
-
-.mt-0 {
-  margin-top: 0 !important;
-}
-.mr-0 {
-  margin-right: 0 !important;
-}
-.mb-0 {
-  margin-bottom: 0 !important;
-}
-.ml-0 {
-  margin-left: 0 !important;
-}
-.mx-0 {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-.my-0 {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.mt-1 {
-  margin-top: 0.25rem !important;
-}
-.mr-1 {
-  margin-right: 0.25rem !important;
-}
-.mb-1 {
-  margin-bottom: 0.25rem !important;
-}
-.ml-1 {
-  margin-left: 0.25rem !important;
-}
-.mx-1 {
-  margin-left: 0.25rem !important;
-  margin-right: 0.25rem !important;
-}
-.my-1 {
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.25rem !important;
-}
-
-.mt-2 {
-  margin-top: 0.5rem !important;
-}
-.mr-2 {
-  margin-right: 0.5rem !important;
-}
-.mb-2 {
-  margin-bottom: 0.5rem !important;
-}
-.ml-2 {
-  margin-left: 0.5rem !important;
-}
-.mx-2 {
-  margin-right: 0.5rem !important;
-  margin-left: 0.5rem !important;
-}
-.my-2 {
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
-}
-
-.mt-3 {
-  margin-top: 1rem !important;
-}
-.mr-3 {
-  margin-right: 1rem !important;
-}
-.mb-3 {
-  margin-bottom: 1rem !important;
-}
-.mb-4 {
-  margin-bottom: 2rem !important;
-}
-.ml-3 {
-  margin-left: 1rem !important;
-}
-.mx-3 {
-  margin-right: 1rem !important;
-  margin-left: 1rem !important;
-}
-.my-3 {
-  margin-bottom: 1rem !important;
-  margin-top: 1rem !important;
-}
-
-.p-0 {
-  padding: 0 !important;
-}
-.p-1 {
-  padding: 0.25rem !important;
-}
-.p-2 {
-  padding: 0.5rem !important;
-}
-.p-3 {
-  padding: 1rem !important;
-}
-.p-4 {
-  padding: 1.5rem !important;
-}
-.p-5 {
-  padding: 3rem !important;
-}
-
-.pt-0 {
-  padding-top: 0 !important;
-}
-.pr-0 {
-  padding-right: 0 !important;
-}
-.pb-0 {
-  padding-bottom: 0 !important;
-}
-.pl-0 {
-  padding-left: 0 !important;
-}
-.px-0 {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-.py-0 {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-.pt-1 {
-  padding-top: 0.25rem !important;
-}
-.pr-1 {
-  padding-right: 0.25rem !important;
-}
-.pb-1 {
-  padding-bottom: 0.25rem !important;
-}
-.pl-1 {
-  padding-left: 0.25rem !important;
-}
-.px-1 {
-  padding-left: 0.25rem !important;
-  padding-right: 0.25rem !important;
-}
-.py-1 {
-  padding-top: 0.25rem !important;
-  padding-bottom: 0.25rem !important;
-}
-
-.pt-2 {
-  padding-top: 0.5rem !important;
-}
-.pr-2 {
-  padding-right: 0.5rem !important;
-}
-.pb-2 {
-  padding-bottom: 0.5rem !important;
-}
-.pl-2 {
-  padding-left: 0.5rem !important;
-}
-.px-2 {
-  padding-right: 0.5rem !important;
-  padding-left: 0.5rem !important;
-}
-.py-2 {
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
-}
-
-.pt-3 {
-  padding-top: 1rem !important;
-}
-.pr-3 {
-  padding-right: 1rem !important;
-}
-.pb-3 {
-  padding-bottom: 1rem !important;
-}
-.pl-3 {
-  padding-left: 1rem !important;
-}
-.px-3 {
-  padding-right: 1rem !important;
-  padding-left: 1rem !important;
-}
-.py-3 {
-  padding-bottom: 1rem !important;
-  padding-top: 1rem !important;
-}
-
-.d-none {
-  display: none !important;
 }
 
 .password_background {
@@ -1583,17 +1533,6 @@ table.dataTable tbody > tr > .selected {
 .overflow-wrap {
   overflow-wrap: break-word;
   inline-size: auto;
-}
-
-/* Search page options */
-#domain-limitbox-block {
-  /* Add margin to match the other component (icheck) height */
-  margin: 3px 0;
-}
-@media (min-width: 992px) {
-  #domain-limitbox-block {
-    text-align: right;
-  }
 }
 
 .box-icons {
@@ -1704,8 +1643,8 @@ table.dataTable tbody > tr > .selected {
 
 #revServers-table .btn-xs,
 #StaticDHCPTable .btn-xs {
-  width: 24px;
-  height: 24px;
+  padding: 4px;
+  font-size: 13px;
 }
 .btn-xs .fa-fw {
   width: 1em;
@@ -1808,13 +1747,6 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   margin: 0 0 1em;
 }
 
-.card {
-  border-radius: 6px;
-  margin: 0 0 1em;
-  padding: 0.5em;
-  border: 1px solid color-mix(currentColor 15%, transparent);
-}
-
 /* Used in query log page */
 td.dnssec {
   padding-inline-start: 2.25em !important;
@@ -1823,4 +1755,45 @@ td.dnssec {
 td.dnssec i {
   text-indent: 0;
   margin-left: -0.5rem;
+}
+
+/* Keep the two single-icon columns (list status and list type) on the
+  subscribed-lists table the same width, and centre their icons. */
+#listsTable td.details-control,
+#listsTable th.details-control {
+  min-width: 3.5rem;
+  text-align: center;
+}
+
+/* Tom Select general styles */
+.ts-control,
+.ts-control input,
+.ts-dropdown {
+  font-size: 12px;
+}
+
+/* Tom Select - Dark theme colors */
+/* Dropdown menu background and border alignment */
+[data-bs-theme="dark"] .ts-dropdown {
+  color: var(--bs-dropdown-link-color);
+}
+
+/* Dropdown individual option items */
+[data-bs-theme="dark"] .ts-dropdown .option {
+  color: var(--bs-dropdown-link-color);
+}
+
+/* Selected multi-select pills (Tags) */
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div {
+  background-color: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+
+/* Remove button X inside multi-select pills */
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove {
+  border-left-color: var(--bs-border-color);
+}
+[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

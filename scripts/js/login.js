@@ -74,7 +74,7 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     // invalid TOTP token and this is no error response (= password is wrong)
     if (!isErrorResponse && !isInvalidTOTP) {
       const forgotPwBox = document.getElementById("forgot-pw-box");
-      forgotPwBox.classList.replace("box-info", "box-danger");
+      forgotPwBox.classList.replace("card-info", "card-danger");
       utils.toggleBoxCollapse(forgotPwBox, true);
     }
 
@@ -92,7 +92,7 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
 
   $("#invalid2fa-box").addClass("hidden");
   const forgotPwBox = document.getElementById("forgot-pw-box");
-  forgotPwBox.classList.replace("box-danger", "box-info");
+  forgotPwBox.classList.replace("card-danger", "card-info");
   utils.toggleBoxCollapse(forgotPwBox, false);
 }
 

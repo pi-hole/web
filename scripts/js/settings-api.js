@@ -71,9 +71,6 @@ $(() => {
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.id);
@@ -427,7 +424,7 @@ $("#totp_code").on("keyup", function () {
     $("#totp_div").addClass("has-success");
     $("#totp_code").prop("disabled", true);
     $("#totp_submit").prop("disabled", false);
-    $("#totp_submit").removeClass("btn-default");
+    $("#totp_submit").removeClass("btn-secondary");
     $("#totp_submit").addClass("btn-success");
   }
 });

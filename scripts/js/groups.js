@@ -36,7 +36,7 @@ $(() => {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "2rem" },
       { data: "name" },
       { data: "enabled", searchable: false },
       { data: "comment" },
@@ -89,8 +89,8 @@ $(() => {
       );
       const enabledEl = $("#enabled_" + dataId, row);
       enabledEl.bootstrapToggle({
-        on: "Enabled",
-        off: "Disabled",
+        onlabel: "Enabled",
+        offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",

@@ -177,22 +177,6 @@ function testCookies() {
   return ret;
 }
 
-function applyCheckboxRadioStyle() {
-  // Get all radio/checkboxes for theming, with the exception of:
-  // - the two radio buttons on the custom disable timer,
-  // - radio/checkboxes elements with class "no-icheck",
-  // - every element with an id that starts with "status_"
-  const sel = $("input[type='radio'],input[type='checkbox']")
-    .not("#selSec")
-    .not("#selMin")
-    .not("#expert-settings")
-    .not("#only-changed")
-    .not(".no-icheck")
-    .not("[id^=status_]");
-  sel.parent().removeClass();
-  sel.parent().addClass("icheck-primary");
-}
-
 let systemTimer;
 let versionTimer;
 function updateInfo() {
@@ -571,7 +555,7 @@ function updateVersionInfo() {
         // Display update information of individual components only if we are not running in a Docker container
         if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
           $("#versions").append(
-            "<li><strong>" +
+            '<li class="list-inline-item"><strong>' +
               v.name +
               "</strong> " +
               localVersion +
@@ -582,7 +566,9 @@ function updateVersionInfo() {
           // if at least one component can be updated, display the update-hint footer
           updateAvailable = true;
         } else {
-          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+          $("#versions").append(
+            '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
+          );
         }
       }
     }
@@ -595,13 +581,17 @@ function updateVersionInfo() {
     }
 
     if (dockerUpdate) {
-      $("#update-hint").html(
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
-      );
+      $("#update-hint")
+        .html(
+          'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
+        )
+        .addClass("w-100");
     } else if (updateAvailable) {
-      $("#update-hint").html(
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
-      );
+      $("#update-hint")
+        .html(
+          'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
+        )
+        .addClass("w-100");
     }
 
     clearTimeout(versionTimer);
@@ -624,9 +614,6 @@ $(() => {
   if (!testCookies() && $("#cookieInfo").length > 0) {
     $("#cookieInfo").show();
   }
-
-  // Apply icheckbox/iradio style
-  applyCheckboxRadioStyle();
 
   if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...
@@ -661,7 +648,7 @@ $("#pihole-disable-5m").on("click", e => {
 $("#pihole-disable-custom").on("click", e => {
   e.preventDefault();
   let custVal = $("#customTimeout").val();
-  custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
+  custVal = $("#selMin").is(":checked") ? custVal * 60 : custVal;
   piholeChange("disable", custVal);
 });
 
@@ -686,8 +673,8 @@ function initSettingsLevel() {
 
   // Init the settings level toggle
   $(expertSettingsElement).bootstrapToggle({
-    on: "Expert",
-    off: "Basic",
+    onlabel: "Expert",
+    offlabel: "Basic",
     size: "small",
     offstyle: "success",
     onstyle: "danger",
@@ -726,7 +713,7 @@ function applyExpertSettings() {
     //    settings page as well, even when the button has "only modified"
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
-    if (document.querySelector(".settings-selector") && $(".box:visible").length === 0) {
+    if (document.querySelector(".settings-selector") && $(".card:visible").length === 0) {
       location.assign(`${document.body.dataset.webhome}settings/system`);
     }
   }

@@ -11,9 +11,12 @@ mg.include('header.lp','r')
 ?>
     <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables/datatables.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/datatables/dataTables.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/datatables/dataTables.bootstrap5.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/datatables-select/dataTables.select.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/datatables-select/select.bootstrap5.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/datatables-buttons/dataTables.buttons.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/datatables-buttons/buttons.bootstrap5.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/chartjs/chart.umd.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/chartjs-plugin-deferred/chartjs-plugin-deferred.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/moment/moment.min.js')?>"></script>
@@ -24,7 +27,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
+<body class="<?=theme.name?> hold-transition sidebar-mini sidebar-expand-lg bg-body-secondary <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>" data-bs-theme="<?= bs_theme ?>">
 <noscript>
     <!-- JS Warning -->
     <div>
@@ -38,68 +41,61 @@ mg.include('header.lp','r')
 
 <!-- Send token to JS -->
 <div id="enableTimer" hidden></div>
-<div class="wrapper">
-    <header class="main-header">
-        <!-- Logo -->
-        <a href="<?=webhome?>" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">P<strong>h</strong></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Pi-<strong>hole</strong></span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top">
-            <!-- Sidebar toggle button-->
-            <button class="sidebar-toggle-svg" data-toggle="push-menu" aria-label="Toggle Navigation">
-                <i aria-hidden="true" class="fa fa-angle-double-left"></i>
-                <span class="warning-count hidden" id="top-warning-count"></span>
-            </button>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <? if string.len(hostname) > 0 then ?>
-                        <li>
-                            <p class="navbar-text">
-                                <span class="hidden-xs">hostname:</span>
-                                <code><?=hostname?></code>
+<div class="app-wrapper">
+    <nav class="app-header navbar navbar-expand" data-bs-theme="dark">
+        <div class="container-fluid">
+            <!-- Sidebar toggle button + logo -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link sidebar-toggle-svg" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle Navigation">
+                        <i aria-hidden="true" class="fa fa-angle-double-left"></i>
+                        <span class="warning-count hidden" id="top-warning-count"></span>
+                    </a>
+                </li>
+            </ul>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ms-auto">
+                <? if string.len(hostname) > 0 then ?>
+                    <li class="nav-item d-none d-sm-flex align-items-center">
+                        <span class="navbar-text">
+                            hostname:
+                            <code><?=hostname?></code>
+                        </span>
+                    </li>
+                <? end ?>
+                <li class="nav-item dropdown user user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="<?= bs_theme ?>">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
+                            <p>
+                                Open Source Ad Blocker
                             </p>
                         </li>
-                    <? end ?>
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bars"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <img class="logo-img" src="<?=webhome?>img/logo.svg" alt="Pi-hole Logo" width="50" height="50">
-                                <p>
-                                    Open Source Ad Blocker
-                                </p>
-                            </li>
-                            <!-- Menu Body -->
-                            <li class="user-body" id="advanced-info"></li>
-                            <!-- Menu Footer -->
-                            <li class="user-footer">
-                                <a class="btn-link" href="https://pi-hole.net/" rel="noopener noreferrer" target="_blank">
-                                    <? mg.include('../../img/logo-bw.svg', 'r') ?>
-                                    Pi-hole Website
-                                </a>
-                                <a class="btn-link" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fa-solid fa-circle-question"></i> Documentation</a>
-                                <a class="btn-link" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fab fa-discourse"></i> Pi-hole Discourse</a>
-                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
-                                <a class="btn-link" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fa-solid fa-rocket"></i> Pi-hole Releases</a>
-                                <? if pihole.needLogin() then ?>
-                                <a class="btn-link" href="#" id="logout-button"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</a>
-                                <? end ?>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+                        <!-- Menu Body -->
+                        <li class="user-body" id="advanced-info"></li>
+                        <!-- Menu Footer -->
+                        <li class="user-footer">
+                            <a class="btn-link dropdown-item" href="https://pi-hole.net/" rel="noopener noreferrer" target="_blank">
+                                <? mg.include('../../img/logo-bw.svg', 'r') ?>
+                                Pi-hole Website
+                            </a>
+                            <a class="btn-link dropdown-item" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fa-solid fa-circle-question"></i> Documentation</a>
+                            <a class="btn-link dropdown-item" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fab fa-discourse"></i> Pi-hole Discourse</a>
+                            <a class="btn-link dropdown-item" href="https://github.com/pi-hole" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fab fa-github"></i> GitHub</a>
+                            <a class="btn-link dropdown-item" href="https://discourse.pi-hole.net/c/announcements/5" rel="noopener noreferrer" target="_blank"><i class="fa-fw menu-icon fa-solid fa-rocket"></i> Pi-hole Releases</a>
+                            <? if pihole.needLogin() then ?>
+                            <a class="btn-link dropdown-item" href="#" id="logout-button"><i class="fa-fw menu-icon fa-solid fa-arrow-right-from-bracket"></i> Log out</a>
+                            <? end ?>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
 <? mg.include('sidebar.lp', 'r') ?>
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Main content -->
-        <section class="content">
+<!-- Main content -->
+<main class="app-main">
