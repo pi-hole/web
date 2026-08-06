@@ -103,7 +103,9 @@ function padNumber(num) {
 }
 
 let showAlertBox = null;
-function getToastContainer() {
+
+// Gets ToastContainer if it exists, otherwise creates a new one and return it
+function getOrCreateToastContainer() {
   const existing =
     document.getElementById("toast-container") || document.querySelector(".toast-container");
 
@@ -114,24 +116,23 @@ function getToastContainer() {
   const container = document.createElement("div");
   container.className = "toast-container position-fixed top-0 end-0 p-3";
   container.id = "toast-container";
-  container.setAttribute("aria-live", "polite");
-  container.setAttribute("aria-atomic", "true");
   container.style.zIndex = "9999";
   document.body.append(container);
 
   return container;
 }
 
-function createToastElement(state) {
+// Create the toast element and show it in the toast container
+function createToast(alertState) {
   const toast = document.createElement("div");
   toast.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
-  toast.dataset.toastType = state.type;
-  toast.setAttribute("role", state.role);
-  toast.setAttribute("aria-live", state.live);
-  toast.setAttribute("aria-atomic", state.ariaAtomic);
+  toast.dataset.toastType = alertState.type;
+  toast.setAttribute("role", alertState.role);
+  toast.setAttribute("aria-live", alertState.live);
+  toast.setAttribute("aria-atomic", alertState.ariaAtomic);
 
   const content = document.createElement("div");
-  content.className = `toast-content ${state.className}`;
+  content.className = `toast-content ${alertState.className}`;
 
   const layout = document.createElement("div");
   layout.className = "d-flex align-items-start p-3";
@@ -139,9 +140,10 @@ function createToastElement(state) {
   const body = document.createElement("div");
   body.className = "d-flex flex-grow-1 gap-2";
 
-  if (state.icon !== "") {
+  // Add icon if it is not empty
+  if (alertState.icon !== "") {
     const icon = document.createElement("i");
-    icon.className = `${state.icon} mt-1`;
+    icon.className = `${alertState.icon} mt-1`;
     icon.setAttribute("aria-hidden", "true");
     body.append(icon);
   }
@@ -149,23 +151,27 @@ function createToastElement(state) {
   const text = document.createElement("div");
   text.className = "toast-text flex-grow-1";
 
+  // Add title and message to the toast
   const title = document.createElement("strong");
   title.className = "d-block";
-  title.innerHTML = state.title;
+  // Title is already escaped in showAlert() function, so we can safely set it as innerHTML
+  title.innerHTML = alertState.title;
 
   const message = document.createElement("div");
   message.className = "toast-message";
   message.style.whiteSpace = "pre-line";
   message.style.overflowWrap = "anywhere";
-  message.innerHTML = state.message;
+  // Title is already escaped in showAlert() function, so we can safely set it as innerHTML
+  message.innerHTML = alertState.message;
 
   text.append(title, message);
   body.append(text);
   layout.append(body);
 
+  // Add close button to the toast
   const closeButton = document.createElement("button");
   closeButton.type = "button";
-  closeButton.className = `${state.closeButtonClass} ms-2 mt-1`;
+  closeButton.className = `${alertState.closeButtonClass} ms-2 mt-1`;
   closeButton.dataset.bsDismiss = "toast";
   closeButton.setAttribute("aria-label", "Close");
   layout.append(closeButton);
@@ -177,6 +183,7 @@ function createToastElement(state) {
 }
 
 function showAlert(type, icon, title, message, toast) {
+  // sets all properties of the alertState object based on the type of alert and the provided parameters
   const alertState = {
     title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
     message: escapeHtml(message),
@@ -241,14 +248,11 @@ function showAlert(type, icon, title, message, toast) {
       return;
   }
 
-  const container = getToastContainer();
+  const container = getOrCreateToastContainer();
 
-  const controller = toast === undefined ? (type === "info" ? null : showAlertBox) : toast;
-
-  const toastController = controller ?? {
-    element: createToastElement(alertState),
+  const toastController = {
+    element: createToast(alertState),
     instance: null,
-    hideTimer: null,
     alertState,
     update(partialState) {
       this.alertState = { ...this.alertState, ...partialState };
@@ -257,75 +261,23 @@ function showAlert(type, icon, title, message, toast) {
       return this;
     },
     render() {
-      this.element.dataset.toastType = this.alertState.type;
-      this.element.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
-      this.element.setAttribute("role", this.alertState.role);
-      this.element.setAttribute("aria-live", this.alertState.live);
-      this.element.setAttribute("aria-atomic", this.alertState.ariaAtomic);
+      const renderedToast = createToast(this.alertState);
 
-      const content = this.element.querySelector(".toast-content");
-      const body = this.element.querySelector(".d-flex.flex-grow-1.gap-2");
-      const text = this.element.querySelector(".toast-text");
-      const closeButton = this.element.querySelector("button[data-bs-dismiss='toast']");
-
-      if (content !== null) {
-        content.className = `toast-content ${this.alertState.className}`;
-      }
-
-      if (body !== null) {
-        body.replaceChildren();
-
-        if (this.alertState.icon !== "") {
-          const iconElement = document.createElement("i");
-          iconElement.className = `${this.alertState.icon} mt-1`;
-          iconElement.setAttribute("aria-hidden", "true");
-          body.append(iconElement);
-        }
-
-        if (text !== null) {
-          text.replaceChildren();
-
-          const titleElement = document.createElement("strong");
-          titleElement.className = "d-block";
-          titleElement.innerHTML = this.alertState.title;
-
-          const messageElement = document.createElement("div");
-          messageElement.className = "toast-message";
-          messageElement.style.whiteSpace = "pre-line";
-          messageElement.style.overflowWrap = "anywhere";
-          messageElement.innerHTML = this.alertState.message;
-
-          text.append(titleElement, messageElement);
-          body.append(text);
-        }
-      }
-
-      if (closeButton !== null) {
-        closeButton.className = `${this.alertState.closeButtonClass} ms-2 mt-1`;
-      }
-    },
-    clearTimer() {
-      if (this.hideTimer === null) {
-        return;
-      }
-
-      clearTimeout(this.hideTimer);
-      this.hideTimer = null;
-    },
-    scheduleHide() {
-      this.clearTimer();
-      if (!this.alertState.autohide) {
-        return;
-      }
-
-      this.hideTimer = setTimeout(() => {
-        this.hide();
-      }, this.alertState.delay);
+      this.element.className = renderedToast.className;
+      this.element.dataset.toastType = renderedToast.dataset.toastType;
+      this.element.setAttribute("role", renderedToast.getAttribute("role"));
+      this.element.setAttribute("aria-live", renderedToast.getAttribute("aria-live"));
+      this.element.setAttribute("aria-atomic", renderedToast.getAttribute("aria-atomic"));
+      this.element.replaceChildren(...renderedToast.childNodes);
     },
     ensureInstance() {
-      this.instance = bootstrap.Toast.getOrCreateInstance(this.element, {
-        autohide: false,
-      });
+      if (this.instance === null) {
+        this.instance = new bootstrap.Toast(this.element, {
+          autohide: this.alertState.autohide,
+          delay: this.alertState.delay,
+        });
+      }
+
       return this.instance;
     },
     show() {
@@ -334,11 +286,9 @@ function showAlert(type, icon, title, message, toast) {
       }
 
       this.ensureInstance().show();
-      this.scheduleHide();
       return this;
     },
     hide() {
-      this.clearTimer();
       if (this.instance !== null) {
         this.instance.hide();
       }
@@ -346,7 +296,6 @@ function showAlert(type, icon, title, message, toast) {
       return this;
     },
     dispose() {
-      this.clearTimer();
       if (this.instance !== null) {
         this.instance.dispose();
         this.instance = null;
@@ -362,43 +311,35 @@ function showAlert(type, icon, title, message, toast) {
   };
 
   toastController.element.addEventListener("hidden.bs.toast", () => {
-    toastController.clearTimer();
-    if (toastController.instance !== null) {
-      toastController.instance.dispose();
-      toastController.instance = null;
-    }
-
     toastController.element.remove();
     if (showAlertBox === toastController) {
       showAlertBox = null;
     }
   });
 
-  toastController.render();
-
-  if (toast === undefined) {
-    if (type === "info") {
-      // Create a new notification for info boxes
-      showAlertBox = toastController;
-      return toastController.show();
-    }
-
-    if (showAlertBox !== null) {
-      // Update existing notification for other boxes (if available)
-      return showAlertBox.update(alertState);
-    }
-
-    // Create a new notification for other boxes if no previous info box exists
-    return toastController.show();
-  }
-
   if (toast === null) {
     // Always create a new toast
     return toastController.show();
   }
 
-  // Update existing toast
-  return toast.update(alertState);
+  if (toast !== undefined) {
+    // Update existing toast
+    return toast.update(alertState);
+  }
+
+  if (type === "info") {
+    // Create a new notification for info boxes
+    showAlertBox = toastController;
+    return toastController.show();
+  }
+
+  if (showAlertBox !== null) {
+    // Update existing notification for other boxes (if available)
+    return showAlertBox.update(alertState);
+  }
+
+  // Create a new notification for other boxes if no previous info box exists
+  return toastController.show();
 }
 
 function datetime(date, html, humanReadable) {

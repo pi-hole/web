@@ -39,7 +39,7 @@ mg.include('header.lp','r')
 </noscript>
 
 <!-- Toast container to display notifications, should be present before the toast is generated to be recognized by by assistive technologies-->
-<div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container" aria-live="polite" aria-atomic="true" style="z-index: 9999"></div>
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container" style="z-index: 9999"></div>
 
 <!-- Send token to JS -->
 <div id="enableTimer" hidden></div>
