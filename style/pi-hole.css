@@ -1549,7 +1549,8 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   resize: vertical;
 }
 
-.actions {
+.actions,
+.dataTable :is(td, th).actions {
   text-align: right;
 }
 
@@ -1583,6 +1584,7 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
 
 /* Add placeholder text to the footer cells, when empty */
 #revServers-table :is(td, tfoot th):empty::before {
+  font-size: 0.9rem;
   color: rgba(127, 127, 127, 0.5);
   pointer-events: none; /* Allow clicks on the parent element (cell) */
   display: block;

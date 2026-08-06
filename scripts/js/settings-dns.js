@@ -275,6 +275,23 @@ function createRevServerTable() {
         },
       },
     ],
+    initComplete() {
+      $(this.api().table().footer())
+        // Remove elements automatically created by datatables in the table footer
+        .find(".dt-column-footer")
+        .each(function () {
+          const $innerTitle = $(this).find(".dt-column-title");
+
+          // If the inner span has no text or HTML, empty the cell entirely
+          if ($.trim($innerTitle.html()) === "") {
+            $(this).closest("th, td").empty();
+          } else {
+            // Otherwise, safely strip both wrappers to restore original HTML
+            $innerTitle.contents().unwrap();
+            $(this).contents().unwrap();
+          }
+        });
+    },
     drawCallback() {
       $(".deleteRevServers").on("click", deleteRecord);
       $("tbody .saveRevServers").on("click", saveRecord);
