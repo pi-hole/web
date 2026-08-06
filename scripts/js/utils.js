@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false, bootstrap: false */
 
 "use strict";
 
@@ -103,41 +103,120 @@ function padNumber(num) {
 }
 
 let showAlertBox = null;
+function getToastContainer() {
+  const existing =
+    document.getElementById("toast-container") || document.querySelector(".toast-container");
+
+  if (existing !== null) {
+    return existing;
+  }
+
+  const container = document.createElement("div");
+  container.className = "toast-container position-fixed top-0 end-0 p-3";
+  container.id = "toast-container";
+  container.setAttribute("aria-live", "polite");
+  container.setAttribute("aria-atomic", "true");
+  container.style.zIndex = "9999";
+  document.body.append(container);
+
+  return container;
+}
+
+function createToastElement(state) {
+  const toast = document.createElement("div");
+  toast.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
+  toast.dataset.toastType = state.type;
+  toast.setAttribute("role", state.role);
+  toast.setAttribute("aria-live", state.live);
+  toast.setAttribute("aria-atomic", state.ariaAtomic);
+
+  const content = document.createElement("div");
+  content.className = `toast-content ${state.className}`;
+
+  const layout = document.createElement("div");
+  layout.className = "d-flex align-items-start p-3";
+
+  const body = document.createElement("div");
+  body.className = "d-flex flex-grow-1 gap-2";
+
+  if (state.icon !== "") {
+    const icon = document.createElement("i");
+    icon.className = `${state.icon} mt-1`;
+    icon.setAttribute("aria-hidden", "true");
+    body.append(icon);
+  }
+
+  const text = document.createElement("div");
+  text.className = "toast-text flex-grow-1";
+
+  const title = document.createElement("strong");
+  title.className = "d-block";
+  title.innerHTML = state.title;
+
+  const message = document.createElement("div");
+  message.className = "toast-message";
+  message.style.whiteSpace = "pre-line";
+  message.style.overflowWrap = "anywhere";
+  message.innerHTML = state.message;
+
+  text.append(title, message);
+  body.append(text);
+  layout.append(body);
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = `${state.closeButtonClass} ms-2 mt-1`;
+  closeButton.dataset.bsDismiss = "toast";
+  closeButton.setAttribute("aria-label", "Close");
+  layout.append(closeButton);
+
+  content.append(layout);
+  toast.append(content);
+
+  return toast;
+}
+
 function showAlert(type, icon, title, message, toast) {
-  const options = {
+  const alertState = {
     title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
     message: escapeHtml(message),
     icon,
-  };
-  const settings = {
     type,
+    className: "",
+    animation: true,
     delay: 5000, // default value
-    z_index: 9999, // increased to avoid overlapping issues with the AdminLTE header
-    mouse_over: "pause",
-    animate: {
-      enter: "animate__animated animate__fadeInDown",
-      exit: "animate__animated animate__fadeOutUp",
-    },
+    autohide: true,
+    role: "status",
+    live: "polite",
+    ariaAtomic: "true",
+    closeButtonClass: "btn-close",
   };
+
   switch (type) {
     case "info":
-      options.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
-
+      alertState.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
+      alertState.className = "text-bg-info";
       break;
     case "success":
+      alertState.className = "text-bg-success";
+      alertState.closeButtonClass += " btn-close-white";
       break;
     case "warning":
-      options.icon = "fas fa-exclamation-triangle";
-      settings.delay *= 2;
-
+      alertState.icon = "fas fa-exclamation-triangle";
+      alertState.delay *= 2;
+      alertState.className = "text-bg-warning";
       break;
     case "error":
-      options.icon = "fas fa-times";
+      alertState.icon = "fas fa-times";
       if (title.length === 0) {
-        options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+        alertState.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
       }
 
-      settings.delay *= 2;
+      alertState.delay *= 2;
+      alertState.className = "text-bg-danger";
+      alertState.role = "alert";
+      alertState.live = "assertive";
+      alertState.closeButtonClass += " btn-close-white";
 
       // If the message is an API object, nicely format the error message
       // Try to parse message as JSON
@@ -145,10 +224,10 @@ function showAlert(type, icon, title, message, toast) {
         const data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
-          options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
+          alertState.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
 
           if (data.error.hint !== null) {
-            options.message = escapeHtml(data.error.hint);
+            alertState.message = escapeHtml(data.error.hint);
           }
         }
       } catch {
@@ -162,33 +241,164 @@ function showAlert(type, icon, title, message, toast) {
       return;
   }
 
+  const container = getToastContainer();
+
+  const controller = toast === undefined ? (type === "info" ? null : showAlertBox) : toast;
+
+  const toastController = controller ?? {
+    element: createToastElement(alertState),
+    instance: null,
+    hideTimer: null,
+    alertState,
+    update(partialState) {
+      this.alertState = { ...this.alertState, ...partialState };
+      this.render();
+      this.show();
+      return this;
+    },
+    render() {
+      this.element.dataset.toastType = this.alertState.type;
+      this.element.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
+      this.element.setAttribute("role", this.alertState.role);
+      this.element.setAttribute("aria-live", this.alertState.live);
+      this.element.setAttribute("aria-atomic", this.alertState.ariaAtomic);
+
+      const content = this.element.querySelector(".toast-content");
+      const body = this.element.querySelector(".d-flex.flex-grow-1.gap-2");
+      const text = this.element.querySelector(".toast-text");
+      const closeButton = this.element.querySelector("button[data-bs-dismiss='toast']");
+
+      if (content !== null) {
+        content.className = `toast-content ${this.alertState.className}`;
+      }
+
+      if (body !== null) {
+        body.replaceChildren();
+
+        if (this.alertState.icon !== "") {
+          const iconElement = document.createElement("i");
+          iconElement.className = `${this.alertState.icon} mt-1`;
+          iconElement.setAttribute("aria-hidden", "true");
+          body.append(iconElement);
+        }
+
+        if (text !== null) {
+          text.replaceChildren();
+
+          const titleElement = document.createElement("strong");
+          titleElement.className = "d-block";
+          titleElement.innerHTML = this.alertState.title;
+
+          const messageElement = document.createElement("div");
+          messageElement.className = "toast-message";
+          messageElement.style.whiteSpace = "pre-line";
+          messageElement.style.overflowWrap = "anywhere";
+          messageElement.innerHTML = this.alertState.message;
+
+          text.append(titleElement, messageElement);
+          body.append(text);
+        }
+      }
+
+      if (closeButton !== null) {
+        closeButton.className = `${this.alertState.closeButtonClass} ms-2 mt-1`;
+      }
+    },
+    clearTimer() {
+      if (this.hideTimer === null) {
+        return;
+      }
+
+      clearTimeout(this.hideTimer);
+      this.hideTimer = null;
+    },
+    scheduleHide() {
+      this.clearTimer();
+      if (!this.alertState.autohide) {
+        return;
+      }
+
+      this.hideTimer = setTimeout(() => {
+        this.hide();
+      }, this.alertState.delay);
+    },
+    ensureInstance() {
+      this.instance = bootstrap.Toast.getOrCreateInstance(this.element, {
+        autohide: false,
+      });
+      return this.instance;
+    },
+    show() {
+      if (!this.element.isConnected) {
+        container.prepend(this.element);
+      }
+
+      this.ensureInstance().show();
+      this.scheduleHide();
+      return this;
+    },
+    hide() {
+      this.clearTimer();
+      if (this.instance !== null) {
+        this.instance.hide();
+      }
+
+      return this;
+    },
+    dispose() {
+      this.clearTimer();
+      if (this.instance !== null) {
+        this.instance.dispose();
+        this.instance = null;
+      }
+
+      this.element.remove();
+      if (showAlertBox === this) {
+        showAlertBox = null;
+      }
+
+      return this;
+    },
+  };
+
+  toastController.element.addEventListener("hidden.bs.toast", () => {
+    toastController.clearTimer();
+    if (toastController.instance !== null) {
+      toastController.instance.dispose();
+      toastController.instance = null;
+    }
+
+    toastController.element.remove();
+    if (showAlertBox === toastController) {
+      showAlertBox = null;
+    }
+  });
+
+  toastController.render();
+
   if (toast === undefined) {
     if (type === "info") {
       // Create a new notification for info boxes
-      showAlertBox = $.notify(options, settings);
-      return showAlertBox;
+      showAlertBox = toastController;
+      return toastController.show();
     }
 
     if (showAlertBox !== null) {
       // Update existing notification for other boxes (if available)
-      showAlertBox.update(options);
-      showAlertBox.update(settings);
-      return showAlertBox;
+      return showAlertBox.update(alertState);
     }
 
     // Create a new notification for other boxes if no previous info box exists
-    return $.notify(options, settings);
+    return toastController.show();
   }
 
   if (toast === null) {
     // Always create a new toast
-    return $.notify(options, settings);
+    return toastController.show();
   }
 
   // Update existing toast
-  toast.update(options);
-  toast.update(settings);
-  return toast;
+  return toast.update(alertState);
 }
 
 function datetime(date, html, humanReadable) {
