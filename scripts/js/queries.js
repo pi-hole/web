@@ -733,9 +733,8 @@ $(() => {
         .columns()
         .every(function () {
           // Skip columns that are not searchable
-          const colIdx = this.index();
-          const bSearchable = this.context[0].aoColumns[colIdx].bSearchable;
-          if (!bSearchable) {
+          const searchable = this.init().searchable ?? true;
+          if (!searchable) {
             return null;
           }
 
