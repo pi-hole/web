@@ -283,7 +283,7 @@ function createRevServerTable() {
           const $innerTitle = $(this).find(".dt-column-title");
 
           // If the inner span has no text or HTML, empty the cell entirely
-          if ($.trim($innerTitle.html()) === "") {
+          if ($innerTitle.html().trim() === "") {
             $(this).closest("th, td").empty();
           } else {
             // Otherwise, safely strip both wrappers to restore original HTML
