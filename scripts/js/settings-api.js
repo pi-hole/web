@@ -14,6 +14,7 @@ let ownSessionID = null;
 let deleted = 0;
 let TOTPdata = null;
 let apppwSet = false;
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 function renderBool(data, type) {
   // Display and search content
@@ -36,6 +37,7 @@ $(() => {
       url: document.body.dataset.apiurl + "/auth/sessions",
       type: "GET",
       dataSrc: "sessions",
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     order: [[1, "asc"]],
     columns: [

@@ -10,6 +10,7 @@
 "use strict";
 
 let tableApi;
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 // How many IPs do we show at most per device?
 const MAXIPDISPLAY = 3;
@@ -217,6 +218,7 @@ $(() => {
       url: document.body.dataset.apiurl + "/network/devices",
       type: "GET",
       dataType: "json",
+      headers: { "X-CSRF-TOKEN": csrfToken },
       data: {
         max_devices: 999,
         max_addresses: 25,

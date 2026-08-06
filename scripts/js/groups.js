@@ -10,6 +10,7 @@
 "use strict";
 
 let table;
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -32,6 +33,7 @@ $(() => {
       error: handleAjaxError,
       dataSrc: "groups",
       type: "GET",
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     order: [[0, "asc"]],
     columns: [

@@ -9,6 +9,8 @@
 
 "use strict";
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
 // These values are provided by the API
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch
@@ -592,6 +594,7 @@ $(() => {
       url: apiURL,
       error: handleAjaxError,
       dataSrc: "queries",
+      headers: { "X-CSRF-TOKEN": csrfToken },
       data(d) {
         if (cursor !== null) {
           d.cursor = cursor;
