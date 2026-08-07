@@ -102,8 +102,6 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-let showAlertBox = null;
-
 // Gets ToastContainer if it exists, otherwise creates a new one and return it
 function getOrCreateToastContainer() {
   const existing =
@@ -127,6 +125,8 @@ function createToast(alertState) {
   const toast = document.createElement("div");
   toast.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
   toast.dataset.toastType = alertState.type;
+  toast.dataset.bsAutohide = String(alertState.autohide);
+  toast.dataset.bsDelay = String(alertState.delay);
   toast.setAttribute("role", alertState.role);
   toast.setAttribute("aria-live", alertState.live);
   toast.setAttribute("aria-atomic", alertState.ariaAtomic);
@@ -182,7 +182,7 @@ function createToast(alertState) {
   return toast;
 }
 
-function showAlert(type, icon, title, message, toast) {
+function showAlert(type, icon, title, message) {
   // sets all properties of the alertState object based on the type of alert and the provided parameters
   const alertState = {
     title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
@@ -249,97 +249,17 @@ function showAlert(type, icon, title, message, toast) {
   }
 
   const container = getOrCreateToastContainer();
+  const toastElement = createToast(alertState);
+  const toastInstance = new bootstrap.Toast(toastElement);
 
-  const toastController = {
-    element: createToast(alertState),
-    instance: null,
-    alertState,
-    update(partialState) {
-      this.alertState = { ...this.alertState, ...partialState };
-      this.render();
-      this.show();
-      return this;
-    },
-    render() {
-      const renderedToast = createToast(this.alertState);
-
-      this.element.className = renderedToast.className;
-      this.element.dataset.toastType = renderedToast.dataset.toastType;
-      this.element.setAttribute("role", renderedToast.getAttribute("role"));
-      this.element.setAttribute("aria-live", renderedToast.getAttribute("aria-live"));
-      this.element.setAttribute("aria-atomic", renderedToast.getAttribute("aria-atomic"));
-      this.element.replaceChildren(...renderedToast.childNodes);
-    },
-    ensureInstance() {
-      if (this.instance === null) {
-        this.instance = new bootstrap.Toast(this.element, {
-          autohide: this.alertState.autohide,
-          delay: this.alertState.delay,
-        });
-      }
-
-      return this.instance;
-    },
-    show() {
-      if (!this.element.isConnected) {
-        container.prepend(this.element);
-      }
-
-      this.ensureInstance().show();
-      return this;
-    },
-    hide() {
-      if (this.instance !== null) {
-        this.instance.hide();
-      }
-
-      return this;
-    },
-    dispose() {
-      if (this.instance !== null) {
-        this.instance.dispose();
-        this.instance = null;
-      }
-
-      this.element.remove();
-      if (showAlertBox === this) {
-        showAlertBox = null;
-      }
-
-      return this;
-    },
-  };
-
-  toastController.element.addEventListener("hidden.bs.toast", () => {
-    toastController.element.remove();
-    if (showAlertBox === toastController) {
-      showAlertBox = null;
-    }
+  toastElement.addEventListener("hidden.bs.toast", () => {
+    toastElement.remove();
+    toastInstance.dispose();
   });
 
-  if (toast === null) {
-    // Always create a new toast
-    return toastController.show();
-  }
-
-  if (toast !== undefined) {
-    // Update existing toast
-    return toast.update(alertState);
-  }
-
-  if (type === "info") {
-    // Create a new notification for info boxes
-    showAlertBox = toastController;
-    return toastController.show();
-  }
-
-  if (showAlertBox !== null) {
-    // Update existing notification for other boxes (if available)
-    return showAlertBox.update(alertState);
-  }
-
-  // Create a new notification for other boxes if no previous info box exists
-  return toastController.show();
+  container.prepend(toastElement);
+  toastInstance.show();
+  return toastInstance;
 }
 
 function datetime(date, html, humanReadable) {

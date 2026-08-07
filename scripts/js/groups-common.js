@@ -59,7 +59,12 @@ function getGroups() {
 function processGroupResult(data, type, done, notDone) {
   // Loop over data.processed.success and show toasts
   for (const item of data.processed.success) {
-    utils.showAlert("success", "fas fa-pencil-alt", `Successfully ${done} ${type}`, item);
+    utils.showAlert(
+      "success",
+      "fas fa-pencil-alt",
+      `Successfully ${done} ${type}`,
+      item
+    );
   }
 
   // Loop over errors and display them

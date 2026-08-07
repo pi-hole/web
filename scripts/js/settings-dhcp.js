@@ -10,7 +10,6 @@
 "use strict";
 
 let dhcpLeaesTable = null;
-const toasts = {};
 
 // DHCP leases tooltips
 // Bootstrap 5 has no jQuery-plugin tooltip delegation, so lazily instantiate
@@ -184,7 +183,7 @@ function deleteLease() {
 
 function delLease(ip) {
   utils.disableAll();
-  toasts[ip] = utils.showAlert("info", "", "Deleting lease...", ip, null);
+  utils.showAlert("info", "", "Deleting lease...", ip);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/dhcp/leases/" + encodeURIComponent(ip),
@@ -193,22 +192,10 @@ function delLease(ip) {
     .done(response => {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert(
-          "success",
-          "far fa-trash-alt",
-          "Successfully deleted lease",
-          ip,
-          toasts[ip]
-        );
+        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted lease", ip);
         dhcpLeaesTable.ajax.reload(null, false);
       } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting lease: " + ip,
-          response.lease,
-          toasts[ip]
-        );
+        utils.showAlert("error", "", "Error while deleting lease: " + ip, response.lease);
       }
 
       // Clear selection after deletion
@@ -217,13 +204,7 @@ function delLease(ip) {
     })
     .fail((jqXHR, exception) => {
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting lease: " + ip,
-        jqXHR.responseText,
-        toasts[ip]
-      );
+      utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText);
       console.log(exception); // eslint-disable-line no-console
     });
 }
