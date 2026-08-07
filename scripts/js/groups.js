@@ -10,6 +10,7 @@
 "use strict";
 
 let table;
+globalThis.toasts ??= {};
 
 function handleAjaxError(xhr, textStatus) {
   if (textStatus === "timeout") {
@@ -254,11 +255,11 @@ function addGroup() {
   if (names.length === 0) {
     // enable the ui elements again
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a group name");
+    utils.showAlert("warning", "", "Warning", "Please specify a group name", null);
     return;
   }
 
-  utils.showAlert("info", "", "Adding group(s)...", groupStr);
+  globalThis.toasts.AddGroup = utils.showAlert("info", "", "Adding group(s)...", groupStr, null);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/groups",
@@ -273,7 +274,7 @@ function addGroup() {
     }),
     success(data) {
       utils.enableAll();
-      utils.listsAlert("group", names, data);
+      utils.listsAlert("group", names, data, globalThis.toasts.AddGroup);
       $("#new_name").val("");
       $("#new_comment").val("");
       table.ajax.reload();
@@ -285,7 +286,13 @@ function addGroup() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new group", data.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while adding new group",
+        data.responseText,
+        globalThis.toasts.AddGroup
+      );
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -327,7 +334,7 @@ function editGroup() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing group...", oldName);
+  globalThis.toasts.EditGroup = utils.showAlert("info", "", "Editing group...", oldName, null);
   $.ajax({
     url: document.body.dataset.apiurl + "/groups/" + oldName,
     method: "put",
@@ -341,7 +348,7 @@ function editGroup() {
     }),
     success(data) {
       utils.enableAll();
-      processGroupResult(data, "group", done, notDone);
+      processGroupResult(data, "group", done, notDone, globalThis.toasts.EditGroup);
       table.ajax.reload(null, false);
     },
     error(data, exception) {
@@ -351,7 +358,8 @@ function editGroup() {
         "error",
         "",
         "Error while " + notDone + " group with name " + oldName,
-        data.responseText
+        data.responseText,
+        globalThis.toasts.EditGroup
       );
       console.log(exception); // eslint-disable-line no-console
     },

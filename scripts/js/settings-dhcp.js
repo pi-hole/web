@@ -10,6 +10,7 @@
 "use strict";
 
 let dhcpLeaesTable = null;
+globalThis.toasts ??= {};
 
 // DHCP leases tooltips
 // Bootstrap 5 has no jQuery-plugin tooltip delegation, so lazily instantiate
@@ -183,7 +184,7 @@ function deleteLease() {
 
 function delLease(ip) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting lease...", ip);
+  globalThis.toasts.delLease = utils.showAlert("info", "", "Deleting lease...", ip, null);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/dhcp/leases/" + encodeURIComponent(ip),
@@ -192,10 +193,22 @@ function delLease(ip) {
     .done(response => {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted lease", ip);
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted lease",
+          ip,
+          globalThis.toasts.delLease
+        );
         dhcpLeaesTable.ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting lease: " + ip, response.lease);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting lease: " + ip,
+          response.lease,
+          globalThis.toasts.delLease
+        );
       }
 
       // Clear selection after deletion
@@ -204,7 +217,13 @@ function delLease(ip) {
     })
     .fail((jqXHR, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting lease: " + ip, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting lease: " + ip,
+        jqXHR.responseText,
+        globalThis.toasts.delLease
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }
@@ -325,7 +344,8 @@ $(document).on("click", ".save-static-row", function () {
       "error",
       "fa-times",
       "Cannot save: Invalid value found on the table",
-      "Please correct the highlighted fields before saving."
+      "Please correct the highlighted fields before saving.",
+      null
     );
     return;
   }
@@ -543,7 +563,8 @@ $(document).on("click", ".copy-to-static", function () {
       "warning",
       "",
       "Finish editing first",
-      "Please confirm or cancel the row you are editing before copying a lease."
+      "Please confirm or cancel the row you are editing before copying a lease.",
+      null
     );
     return;
   }

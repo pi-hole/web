@@ -10,6 +10,7 @@
 "use strict";
 
 let groups = [];
+globalThis.toasts ??= {};
 
 function populateGroupSelect(selectEl) {
   if (selectEl.length === 0) {
@@ -56,7 +57,7 @@ function getGroups() {
 }
 
 // eslint-disable-next-line no-unused-vars
-function processGroupResult(data, type, done, notDone) {
+function processGroupResult(data, type, done, notDone, oldToastInstance) {
   // Helper function to get the label of an item
   const itemLabel = entry => {
     if (typeof entry === "string") {
@@ -76,7 +77,8 @@ function processGroupResult(data, type, done, notDone) {
       "success",
       "fas fa-pencil-alt",
       `Successfully ${done} ${type}`,
-      itemLabel(item)
+      itemLabel(item),
+      oldToastInstance
     );
   }
 
@@ -87,7 +89,8 @@ function processGroupResult(data, type, done, notDone) {
       "error",
       "",
       `Error while ${notDone} ${type} ${itemLabel(error)}`,
-      typeof error.error === "string" ? error.error : String(error.error)
+      typeof error.error === "string" ? error.error : String(error.error),
+      oldToastInstance
     );
   }
 }
@@ -120,7 +123,13 @@ function delGroupItems(type, ids, table, listType = undefined) {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting " + ids.length + " " + type + "...", idstring);
+  globalThis.toasts.delGroupItems = utils.showAlert(
+    "info",
+    "",
+    "Deleting " + ids.length + " " + type + "...",
+    idstring,
+    null
+  );
 
   $.ajax({
     url,
@@ -130,7 +139,13 @@ function delGroupItems(type, ids, table, listType = undefined) {
   })
     .done(() => {
       utils.enableAll();
-      utils.showAlert("success", "far fa-trash-alt", "Successfully deleted " + type, idstring);
+      utils.showAlert(
+        "success",
+        "far fa-trash-alt",
+        "Successfully deleted " + type,
+        idstring,
+        globalThis.toasts.delGroupItems
+      );
       table.ajax.reload(null, false);
 
       // Clear selection after deletion
@@ -143,7 +158,13 @@ function delGroupItems(type, ids, table, listType = undefined) {
     .fail((data, exception) => {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting " + type, data.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting " + type,
+        data.responseText,
+        globalThis.toasts.delGroupItems
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }

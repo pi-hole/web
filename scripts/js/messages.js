@@ -10,6 +10,7 @@
 "use strict";
 
 let table;
+globalThis.toasts ??= {};
 
 $(() => {
   const url = document.body.dataset.apiurl + "/info/messages";
@@ -150,7 +151,13 @@ function deleteMessage() {
 function delMsg(id) {
   id = Math.trunc(Number(id));
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting message...", "ID: " + id);
+  globalThis.toasts.deleteMessage = utils.showAlert(
+    "info",
+    "",
+    "Deleting message...",
+    "ID: " + id,
+    null
+  );
 
   $.ajax({
     url: document.body.dataset.apiurl + "/info/messages/" + id,
@@ -159,12 +166,24 @@ function delMsg(id) {
     .done(response => {
       utils.enableAll();
       if (response === undefined) {
-        utils.showAlert("success", "far fa-trash-alt", "Successfully deleted message", "ID: " + id);
+        utils.showAlert(
+          "success",
+          "far fa-trash-alt",
+          "Successfully deleted message",
+          "ID: " + id,
+          globalThis.toasts.deleteMessage
+        );
         table.row(id).remove();
 
         table.draw(false).ajax.reload(null, false);
       } else {
-        utils.showAlert("error", "", "Error while deleting message: " + id, response.message);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while deleting message: " + id,
+          response.message,
+          globalThis.toasts.deleteMessage
+        );
       }
 
       // Clear selection after deletion
@@ -176,7 +195,13 @@ function delMsg(id) {
     )
     .fail((jqXHR, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while deleting message: " + id, jqXHR.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while deleting message: " + id,
+        jqXHR.responseText,
+        globalThis.toasts.deleteMessage
+      );
       console.log(exception); // eslint-disable-line no-console
     });
 }

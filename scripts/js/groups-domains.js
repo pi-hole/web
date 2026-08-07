@@ -12,6 +12,7 @@
 
 let table;
 let GETDict = {};
+globalThis.toasts ??= {};
 
 $(() => {
   GETDict = utils.parseQueryString();
@@ -475,11 +476,11 @@ function addDomain() {
 
   if (domains.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify at least one domain");
+    utils.showAlert("warning", "", "Warning", "Please specify at least one domain", null);
     return;
   }
 
-  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
+  globalThis.toasts.AddDomain = utils.showAlert("info", "", "Adding domain(s)...", domainStr, null);
 
   // Check if the wildcard checkbox was marked and transform the domains into regex
   if (kind === "exact" && wildcardChecked) {
@@ -514,7 +515,7 @@ function addDomain() {
     }),
     success(data) {
       utils.enableAll();
-      utils.listsAlert("domain", domains, data);
+      utils.listsAlert("domain", domains, data, globalThis.toasts.AddDomain);
       $("#new_domain").val("");
       $("#new_domain_comment").val("");
       $("#new_regex").val("");
@@ -528,7 +529,13 @@ function addDomain() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new domain", data.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while adding new domain",
+        data.responseText,
+        globalThis.toasts.AddDomain
+      );
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -587,7 +594,14 @@ function editDomain() {
 
   utils.disableAll();
   const domainDecoded = utils.hexDecode(domain.split("_", 1)[0]);
-  utils.showAlert("info", "", "Editing domain...", domainDecoded);
+
+  globalThis.toasts.DelGroupDomain = utils.showAlert(
+    "info",
+    "",
+    "Editing domain...",
+    domainDecoded,
+    null
+  );
   $.ajax({
     url:
       document.body.dataset.apiurl +
@@ -608,7 +622,7 @@ function editDomain() {
     }),
     success(data) {
       utils.enableAll();
-      processGroupResult(data, "domain", done, notDone);
+      processGroupResult(data, "domain", done, notDone, globalThis.toasts.DelGroupDomain);
       table.ajax.reload(null, false);
     },
     error(data, exception) {
@@ -618,7 +632,8 @@ function editDomain() {
         "error",
         "",
         "Error while " + notDone + " domain " + domainDecoded,
-        data.responseText
+        data.responseText,
+        globalThis.toasts.DelGroupDomain
       );
       console.log(exception); // eslint-disable-line no-console
     },

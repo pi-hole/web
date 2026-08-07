@@ -12,6 +12,7 @@
 
 let table;
 let GETDict = {};
+globalThis.toasts ??= {};
 
 $(() => {
   GETDict = utils.parseQueryString();
@@ -490,11 +491,17 @@ function addList(event) {
   if (addresses.length === 0) {
     // enable the ui elements again
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify " + type + "list address");
+    utils.showAlert("warning", "", "Warning", "Please specify " + type + "list address", null);
     return;
   }
 
-  utils.showAlert("info", "", "Adding subscribed " + type + "list(s)...", addressestr);
+  globalThis.toasts.AddGroupList = utils.showAlert(
+    "info",
+    "",
+    "Adding subscribed " + type + "list(s)...",
+    addressestr,
+    null
+  );
 
   $.ajax({
     url: document.body.dataset.apiurl + "/lists?type=" + encodeURIComponent(type),
@@ -505,7 +512,7 @@ function addList(event) {
     data: JSON.stringify({ address: addresses, comment, groups: group }),
     success(data) {
       utils.enableAll();
-      utils.listsAlert(type + "list", addresses, data);
+      utils.listsAlert(type + "list", addresses, data, globalThis.toasts.AddGroupList);
       $("#new_address").val("");
       $("#new_comment").val("");
       table.ajax.reload(null, false);
@@ -517,7 +524,13 @@ function addList(event) {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new " + type + "list", data.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while adding new " + type + "list",
+        data.responseText,
+        globalThis.toasts.AddGroupList
+      );
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -564,7 +577,13 @@ function editList() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Editing address...", address);
+  globalThis.toasts.EditGroupList = utils.showAlert(
+    "info",
+    "",
+    "Editing address...",
+    address,
+    null
+  );
   $.ajax({
     url: document.body.dataset.apiurl + "/lists/" + encodeURIComponent(address) + "?type=" + type,
     method: "put",
@@ -579,7 +598,7 @@ function editList() {
     }),
     success(data) {
       utils.enableAll();
-      processGroupResult(data, type + "list", done, notDone);
+      processGroupResult(data, type + "list", done, notDone, globalThis.toasts.EditGroupList);
       table.ajax.reload(null, false);
     },
     error(data, exception) {
@@ -589,7 +608,8 @@ function editList() {
         "error",
         "",
         "Error while " + notDone + type + "list " + address,
-        data.responseText
+        data.responseText,
+        globalThis.toasts.EditGroupList
       );
       console.log(exception); // eslint-disable-line no-console
     },

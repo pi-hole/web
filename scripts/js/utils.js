@@ -8,6 +8,7 @@
 /* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false, bootstrap: false */
 
 "use strict";
+globalThis.toasts ??= {};
 
 $(() => {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -174,7 +175,11 @@ function createToast(alertState) {
   return toast;
 }
 
-function showAlert(type, icon, title, message) {
+function showAlert(type, icon, title, message, oldToastInstance = undefined) {
+  if (oldToastInstance === undefined) {
+    throw new Error("oldToastInstance is required; use null for a new toast");
+  }
+
   // sets all properties of the alertState object based on the type of alert and the provided parameters
   const alertState = {
     title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
@@ -240,9 +245,31 @@ function showAlert(type, icon, title, message) {
       return;
   }
 
-  // Get or create the toast container and create a new toast element
+  let toastElement;
+  // Get or create the toast container
   const container = getOrCreateToastContainer();
-  const toastElement = createToast(alertState);
+
+  // If an old toast instance is provided and still shown, replace it with a new one, otherwise create a new toast
+  if (oldToastInstance?.isShown()) {
+    // Get the old DOM element
+    const oldToastElement = oldToastInstance._element;
+
+    // Create the replacement element
+    toastElement = createToast(alertState);
+
+    // Replace old element with new element
+    oldToastElement.replaceWith(toastElement);
+
+    // Hide the old Bootstrap instance
+    // This will trigger the "hidden.bs.toast" event, and the event listener will remove the old element and dispose of the instance
+    oldToastInstance.hide();
+  } else {
+    // No existing toast — create a new one
+    toastElement = createToast(alertState);
+    // Prepend the toast element to the container so that new toasts appear at the top
+    container.prepend(toastElement);
+  }
+
   const toastInstance = bootstrap.Toast.getOrCreateInstance(toastElement);
 
   // Remove the toast element from the DOM when it is hidden, and dispose of the Bootstrap toast instance to free up resources
@@ -255,8 +282,6 @@ function showAlert(type, icon, title, message) {
     { once: true }
   );
 
-  // Prepend the toast element to the container so that new toasts appear at the top
-  container.prepend(toastElement);
   toastInstance.show();
   return toastInstance;
 }
@@ -529,7 +554,13 @@ function addFromQueryLog(domain, list) {
   const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   disableAll();
-  showAlert("info", "", "Adding from Query Log", `Adding ${domain} to the ${listtype}...`);
+  globalThis.toasts.addFromQueryLog = showAlert(
+    "info",
+    "",
+    "Adding from Query Log",
+    `Adding ${domain} to the ${listtype}...`,
+    null
+  );
 
   $.ajax({
     url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
@@ -551,14 +582,21 @@ function addFromQueryLog(domain, list) {
           "success",
           "fas fa-plus",
           "Added from Query Log",
-          `${domain} successfully added to the ${listtype}`
+          `${domain} successfully added to the ${listtype}`,
+          globalThis.toasts.addFromQueryLog
         );
 
         // Update domains counter in the menu
         updateFtlInfo();
       } else {
         // Failure
-        showAlert("error", "", `Failure adding ${domain} to ${listtype}`, response.message);
+        showAlert(
+          "error",
+          "",
+          `Failure adding ${domain} to ${listtype}`,
+          response.message,
+          globalThis.toasts.addFromQueryLog
+        );
       }
     },
     error(xhr) {
@@ -580,7 +618,13 @@ function addFromQueryLog(domain, list) {
       }
 
       enableAll();
-      showAlert("error", "", `Failure adding ${domain} to ${listtype}`, errorMsg);
+      showAlert(
+        "error",
+        "",
+        `Failure adding ${domain} to ${listtype}`,
+        errorMsg,
+        globalThis.toasts.addFromQueryLog
+      );
     },
   });
 }
@@ -760,7 +804,7 @@ function hexDecode(text) {
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
 
-function listsAlert(type, items, data) {
+function listsAlert(type, items, data, oldToastInstance) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
   const successLength = data.processed.success.length;
@@ -770,7 +814,8 @@ function listsAlert(type, items, data) {
       "success",
       "fas fa-plus",
       "Successfully added " + type + (items.length !== 1 ? "s" : ""),
-      items.join(", ")
+      items.join(", "),
+      oldToastInstance
     );
     return;
   }
@@ -821,7 +866,8 @@ function listsAlert(type, items, data) {
     "warning",
     "fas fa-exclamation-triangle",
     "Some " + type + (items.length !== 1 ? "s" : "") + " could not be added " + processed,
-    message
+    message,
+    oldToastInstance
   );
 }
 
