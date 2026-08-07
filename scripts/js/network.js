@@ -66,7 +66,7 @@ function deleteNetworkEntry() {
   const hwaddr = tr.attr("data-hwaddr");
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting network table entry...");
+  utils.showAlert("info", "", "Deleting network table entry...", hwaddr);
   $.ajax({
     url: document.body.dataset.apiurl + "/network/devices/" + id,
     method: "DELETE",
