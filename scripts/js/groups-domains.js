@@ -472,13 +472,14 @@ function addDomain() {
   const domainStr = JSON.stringify(domains);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
 
   if (domains.length === 0) {
     utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify at least one domain");
     return;
   }
+
+  utils.showAlert("info", "", "Adding domain(s)...", domainStr);
 
   // Check if the wildcard checkbox was marked and transform the domains into regex
   if (kind === "exact" && wildcardChecked) {

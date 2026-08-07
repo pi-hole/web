@@ -377,13 +377,14 @@ function addClient() {
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding client(s)...", ipStr);
 
   if (ips.length === 0) {
     utils.enableAll();
     utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
     return;
   }
+
+  utils.showAlert("info", "", "Adding client(s)...", ipStr);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/clients",

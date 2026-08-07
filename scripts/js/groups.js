@@ -250,7 +250,6 @@ function addGroup() {
   const groupStr = JSON.stringify(names);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding group(s)...", groupStr);
 
   if (names.length === 0) {
     // enable the ui elements again
@@ -258,6 +257,8 @@ function addGroup() {
     utils.showAlert("warning", "", "Warning", "Please specify a group name");
     return;
   }
+
+  utils.showAlert("info", "", "Adding group(s)...", groupStr);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/groups",

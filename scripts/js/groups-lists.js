@@ -486,7 +486,6 @@ function addList(event) {
   const addressestr = JSON.stringify(addresses);
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding subscribed " + type + "list(s)...", addressestr);
 
   if (addresses.length === 0) {
     // enable the ui elements again
@@ -494,6 +493,8 @@ function addList(event) {
     utils.showAlert("warning", "", "Warning", "Please specify " + type + "list address");
     return;
   }
+
+  utils.showAlert("info", "", "Adding subscribed " + type + "list(s)...", addressestr);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/lists?type=" + encodeURIComponent(type),
