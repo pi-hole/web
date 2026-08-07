@@ -120,10 +120,11 @@ function getOrCreateToastContainer() {
   return container;
 }
 
-// Create the toast element and show it in the toast container
+// Set the toast element's properties
 function createToast(alertState) {
   const toast = document.createElement("div");
   toast.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
+  toast.className += ` ${alertState.bgColor}`;
   toast.dataset.toastType = alertState.type;
   toast.dataset.bsAutohide = String(alertState.autohide);
   toast.dataset.bsDelay = String(alertState.delay);
@@ -132,51 +133,42 @@ function createToast(alertState) {
   toast.setAttribute("aria-atomic", alertState.ariaAtomic);
 
   const content = document.createElement("div");
-  content.className = `toast-content ${alertState.className}`;
+  content.className = "d-flex flex-column";
+  const header = document.createElement("div");
+  header.className = `toast-header ${alertState.bgColor}`;
 
-  const layout = document.createElement("div");
-  layout.className = "d-flex align-items-start p-3";
-
-  const body = document.createElement("div");
-  body.className = "d-flex flex-grow-1 gap-2";
-
-  // Add icon if it is not empty
   if (alertState.icon !== "") {
     const icon = document.createElement("i");
-    icon.className = `${alertState.icon} mt-1`;
+    icon.className = `${alertState.icon} me-2 mt-1`;
     icon.setAttribute("aria-hidden", "true");
-    body.append(icon);
+    header.append(icon);
   }
 
-  const text = document.createElement("div");
-  text.className = "toast-text flex-grow-1";
-
-  // Add title and message to the toast
   const title = document.createElement("strong");
-  title.className = "d-block";
+  title.className = "me-auto";
   // Title is already escaped in showAlert() function, so we can safely set it as innerHTML
   title.innerHTML = alertState.title;
 
-  const message = document.createElement("div");
-  message.className = "toast-message";
-  message.style.whiteSpace = "pre-line";
-  message.style.overflowWrap = "anywhere";
-  // Title is already escaped in showAlert() function, so we can safely set it as innerHTML
-  message.innerHTML = alertState.message;
-
-  text.append(title, message);
-  body.append(text);
-  layout.append(body);
-
-  // Add close button to the toast
   const closeButton = document.createElement("button");
   closeButton.type = "button";
-  closeButton.className = `${alertState.closeButtonClass} ms-2 mt-1`;
+  closeButton.className = `${alertState.closeButtonClass} ms-2 mb-auto`;
   closeButton.dataset.bsDismiss = "toast";
   closeButton.setAttribute("aria-label", "Close");
-  layout.append(closeButton);
 
-  content.append(layout);
+  header.append(title, closeButton);
+
+  const body = document.createElement("div");
+  body.className = "toast-body";
+
+  const message = document.createElement("div");
+  message.className = "toast-message flex-grow-1";
+  message.style.whiteSpace = "pre-line";
+  message.style.overflowWrap = "anywhere";
+  // Message is already escaped in showAlert() function, so we can safely set it as innerHTML
+  message.innerHTML = alertState.message;
+
+  body.append(message);
+  content.append(header, body);
   toast.append(content);
 
   return toast;
@@ -189,7 +181,7 @@ function showAlert(type, icon, title, message) {
     message: escapeHtml(message),
     icon,
     type,
-    className: "",
+    bgColor: "",
     animation: true,
     delay: 5000, // default value
     autohide: true,
@@ -202,16 +194,16 @@ function showAlert(type, icon, title, message) {
   switch (type) {
     case "info":
       alertState.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
-      alertState.className = "text-bg-info";
+      alertState.bgColor = "text-bg-info";
       break;
     case "success":
-      alertState.className = "text-bg-success";
+      alertState.bgColor = "text-bg-success";
       alertState.closeButtonClass += " btn-close-white";
       break;
     case "warning":
       alertState.icon = "fas fa-exclamation-triangle";
       alertState.delay *= 2;
-      alertState.className = "text-bg-warning";
+      alertState.bgColor = "text-bg-warning";
       break;
     case "error":
       alertState.icon = "fas fa-times";
@@ -220,7 +212,7 @@ function showAlert(type, icon, title, message) {
       }
 
       alertState.delay *= 2;
-      alertState.className = "text-bg-danger";
+      alertState.bgColor = "text-bg-danger";
       alertState.role = "alert";
       alertState.live = "assertive";
       alertState.closeButtonClass += " btn-close-white";
@@ -248,15 +240,22 @@ function showAlert(type, icon, title, message) {
       return;
   }
 
+  // Get or create the toast container and create a new toast element
   const container = getOrCreateToastContainer();
   const toastElement = createToast(alertState);
-  const toastInstance = new bootstrap.Toast(toastElement);
+  const toastInstance = bootstrap.Toast.getOrCreateInstance(toastElement);
 
-  toastElement.addEventListener("hidden.bs.toast", () => {
-    toastElement.remove();
-    toastInstance.dispose();
-  });
+  // Remove the toast element from the DOM when it is hidden, and dispose of the Bootstrap toast instance to free up resources
+  toastElement.addEventListener(
+    "hidden.bs.toast",
+    () => {
+      toastElement.remove();
+      toastInstance.dispose();
+    },
+    { once: true }
+  );
 
+  // Prepend the toast element to the container so that new toasts appear at the top
   container.prepend(toastElement);
   toastInstance.show();
   return toastInstance;
