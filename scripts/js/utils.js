@@ -182,7 +182,7 @@ function showAlert(type, icon, title, message, oldToastInstance = undefined) {
 
   // sets all properties of the alertState object based on the type of alert and the provided parameters
   const alertState = {
-    title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+    title: escapeHtml(title),
     message: escapeHtml(message),
     icon,
     type,
@@ -213,7 +213,7 @@ function showAlert(type, icon, title, message, oldToastInstance = undefined) {
     case "error":
       alertState.icon = "fas fa-times";
       if (title.length === 0) {
-        alertState.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+        alertState.title = "Error, something went wrong!";
       }
 
       alertState.delay *= 2;
@@ -228,7 +228,7 @@ function showAlert(type, icon, title, message, oldToastInstance = undefined) {
         const data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
-          alertState.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
+          alertState.title = escapeHtml(data.error.message);
 
           if (data.error.hint !== null) {
             alertState.message = escapeHtml(data.error.hint);
