@@ -140,7 +140,7 @@ function createToast(alertState) {
 
   if (alertState.icon !== "") {
     const icon = document.createElement("i");
-    icon.className = `${alertState.icon} me-2 mt-1`;
+    icon.className = `${alertState.icon} me-2`;
     icon.setAttribute("aria-hidden", "true");
     header.append(icon);
   }
