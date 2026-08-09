@@ -1799,3 +1799,8 @@ td.dnssec i {
 [data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove:hover {
   background: rgba(255, 255, 255, 0.1);
 }
+
+.toast {
+  --bs-toast-bg: var(--bs-toast-header-bg);
+  color: var(--bs-toast-header-color);
+}
