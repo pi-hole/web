@@ -123,9 +123,13 @@ function getOrCreateToastContainer() {
 
 // Set the toast element's properties
 function createToast(alertState) {
+  let clsName = alertState.type;
+  if (alertState.type === "error") {
+    clsName = "danger";
+  }
+
   const toast = document.createElement("div");
-  toast.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
-  toast.className += ` ${alertState.bgColor}`;
+  toast.className = `toast toast-${clsName} overflow-hidden`;
   toast.dataset.toastType = alertState.type;
   toast.dataset.bsAutohide = String(alertState.autohide);
   toast.dataset.bsDelay = String(alertState.delay);
@@ -136,7 +140,7 @@ function createToast(alertState) {
   const content = document.createElement("div");
   content.className = "d-flex flex-column";
   const header = document.createElement("div");
-  header.className = `toast-header ${alertState.bgColor}`;
+  header.className = "toast-header";
 
   if (alertState.icon !== "") {
     const icon = document.createElement("i");
@@ -152,24 +156,31 @@ function createToast(alertState) {
 
   const closeButton = document.createElement("button");
   closeButton.type = "button";
-  closeButton.className = `${alertState.closeButtonClass} ms-2 mb-auto`;
+  closeButton.className = "btn-close ms-2 mb-auto";
   closeButton.dataset.bsDismiss = "toast";
   closeButton.setAttribute("aria-label", "Close");
 
   header.append(title, closeButton);
 
-  const body = document.createElement("div");
-  body.className = "toast-body";
+  // Only create toast-body if there is a message
+  if (alertState.message !== "") {
+    const body = document.createElement("div");
+    body.className = "toast-body";
 
-  const message = document.createElement("div");
-  message.className = "toast-message flex-grow-1";
-  message.style.whiteSpace = "pre-line";
-  message.style.overflowWrap = "anywhere";
-  // Message is already escaped in showAlert() function, so we can safely set it as innerHTML
-  message.innerHTML = alertState.message;
+    const message = document.createElement("div");
+    message.className = "toast-message flex-grow-1";
+    message.style.whiteSpace = "pre-line";
+    message.style.overflowWrap = "anywhere";
 
-  body.append(message);
-  content.append(header, body);
+    // Message is already escaped in showAlert() function, so we can safely set it as innerHTML
+    message.innerHTML = alertState.message;
+    body.append(message);
+
+    content.append(header, body);
+  } else {
+    content.append(header);
+  }
+
   toast.append(content);
 
   return toast;
@@ -186,29 +197,23 @@ function showAlert(type, icon, title, message, oldToastInstance = undefined) {
     message: escapeHtml(message),
     icon,
     type,
-    bgColor: "",
     animation: true,
     delay: 5000, // default value
     autohide: true,
     role: "status",
     live: "polite",
     ariaAtomic: "true",
-    closeButtonClass: "btn-close",
   };
 
   switch (type) {
     case "info":
       alertState.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
-      alertState.bgColor = "text-bg-info";
       break;
     case "success":
-      alertState.bgColor = "text-bg-success";
-      alertState.closeButtonClass += " btn-close-white";
       break;
     case "warning":
       alertState.icon = "fas fa-exclamation-triangle";
       alertState.delay *= 2;
-      alertState.bgColor = "text-bg-warning";
       break;
     case "error":
       alertState.icon = "fas fa-times";
@@ -217,10 +222,8 @@ function showAlert(type, icon, title, message, oldToastInstance = undefined) {
       }
 
       alertState.delay *= 2;
-      alertState.bgColor = "text-bg-danger";
       alertState.role = "alert";
       alertState.live = "assertive";
-      alertState.closeButtonClass += " btn-close-white";
 
       // If the message is an API object, nicely format the error message
       // Try to parse message as JSON
