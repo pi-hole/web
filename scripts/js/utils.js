@@ -162,18 +162,25 @@ function createToast(alertState) {
 
   header.append(title, closeButton);
 
-  const body = document.createElement("div");
-  body.className = "toast-body";
+  // Only create toast-body if there is a message
+  if (alertState.message !== "") {
+    const body = document.createElement("div");
+    body.className = "toast-body";
 
-  const message = document.createElement("div");
-  message.className = "toast-message flex-grow-1";
-  message.style.whiteSpace = "pre-line";
-  message.style.overflowWrap = "anywhere";
-  // Message is already escaped in showAlert() function, so we can safely set it as innerHTML
-  message.innerHTML = alertState.message;
+    const message = document.createElement("div");
+    message.className = "toast-message flex-grow-1";
+    message.style.whiteSpace = "pre-line";
+    message.style.overflowWrap = "anywhere";
 
-  body.append(message);
-  content.append(header, body);
+    // Message is already escaped in showAlert() function, so we can safely set it as innerHTML
+    message.innerHTML = alertState.message;
+    body.append(message);
+
+    content.append(header, body);
+  } else {
+    content.append(header);
+  }
+
   toast.append(content);
 
   return toast;
