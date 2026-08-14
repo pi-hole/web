@@ -27,7 +27,7 @@ mg.include('header.lp','r')
     <script src="<?=pihole.fileversion('vendor/waitMe-js/modernized-waitme-min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/logout.js')?>"></script>
 </head>
-<body class="<?=theme.name?> hold-transition sidebar-mini sidebar-expand-lg bg-body-secondary <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>" data-bs-theme="<?= bs_theme ?>">
+<body class="<?=theme.name?> hold-transition sidebar-expand-lg bg-body-secondary <? if pihole.boxedlayout() then ?>layout-boxed<? end ?> logged-in page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>" data-bs-theme="<?= bs_theme ?>">
 <noscript>
     <!-- JS Warning -->
     <div>

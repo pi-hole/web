@@ -55,6 +55,7 @@ html {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   position: relative;
   background-color: var(--bs-secondary-bg);
+  overflow: hidden;
 }
 
 /* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
