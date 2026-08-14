@@ -10,7 +10,7 @@
 mg.include('scripts/lua/header.lp','r')
 ?>
 </head>
-<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>">
+<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>" data-apiurl="<?=pihole.api_url()?>" data-webhome="<?=webhome?>" data-bs-theme="<?= bs_theme ?>">
 <div class="card login-box" id="login-box">
     <section class="p-3">
         <div class="login-logo">
