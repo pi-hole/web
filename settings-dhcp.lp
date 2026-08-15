@@ -207,7 +207,7 @@ PageTitle = "DHCP Settings"
                                 <ul>
                                     <li>Only one entry per MAC address is allowed.</li>
                                     <li>IPv6 addresses must be enclosed in square brackets like <code>[2001:db8::1]</code>.</li>
-                                    <li>Only letters, digits, hyphens and dots are allowed in hostnames.</li>
+                                    <li>Static DHCP hostnames may contain letters, digits, hyphens, dots, and underscores, but must start with a letter or digit.</li>
                                 </ul>
                                 <br>
                                 <div class="dhcp-hosts-wrapper mb-4">
