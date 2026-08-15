@@ -56,10 +56,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.5.4",
-    "eslint": "^10.7.0",
+    "eslint": "^10.8.1",
     "eslint-plugin-compat": "^7.0.2",
-    "globals": "^17.7.0",
-    "postcss": "^8.5.19",
+    "globals": "^17.10.0",
+    "postcss": "^8.5.26",
     "postcss-cli": "^11.0.1",
     "prettier": "^3.9.5",
     "xo": "^4.0.0"
