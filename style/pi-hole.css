@@ -109,31 +109,9 @@ html {
   color: var(--bs-secondary-color);
 }
 
-/* AdminLTE 4 moved the logo to the sidebar (.sidebar-brand class).
-  By default, AdminLTE expects an image and a text for the logo, but we only use
-  "Pi-hole" text as logo.
-  AdminLTE 4 automatically hides the text when the sidebar is collapsed, rsulting
-  in an empty brand.
-  To avoid this issue, we use ::before and ::after pseudo elements to show a
-  smaller text, so the full "Pi-hole" wordmark is always shown. */
 .sidebar-brand .brand-text {
   margin: 0;
   font-size: 1.35em;
-}
-.sidebar-collapse .sidebar-brand .brand-link::before {
-  content: "Pi-";
-  color: var(--lte-sidebar-menu-active-color);
-  font-size: 15px;
-}
-.sidebar-collapse .sidebar-brand .brand-link::after {
-  content: "hole";
-  color: var(--lte-sidebar-menu-active-color);
-  font-size: 15px;
-  font-weight: bold;
-}
-.sidebar-collapse .app-sidebar:hover .brand-link::before,
-.sidebar-collapse .app-sidebar:hover .brand-link::after {
-  content: none;
 }
 
 @keyframes Pulse {
