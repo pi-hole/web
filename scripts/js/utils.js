@@ -357,9 +357,13 @@ function validateMAC(mac) {
   return macvalidator.test(mac.trim());
 }
 
-function validateHostname(name) {
-  const namevalidator = /[^<>;"]/u;
-  return namevalidator.test(name.trim());
+function validateClientPattern(name) {
+  // A client that is neither an IP/subnet nor a MAC address can only be a host
+  // name or an interface (prefaced with a colon). FTL matches both verbatim and
+  // only ever records names built from these characters, so anything else can
+  // never describe a client.
+  const clientValidator = /^:?[\w.-]+$/u;
+  return clientValidator.test(name.trim());
 }
 
 function validateHostnameStrict(name) {
@@ -873,7 +877,7 @@ globalThis.utils = (function () {
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
-    validateHostname,
+    validateClientPattern,
     validateHostnameStrict,
     addFromQueryLog,
     addTD,
