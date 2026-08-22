@@ -366,8 +366,10 @@ function validateClientPattern(name) {
   return clientValidator.test(name.trim());
 }
 
-function validateHostnameStrict(name) {
-  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
+function validateHostname(name) {
+  // These end up in comma-separated dnsmasq config lines, so a space or a comma
+  // is never acceptable. The rest follows a host name: dot-separated labels of
+  // letters, digits and inner hyphens.
   const hostnameValidator =
     /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
   return hostnameValidator.test(name.trim());
@@ -878,7 +880,7 @@ globalThis.utils = (function () {
     stateLoadCallback,
     validateMAC,
     validateClientPattern,
-    validateHostnameStrict,
+    validateHostname,
     addFromQueryLog,
     addTD,
     toPercent,
