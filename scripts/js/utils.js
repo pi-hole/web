@@ -366,7 +366,11 @@ function validateClientPattern(name) {
   return clientValidator.test(name.trim());
 }
 
-function validateHostnameStrict(name) {
+function validateHostname(name) {
+  // These end up in comma-separated dnsmasq config lines, so a space or a comma
+  // is never acceptable. The rest is what dnsmasq's legal_hostname() takes: an
+  // alphanumeric first character, then letters, digits, hyphens, underscores
+  // and dots.
   const hostnameValidator = /^[a-zA-Z0-9][\w.-]*$/u;
   return hostnameValidator.test(name.trim());
 }
@@ -876,7 +880,7 @@ globalThis.utils = (function () {
     stateLoadCallback,
     validateMAC,
     validateClientPattern,
-    validateHostnameStrict,
+    validateHostname,
     addFromQueryLog,
     addTD,
     toPercent,
