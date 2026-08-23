@@ -66,7 +66,7 @@ PageTitle = "Local DNS Settings"
                     </div>
                     <div class="card-footer">
                         <strong>Note:</strong>
-                        <p>Adding/removing local DNS records will flush the cache but does not require a restart of the DNS server.</p>
+                        <p>Adding/removing local DNS records will flush the cache. With the option above enabled, the DNS server is restarted as well, as the rules keeping these names local are part of its configuration.</p>
                     </div>
                 </div>
             </div>
