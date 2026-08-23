@@ -19,7 +19,7 @@ PageTitle = "Local DNS Settings"
             <div class="col-md-12 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title" id="title-hosts" data-configkeys="dns.hosts">Local DNS records</h3>
+                        <h3 class="card-title" id="title-hosts" data-configkeys="dns.hosts dns.hostsLocal">Local DNS records</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -48,6 +48,19 @@ PageTitle = "Local DNS Settings"
                                         </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="dns.hostsLocal" data-key="dns.hostsLocal">
+                                    <label class="form-check-label" for="dns.hostsLocal"><strong>Never forward queries for local DNS records</strong></label>
+                                    <p class="help-block">If set, the names configured above are considered local and no query
+                                        for them ever leaves your Pi-hole - not even for record types you did not define, such as
+                                        the <code>AAAA</code> query a browser sends alongside the <code>A</code> query. Without this,
+                                        such a query is forwarded and a public answer for the same name can shadow your local record.
+                                        The scope includes subdomains of the configured names.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -105,6 +118,9 @@ PageTitle = "Local DNS Settings"
                         <p>Adding/removing local CNAME records will restart the DNS server.</p>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-12 save-button-container">
+                <button type="button" class="btn btn-primary save-button"><i class="fa-solid fa-fw fa-floppy-disk"></i>&nbsp;Save & Apply</button>
             </div>
         </div>
     </div><!-- /.container-fluid -->
