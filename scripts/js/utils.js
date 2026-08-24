@@ -357,13 +357,19 @@ function validateMAC(mac) {
   return macvalidator.test(mac.trim());
 }
 
-function validateHostname(name) {
-  const namevalidator = /[^<>;"]/u;
-  return namevalidator.test(name.trim());
+function validateClientPattern(name) {
+  // A client that is neither an IP/subnet nor a MAC address can only be a host
+  // name or an interface (prefaced with a colon). FTL matches both verbatim and
+  // only ever records names built from these characters, so anything else can
+  // never describe a client.
+  const clientValidator = /^:?[\w.-]+$/u;
+  return clientValidator.test(name.trim());
 }
 
-function validateHostnameStrict(name) {
-  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
+function validateHostname(name) {
+  // These end up in comma-separated dnsmasq config lines, so a space or a comma
+  // is never acceptable. The rest follows a host name: dot-separated labels of
+  // letters, digits and inner hyphens.
   const hostnameValidator =
     /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
   return hostnameValidator.test(name.trim());
@@ -873,8 +879,8 @@ globalThis.utils = (function () {
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
+    validateClientPattern,
     validateHostname,
-    validateHostnameStrict,
     addFromQueryLog,
     addTD,
     toPercent,
