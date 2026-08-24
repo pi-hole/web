@@ -363,9 +363,7 @@ function validateHostname(name) {
 }
 
 function validateHostnameStrict(name) {
-  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
-  const hostnameValidator =
-    /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
+  const hostnameValidator = /^[a-zA-Z0-9][\w.-]*$/u;
   return hostnameValidator.test(name.trim());
 }
 

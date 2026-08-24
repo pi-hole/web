@@ -660,7 +660,10 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", functi
   const val = $(this).text().trim();
   if (val && !utils.validateHostnameStrict(val)) {
     $(this).addClass("table-danger");
-    $(this).attr("title", "Invalid hostname: only letters, digits, hyphens, and dots allowed");
+    $(this).attr(
+      "title",
+      "Invalid hostname: letters, digits, hyphens, dots, and underscores allowed"
+    );
   } else {
     $(this).removeClass("table-danger");
     $(this).attr("title", "");
