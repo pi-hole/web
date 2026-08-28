@@ -32,13 +32,13 @@
                 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="sidebar-navigation">
                     <li class="nav-header text-uppercase">Main</li>
                     <!-- Home Page -->
-                    <li class="nav-item">
+                    <li class="nav-item menu-main">
                         <a href="<?=webhome?>" class="nav-link<? if scriptname == 'index' or scriptname == 'index.lp' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-home"></i> <p>Dashboard</p>
                         </a>
                     </li>
                     <!-- Query Log -->
-                    <li class="nav-item">
+                    <li class="nav-item menu-analysis">
                         <a href="<?=webhome?>queries" class="nav-link<? if scriptname == 'queries' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-file-alt"></i> <p>Query Log</p>
                         </a>
@@ -46,7 +46,7 @@
 
                     <li class="nav-header text-uppercase">Group Management</li>
                     <!-- Group Management -->
-                    <li class="nav-item">
+                    <li class="nav-item menu-group">
                         <a href="<?=webhome?>groups" class="nav-link<? if scriptname == 'groups' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-user-friends"></i>
                             <p>Groups
@@ -54,7 +54,7 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item menu-group">
                         <a href="<?=webhome?>groups/clients" class="nav-link<? if scriptname == 'groups/clients' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-laptop"></i>
                             <p>Clients
@@ -62,7 +62,7 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item menu-group">
                         <a href="<?=webhome?>groups/domains" class="nav-link<? if scriptname == 'groups/domains' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-list"></i>
                             <p>Domains
@@ -73,7 +73,7 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item menu-group">
                         <a href="<?=webhome?>groups/lists" class="nav-link<? if scriptname == 'groups/lists' then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-shield-alt"></i>
                             <p>Lists
@@ -87,7 +87,7 @@
 
                     <li class="nav-header text-uppercase">DNS Control</li>
                     <!-- Enable/Disable Blocking -->
-                    <li id="pihole-disable" class="nav-item">
+                    <li id="pihole-disable" class="nav-item menu-dns">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-fw fa-stop"></i> <p>Disable Blocking&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span>
                             <i class="nav-arrow fa fa-angle-left"></i></p>
@@ -121,7 +121,7 @@
                         </ul>
                         <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
                     </li>
-                    <li id="pihole-enable" class="nav-item" style="display: none;">
+                    <li id="pihole-enable" class="nav-item menu-dns" style="display: none;">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fa fa-fw fa-play"></i>
                             <p id="enableLabel">Enable Blocking&nbsp;&nbsp;&nbsp;
@@ -131,7 +131,7 @@
                     </li>
                     <li class="nav-header text-uppercase">System</li>
                     <!-- Settings -->
-                    <li class="nav-item<? if startsWith(scriptname, 'settings/') then ?> menu-open<? end ?>">
+                    <li class="nav-item<? if startsWith(scriptname, 'settings/') then ?> menu-open<? end ?> menu-system">
                         <a href="#" class="nav-link<? if startsWith(scriptname, 'settings/') then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-cogs"></i> <p>Settings
                             <i class="nav-arrow fa fa-angle-left"></i></p>
@@ -180,7 +180,7 @@
                         </ul>
                     </li>
                     <!-- Tools -->
-                    <li class="nav-item<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> menu-open<? end ?>">
+                    <li class="nav-item<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> menu-open<? end ?> menu-system">
                         <a href="#" class="nav-link<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
                             <i class="nav-icon fa fa-fw fa-tools"></i> <p>Tools
                             <span class="warning-count hidden"></span>
@@ -250,7 +250,7 @@
 
                     <!-- Donate button -->
                     <li class="nav-header text-uppercase">Donate</li>
-                    <li class="nav-item">
+                    <li class="nav-item menu-donate">
                         <a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank" class="nav-link">
                             <i class="nav-icon fas fa-fw fa-donate"></i> <p>Donate</p>
                         </a>
