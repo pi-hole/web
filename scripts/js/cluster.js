@@ -124,9 +124,19 @@ function roleBadges(entry, vipAddress) {
   }
 
   // Only where the node answered: an unreachable one reports no capability at
-  // all, and "cannot serve DHCP" is not the news about it
-  if (entry.reachable && entry.dhcp.failover && !entry.dhcp.capable) {
+  // all, and "cannot serve DHCP" is not the news about it.
+  //
+  // `configured` is the permanent half and `capable` the momentary one - a node
+  // rebuilding its lists, or backing off after a failed takeover, is fully able
+  // to serve and simply not right now. Saying it cannot sends somebody looking
+  // for a DHCP fault that is not there, and it can land on the very node that
+  // is handing out the addresses
+  if (entry.reachable && entry.dhcp.failover && entry.dhcp.configured === false) {
     badges.push('<span class="badge text-bg-warning">cannot serve DHCP</span>');
+  } else if (entry.reachable && entry.dhcp.failover && !entry.dhcp.capable) {
+    badges.push(
+      '<span class="badge text-bg-secondary" title="Rebuilding its lists, or waiting after a failed takeover. It can serve, just not at this moment">not ready to take DHCP</span>'
+    );
   }
 
   // Answers every poll, sends nothing back - the one failure that looks like
@@ -408,12 +418,29 @@ function renderPeers(list) {
     // would leave that looking like a synchronization that never catches up
     const pinnedHere = ours?.sync.config.pinned || "";
     const pinnedThere = entry.sync.config.pinned || "";
-    const pinned = entry.self ? pinnedHere : [pinnedHere, pinnedThere].filter(Boolean).join(", ");
+    // Both ends can pin the same item, and naming it twice reads as two
+    // separate problems
+    const pinned = [
+      ...new Set(
+        (entry.self ? [pinnedHere] : [pinnedHere, pinnedThere])
+          .filter(Boolean)
+          .flatMap(s => s.split(",").map(t => t.trim()))
+          .filter(Boolean)
+      ),
+    ].join(", ");
+    // Two FTL versions define different sets of settings, and the fingerprint
+    // covers the item names as well as their values - so nodes on different
+    // versions differ whatever they hold, and no push closes it
+    const versionsApart =
+      Boolean(ours?.version) && Boolean(entry.version) && ours.version !== entry.version;
+
+    const why = [
+      versionsApart ? `different FTL versions (${utils.escapeHtml(entry.version)})` : "",
+      pinned ? `pinned to the environment: ${utils.escapeHtml(pinned)}` : "",
+    ].filter(Boolean);
     const pinnedNote =
-      !sameConfig && pinned
-        ? `<br><small class="text-body-secondary">pinned to the environment: ${utils.escapeHtml(
-            pinned
-          )}</small>`
+      !sameConfig && why.length > 0
+        ? `<br><small class="text-body-secondary">${why.join("; ")}</small>`
         : "";
 
     const listsOwed = entry.sync.gravity.owed === true;
@@ -566,7 +593,16 @@ function patchSetting(key, value, done) {
       return;
     }
 
-    utils.showAlert("success", "", "Saved", `${key} is now ${value}`);
+    // Both switches on this page carry FLAG_RESTART_FTL, so saving one takes
+    // this node's DNS down for a moment. Saying so is the difference between
+    // a page that has gone quiet and a page that is broken
+    const restarts = key === "cluster.dhcp.failover" || key === "cluster.vip.address";
+    utils.showAlert(
+      "success",
+      "",
+      "Saved",
+      `${key} is now ${value}${restarts ? " - FTL is restarting to apply it" : ""}`
+    );
     if (done) {
       done();
     }
@@ -795,6 +831,12 @@ function setupJoin() {
   if (location.protocol !== "https:") {
     document.querySelector("#join-insecure").hidden = false;
     go.disabled = true;
+
+    // Creating is allowed over http - a cluster without encryption is a
+    // supported thing - but the address seeded here becomes a member entry
+    // that every later node inherits, and one http member stops credentials
+    // travelling anywhere in the cluster for as long as it is there
+    document.querySelector("#create-insecure").hidden = false;
   }
 
   scan.addEventListener("click", () => {
@@ -936,7 +978,7 @@ function setupJoin() {
 }
 
 function refresh() {
-  Promise.all([api("/cluster/status"), api("/config")]).then(([status, config]) => {
+  return Promise.all([api("/cluster/status"), api("/config")]).then(([status, config]) => {
     if (!status || !config) {
       return;
     }
@@ -962,7 +1004,9 @@ function refresh() {
     }
 
     const list = members(status);
-    document.querySelector("#cluster-name").textContent = `${list.length} nodes`;
+    document.querySelector("#cluster-name").textContent = `${list.length} ${
+      list.length === 1 ? "node" : "nodes"
+    }`;
     document.querySelector("#cluster-lastround").innerHTML = status.cluster.last_round
       ? `last round ${utils.datetimeRelative(status.cluster.last_round)}`
       : "no round has finished yet";
@@ -1019,11 +1063,30 @@ function setupLeave() {
   });
 }
 
+// A round that could not be fetched leaves the page holding the last one it
+// could, which is every node green and "in the cluster" - the exact picture a
+// healthy cluster paints. Saving either switch here restarts FTL, so this is
+// not an unusual state, and it must not look like the usual one
+function noteUnreachable() {
+  const marker = document.querySelector("#cluster-lastround");
+  if (marker) {
+    marker.textContent = "not answering";
+    marker.classList.add("text-warning");
+  }
+}
+
+function refreshOnce() {
+  const marker = document.querySelector("#cluster-lastround");
+  return refresh()
+    .then(() => marker && marker.classList.remove("text-warning"))
+    .catch(noteUnreachable);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupJoin();
   setupLeave();
   setupControls();
-  refresh();
-  refreshTimer = setInterval(refresh, 5000);
+  refreshOnce();
+  refreshTimer = setInterval(refreshOnce, 5000);
   addEventListener("beforeunload", () => clearInterval(refreshTimer));
 });

@@ -124,6 +124,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 Create a cluster
                             </button>
                         </div>
+                        <div id="create-insecure" class="alert alert-warning mt-2 mb-0" hidden>
+                            This page is open over <code>http</code>, so the address above is an
+                            <code>http</code> one. The member list is shared, so every node that
+                            joins later inherits it - and passwords never travel between nodes
+                            while any member is reached without encryption. Write it as
+                            <code>https://</code> if this Pi-hole serves it.
+                        </div>
                         <p class="text-body-secondary small mt-2 mb-0">
                             The address is how the other nodes will reach this one - a loopback
                             address only works if they are containers on this host. FTL restarts
