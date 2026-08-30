@@ -383,11 +383,15 @@ function renderTopology(list, data) {
         "DHCP moves between nodes but no virtual IP address is set, so clients keep " +
         "pointing at whichever node gave them their lease.</span>"
     );
-  } else if (owner && vip && !held) {
+  } else if (vip && !held) {
+    // Not gated on DHCP moving. An address that is configured and on no node is
+    // wrong whatever else the cluster is doing, and it is the case a first-time
+    // reader hits: a missing CAP_NET_ADMIN, or an interface name that is right
+    // on one machine and not on another. FTL names the reason in the log
     notes.push(
       `<span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> <strong>${utils.escapeHtml(
         vip
-      )}</strong> is on no node - check <code>cluster.vip.interface</code> where it should be.</span>`
+      )}</strong> is on no node - check <code>cluster.vip.interface</code>, and the log for why it could not be placed.</span>`
     );
   }
 
