@@ -444,8 +444,7 @@ function renderPeers(list) {
         : "";
 
     const listsOwed = entry.sync.gravity.owed === true;
-    const sameLists =
-      ours && entry.sync.gravity.hash === ours.sync.gravity.hash && !listsOwed;
+    const sameLists = ours && entry.sync.gravity.hash === ours.sync.gravity.hash && !listsOwed;
     // A fingerprint we do not have is not a fingerprint that matches: two
     // nodes that both failed to read their own would otherwise be counted as
     // agreeing, and the summary would say synced over a table of "unknown"
