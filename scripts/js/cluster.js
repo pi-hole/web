@@ -502,9 +502,18 @@ function renderPeers(list) {
     // the timestamp travels with the document rather than being taken on
     // arrival - nodes holding the same configuration really do report the same
     // instant, and seconds alone would leave that looking like a rounding
+    // A node that declared its own version as the cluster's starting point
+    // stamps something below every real timestamp on purpose, so that any real
+    // change outranks it. Rendering that as a moment would put it in 1970
+    const BASELINE_MAX = 1000000000;
+
     const when = value => {
       if (!value || value <= 0) {
         return '<span class="text-body-secondary">never</span>';
+      }
+
+      if (value < BASELINE_MAX) {
+        return '<span class="text-body-secondary" title="This node offered what it holds as the cluster\'s starting point. Any real change, on any node, replaces it">nothing changed yet</span>';
       }
 
       const micro = String(Math.round((value % 1) * 1e6) % 1e6).padStart(6, "0");
