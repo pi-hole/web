@@ -23,9 +23,9 @@ mg.include('scripts/lua/header.lp','r')
 
         <div class="card">
             <div class="card-body login-card-body">
-                <div id="cookieInfo" class="panel-title text-center text-red fs-3" hidden>Verify that cookies are allowed</div>
-                <div class="text-center mb-3 alert alert-danger" id="dns-failure-label" style="display: none;">
-                    <label>DNS Server failure detected, log in to see Pi-hole diagnosis messages</label>
+                <div id="cookieInfo" class="card card-danger card-outline text-center text-danger fs-5 p-2 mb-3" hidden>Verify that cookies are allowed</div>
+                <div class="card card-danger card-outline text-center text-danger fs-5 p-2 mb-3" id="dns-failure-label" style="display: none;">
+                    <label>DNS Server failure detected.<br>Log in to see Pi-hole diagnosis messages.</label>
                 </div>
                 <div class="text-center mb-3 has-warning" id="insecure-box" style="display: none;">
                     <div class="card card-warning card-outline">
@@ -34,19 +34,19 @@ mg.include('scripts/lua/header.lp','r')
                         </div>
                     </div>
                 </div>
-                <div class="mb-3 has-error login-box-msg" id="error-label" style="display: none;">
+                <div class="login-box-msg card card-danger card-outline text-center text-danger p-2 mb-3 has-error" id="error-label" style="display: none;">
                     <label class="control-label"><i class="fa fa-times-circle"></i> <span id="error-message"></span><br><span id="error-hint" style="display: none;"></span></label>
                 </div>
 
                 <form id="loginform">
-                    <div class="login-options has-feedback" id="pw-field">
+                    <div class="login-options" id="pw-field">
                         <!-- hidden username input field to help password managers to autfill the password -->
                         <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                         <!-- hidden label for screen readers -->
                         <label class="visually-hidden" for="loginPassword">Password</label>
                         <div class="input-group mb-3">
                             <input type="password" class="form-control" placeholder="Password" value="" spellcheck="false" autocomplete="current-password" id="current-password" autofocus required>
-                            <button class="btn btn-outline-secondary" id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">
+                            <button class="btn btn-secondary" id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">
                                 <span class="fa fa-fw fa-eye field-icon"></span>
                             </button>
                         </div>
@@ -63,10 +63,9 @@ mg.include('scripts/lua/header.lp','r')
                         <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
                     </div>
                 </form>
-                <br>
                 <div class="row">
                     <div class="col-12">
-                        <div class="card card-danger card-outline hidden" id="invalid2fa-box">
+                        <div class="card card-danger card-outline hidden mb-3" id="invalid2fa-box">
                             <div class="card-header pointer no-user-select" data-lte-toggle="card-collapse">
                                 <h3 class="card-title">Wrong 2FA token</h3>
                                 <div class="card-tools float-end">
@@ -87,7 +86,7 @@ mg.include('scripts/lua/header.lp','r')
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <div class="card card-info card-outline collapsed-card" id="forgot-pw-box">
+                        <div class="card card-info card-outline collapsed-card my-3" id="forgot-pw-box">
                             <div class="card-header pointer no-user-select" data-lte-toggle="card-collapse">
                                 <h3 class="card-title">Forgot password?</h3>
                                 <div class="card-tools float-end">
@@ -110,7 +109,7 @@ mg.include('scripts/lua/header.lp','r')
                 </div>
             </div>
             <!-- /.login-card-body -->
-            <div class="login-footer m-3 d-flex justify-content-around">
+            <div class="login-footer mt-3 d-flex justify-content-between">
                 <a class="btn btn-secondary btn-sm" role="button" href="https://docs.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fas fa-question-circle"></i> Documentation</a>
                 <a class="btn btn-secondary btn-sm" role="button" href="https://github.com/pi-hole/" rel="noopener noreferrer" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                 <a class="btn btn-secondary btn-sm" role="button" href="https://discourse.pi-hole.net/" rel="noopener noreferrer" target="_blank"><i class="fab fa-discourse"></i> Pi-hole Discourse</a>
@@ -121,7 +120,7 @@ mg.include('scripts/lua/header.lp','r')
 
 <div class="login-donate">
     <div class="text-center fs-5">
-        <strong><a href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
+        <strong><a class="text-decoration-none" href="https://pi-hole.net/donate/" rel="noopener noreferrer" target="_blank"><i class="fa fa-heart text-red"></i> Donate</a></strong> if you found this useful.
     </div>
 </div>
 <script src="<?=pihole.fileversion('scripts/js/footer.js')?>"></script>

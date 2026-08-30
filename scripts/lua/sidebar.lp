@@ -182,16 +182,20 @@
                     <!-- Tools -->
                     <li class="nav-item<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> menu-open<? end ?> menu-system">
                         <a href="#" class="nav-link<? if in_array(scriptname, {'messages', 'gravity', 'search', 'taillog', 'interfaces', 'network'}) then ?> active<? end ?>">
-                            <i class="nav-icon fa fa-fw fa-tools"></i> <p>Tools
-                            <span class="warning-count hidden"></span>
-                            <i class="nav-arrow fa fa-angle-left"></i></p>
+                            <i class="nav-icon fa fa-fw fa-tools"></i>
+                            <p>Tools
+                                <span class="nav-badge"><span class="warning-count badge text-bg-warning hidden"></span></span>
+                                <i class="nav-arrow fa fa-angle-left"></i>
+                            </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <!-- Pi-hole diagnosis -->
                             <li class="nav-item">
                                 <a href="<?=webhome?>messages" class="nav-link<? if scriptname == 'messages' then ?> active<? end ?>">
-                                    <i class="nav-icon fa fa-fw fa-file-medical-alt"></i> <p>Pi-hole diagnosis
-                                    <span class="warning-count hidden"></span></p>
+                                    <i class="nav-icon fa fa-fw fa-file-medical-alt"></i>
+                                    <p>Pi-hole diagnosis
+                                        <span class="nav-badge"><span class="warning-count badge text-bg-warning hidden"></span></span>
+                                    </p>
                                 </a>
                             </li>
                             <!-- Tail log files -->
