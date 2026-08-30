@@ -418,6 +418,8 @@ function renderPeers(list) {
     // would leave that looking like a synchronization that never catches up
     const pinnedHere = ours?.sync.config.pinned || "";
     const pinnedThere = entry.sync.config.pinned || "";
+    const credsPinnedHere = ours?.sync.config.pinned_credentials || "";
+    const credsPinnedThere = entry.sync.config.pinned_credentials || "";
     // Both ends can pin the same item, and naming it twice reads as two
     // separate problems
     const pinned = [
@@ -442,6 +444,23 @@ function renderPeers(list) {
       !sameConfig && why.length > 0
         ? `<br><small class="text-body-secondary">${why.join("; ")}</small>`
         : "";
+
+    // The credentials are fingerprinted apart from the rest and compared apart
+    // from it, so an item pinned there explains that difference and not the
+    // other one
+    const credsPinned = [
+      ...new Set(
+        (entry.self ? [credsPinnedHere] : [credsPinnedHere, credsPinnedThere])
+          .filter(Boolean)
+          .flatMap(t => t.split(",").map(x => x.trim()))
+          .filter(Boolean)
+      ),
+    ].join(", ");
+    const credsPinnedNote = credsPinned
+      ? `<br><small class="text-body-secondary">pinned to the environment: ${utils.escapeHtml(
+          credsPinned
+        )}</small>`
+      : "";
 
     const listsOwed = entry.sync.gravity.owed === true;
     const sameLists = ours && entry.sync.gravity.hash === ours.sync.gravity.hash && !listsOwed;
@@ -528,7 +547,7 @@ function renderPeers(list) {
       )}</span></td>
       <td>${
         sameConfig && credsDiffer
-          ? '<span class="badge text-bg-warning">credentials differ</span>'
+          ? '<span class="badge text-bg-warning">credentials differ</span>' + credsPinnedNote
           : mark(sameConfig, entry.sync.config.hash) + pinnedNote
       }</td>
       <td>${when(entry.sync.config.changed)}</td>
