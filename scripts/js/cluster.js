@@ -92,14 +92,13 @@ function members(data) {
       // older FTL does not report that at all, and was always running when
       // it said it was enabled
       reachable: data.cluster.running !== false,
-      error: "clustering is not running here",
       version: node.version,
       branch: node.branch,
       sees: [],
       clockOffset: 0,
       clockAgrees: true,
       lastSeen: null,
-      error: null,
+      error: data.cluster.running === false ? "clustering is not running here" : null,
       dhcp: node.dhcp,
       vipHeld: node.vip.held,
       sync: node.sync,
@@ -1030,7 +1029,7 @@ function refresh() {
       const members = config.config.cluster.members ?? [];
       document.querySelector("#cluster-not-running-why").textContent =
         members.length === 0
-          ? "No other nodes are configured, so there is nothing to keep in step. Add them below, or leave the cluster."
+          ? "No other nodes are configured, so there is nothing to keep in step. Add them under Settings > All settings > Cluster, or leave the cluster below."
           : "FTL could not start it - the reason is in the FTL log.";
     }
     if (!enabled) {
@@ -1091,7 +1090,9 @@ function setupLeave() {
           "info",
           "",
           "Leaving the cluster",
-          "The other nodes are being told, then FTL restarts here"
+          answer.restarting === false
+            ? "Clustering was not running here, so there was nobody to tell - it is switched off now"
+            : "The other nodes are being told, then FTL restarts here"
         );
       })
       .catch(() =>
