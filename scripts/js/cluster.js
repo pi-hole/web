@@ -400,7 +400,25 @@ function renderPeers(list) {
 
   for (const entry of list) {
     const sameConfig = ours && entry.sync.config.hash === ours.sync.config.hash;
-    const sameLists = ours && entry.sync.gravity.hash === ours.sync.gravity.hash;
+    // The fingerprint names the tables on disk, and a node that took them
+    // from a peer and then failed to rebuild has exactly the peer's - so the
+    // hashes match while its blocking database is stale. It says so itself
+    // An item pinned through the environment is hashed but no push can move
+    // it, so two nodes differing only there differ for good. The badge alone
+    // would leave that looking like a synchronization that never catches up
+    const pinnedHere = ours?.sync.config.pinned || "";
+    const pinnedThere = entry.sync.config.pinned || "";
+    const pinned = entry.self ? pinnedHere : [pinnedHere, pinnedThere].filter(Boolean).join(", ");
+    const pinnedNote =
+      !sameConfig && pinned
+        ? `<br><small class="text-body-secondary">pinned to the environment: ${utils.escapeHtml(
+            pinned
+          )}</small>`
+        : "";
+
+    const listsOwed = entry.sync.gravity.owed === true;
+    const sameLists =
+      ours && entry.sync.gravity.hash === ours.sync.gravity.hash && !listsOwed;
     // A fingerprint we do not have is not a fingerprint that matches: two
     // nodes that both failed to read their own would otherwise be counted as
     // agreeing, and the summary would say synced over a table of "unknown"
@@ -485,24 +503,34 @@ function renderPeers(list) {
       <td>${
         sameConfig && credsDiffer
           ? '<span class="badge text-bg-warning">credentials differ</span>'
-          : mark(sameConfig, entry.sync.config.hash)
+          : mark(sameConfig, entry.sync.config.hash) + pinnedNote
       }</td>
       <td>${when(entry.sync.config.changed)}</td>
-      <td>${mark(sameLists, entry.sync.gravity.hash)}</td>
+      <td>${mark(sameLists, entry.sync.gravity.hash, listsOwed ? "not rebuilt" : "differs")}</td>
       <td>${when(entry.sync.gravity.changed)}</td>
       <td>${clock()}</td>`;
     body.append(row);
   }
 
+  // Asked for and not happening, which is what an http:// member does to it.
+  // Worth its own line: the table would otherwise show the passwords quietly
+  // staying apart with nothing saying why
+  const credsAsked = ours?.sync.config.wants_credentials === true;
+  const credsHappening = ours?.sync.config.accepts_credentials === true;
+  const credsBlocked =
+    credsAsked && !credsHappening
+      ? ' <span class="badge text-bg-warning" title="Every member has to be reached over https before a password travels">credentials not travelling</span>'
+      : "";
+
   const summary = document.querySelector("#peer-summary");
   summary.innerHTML =
-    comparable === 0
+    (comparable === 0
       ? '<span class="badge text-bg-secondary">no peers to compare with</span>'
       : agreeing === comparable
         ? `<span class="badge text-bg-success">all ${comparable} peers synced</span>`
         : `<span class="badge text-bg-warning">${
             comparable - agreeing
-          } of ${comparable} peers differ</span>`;
+          } of ${comparable} peers differ</span>`) + credsBlocked;
 }
 
 // The request the web interface makes anywhere else, which is also the one the
