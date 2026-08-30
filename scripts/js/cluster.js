@@ -88,7 +88,11 @@ function members(data) {
       address: null,
       self: true,
       knowsUs: true,
-      reachable: true,
+      // Drawn as reachable only where the cluster is actually running. An
+      // older FTL does not report that at all, and was always running when
+      // it said it was enabled
+      reachable: data.cluster.running !== false,
+      error: "clustering is not running here",
       version: node.version,
       branch: node.branch,
       sees: [],
@@ -1017,6 +1021,18 @@ function refresh() {
     const enabled = status.cluster.enabled === true;
     document.querySelector("#cluster-disabled").hidden = enabled;
     document.querySelector("#cluster-body").hidden = !enabled;
+
+    // Switched on is not the same as running: FTL refuses to start clustering
+    // without a member list, and everything on this page reads the switch
+    const running = status.cluster.running !== false;
+    document.querySelector("#cluster-not-running").hidden = !enabled || running;
+    if (enabled && !running) {
+      const members = config.config.cluster.members ?? [];
+      document.querySelector("#cluster-not-running-why").textContent =
+        members.length === 0
+          ? "No other nodes are configured, so there is nothing to keep in step. Add them below, or leave the cluster."
+          : "FTL could not start it - the reason is in the FTL log.";
+    }
     if (!enabled) {
       // The heading is outside the part that gets hidden, so what it said
       // while this node was in a cluster would otherwise stand there

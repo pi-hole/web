@@ -143,6 +143,17 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 
         <div id="cluster-body" hidden>
 
+            <!-- Switched on, but FTL did not start it. Everything below would
+                 otherwise describe a cluster that is not running -->
+            <div class="row" id="cluster-not-running" hidden>
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        <strong>Clustering is switched on here, but it is not running.</strong>
+                        <span id="cluster-not-running-why"></span>
+                    </div>
+                </div>
+            </div>
+
             <!-- What the cluster is doing right now -->
             <div class="row" id="cluster-nodes"></div>
 
