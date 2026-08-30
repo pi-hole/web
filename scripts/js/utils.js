@@ -514,10 +514,6 @@ function addFromQueryLog(domain, list) {
 }
 
 // Helper functions to format the progress bars used on the Dashboard and Long-term Lists
-function addTD(content) {
-  return "<td>" + content + "</td> ";
-}
-
 function toPercent(number, fractionDigits = 0) {
   const userLocale = navigator.language || "en-US";
   return new Intl.NumberFormat(userLocale, {
@@ -874,7 +870,6 @@ globalThis.utils = (function () {
     validateHostname,
     validateHostnameStrict,
     addFromQueryLog,
-    addTD,
     toPercent,
     colorBar,
     checkMessages,
