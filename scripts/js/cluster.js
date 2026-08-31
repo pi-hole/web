@@ -1091,7 +1091,9 @@ function setupLeave() {
           "",
           "Leaving the cluster",
           answer.restarting === false
-            ? "Clustering was not running here, so there was nobody to tell - it is switched off now"
+            ? answer.peers_told === false
+              ? "Clustering was not running here, so the other nodes were not told - remove this Pi-hole from their member lists"
+              : "Clustering was not running here, so there was nobody to tell - it is switched off now"
             : "The other nodes are being told, then FTL restarts here"
         );
       })
