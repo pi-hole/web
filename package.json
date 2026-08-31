@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.5.4",
-    "eslint": "^10.8.1",
+    "eslint": "^10.9.1",
     "eslint-plugin-compat": "^7.0.2",
     "globals": "^17.11.0",
     "postcss": "^8.5.26",
