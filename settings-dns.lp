@@ -159,7 +159,7 @@ PageTitle = "DNS Settings"
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <div class="no-danger-area">
+                                    <div class="callout border-success mb-4">
                                         <h4>Recommended setting</h4>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
@@ -167,7 +167,7 @@ PageTitle = "DNS Settings"
                                             <p class="help-block">Allows only queries from devices that are on a subnet directly connected to this Pi-hole (local devices).</p>
                                         </div>
                                     </div>
-                                    <div class="danger-area">
+                                    <div class="callout border-danger mb-4">
                                         <h4>Potentially dangerous options</h4>Make sure your Pi-hole is properly firewalled!
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="DNSinterface" id="dns.listeningMode-SINGLE" data-key="dns.listeningMode" value="single">
