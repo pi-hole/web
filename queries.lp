@@ -25,7 +25,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-info collapsed-card">
-                    <div class="card-header pointer no-user-select p-4" data-lte-toggle="card-collapse">
+                    <div class="card-header pointer no-user-select" data-lte-toggle="card-collapse">
                         <h3 class="card-title">Advanced filtering</h3>
                         <div class="card-tools float-end">
                             <button type="button" class="btn btn-tool">
