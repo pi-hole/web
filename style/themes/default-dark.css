@@ -1,16 +1,17 @@
-/* Pi-hole: A black hole for Internet advertisements
-*  (c) 2020 Pi-hole, LLC (https://pi-hole.net)
+/*
+* Pi-hole: A black hole for Internet advertisements
+*  (c) 2026 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license.
-*
-*  The colors used in this theme has been inspired by
-*  https://github.com/anvyst/adminlte-skin-midnight */
+*/
 
 :root {
-  --datatable-selected-bg: rgba(60, 141, 188, 0.6);
-  --overlay-bgcolor: rgba(64, 76, 88, 0.8);
+  --ph-main: #3c8dbc;
+  --ph-main-rgb: 60, 141, 188;
+  --ph-main-dimmed: #2a6384;
+  --ph-main-dimmed-rgb: 42, 99, 132;
 
   /* Dashboard graphic bars */
   --allowed-color: #12b660;
@@ -18,9 +19,103 @@
   --cached-color: #44649c;
   --other-color: #969798;
 
+  /* Network table colors (use hex colors) */
+  --ph-network-never: rgb(48, 19, 13);
+  --ph-network-recent: rgb(26, 53, 35);
+  --ph-network-old: rgb(65, 76, 45);
+  --ph-network-older: rgb(53, 54, 40);
+
+  /* Text colors used in buttons, icons, gravity and tail log outputs */
+  --text-black: #000;
+  --text-light-green: #63c832;
+  --text-green: #00aa60;
+  --text-yellow: #b1720c;
+  --text-red: #d02c19;
+  --text-blue: #08c;
+  --text-purple: #c6f;
+  --text-cyan: #0df;
+  --text-gray: #999;
+
+  /* Overlay color - Used in settings save button */
+  --save-button-overlay: rgba(212, 220, 232, 0.55);
+
+  /* Border color for some focused elements */
+  --ph-focus-color: #88b6ff;
+  --ph-focus-color-rgb: 134, 182, 255;
+
   /* Base theme colors, reused throughout this file */
   --theme-text: #bec5cb;
   --theme-bg: #353c42;
+
+  --ph-sidebar-bg: var(--bs-tertiary-bg);
+
+  /* AdminLTE/BS5 colors */
+  --bs-blue: var(--ph-main);
+  --bs-primary: var(--ph-main);
+  --bs-primary-rgb: var(--ph-main-rgb);
+
+  --bs-green: #005c32;
+  --bs-success-rgb: 0, 92, 50;
+
+  --bs-yellow: #b1720c;
+  --bs-warning-rgb: 177, 114, 12;
+
+  --bs-cyan: #007997;
+  --bs-info-rgb: 0, 121, 151;
+
+  --bs-red: #a42e1e;
+  --bs-danger-rgb: 164, 46, 30;
+}
+
+:root,
+[data-bs-theme="dark"] {
+  --bs-dark: rgb(194, 189, 181);
+  --bs-dark-rgb: 194, 189, 181;
+  --bs-secondary-bg: rgb(32, 35, 36);
+  --bs-secondary-bg-rgb: 32, 35, 36;
+  --bs-tertiary-bg: rgb(var(--bs-tertiary-bg-rgb));
+  --bs-tertiary-bg-rgb: 39, 44, 48;
+  --bs-emphasis-color: #fff;
+  --bs-emphasis-color-rgb: 255, 255, 255;
+  --bs-code-color: var(--theme-text);
+
+  --bs-body-color: var(--theme-text);
+  --bs-body-bg: #272c30;
+  --bs-success-text-emphasis: var(--bs-success-text-emphasis);
+  --bs-danger-text-emphasis: var(--bs-danger-text-emphasis);
+  --bs-light-text-emphasis: var(--bs-gray-100);
+  --bs-dark-text-emphasis: var(--bs-gray-300);
+  --bs-light-bg-subtle: var(--bs-gray-dark);
+  --bs-light-border-subtle: var(--bs-gray-700);
+  --bs-dark-border-subtle: var(--bs-gray-dark);
+  --bs-highlight-color: var(--bs-gray-300);
+  --bs-highlight-bg: var(--bs-warning-text-emphasis);
+  --bs-border-color: var(--bs-gray-700);
+  --bs-form-valid-color: var(--bs-success-text-emphasis);
+  --bs-form-valid-border-color: var(--bs-success-text-emphasis);
+  --bs-form-invalid-color: var(--bs-danger-text-emphasis);
+  --bs-form-invalid-border-color: var(--bs-danger-text-emphasis);
+
+  --bs-link-color: rgb(99, 164, 201);
+  --bs-link-color-rgb: 99, 164, 201;
+  --bs-link-hover-color: var(--bs-primary);
+  --bs-link-hover-color-rgb: var(--bs-primary-rgb);
+}
+
+.bg-success,
+.card-success,
+.text-bg-success,
+.bg-info,
+.card-info,
+.text-bg-info,
+.bg-warning,
+.card-warning,
+.text-bg-warning,
+.bg-danger,
+.card-danger,
+.text-bg-danger {
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: 255, 255, 255;
 }
 
 /* fix #2554: browser not detecting dark mode */
@@ -28,20 +123,66 @@ html {
   color-scheme: dark;
 }
 
-body {
-  background-color: var(--theme-bg);
-  color: var(--theme-text);
-}
 h4 {
-  color: #3c8dbc;
+  color: var(--bs-primary);
 }
-/* Tone down Bootstrap's bright accent fills, which are too saturated on the
-  dark background (the active page link and the filled coloured card headers
-  such as the query-log "Advanced filtering" box). */
-.page-item.active > .page-link {
-  background-color: #3c8dbc;
-  border-color: #3c8dbc;
+
+.layout-boxed,
+.login-page {
+  background: linear-gradient(#0003, #0003), url("../../img/boxed-bg-dark.png");
 }
+
+.callout h4 {
+  color: inherit;
+}
+
+.table-bordered {
+  --bs-border-color: var(--theme-bg);
+}
+
+.app-sidebar {
+  box-shadow: none !important;
+  background-color: var(--ph-sidebar-bg);
+}
+.sidebar-brand {
+  background-color: var(--ph-sidebar-bg);
+  border-color: transparent;
+}
+.sidebar-menu > li.nav-header {
+  color: #8e989d;
+  background-color: #1e2225;
+  margin: 4px -0.25rem;
+  padding: 4px 8px;
+  width: auto;
+}
+
+.sidebar-menu .badge.text-bg-primary {
+  background: var(--ph-main-dimmed) !important;
+}
+
+.small-box {
+  box-shadow: none;
+}
+
+.card {
+  color: var(--theme-text);
+  box-shadow: none;
+  border-top-width: var(--bs-card-border-width);
+}
+
+.card-body,
+.card-footer,
+.card-header {
+  border-color: var(--theme-bg);
+}
+
+.card-footer {
+  border-top: 1px solid var(--theme-bg);
+}
+.card-header.with-border {
+  border-bottom: 1px solid var(--theme-bg);
+}
+
 .card-info {
   --lte-card-variant-bg: #256170;
   --lte-card-variant-bg-rgb: 37, 97, 112;
@@ -54,104 +195,7 @@ h4 {
   --lte-card-variant-color: #d6e5f2;
   --lte-card-variant-color-rgb: 214, 229, 242;
 }
-.callout h4 {
-  color: inherit;
-}
-.content-header > .breadcrumb > li > a {
-  color: var(--theme-text);
-}
-.table > thead > tr > th,
-.table > tbody > tr > th,
-.table > tfoot > tr > th,
-.table > thead > tr > td,
-.table > tbody > tr > td,
-.table > tfoot > tr > td {
-  border-top: 0;
-}
-.table > thead > tr.odd,
-.table > tbody > tr.odd,
-.table > tfoot > tr.odd {
-  background-color: #2a2f34;
-}
-.table > thead > tr.odd:hover,
-.table > tbody > tr.odd:hover,
-.table > tfoot > tr.odd:hover,
-.table > thead > tr.even:hover,
-.table > tbody > tr.even:hover,
-.table > tfoot > tr.even:hover {
-  background-color: #1e2226;
-}
-.table-bordered,
-.table-bordered > thead > tr > th,
-.table-bordered > tbody > tr > th,
-.table-bordered > tfoot > tr > th,
-.table-bordered > thead > tr > td,
-.table-bordered > tbody > tr > td,
-.table-bordered > tfoot > tr > td {
-  border: 1px solid var(--theme-bg);
-}
-.app-wrapper,
-.app-sidebar {
-  background-color: #272c30;
-}
-.user-panel > .info,
-.user-panel > .info > a {
-  color: #fff;
-}
-.sidebar-menu > li.nav-header {
-  color: #8e989d;
-  background-color: #1e2225;
-}
-.sidebar-menu > li > a {
-  border-left: 3px solid transparent;
-}
-.sidebar-menu > li:hover > a,
-.sidebar-menu > li > a:focus,
-.sidebar-menu > li.active > a {
-  color: #fff;
-  background-color: #22272a;
-  border-color: #3c8dbc;
-}
-.sidebar-menu > li > .nav-treeview {
-  margin: 0 1px;
-  background-color: #32393e;
-}
-.sidebar a {
-  color: var(--theme-text);
-}
-.sidebar a:hover {
-  text-decoration: none;
-}
-.nav-treeview > li > a {
-  color: #949fa8;
-}
-.nav-treeview > li.active > a,
-.nav-treeview > li > a:hover,
-.nav-treeview > li > a:focus {
-  color: #fff;
-}
-.card,
-.card-body,
-.card-footer,
-.card-header {
-  border-color: var(--theme-bg);
-  color: var(--theme-text);
-  background-color: #272c30;
-  box-shadow: none;
-}
-.info-box {
-  color: var(--theme-text);
-  background-color: #272c30;
-}
-.card-footer {
-  border-top: 1px solid var(--theme-bg);
-}
-.card-header.with-border {
-  border-bottom: 1px solid var(--theme-bg);
-}
-.card > .card-header {
-  color: var(--theme-text);
-}
+
 .card.card-info {
   border-top-color: #00c0ef;
 }
@@ -167,126 +211,34 @@ h4 {
 .card.card-danger {
   border-top-color: #dd4b39;
 }
+
 .app-header.navbar {
-  background-color: #272c30;
+  background-color: var(--bs-tertiary-bg);
 }
-.app-header.navbar .nav > li > a,
-.app-header.navbar .nav > li > .navbar-text {
-  color: var(--theme-text);
-  height: 50px;
-  padding: 15px;
-}
-.app-header.navbar .nav > li > a:hover,
-.app-header.navbar .nav > li > a:active,
-.app-header.navbar .nav > li > a:focus,
-.app-header.navbar .nav .open > a,
-.app-header.navbar .nav .open > a:hover,
-.app-header.navbar .nav .open > a:focus,
-.app-header.navbar .nav > .active > a {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #f6f6f6;
-}
-.app-header.navbar .sidebar-toggle {
-  color: var(--theme-text);
-}
-.app-header.navbar .sidebar-toggle:hover {
-  color: #f6f6f6;
-  background-color: rgba(0, 0, 0, 0.1);
-}
-.timeline li .timeline-item {
-  color: var(--theme-text);
-  background-color: #272c30;
-  border-color: var(--theme-bg);
-}
-.timeline li .timeline-header {
-  border-bottom-color: var(--theme-bg);
-}
+
 .app-main {
   background-color: var(--theme-bg);
 }
-.app-footer,
-.nav-tabs-custom {
-  background-color: #272c30;
-  border-top-color: var(--theme-bg);
-  color: var(--theme-text);
-}
-.app-footer .nav-tabs,
-.nav-tabs-custom .nav-tabs {
-  background-color: #30383f;
-  border-bottom-color: #2f363b;
-}
-.app-footer .tab-content,
-.nav-tabs-custom .tab-content {
-  background-color: #30383f;
-}
-.nav-tabs-custom > .nav-tabs {
-  background: rgba(64, 72, 80, 0.666);
-}
-.nav-tabs-custom > .nav-tabs > li {
-  margin-right: 1px;
-  color: var(--theme-text);
-}
-.nav-tabs-custom > .nav-tabs > li.active > a,
-.nav-tabs-custom > .nav-tabs > li.active:hover > a {
-  border-left-color: #30383f;
-  border-right-color: #30383f;
-  background-color: #30383f;
-  color: var(--theme-text);
-}
-.nav-tabs-custom > .nav-tabs > li:not(.active):hover {
-  border-top-color: #d2d6de;
-  background-color: transparent;
-}
-.nav-tabs-custom > .nav-tabs > li > a {
-  color: #8e959b;
-}
-.nav-tabs-custom > .nav-tabs > li > a:focus {
-  color: #3c8dbc;
-}
-.nav-tabs-custom > .nav-tabs > li:hover > a,
-.nav-tabs-custom > .nav-tabs > li.active:hover > a {
-  background-color: var(--theme-bg);
+
+.app-footer {
+  background: var(--bs-tertiary-bg);
+  border-top-color: transparent;
   color: var(--theme-text);
 }
 
 .list-group {
   color: var(--theme-text);
-  background-color: #272c30;
+  background-color: var(--bs-tertiary-bg);
 }
 .list-group .list-group-item {
   border-color: var(--theme-bg);
-  background-color: #272c30;
-}
-.input-group .input-group-addon {
-  border-right: 1px solid #272c30;
-}
-.select2 .select2-selection {
-  background-color: var(--theme-bg);
-  color: var(--theme-text);
-  border: 1px solid var(--theme-bg);
-}
-.select2 .select2-selection .select2-container--default,
-.select2 .select2-selection .select2-selection--single,
-.select2 .select2-selection .select2-selection--multiple,
-.select2 .select2-selection .select2-selection__rendered {
-  color: var(--theme-text);
-}
-.select2-dropdown {
-  background-color: var(--theme-bg);
-  color: var(--theme-text);
-  border: 1px solid var(--theme-bg);
-}
-.select2-dropdown .select2-search__field {
-  background-color: #272c30;
-  color: var(--theme-text);
-  border: 1px solid var(--theme-bg);
-}
-.select2-container--default.select2-container--open {
-  background-color: #272c30;
+  background-color: var(--bs-tertiary-bg);
 }
 
-.layout-boxed {
-  background: url("../../img/boxed-bg-dark.png") repeat fixed;
+.select2:not(.select2-container--open) .select2-selection {
+  background-color: var(--theme-bg);
+  color: var(--theme-text);
+  border: 1px solid var(--theme-bg);
 }
 
 .graphs-grid {
@@ -296,47 +248,21 @@ h4 {
   color: #b8c7ce;
 }
 
-.progress {
-  background-color: #333;
-}
-
-kbd {
-  color: var(--theme-bg);
-  background-color: var(--theme-text);
-  box-shadow: inset -1px -1px 2px 0 rgba(0, 0, 0, 0.5);
-  vertical-align: middle;
-}
-
 code,
 pre {
-  padding: 2px 4px;
-  font-size: 90%;
-  color: var(--theme-text);
   background-color: var(--theme-bg);
-  border-radius: 4px;
 }
 
-/* Used in the Query Log table */
-.text-green-light {
-  color: #5ca314 !important;
+code {
+  border: 1px solid color-mix(var(--theme-text) 20%, transparent);
 }
-.text-green {
-  color: #00aa60 !important;
-}
-.text-orange {
-  color: #b1720c !important;
-}
-.text-red {
-  color: #bd2c19 !important;
-}
+
 td.highlight {
   background-color: rgba(255, 204, 0, 0.333);
 }
-.btn-default {
-  box-shadow: none;
-  background-color: #3e464c;
-  color: var(--theme-text);
-  border: 1px solid var(--theme-bg);
+
+.btn-secondary {
+  --bs-btn-box-shadow: none;
 }
 
 /* Used in debug log page */
@@ -362,60 +288,14 @@ td.highlight {
   color: #999;
 }
 
-#output {
-  border-color: #505458;
-  background: #272c30;
-}
-
 /* Used by the long-term pages */
-.daterangepicker {
-  background-color: #3e464c;
-  border-radius: 4px;
-  border: 1px solid var(--theme-bg);
-}
-.daterangepicker .ranges li:hover {
-  background-color: var(--theme-bg);
-}
-.daterangepicker .ranges li.active {
-  background-color: #1e2226; /* Color also used in table pagination */
-}
-.daterangepicker .calendar-table {
-  background-color: #3e464c;
-  border-radius: 4px;
-  border: 1px solid var(--theme-bg);
-}
-.daterangepicker td.off,
-.daterangepicker td.off.in-range,
-.daterangepicker td.off.start-date,
-.daterangepicker td.off.end-date {
-  background-color: #485158;
-}
-.daterangepicker td.available:hover,
-.daterangepicker th.available:hover {
-  background-color: #1e2226;
-}
-.daterangepicker td.active,
-.daterangepicker td.active:hover,
-.daterangepicker td.in-range:hover {
-  background-color: #225e92;
-}
-.daterangepicker td.in-range {
-  background-color: #1e2226;
-  color: var(--theme-text);
-}
 input,
 select,
-select.form-control,
-.form-group .input-group-addon,
-.input-group .input-group-addon,
+select.form-select,
 .form-group input,
 .input-group input,
 .form-group textarea,
 .input-group textarea,
-.daterangepicker select.hourselect,
-.daterangepicker select.minuteselect,
-.daterangepicker select.secondselect,
-.daterangepicker select.ampmselect,
 .form-control {
   background-color: var(--theme-bg);
   color: var(--theme-text);
@@ -440,33 +320,19 @@ fieldset[disabled] .form-control {
 }
 
 .navbar[data-bs-theme="dark"] {
-  --bs-border-color: var(--theme-bg);
+  --bs-border-color: var(--ph-sidebar-bg);
 }
 
-.dropdown-menu {
-  background-color: #22282d;
-  color: var(--theme-text);
-  border: 1px solid #4c5761;
-}
-.navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
-  background-color: #30383f;
-  border: 1px solid #171c20;
-  box-shadow: none;
-}
-.navbar-nav > .user-menu > .dropdown-menu > .user-body {
-  border-color: var(--theme-text);
-}
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-  background-color: #272c30;
-}
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
-  color: var(--theme-text) !important;
-}
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer a:hover {
-  color: #fff !important;
-}
-.user-menu hr {
-  border-color: var(--theme-text);
+.navbar-nav > .user-menu > .dropdown-menu {
+  --bs-dropdown-color: var(--theme-text);
+  --bs-dropdown-header-color: var(--theme-text);
+  --bs-dropdown-bg: #30383f;
+  --bs-dropdown-link-color: var(--theme-text);
+  --bs-dropdown-link-hover-color: #fff;
+  --bs-dropdown-border-color: var(--bs-body-bg);
+  --ph-dropdown-body-border-color: var(--bs-secondary);
+  --ph-dropdown-body-bg: transparent;
+  --ph-dropdown-footer-bg: var(--ph-sidebar-bg);
 }
 
 .table-striped > tbody > tr:nth-of-type(2n + 1) {
@@ -475,33 +341,6 @@ fieldset[disabled] .form-control {
 
 input[type="password"]::-webkit-caps-lock-indicator {
   filter: invert(100%);
-}
-
-.network-never {
-  background-color: #661b02;
-}
-.network-recent {
-  background-color: #114100;
-}
-.network-old {
-  background-color: #525200;
-}
-.network-older {
-  background-color: #502b00;
-}
-.network-gradient {
-  background-image: linear-gradient(to right, #114100 0%, #525200 100%);
-}
-
-/* Overlay box with spinners as shown during data collection for graphs */
-.card .overlay {
-  z-index: 50;
-  background-color: rgba(53, 60, 66, 0.733);
-  border-radius: 3px;
-}
-.card .overlay > .fa,
-.navbar-nav > .user-menu > .dropdown-menu > .user-body a {
-  color: var(--theme-text) !important;
 }
 
 .modal-content {
@@ -520,26 +359,5 @@ input[type="password"]::-webkit-caps-lock-indicator {
 }
 .close:focus,
 .close:hover {
-  color: #fff;
-}
-
-.login-page {
-  background-image: linear-gradient(#0006, #0006), url("../../img/boxed-bg-dark.png");
-}
-
-/*** Fix login input visual misalignment ***/
-#loginform,
-#loginform input {
-  color: rgb(120, 127, 133);
-}
-
-/* Group assignment select */
-.open > .dropdown-toggle.btn-default,
-.open > .dropdown-toggle.btn-default:active {
-  background-color: var(--theme-bg);
-  color: var(--theme-text);
-  border: 1px solid #3d444b;
-}
-.open > .dropdown-toggle.btn-default:hover {
   color: #fff;
 }
