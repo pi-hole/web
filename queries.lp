@@ -37,7 +37,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <!-- /.card-header -->
                     <div class="card-body">
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="mb-3 col-md-6">
                                 <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="far fa-clock"></i>
@@ -46,13 +46,13 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                                 <small id="querytime-note" class="form-text text-muted" style="margin-top: 5px;"></small>
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="mb-3 col-md-6">
                                 <div class="form-check"><input class="form-check-input" type="checkbox" id="disk"><label class="form-check-label" for="disk">Query on-disk data. This is <em>a lot</em> slower but necessary if you want to obtain queries older than 24 hours. This option disables live update.</label></div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Domain*</label>
                                     <select id="domain_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -60,7 +60,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Client (by IP)*</label>
                                     <select id="client_ip_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -68,7 +68,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Client (by name)*</label>
                                     <select id="client_name_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -76,7 +76,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Upstream*</label>
                                     <select id="upstream_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -84,7 +84,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Type</label>
                                     <select id="type_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -92,7 +92,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Status</label>
                                     <select id="status_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -100,7 +100,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>Reply</label>
                                     <select id="reply_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>
@@ -108,7 +108,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label>DNSSEC status</label>
                                     <select id="dnssec_filter" class="form-control" placeholder="">
                                         <option disabled selected>Loading...</option>

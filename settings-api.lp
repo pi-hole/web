@@ -24,7 +24,7 @@ PageTitle = "Web Interface - API Settings"
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="row form-group">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label for="webserver.interface.theme">Theme:</label>
                                     </div>
@@ -36,7 +36,7 @@ PageTitle = "Web Interface - API Settings"
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <div class="row form-group">
+                                <div class="row mb-3">
                                     <div class="col-sm-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
@@ -194,7 +194,7 @@ PageTitle = "Web Interface - API Settings"
                         <div class="row">
                             <div class="col-md-6 offset-md-3">
                                 <div id="totp_div">
-                                    <div class="pwd-field form-group has-error">
+                                    <div class="pwd-field mb-3">
                                         <div class="input-group">
                                             <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
                                             <span class="input-group-text" data-bs-toggle="tooltip" data-placement="auto" title="TOTP verification code">

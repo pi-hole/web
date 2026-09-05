@@ -34,7 +34,7 @@ PageTitle = "DHCP Settings"
                                 <label style="margin-top: 10px">Range of IP addresses to hand out</label>
                             </div>
                             <div class="col-sm-6 col-md-12 col-lg-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <span class="input-group-text">Start</span>
                                         <input type="text" class="form-control DHCPgroup" id="dhcp.start" data-key="dhcp.start"
@@ -44,7 +44,7 @@ PageTitle = "DHCP Settings"
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-12 col-lg-6">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <span class="input-group-text">End</span>
                                         <input type="text" class="form-control DHCPgroup" id="dhcp.end" data-key="dhcp.end"
@@ -55,7 +55,7 @@ PageTitle = "DHCP Settings"
                             </div>
                             <div class="col-sm-6 col-md-12 col-lg-6">
                                 <label>Router (gateway) IP address</label>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <span class="input-group-text">Router</span>
                                         <input type="text" class="form-control DHCPgroup" id="dhcp.router" data-key="dhcp.router"
@@ -66,7 +66,7 @@ PageTitle = "DHCP Settings"
                             </div>
                             <div class="col-sm-6 col-md-12 col-lg-6">
                                 <label>Netmask</label>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <span class="input-group-text">Netmask</span>
                                         <input type="text" class="form-control DHCPgroup" id="dhcp.netmask" data-key="dhcp.netmask"
@@ -97,7 +97,7 @@ PageTitle = "DHCP Settings"
                         <div class="row">
                             <div class="col-md-12">
                                 <label>DHCP lease time</label>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <div class="input-group">
                                         <span class="input-group-text">Lease time</span>
                                         <input type="text" class="form-control DHCPgroup"

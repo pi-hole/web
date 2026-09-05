@@ -51,17 +51,17 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                     <div id="tab_domain" class="tab-pane active fade show">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <label for="new_domain">Domain:</label>
                                                     <input id="new_domain" type="url" class="form-control active" placeholder="Domain to be added" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                                                     <div id="suggest_domains" class="table-responsive no-border"></div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 form-group">
+                                            <div class="col-lg-3 col-md-6 mb-3">
                                                 <label for="new_domain_comment">Comment:</label>
                                                 <input id="new_domain_comment" type="text" class="form-control" placeholder="Description (optional)">
                                             </div>
-                                            <div class="col-lg-3 col-md-6 form-group">
+                                            <div class="col-lg-3 col-md-6 mb-3">
                                                 <label for="new_domain_group">Group assignment:</label>
                                                 <div><select class="group-select" id="new_domain_group" multiple></select></div>
                                             </div>
@@ -81,21 +81,21 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                                     <div id="tab_regex" class="tab-pane fade">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <label for="new_regex">Regular Expression:</label>
                                                     <input id="new_regex" type="text" class="form-control active" placeholder="RegEx to be added">
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <strong>Hint:</strong> Need help to write a proper RegEx rule? Have a look at our online
                                                     <a href="https://docs.pi-hole.net/ftldns/regex/tutorial" rel="noopener noreferrer" target="_blank">
                                                         regular expressions tutorial</a>.
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 form-group">
+                                            <div class="col-lg-3 col-md-6 mb-3">
                                                 <label for="new_regex_comment">Comment:</label>
                                                 <input id="new_regex_comment" type="text" class="form-control" placeholder="Description (optional)">
                                             </div>
-                                            <div class="col-lg-3 col-md-6 form-group">
+                                            <div class="col-lg-3 col-md-6 mb-3">
                                                 <label for="new_regex_group">Group assignment:</label>
                                                 <div><select class="group-select" id="new_regex_group" multiple></select></div>
                                             </div>
