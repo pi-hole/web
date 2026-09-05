@@ -11,6 +11,7 @@
 "use strict";
 
 let table;
+globalThis.toasts ??= {};
 
 function reloadClientSuggestions() {
   $.ajax({
@@ -370,20 +371,28 @@ function addClient() {
         "warning",
         "",
         "Warning",
-        "Input is neither a valid IP or MAC address nor a valid host name!"
+        "Input is neither a valid IP or MAC address nor a valid host name!",
+        null
       );
       return;
     }
   }
 
   utils.disableAll();
-  utils.showAlert("info", "", "Adding client(s)...", ipStr);
 
   if (ips.length === 0) {
     utils.enableAll();
-    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address");
+    utils.showAlert("warning", "", "Warning", "Please specify a client IP or MAC address", null);
     return;
   }
+
+  globalThis.toasts.AddGroupClients = utils.showAlert(
+    "info",
+    "",
+    "Adding client(s)...",
+    ipStr,
+    null
+  );
 
   $.ajax({
     url: document.body.dataset.apiurl + "/clients",
@@ -394,7 +403,7 @@ function addClient() {
     data: JSON.stringify({ client: ips, comment, groups: group }),
     success(data) {
       utils.enableAll();
-      utils.listsAlert("client", ips, data);
+      utils.listsAlert("client", ips, data, globalThis.toasts.AddGroupClients);
       reloadClientSuggestions();
       $("#new_comment").val("");
       table.ajax.reload(null, false);
@@ -406,7 +415,13 @@ function addClient() {
     error(data, exception) {
       apiFailure(data);
       utils.enableAll();
-      utils.showAlert("error", "", "Error while adding new client", data.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while adding new client",
+        data.responseText,
+        globalThis.toasts.AddGroupClients
+      );
       console.log(exception); // eslint-disable-line no-console
     },
   });
@@ -441,7 +456,13 @@ function editClient() {
 
   utils.disableAll();
   const clientDecoded = utils.hexDecode(client);
-  utils.showAlert("info", "", "Editing client...", clientDecoded);
+  globalThis.toasts.EditGroupClient = utils.showAlert(
+    "info",
+    "",
+    "Editing client...",
+    clientDecoded,
+    null
+  );
   $.ajax({
     url: document.body.dataset.apiurl + "/clients/" + encodeURIComponent(clientDecoded),
     method: "put",
@@ -454,7 +475,7 @@ function editClient() {
     }),
     success(data) {
       utils.enableAll();
-      processGroupResult(data, "client", done, notDone);
+      processGroupResult(data, "client", done, notDone, globalThis.toasts.EditGroupClient);
       table.ajax.reload(null, false);
     },
     error(data, exception) {
@@ -464,7 +485,8 @@ function editClient() {
         "error",
         "",
         "Error while " + notDone + " client " + clientDecoded,
-        data.responseText
+        data.responseText,
+        globalThis.toasts.EditGroupClient
       );
       console.log(exception); // eslint-disable-line no-console
     },

@@ -10,7 +10,7 @@
 "use strict";
 
 let table;
-const toasts = {};
+globalThis.toasts ??= {};
 
 $(() => {
   const url = document.body.dataset.apiurl + "/info/messages";
@@ -151,7 +151,13 @@ function deleteMessage() {
 function delMsg(id) {
   id = Math.trunc(Number(id));
   utils.disableAll();
-  toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
+  globalThis.toasts.deleteMessage = utils.showAlert(
+    "info",
+    "",
+    "Deleting message...",
+    "ID: " + id,
+    null
+  );
 
   $.ajax({
     url: document.body.dataset.apiurl + "/info/messages/" + id,
@@ -165,7 +171,7 @@ function delMsg(id) {
           "far fa-trash-alt",
           "Successfully deleted message",
           "ID: " + id,
-          toasts[id]
+          globalThis.toasts.deleteMessage
         );
         table.row(id).remove();
 
@@ -176,7 +182,7 @@ function delMsg(id) {
           "",
           "Error while deleting message: " + id,
           response.message,
-          toasts[id]
+          globalThis.toasts.deleteMessage
         );
       }
 
@@ -194,7 +200,7 @@ function delMsg(id) {
         "",
         "Error while deleting message: " + id,
         jqXHR.responseText,
-        toasts[id]
+        globalThis.toasts.deleteMessage
       );
       console.log(exception); // eslint-disable-line no-console
     });

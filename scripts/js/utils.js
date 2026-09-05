@@ -5,9 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false, bootstrap: false */
 
 "use strict";
+globalThis.toasts ??= {};
 
 $(() => {
   // CSRF protection for AJAX requests, this has to be configured globally
@@ -102,42 +103,124 @@ function padNumber(num) {
   return ("00" + num).substr(-2, 2);
 }
 
-let showAlertBox = null;
-function showAlert(type, icon, title, message, toast) {
-  const options = {
-    title: "&nbsp;<strong>" + escapeHtml(title) + "</strong><br>",
+// Gets ToastContainer if it exists, otherwise creates a new one and return it
+function getOrCreateToastContainer() {
+  const existing =
+    document.getElementById("toast-container") || document.querySelector(".toast-container");
+
+  if (existing !== null) {
+    return existing;
+  }
+
+  const container = document.createElement("div");
+  container.className = "toast-container position-fixed top-0 end-0 p-3";
+  container.id = "toast-container";
+  container.style.zIndex = "9999";
+  document.body.append(container);
+
+  return container;
+}
+
+// Set the toast element's properties
+function createToast(alertState) {
+  const toast = document.createElement("div");
+  toast.className = "toast align-items-center border-0 shadow rounded overflow-hidden";
+  toast.className += ` ${alertState.bgColor}`;
+  toast.dataset.toastType = alertState.type;
+  toast.dataset.bsAutohide = String(alertState.autohide);
+  toast.dataset.bsDelay = String(alertState.delay);
+  toast.setAttribute("role", alertState.role);
+  toast.setAttribute("aria-live", alertState.live);
+  toast.setAttribute("aria-atomic", alertState.ariaAtomic);
+
+  const content = document.createElement("div");
+  content.className = "d-flex flex-column";
+  const header = document.createElement("div");
+  header.className = `toast-header ${alertState.bgColor}`;
+
+  if (alertState.icon !== "") {
+    const icon = document.createElement("i");
+    icon.className = `${alertState.icon} me-2`;
+    icon.setAttribute("aria-hidden", "true");
+    header.append(icon);
+  }
+
+  const title = document.createElement("strong");
+  title.className = "me-auto";
+  // Title is already escaped in showAlert() function, so we can safely set it as innerHTML
+  title.innerHTML = alertState.title;
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = `${alertState.closeButtonClass} ms-2 mb-auto`;
+  closeButton.dataset.bsDismiss = "toast";
+  closeButton.setAttribute("aria-label", "Close");
+
+  header.append(title, closeButton);
+
+  const body = document.createElement("div");
+  body.className = "toast-body";
+
+  const message = document.createElement("div");
+  message.className = "toast-message flex-grow-1";
+  message.style.whiteSpace = "pre-line";
+  message.style.overflowWrap = "anywhere";
+  // Message is already escaped in showAlert() function, so we can safely set it as innerHTML
+  message.innerHTML = alertState.message;
+
+  body.append(message);
+  content.append(header, body);
+  toast.append(content);
+
+  return toast;
+}
+
+function showAlert(type, icon, title, message, oldToastInstance = undefined) {
+  if (oldToastInstance === undefined) {
+    throw new Error("oldToastInstance is required; use null for a new toast");
+  }
+
+  // sets all properties of the alertState object based on the type of alert and the provided parameters
+  const alertState = {
+    title: escapeHtml(title),
     message: escapeHtml(message),
     icon,
-  };
-  const settings = {
     type,
+    bgColor: "",
+    animation: true,
     delay: 5000, // default value
-    z_index: 9999, // increased to avoid overlapping issues with the AdminLTE header
-    mouse_over: "pause",
-    animate: {
-      enter: "animate__animated animate__fadeInDown",
-      exit: "animate__animated animate__fadeOutUp",
-    },
+    autohide: true,
+    role: "status",
+    live: "polite",
+    ariaAtomic: "true",
+    closeButtonClass: "btn-close",
   };
+
   switch (type) {
     case "info":
-      options.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
-
+      alertState.icon = icon !== null && icon.length > 0 ? icon : "fas fa-clock";
+      alertState.bgColor = "text-bg-info";
       break;
     case "success":
+      alertState.bgColor = "text-bg-success";
+      alertState.closeButtonClass += " btn-close-white";
       break;
     case "warning":
-      options.icon = "fas fa-exclamation-triangle";
-      settings.delay *= 2;
-
+      alertState.icon = "fas fa-exclamation-triangle";
+      alertState.delay *= 2;
+      alertState.bgColor = "text-bg-warning";
       break;
     case "error":
-      options.icon = "fas fa-times";
+      alertState.icon = "fas fa-times";
       if (title.length === 0) {
-        options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+        alertState.title = "Error, something went wrong!";
       }
 
-      settings.delay *= 2;
+      alertState.delay *= 2;
+      alertState.bgColor = "text-bg-danger";
+      alertState.role = "alert";
+      alertState.live = "assertive";
+      alertState.closeButtonClass += " btn-close-white";
 
       // If the message is an API object, nicely format the error message
       // Try to parse message as JSON
@@ -145,10 +228,10 @@ function showAlert(type, icon, title, message, toast) {
         const data = JSON.parse(message);
         console.log(data); // eslint-disable-line no-console
         if (data.error !== undefined) {
-          options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
+          alertState.title = escapeHtml(data.error.message);
 
           if (data.error.hint !== null) {
-            options.message = escapeHtml(data.error.hint);
+            alertState.message = escapeHtml(data.error.hint);
           }
         }
       } catch {
@@ -162,33 +245,45 @@ function showAlert(type, icon, title, message, toast) {
       return;
   }
 
-  if (toast === undefined) {
-    if (type === "info") {
-      // Create a new notification for info boxes
-      showAlertBox = $.notify(options, settings);
-      return showAlertBox;
-    }
+  let toastElement;
+  // Get or create the toast container
+  const container = getOrCreateToastContainer();
 
-    if (showAlertBox !== null) {
-      // Update existing notification for other boxes (if available)
-      showAlertBox.update(options);
-      showAlertBox.update(settings);
-      return showAlertBox;
-    }
+  // If an old toast instance is provided and still shown, replace it with a new one, otherwise create a new toast
+  if (oldToastInstance?.isShown()) {
+    // Get the old DOM element
+    const oldToastElement = oldToastInstance._element;
 
-    // Create a new notification for other boxes if no previous info box exists
-    return $.notify(options, settings);
+    // Create the replacement element
+    toastElement = createToast(alertState);
+
+    // Replace old element with new element
+    oldToastElement.replaceWith(toastElement);
+
+    // Hide the old Bootstrap instance
+    // This will trigger the "hidden.bs.toast" event, and the event listener will remove the old element and dispose of the instance
+    oldToastInstance.hide();
+  } else {
+    // No existing toast — create a new one
+    toastElement = createToast(alertState);
+    // Prepend the toast element to the container so that new toasts appear at the top
+    container.prepend(toastElement);
   }
 
-  if (toast === null) {
-    // Always create a new toast
-    return $.notify(options, settings);
-  }
+  const toastInstance = bootstrap.Toast.getOrCreateInstance(toastElement);
 
-  // Update existing toast
-  toast.update(options);
-  toast.update(settings);
-  return toast;
+  // Remove the toast element from the DOM when it is hidden, and dispose of the Bootstrap toast instance to free up resources
+  toastElement.addEventListener(
+    "hidden.bs.toast",
+    () => {
+      toastElement.remove();
+      toastInstance.dispose();
+    },
+    { once: true }
+  );
+
+  toastInstance.show();
+  return toastInstance;
 }
 
 function datetime(date, html, humanReadable) {
@@ -457,7 +552,13 @@ function addFromQueryLog(domain, list) {
   const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
   disableAll();
-  showAlert("info", "", "Adding from Query Log", `Adding ${domain} to the ${listtype}...`);
+  globalThis.toasts.addFromQueryLog = showAlert(
+    "info",
+    "",
+    "Adding from Query Log",
+    `Adding ${domain} to the ${listtype}...`,
+    null
+  );
 
   $.ajax({
     url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
@@ -479,14 +580,21 @@ function addFromQueryLog(domain, list) {
           "success",
           "fas fa-plus",
           "Added from Query Log",
-          `${domain} successfully added to the ${listtype}`
+          `${domain} successfully added to the ${listtype}`,
+          globalThis.toasts.addFromQueryLog
         );
 
         // Update domains counter in the menu
         updateFtlInfo();
       } else {
         // Failure
-        showAlert("error", "", `Failure adding ${domain} to ${listtype}`, response.message);
+        showAlert(
+          "error",
+          "",
+          `Failure adding ${domain} to ${listtype}`,
+          response.message,
+          globalThis.toasts.addFromQueryLog
+        );
       }
     },
     error(xhr) {
@@ -508,7 +616,13 @@ function addFromQueryLog(domain, list) {
       }
 
       enableAll();
-      showAlert("error", "", `Failure adding ${domain} to ${listtype}`, errorMsg);
+      showAlert(
+        "error",
+        "",
+        `Failure adding ${domain} to ${listtype}`,
+        errorMsg,
+        globalThis.toasts.addFromQueryLog
+      );
     },
   });
 }
@@ -692,7 +806,7 @@ function hexDecode(text) {
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
 
-function listsAlert(type, items, data) {
+function listsAlert(type, items, data, oldToastInstance) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
   const successLength = data.processed.success.length;
@@ -702,7 +816,8 @@ function listsAlert(type, items, data) {
       "success",
       "fas fa-plus",
       "Successfully added " + type + (items.length !== 1 ? "s" : ""),
-      items.join(", ")
+      items.join(", "),
+      oldToastInstance
     );
     return;
   }
@@ -753,7 +868,8 @@ function listsAlert(type, items, data) {
     "warning",
     "fas fa-exclamation-triangle",
     "Some " + type + (items.length !== 1 ? "s" : "") + " could not be added " + processed,
-    message
+    message,
+    oldToastInstance
   );
 }
 

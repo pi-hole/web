@@ -10,7 +10,7 @@
 "use strict";
 
 let dhcpLeaesTable = null;
-const toasts = {};
+globalThis.toasts ??= {};
 
 // DHCP leases tooltips
 // Bootstrap 5 has no jQuery-plugin tooltip delegation, so lazily instantiate
@@ -184,7 +184,7 @@ function deleteLease() {
 
 function delLease(ip) {
   utils.disableAll();
-  toasts[ip] = utils.showAlert("info", "", "Deleting lease...", ip, null);
+  globalThis.toasts.delLease = utils.showAlert("info", "", "Deleting lease...", ip, null);
 
   $.ajax({
     url: document.body.dataset.apiurl + "/dhcp/leases/" + encodeURIComponent(ip),
@@ -198,7 +198,7 @@ function delLease(ip) {
           "far fa-trash-alt",
           "Successfully deleted lease",
           ip,
-          toasts[ip]
+          globalThis.toasts.delLease
         );
         dhcpLeaesTable.ajax.reload(null, false);
       } else {
@@ -207,7 +207,7 @@ function delLease(ip) {
           "",
           "Error while deleting lease: " + ip,
           response.lease,
-          toasts[ip]
+          globalThis.toasts.delLease
         );
       }
 
@@ -222,7 +222,7 @@ function delLease(ip) {
         "",
         "Error while deleting lease: " + ip,
         jqXHR.responseText,
-        toasts[ip]
+        globalThis.toasts.delLease
       );
       console.log(exception); // eslint-disable-line no-console
     });
@@ -344,7 +344,8 @@ $(document).on("click", ".save-static-row", function () {
       "error",
       "fa-times",
       "Cannot save: Invalid value found on the table",
-      "Please correct the highlighted fields before saving."
+      "Please correct the highlighted fields before saving.",
+      null
     );
     return;
   }
@@ -562,7 +563,8 @@ $(document).on("click", ".copy-to-static", function () {
       "warning",
       "",
       "Finish editing first",
-      "Please confirm or cancel the row you are editing before copying a lease."
+      "Please confirm or cancel the row you are editing before copying a lease.",
+      null
     );
     return;
   }
