@@ -6,33 +6,630 @@
 *  Please see LICENSE file for your rights under this license. */
 
 :root {
-  /* Datatables Select - bgcolor */
-  --datatable-selected-bg: #90b6ff;
+  --ph-main-color: #3f90bf;
+  --ph-main-color-rgb: 63, 144, 191;
+  --ph-main-color-dimmed: #327da9;
+  --ph-main-color-dimmed-rgb: 50, 125, 169;
 
-  /* Used in settings save button */
-  --overlay-bgcolor: rgba(212, 220, 232, 0.55);
+  /* Border color for focused elements */
+  --ph-focus-border-color: #88b6ff;
 
   /* Dashboard graphic bars colors */
   --allowed-color: #00a65a;
   --blocked-color: #b00000;
-  --cached-color: #9be;
+  --cached-color: #88b6ff;
   --other-color: #908878;
 
-  /* AdminLTE root variables */
-  --bs-body-font-size: 15px;
+  /* Overlay element - Used in settings save button */
+  --overlay-bgcolor: rgba(212, 220, 232, 0.55);
+
+  /* Network table colors (use hex colors) */
+  --ph-network-never: #ffd0cc;
+  --ph-network-recent: #ebfce6;
+  --ph-network-old: #fffddd;
+  --ph-network-older: #ffeeda;
+
+  /* Datatables Select - bgcolor */
+  --datatable-selected-bg: #88b6ff;
+
+  /* Text colors used in buttons, icons, gravity and tail log outputs */
+  --text-black: #000;
+  --text-light-green: #7fff00;
+  --text-green: #090;
+  --text-yellow: #f69600;
+  --text-red: #e00;
+  --text-blue: #0048e8;
+  --text-purple: #a0c;
+  --text-cyan: #0ab;
+  --text-gray: #999;
 }
 
-/* AdminLTE Color variables */
+/*** Sidebar ***/
+
+/* "Pi-hole" brand as logo (no image) - use a bigger font for the brand */
+.sidebar-brand {
+  height: 54px;
+}
+
+.sidebar-brand .brand-text {
+  margin: 0;
+  font-size: 1.35em;
+}
+
+/* Status panel */
+.user-panel {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 0.5rem 0;
+  gap: 1em;
+}
+
+.user-panel,
+.user-panel .info {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.user-panel .image {
+  display: inline-block;
+  flex: 0 0 auto;
+  text-align: center;
+  margin-left: 0.5rem;
+}
+
+.user-panel .image img {
+  max-width: 52px;
+  min-width: 30px;
+  height: auto;
+}
+
+.user-panel .info {
+  padding: 0;
+  line-height: 1.05;
+  color: var(--lte-sidebar-active-color);
+  display: inline-block;
+}
+
+.user-panel > .info > p {
+  margin-bottom: 6px;
+}
+.user-panel > .info > span {
+  display: inline-block;
+  padding: 0;
+  margin: 2px 0;
+  font-size: 11px;
+}
+
+/* Menu */
+.sidebar-wrapper .nav-icon {
+  min-width: 1.4rem;
+  max-width: 1.4rem;
+}
+
+.sidebar-menu .badge {
+  margin-top: 2px;
+  padding: 0.3em 0.6em;
+}
+.sidebar-menu .nav-badge:has(+ .nav-arrow) {
+  margin-right: 1.6rem;
+}
+.sidebar-menu .nav-treeview .nav-link :is(.nav-badge, .nav-arrow) {
+  right: var(--bs-nav-link-padding-x) !important;
+}
+
+.sidebar-menu > .nav-header {
+  font-size: 0.8rem;
+}
+.sidebar-menu > .nav-item .nav-link {
+  border-left: 3px solid transparent;
+}
+.sidebar-menu > .nav-item > .nav-link.active,
+.sidebar-menu > .nav-item > .nav-link:hover {
+  border-color: var(--ph-main-color);
+}
+
+.sidebar-menu .nav-item {
+  margin-bottom: 0.2em;
+}
+.sidebar-menu .nav-item:last-child > .nav-link {
+  margin: 0;
+}
+
+.sidebar-menu .nav-treeview {
+  padding: 2px 4px;
+}
+.sidebar-menu .nav-link:has(+ .nav-treeview) {
+  margin: 0 !important;
+}
+
+.sidebar-menu .nav-item.menu-open {
+  background-color: var(--lte-sidebar-menu-active-bg);
+  border-radius: 0.375rem;
+}
+
+.sidebar-menu .nav-treeview .nav-item > .nav-link {
+  --bs-nav-link-padding-x: 0.75rem;
+}
+.sidebar-menu .nav-treeview .nav-item > .nav-link:not(:hover) {
+  background-color: transparent !important;
+}
+.sidebar-menu .nav-treeview .nav-item .nav-item > .nav-link {
+  padding-left: 2em;
+}
+
+/*** Warning icon and count ***/
+.warning-count {
+  border-radius: 2em;
+  padding: 0.25em 0.5em 0.3em !important;
+}
+.app-header .warning-count {
+  top: 55%;
+  font-size: 12px;
+}
+.menu-open > a .warning-count {
+  display: none;
+}
+
+/* AdminLTE root variables */
+:root,
+[data-bs-theme="light"] {
+  --bs-body-font-size: 15px;
+  --lte-sidebar-width: 238px;
+  --lte-callout-bg: var(--bs-tertiary-bg);
+
+  --bs-blue: var(--ph-main-color);
+  --bs-primary: var(--ph-main-color);
+  --bs-primary-rgb: var(--ph-main-color-rgb);
+
+  --bs-green: #008649;
+  --bs-success: var(--bs-green);
+  --bs-success-rgb: 0, 134, 73;
+
+  --bs-yellow: #f69600;
+  --bs-warning: var(--bs-yellow);
+  --bs-warning-rgb: 238, 158, 0;
+
+  --bs-cyan: #00abd4;
+  --bs-info: var(--bs-cyan);
+  --bs-info-rgb: 0, 171, 212;
+
+  --bs-red: #db3626;
+  --bs-danger: var(--bs-red);
+  --bs-danger-rgb: 219, 54, 38;
+
+  --bs-gray-600: var(--bs-gray);
+  --bs-gray-800: var(--bs-gray-dark);
+  --bs-gray-900: var(--bs-gray-900);
+
+  --bs-secondary: var(--bs-gray);
+
+  --bs-light-text-emphasis: var(--bs-gray-700);
+  --bs-dark-text-emphasis: var(--bs-gray-700);
+  --bs-light-border-subtle: var(--bs-gray-200);
+  --bs-dark-border-subtle: var(--bs-gray-500);
+
+  --bs-body-color: var(--bs-gray-900);
+  --bs-body-color-rgb: var(--bs-dark-rgb);
+
+  --bs-emphasis-color: #000;
+  --bs-emphasis-color-rgb: 0, 0, 0;
+  --bs-secondary-color: rgba(var(--bs-dark-rgb), 0.75);
+  --bs-secondary-color-rgb: var(--bs-dark-rgb);
+  --bs-secondary-bg: var(--bs-gray-200);
+  --bs-tertiary-color: rgba(var(--bs-dark-rgb), 0.5);
+  --bs-tertiary-color-rgb: var(--bs-dark-rgb);
+  --bs-tertiary-bg: var(--bs-gray-100);
+  --bs-tertiary-bg-rgb: var(--bs-light-rgb);
+  --bs-link-color: var(--bs-blue);
+  --bs-link-color-rgb: var(--bs-primary-rgb);
+  --bs-link-hover-color: rgb(var(--ph-main-color-dimmed-rgb));
+  --bs-link-hover-color-rgb: var(--ph-main-color-dimmed-rgb);
+
+  --bs-code-color: #d63384;
+  --bs-highlight-color: var(--bs-gray-900);
+  --bs-highlight-bg: var(--bs-warning-bg-subtle);
+  --bs-border-color: var(--bs-gray-300);
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+
+  --bs-focus-ring-color: rgba(var(--bs-primary-rgb), 0.25);
+  --bs-form-valid-color: var(--bs-green);
+  --bs-form-valid-border-color: var(--bs-green);
+  --bs-form-invalid-color: var(--bs-red);
+  --bs-form-invalid-border-color: var(--bs-red);
+}
+@media screen and (min-width: 1260px) {
+  body:not(.layout-boxed) {
+    --lte-sidebar-width: 250px;
+  }
+}
+
+/* Sidebar and top header always use dark themes, even when the page is using a light theme */
+[data-bs-theme="dark"] {
+  --bs-body-color: var(--bs-gray-300);
+  --bs-secondary-color-rgb: var(--bs-body-color-rgb);
+  --bs-secondary-bg: var(--bs-gray-dark);
+  --bs-tertiary-color-rgb: var(--bs-body-color-rgb);
+  --bs-success-text-emphasis: var(--bs-success-text-emphasis);
+  --bs-danger-text-emphasis: var(--bs-danger-text-emphasis);
+  --bs-light-text-emphasis: var(--bs-gray-100);
+  --bs-dark-text-emphasis: var(--bs-gray-300);
+  --bs-light-bg-subtle: var(--bs-gray-dark);
+  --bs-light-border-subtle: var(--bs-gray-700);
+  --bs-dark-border-subtle: var(--bs-gray-dark);
+  --bs-link-color: var(--bs-primary-text-emphasis);
+  --bs-highlight-color: var(--bs-gray-300);
+  --bs-highlight-bg: var(--bs-warning-text-emphasis);
+  --bs-border-color: var(--bs-gray-700);
+  --bs-form-valid-color: var(--bs-success-text-emphasis);
+  --bs-form-valid-border-color: var(--bs-success-text-emphasis);
+  --bs-form-invalid-color: var(--bs-danger-text-emphasis);
+  --bs-form-invalid-border-color: var(--bs-danger-text-emphasis);
+
+  --lte-callout-bg: var(--bs-tertiary-bg);
+}
+
 .navbar[data-bs-theme="dark"] {
   --bs-navbar-color: rgb(255, 255, 255);
   --bs-border-color: var(--bs-gray-300);
+}
+
+[data-bs-theme="dark"] .app-sidebar,
+[data-bs-theme="dark"].app-sidebar {
+  --ph-menu-item-bg: rgba(184, 199, 206, 0.06);
+  --lte-sidebar-hover-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-color: #b8c7ce;
+  --lte-sidebar-hover-color: #fff;
+  --lte-sidebar-active-color: #fff;
+  --lte-sidebar-menu-active-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-menu-active-color: #fff;
+  --lte-sidebar-submenu-bg: transparent;
+  --lte-sidebar-submenu-color: #a1b5be;
+  --lte-sidebar-submenu-hover-color: #fff;
+  --lte-sidebar-submenu-hover-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-submenu-active-color: #fff;
+  --lte-sidebar-submenu-active-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-header-color: #a1b5be;
+}
+
+/* Used in the Query Log table and Status Panel */
+.text-black {
+  color: var(--text-black);
+}
+
+.text-green-light {
+  color: var(--text-light-green);
+}
+
+.text-green {
+  color: var(--text-green);
+}
+
+.text-orange {
+  color: var(--text-yellow);
+}
+
+.text-red {
+  color: var(--text-red);
+}
+
+/* Boxed layout */
+.layout-boxed {
+  background: url("../img/boxed-bg.png") repeat fixed;
+}
+.layout-boxed .app-wrapper {
+  max-width: 1250px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  background-color: var(--bs-secondary-bg);
+  overflow: hidden;
 }
 
 html {
   font-size: var(--bs-body-font-size);
 }
 
-/* Dashboard graphic bars */
+code {
+  background-color: var(--bs-tertiary-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 0.4rem;
+}
+
+footer a {
+  text-decoration: none;
+}
+.version-info {
+  margin-top: 10px;
+}
+
+.form-check-input:checked {
+  background-color: var(--bs-blue);
+  border-color: var(--bs-blue);
+}
+
+/*** Top bar and dropdown-menu ***/
+.app-header.navbar {
+  background-color: var(--bs-primary);
+}
+
+.sidebar-collapse .sidebar-toggle-svg i {
+  transform: scaleX(-1);
+}
+
+.navbar-nav > .nav-item .nav-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav > .user-menu {
+  margin-left: 1rem;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu {
+  width: 260px;
+  border: none;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+  font-weight: 600;
+  color: var(--bs-navbar-brand-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+  height: 50px;
+  width: 50px;
+  border: none;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  padding: 0.5em 0.75em;
+  text-decoration: none;
+}
+
+.dropdown-menu > li > a {
+  color: inherit;
+}
+
+.user-footer .menu-icon {
+  max-height: 1.55rem;
+}
+
+/*** Main content ***/
+.app-content {
+  padding-top: 1em;
+}
+
+.card {
+  border-radius: 8px;
+  --bs-card-spacer-x: 0.85rem;
+  --bs-card-spacer-y: 0.85rem;
+  border-top-width: 3px;
+  --lte-card-variant-bg: rgb(var(--lte-card-variant-bg-rgb));
+}
+.card.card-primary {
+  --lte-card-variant-bg-rgb: var(--bs-primary-rgb);
+}
+.card.card-info {
+  --lte-card-variant-bg-rgb: var(--bs-info-rgb);
+}
+.card.card-danger {
+  --lte-card-variant-bg-rgb: var(--bs-danger-rgb);
+}
+.card.card-warning {
+  --lte-card-variant-bg-rgb: var(--bs-warning-rgb);
+}
+.card.card-success {
+  --lte-card-variant-bg-rgb: var(--bs-success-rgb);
+}
+
+.card-header {
+  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+}
+.collapsed-card .card-header {
+  border-radius: var(--bs-border-radius);
+}
+
+.app-content .card {
+  margin-bottom: var(--bs-gutter-x);
+}
+
+/* Nav tabs - inside card headers */
+.card-header-tabs {
+  margin: -1px;
+  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+}
+.nav-tabs-custom .nav-link {
+  border-radius: 0;
+}
+.nav-tabs-custom > .nav-tabs > li {
+  margin-right: 1px;
+}
+
+/*** Buttons ***/
+.btn-primary,
+.btn-success,
+.btn-info,
+.btn-warning,
+.btn-danger,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning,
+.btn-outline-danger {
+  --btn-color: var(--bs-gray-600);
+  --btn-color-hover: oklch(from var(--btn-color) calc(l - 0.08) c h);
+
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--btn-color);
+  --bs-btn-border-color: var(--btn-color);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--btn-color-hover);
+  --bs-btn-hover-border-color: var(--btn-color-hover);
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--btn-color-hover);
+  --bs-btn-active-border-color: var(--btn-color-hover);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--btn-color);
+  --bs-btn-disabled-border-color: var(--btn-color);
+}
+
+.btn-secondary {
+  --bs-btn-color: var(--bs-primary);
+  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-link-hover-color);
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--bs-link-hover-color);
+  --bs-btn-active-border-color: var(--ph-main-color-dimmed);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: var(--bs-gray);
+  --bs-btn-disabled-bg: var(--bs-tertiary-bg);
+  --bs-btn-disabled-border-color: var(--bs-gray-500);
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning,
+.btn-outline-danger {
+  --btn-color-hover: var(--btn-color);
+
+  --bs-btn-bg: transparent;
+}
+
+.btn-link {
+  --bs-btn-font-weight: 400;
+  --bs-btn-color: var(--bs-link-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--bs-link-hover-color);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--bs-link-hover-color);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-color: var(--bs-gray);
+  --bs-btn-disabled-border-color: transparent;
+  --bs-btn-box-shadow: 0 0 0 #000;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  text-decoration: underline;
+}
+
+.btn-primary,
+.btn-outline-primary {
+  --btn-color: var(--bs-primary);
+}
+.btn-secondary,
+.btn-outline-secondary {
+  --btn-color: var(--bs-secondary);
+}
+.btn-success,
+.btn-outline-success {
+  --btn-color: var(--bs-success);
+}
+.btn-info,
+.btn-outline-info {
+  --btn-color: var(--bs-info);
+}
+.btn-warning,
+.btn-outline-warning {
+  --btn-color: var(--bs-warning);
+}
+.btn-danger,
+.btn-outline-danger {
+  --btn-color: var(--bs-danger);
+}
+
+.btn-xs {
+  padding: 0.3rem 0.25rem;
+  font-size: 0.9rem;
+}
+.btn-xs .fa-fw {
+  width: 1em;
+}
+
+/*** Dashboard ***/
+
+/* Dashboard boxes */
+.small-box {
+  border-radius: 8px;
+  z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
+  overflow: hidden;
+}
+
+.small-box a {
+  text-decoration: none;
+}
+
+.small-box .icon {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  color: rgba(0, 0, 0, 0.15);
+  font-size: 76px;
+  z-index: -1; /* sends the icon behind the text */
+}
+
+/* Background icons grow on hover, but remain centered */
+.small-box:hover .icon {
+  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
+  transform: scale(1.06);
+}
+
+.small-box span {
+  transition-duration: 0.5s;
+}
+
+.small-box-footer span {
+  transition-duration: 0s;
+}
+
+.small-box p {
+  margin: 0 0 5px;
+}
+
+.small-box > .inner {
+  padding: 10px 10px 0;
+}
+
+.small-box > .small-box-footer {
+  color: color-mix(currentColor 70%, transparent);
+  background-color: rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  transition: all 0.5s;
+}
+.small-box > .small-box-footer:hover {
+  color: currentColor;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+@media screen and (min-width: 768px) {
+  .small-box > .small-box-footer {
+    text-align: right;
+    padding: 3px 7px;
+  }
+}
+
+.small-box-footer i {
+  margin: 0 5px;
+  font-size: 13px;
+}
+
+/* Dashboard graphic bar colors */
 .queries-permitted {
   background-color: var(--allowed-color);
 }
@@ -46,225 +643,32 @@ html {
   background-color: var(--other-color);
 }
 
-.layout-boxed {
-  background: url("../img/boxed-bg.png") repeat fixed;
-}
-.layout-boxed .app-wrapper {
-  max-width: 1250px;
-  margin: 0 auto;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-  position: relative;
-  background-color: var(--bs-secondary-bg);
-  overflow: hidden;
-}
-
-/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
-  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
-  login field, the diagnosis warning-count badge and the "reset sorting"
-  buttons - so restore it here, otherwise those elements are always shown. */
-.hidden {
-  display: none !important;
-}
-
-/* AdminLTE 4 resets `.card` bottom margin to 0 and expects per-card spacing
-  utilities. Restore the vertical rhythm between stacked cards that AdminLTE
-  2's `.box` used to provide, unless a card opts out with its own `mb-*`. */
-.app-content .card {
-  margin-bottom: 1rem;
-}
-
-/* AdminLTE 4's `.app-content` has no vertical padding in this build, so page
-  content sits flush against the header. Add consistent top spacing so every
-  page has breathing room below the header. */
-.app-content {
-  padding-top: 1rem;
-}
-
-/* DataTables renders its pager as a Bootstrap `.pagination` but no longer
-  right-aligns it, so it drifted to the middle of its column. Restore the
-  conventional right-aligned position. */
-.dataTables_wrapper ul.pagination,
-.dt-container ul.pagination,
-.card ul.pagination {
-  justify-content: flex-end;
-  margin-bottom: 0;
-}
-
-/* Space out the button groups inside a toolbar (Bootstrap 5's `.btn-toolbar`
-  no longer adds a gap between adjacent groups). */
-.btn-toolbar {
-  gap: 0.5rem;
-}
-
-/* Bootstrap 5 removed `.form-group` (which carried the bottom margin between
-  form rows) and `.help-block` (muted helper text). The templates still use
-  both throughout, so restore their spacing/appearance rather than rewrite
-  every form to `.mb-3`/`.form-text`. */
-.form-group {
-  margin-bottom: 1rem;
-}
-.help-block {
-  display: block;
-  margin-top: 0.25rem;
-  color: var(--bs-secondary-color);
-}
-
-.sidebar-brand .brand-text {
-  margin: 0;
-  font-size: 1.35em;
-}
-
-@keyframes Pulse {
-  from {
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-p#dhcpnotice[hidden] {
-  display: none;
-}
-
-.lookatme #dhcpnotice {
-  display: block;
-}
-
-td.lookatme {
-  display: table-cell;
-}
-
-.lookatme {
-  color: #630030;
-  opacity: 1;
-  position: relative;
-  display: inline-block;
-}
-
-/* this pseudo element will be faded in and out in front /*
-/* of the lookatme element to create an efficient animation. */
-.lookatme:after {
-  color: #e33100;
-  text-shadow: 0 0 5px #e33100;
-  /* in the html, the data-lookatme-text attribute must */
-  /* contain the same text as the .lookatme element */
-  content: attr(data-lookatme-text);
-  padding: inherit;
+/* Loading overlay and spinner (Dashboard and Long-term data) */
+.card > .overlay {
   position: absolute;
-  inset: 0;
-  z-index: 1;
-  /* 20 steps / 2 seconds = 10fps */
-  animation: 2s infinite Pulse steps(20);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  background-color: var(--bs-body-bg);
+  opacity: 0.9;
+  border-radius: var(--bs-card-border-radius);
+}
+.overlay .fa-spin {
+  font-size: 2.5em;
 }
 
-.table-responsive {
-  -webkit-overflow-scrolling: touch;
-  /* Keep the horizontal scrollbar visible on wide tables (e.g. the network
-    overview) instead of relying on overlay scrollbars that stay hidden until
-    scrolling, which made it look like content was simply cut off. */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
-}
-.table-responsive::-webkit-scrollbar {
-  height: 8px;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-  background-color: rgba(128, 128, 128, 0.6);
-  border-radius: 4px;
+/* Dashboard graphics: reset zoom button and info tooltip */
+.zoom-reset {
+  display: none;
+  margin-top: -1px;
 }
 
-/* Optimize Queries-Table for small screens */
-/* Time column */
-#all-queries td:nth-of-type(1),
-/* Reply time column */
-#all-queries td:nth-of-type(6) {
-  white-space: nowrap;
-}
-
-/* Domain column */
-#all-queries td:nth-of-type(4) {
-  min-width: 200px;
-  word-break: break-all;
-  white-space: pre-wrap;
-}
-
-/* Client column */
-#all-queries td:nth-of-type(5) {
-  word-break: break-all;
-}
-
-/* Allow Info String to wrap (useful while filtering entries on small screen) */
-#all-queries_info {
-  white-space: unset;
-}
-
-/* adjust the buttons width */
-#all-queries_wrapper .pagination > li > a {
-  padding-left: 6px;
-  padding-right: 6px;
-  min-width: 34px;
-  text-align: center;
-}
-
-@media screen and (max-width: 500px), screen and (min-width: 767px) and (max-width: 1000px) {
-  /* Hide "Previous" & "Next"-Buttons in Pagination */
-  #all-queries_wrapper .pagination > li.previous,
-  #all-queries_wrapper .pagination > li.next {
-    display: none;
-  }
-
-  #all-queries_wrapper .pagination > li:nth-of-type(2) a {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-
-  #all-queries_wrapper .pagination > li:nth-last-of-type(2) a {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-}
-
-#resetButton {
-  font-weight: 700;
-}
-
-.vertical-alignment-helper {
-  display: table;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.vertical-alignment-helper > .vertical-align-center {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.vertical-alignment-helper > .vertical-align-center > .modal-content {
-  width: 250px;
-  margin-left: auto;
-  margin-right: auto;
-  word-wrap: break-word;
-  pointer-events: all;
-}
-
-.alSpinner {
-  top: 0.1em;
-  left: 0.1em;
-  width: 0.8em;
-  height: 0.8em;
-  border-radius: 50%;
-  border: 4px solid #c0c0c0;
-  border-right-color: transparent;
-  animation: fa-spin 1s infinite linear;
-}
-
+/* Graphic tooltips and legends */
 .chartjs-tooltip {
   opacity: 0;
   position: absolute;
@@ -393,301 +797,8 @@ td.lookatme {
   cursor: pointer; /* Pointer cursor only for clickable items */
 }
 
-.sidebar-menu > li > a > .nav-icon.fab,
-.sidebar-menu > li > a > .nav-icon.far,
-.sidebar-menu > li > a > .nav-icon.fas {
-  width: 20px;
-}
-
-/* Utilities */
-.text-underline {
-  text-decoration: underline;
-}
-
-.breakall {
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
-}
-
-.no-user-select {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.user-panel {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-}
-
-.user-panel .image {
-  flex: 0 0 auto;
-  margin: 0 8px;
-  text-align: center;
-}
-
-.user-panel > .image > img {
-  max-width: 52px;
-  min-width: 30px;
-}
-
-.user-panel > .info {
-  padding: 0;
-  position: relative;
-  line-height: 1.05;
-  flex: 1 1 auto;
-  left: auto;
-  min-width: 0;
-  color: #fff;
-}
-
-.user-panel > .info > p {
-  margin-bottom: 6px;
-}
-
-.user-panel > .info > span {
-  display: inline-block;
-  padding: 0;
-  margin: 2px 0;
-  font-size: 11px;
-}
-
-.user-panel > .info i {
-  margin-right: 3px;
-}
-
-/* AdminLTE 4 only knows how to hide nav-link text in mini/collapsed sidebar
-  mode; the user-panel is pi-hole's own block, so it needs the same rule. */
-.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .info {
-  display: none;
-}
-.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image > img {
-  max-width: 45px;
-  height: auto;
-}
-.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image {
-  margin: 0 auto;
-}
-.row-centered > div[class^="col-"] {
-  display: inline-block;
-  float: none;
-}
-
-.version-info {
-  margin-top: 10px;
-}
-
-.daterangepicker {
-  font-family: inherit;
-}
-
-.form-inline .dataTable .form-control {
-  display: inline-block;
-  width: 100%;
-  vertical-align: middle;
-}
-
-/* Table footer row used to add new items, using inline input fields */
-tfoot.add-new-item > tr > th {
-  font-weight: normal;
-  vertical-align: inherit;
-}
-
-.select2-container--default .select2-results > .select2-results__options {
-  max-height: 400px;
-}
-
-/* Pi-hole's webserver sends a strict CSP with img-src 'self', which blocks
-  the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
-  normally ship with for checkboxes/radios, the modal close button, select
-  dropdown arrows, and the select2 dropdown arrow. Re-host those exact icons
-  as local files and point the same CSS custom properties (or, for select2,
-  the same rule) at them instead - this changes nothing visually, only where
-  the icon loads from.
-
-  Note: a url() stored in a custom property resolves relative to the
-  stylesheet that consumes it via var() - here that's always
-  vendor/adminLTE/adminlte.min.css, not this file - so these paths go up
-  from vendor/adminLTE/ rather than from style/. */
-.form-check-input:checked[type="checkbox"] {
-  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-checked.svg");
-}
-.form-check-input:checked[type="radio"] {
-  --bs-form-check-bg-image: url("../../style/icons/form-check-radio-checked.svg");
-}
-.form-check-input[type="checkbox"]:indeterminate {
-  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-indeterminate.svg");
-}
-.btn-close {
-  --bs-btn-close-bg: url("../../style/icons/btn-close.svg");
-}
-.form-select {
-  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow.svg");
-}
-[data-bs-theme="dark"] .form-select {
-  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow-dark.svg");
-}
-
-/* Tom Select "Select all / Select none" actions, injected above the
-  options list to replace bootstrap-select's actionsBox feature */
-.ts-actions-box {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25em;
-  padding: 0.5em;
-  border-bottom: 1px solid var(--bs-border-color);
-}
-
-.ts-actions-box .btn {
-  flex: 1 0 auto;
-}
-
-.ts-actions-box .btn-group {
-  display: flex;
-  gap: 2px;
-  width: 100%;
-}
-
-.sidebar-menu .nav-link p {
-  width: 100%;
-}
-
-.sidebar-menu li > a > .nav-arrow.fa-angle-left {
-  height: 1em;
-}
-
-.sidebar-menu .badge {
-  margin-top: 2px;
-  padding: 0.25em 0.6em 0.35em;
-}
-
-.sidebar-menu > li.nav-header {
-  color: transparent;
-  padding: 5px;
-}
-
-.app-header.navbar .nav > li.user > a > .fa,
-.app-header.navbar .nav > li.user > a > .glyphicon,
-.app-header.navbar .nav > li.user > a > .ion {
-  margin-right: 0;
-}
-
-.card {
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.card-header-tabs {
-  margin: -1px;
-  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
-}
-.nav-tabs-custom .nav-link {
-  border-radius: 0;
-}
-
-.small-box {
-  border-radius: 8px;
-  z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
-  overflow: hidden;
-}
-
-.small-box-header {
-  padding: 4px 8px;
-}
-
-.small-box span {
-  transition-duration: 0.5s;
-}
-
-.small-box-footer span {
-  transition-duration: 0s;
-}
-
-.small-box p {
-  margin: 0 0 5px;
-}
-
-.small-box > .inner {
-  padding: 10px 10px 0;
-}
-
-.small-box > .small-box-footer {
-  color: rgba(255, 255, 255, 0.75);
-  transition: all 0.5s;
-}
-
-@media screen and (min-width: 768px) {
-  .small-box > .small-box-footer {
-    text-align: right;
-    padding: 3px 7px;
-  }
-}
-
-.small-box-footer i {
-  margin: 0 5px;
-  font-size: 13px;
-}
-
-/* AdminLTE 4 dropped its font-icon corner icon (it now expects an inline SVG),
-  so pi-hole keeps styling its own Font Awesome version here. */
-.small-box .icon {
-  position: absolute;
-  top: auto;
-  bottom: 5px;
-  right: 5px;
-  color: rgba(0, 0, 0, 0.15);
-  font-size: 76px;
-  z-index: -1; /* sends the icon behind the text */
-}
-
-/*** Icons grow on hover, but remain centered ***/
-.small-box:hover .icon {
-  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
-  transform: scale(1.06);
-}
-
-.list-status-0 {
-  color: #7d7d7d;
-}
-
-.list-status-1 {
-  color: #74c700;
-}
-
-.list-status-2 {
-  color: #98ca52;
-}
-
-.list-status-3 {
-  color: #ff8c00;
-}
-
-.list-status-4 {
-  color: #cc0000;
-}
-
-.list-icon-legend-block {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px 60px;
-}
-
-td.details-control {
-  cursor: pointer;
-  text-align: center;
-}
-
-.dataTables-child td {
-  padding: 2px 5px;
-}
-
-/* Query Log - Allow and Deny buttons */
+/*** Query Log page ***/
+/* Allow and Deny buttons */
 .btn-whitelist {
   --bs-btn-bg: var(--bs-body-bg);
   --bs-btn-color: var(--bs-success);
@@ -701,7 +812,7 @@ td.details-control {
   --bs-btn-hover-color: #fff;
 }
 
-/* Query Log - Allow and Deny row background colors */
+/* Allow and Deny row background colors */
 table.dataTable .blocked-row td {
   background-color: rgb(229, 83, 75, 0.1);
 }
@@ -710,16 +821,94 @@ table.dataTable .allowed-row td {
   background-color: rgb(70, 149, 74, 0.1);
 }
 
-.reload-box {
-  display: none;
-}
-.reload-box div {
-  display: flex;
-  justify-content: space-between;
+/* Query Log options */
+.align-click-options {
   align-items: center;
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 15px;
 }
-.reload-box span {
-  padding-right: 20px;
+
+.overflow-wrap {
+  overflow-wrap: break-word;
+  inline-size: auto;
+}
+
+.daterangepicker {
+  font-family: inherit;
+}
+
+/* Query Log table */
+td.dnssec {
+  padding-inline-start: 2.25em !important;
+  text-indent: -1.25em;
+}
+td.dnssec i {
+  text-indent: 0;
+  margin-left: -0.5rem;
+}
+
+/*** Bootstrap toast ***/
+.toast-primary {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: var(--bs-blue);
+  --bs-toast-header-border-color: var(--bs-blue);
+  --bs-toast-border-color: var(--bs-blue);
+  --bs-toast-bg: var(--bs-primary-bg-subtle);
+}
+.toast-secondary {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: var(--bs-gray);
+  --bs-toast-header-border-color: var(--bs-gray);
+  --bs-toast-border-color: var(--bs-gray);
+  --bs-toast-bg: var(--bs-secondary-bg-subtle);
+}
+.toast-success {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: var(--bs-green);
+  --bs-toast-header-border-color: var(--bs-green);
+  --bs-toast-border-color: var(--bs-green);
+  --bs-toast-bg: var(--bs-success-bg-subtle);
+}
+.toast-info {
+  --bs-toast-header-color: #000;
+  --bs-toast-header-bg: var(--bs-cyan);
+  --bs-toast-header-border-color: var(--bs-cyan);
+  --bs-toast-border-color: var(--bs-cyan);
+  --bs-toast-bg: var(--bs-info-bg-subtle);
+}
+.toast-warning {
+  --bs-toast-header-color: #000;
+  --bs-toast-header-bg: var(--bs-yellow);
+  --bs-toast-header-border-color: var(--bs-yellow);
+  --bs-toast-border-color: var(--bs-yellow);
+  --bs-toast-bg: var(--bs-warning-bg-subtle);
+}
+.toast-danger {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: var(--bs-red);
+  --bs-toast-header-border-color: var(--bs-red);
+  --bs-toast-border-color: var(--bs-red);
+  --bs-toast-bg: var(--bs-danger-bg-subtle);
+}
+.toast-light {
+  --bs-toast-header-color: #000;
+  --bs-toast-header-bg: var(--bs-gray-100);
+  --bs-toast-header-border-color: var(--bs-gray-100);
+  --bs-toast-border-color: var(--bs-gray-100);
+  --bs-toast-bg: var(--bs-light-bg-subtle);
+}
+.toast-dark {
+  --bs-toast-header-color: #fff;
+  --bs-toast-header-bg: var(--bs-gray-900);
+  --bs-toast-header-border-color: var(--bs-gray-900);
+  --bs-toast-border-color: var(--bs-gray-900);
+  --bs-toast-bg: var(--bs-dark-bg-subtle);
+}
+
+.toast {
+  --bs-toast-bg: var(--bs-toast-header-bg);
+  color: var(--bs-toast-header-color);
 }
 
 /*** Login page ***/
@@ -743,63 +932,31 @@ table.dataTable .allowed-row td {
   border: none;
 }
 
+.login-box section > .card {
+  box-shadow: none !important;
+  border: none;
+  background: transparent;
+}
+.login-card-body {
+  background: transparent;
+  padding: 0;
+}
+.login-footer {
+  padding: 0;
+}
+
 .loginpage-logo {
   margin: 0 0 10px;
 }
 
-.login-options {
-  display: flex;
-  margin: 0 0 15px -15px;
-  flex-wrap: wrap;
-}
-
-.login-options div {
-  position: relative;
-  margin-left: 15px;
-}
-
-.login-options div:last-child {
-  margin-right: 2px;
-  margin-bottom: 0 !important;
-  font-size: 95%;
+.error-box {
+  border-width: 2px;
+  border-style: solid;
+  animation: error-border 1s infinite;
 }
 
 .pwd-field {
   flex: 1 0 auto;
-}
-
-/* Bootstrap 3's form validation state classes (.has-error/.has-warning/
-  .has-success) were removed in Bootstrap 5 (replaced by .is-invalid/
-  .is-valid on the input itself), but a few pages still toggle them via JS
-  for simple color-coded feedback, so pi-hole defines them itself here. */
-.has-error .form-control,
-.has-error .form-control:focus {
-  border-color: #a94442;
-}
-
-.has-warning .form-control,
-.has-warning .form-control:focus {
-  border-color: #8a6d3b;
-}
-
-.has-success .form-control,
-.has-success .form-control:focus {
-  border-color: #3c763d;
-}
-
-.has-error label,
-.has-error .control-label {
-  color: #a94442;
-}
-
-.has-warning label,
-.has-warning .control-label {
-  color: #8a6d3b;
-}
-
-.has-success label,
-.has-success .control-label {
-  color: #3c763d;
 }
 
 .login-footer a {
@@ -817,53 +974,191 @@ table.dataTable .allowed-row td {
   padding: 15px;
 }
 
-/*** Warning icon and count ***/
-.warning-count {
+/* TODO: remove all .has-* and replace them with proper BS5 classes */
+/* Inherited form validation state classes (.has-error/.has-warning/.has-success)
+  from Bootstrap 3. They are still toggled via JS for simple color-coded feedback,
+  so pi-hole defines them itself here. */
+.has-error .form-control,
+.has-error .form-control:focus {
+  border-color: #a94442;
+}
+
+.has-success .form-control,
+.has-success .form-control:focus {
+  border-color: #3c763d;
+}
+
+.has-error label,
+.has-error .control-label {
+  color: #a94442;
+}
+
+.has-success label,
+.has-success .control-label {
+  color: #3c763d;
+}
+
+/*** Datatables ***/
+div.dt-buttons {
+  margin: 2px 0 5px;
+}
+@media screen and (max-width: 767px) {
+  div.dt-buttons {
+    margin-bottom: 5px;
+    float: none;
+    text-align: center;
+  }
+}
+
+.dt-buttons :is(.fa, .far) {
+  width: auto;
+}
+
+/* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
+  draws the checkbox box itself (it only nudges the margin), so the outline was
+  invisible and the bulk-select column looked empty. Draw the box and the
+  checkmark here so the selection control is visible again. */
+table.dataTable tbody td.select-checkbox,
+table.dataTable tbody th.select-checkbox {
+  position: relative;
+}
+
+table.dataTable tbody td.select-checkbox::before,
+table.dataTable tbody th.select-checkbox::before {
+  content: "";
   position: absolute;
-  display: inline-block;
+  top: 12px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  box-sizing: border-box;
+  opacity: 0.7;
+}
+
+table.dataTable tr.selected td.select-checkbox::before,
+table.dataTable tr.selected th.select-checkbox::before {
+  opacity: 1;
+}
+
+table.dataTable tr.selected td.select-checkbox::after,
+table.dataTable tr.selected th.select-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  width: 6px;
+  height: 10px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+/* Datatables selected row bgcolor */
+table.table.dataTable > tbody > tr.selected > * {
+  color: inherit;
+  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 20%, transparent);
+}
+table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > * {
+  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 40%, transparent);
+}
+
+.datatable-bt {
+  --bs-btn-padding-y: 0.1rem;
+  --bs-btn-padding-x: 0.3rem;
+}
+
+.datatable-bt span {
+  font-size: 17px;
+}
+
+/* TODO: this should probably be done using BS5 classes and a better HTML markup */
+/* Keep the two single-icon columns (list status and list type) on the
+  subscribed-lists table the same width, and centre their icons. */
+#listsTable td.details-control,
+#listsTable th.details-control {
+  min-width: 3.5rem;
   text-align: center;
-  background: #e08e0b;
-  color: #fff;
-  line-height: 1;
-  padding: 0.25em 0.5em;
-  margin: -0.7em 4px;
-  border-radius: 2em;
-  right: 3em;
-  top: 50%;
-  font-size: 12px;
 }
 
-#top-warning-count {
-  top: 55%;
-  left: 50%;
-  right: unset;
-  margin: 0;
+/* TODO: this should probably be done using BS5 classes and newer datatables settings */
+/* DataTables renders its pager as a Bootstrap `.pagination` but no longer
+  right-aligns it, so it drifted to the middle of its column. Restore the
+  conventional right-aligned position. */
+.dataTables_wrapper ul.pagination,
+.dt-container ul.pagination,
+.card ul.pagination {
+  justify-content: flex-end;
+  margin-bottom: 0;
 }
 
-.nav-treeview .warning-count {
-  margin-right: 0;
-  font-size: 10px;
+/* Table footer row used to add new items, using inline input fields */
+tfoot.add-new-item > tr > th {
+  font-weight: normal;
+  vertical-align: inherit;
 }
 
-.menu-open > a > span.warning-count {
-  display: none;
+/* Lists page - list details row */
+.dataTables-child td {
+  padding: 2px 5px;
 }
 
-/* hide submenu warning count during animation */
-li:not(.menu-open) .nav-treeview .warning-count {
-  display: none;
+/* TODO: this should be done using the "Responsive" datatables plugin */
+/* Optimize Queries-Table for small screens */
+/* Time column */
+#all-queries td:nth-of-type(1),
+/* Reply time column */
+#all-queries td:nth-of-type(6) {
+  white-space: nowrap;
 }
 
-/* hide warning count when hover a collapsed sidebar */
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse
-  .sidebar-menu
-  > li:hover
-  > a
-  > span.warning-count {
-  display: none !important;
+/* Domain column */
+#all-queries td:nth-of-type(4) {
+  min-width: 200px;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
-/* Fix some Domains page datatables layout on small screens */
+/* Client column */
+#all-queries td:nth-of-type(5) {
+  word-break: break-all;
+}
+
+/* Allow Info String to wrap (useful while filtering entries on small screen) */
+#all-queries_info {
+  white-space: unset;
+}
+
+/* adjust the buttons width */
+#all-queries_wrapper .pagination > li > a {
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 34px;
+  text-align: center;
+}
+
+@media screen and (max-width: 500px), screen and (min-width: 767px) and (max-width: 1000px) {
+  /* Hide "Previous" & "Next"-Buttons in Pagination */
+  #all-queries_wrapper .pagination > li.previous,
+  #all-queries_wrapper .pagination > li.next {
+    display: none;
+  }
+
+  #all-queries_wrapper .pagination > li:nth-of-type(2) a {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  #all-queries_wrapper .pagination > li:nth-last-of-type(2) a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+/*** Group Management pages ***/
+
+/*** Group Management - Domains ***/
+/* Adjust datatables layout on small screens */
 @media screen and (max-width: 767px) {
   #domainsTable_wrapper .table-responsive {
     border: none;
@@ -989,358 +1284,31 @@ li:not(.menu-open) .nav-treeview .warning-count {
   min-height: 1.2em;
 }
 
-/* reverse side menu collapse arrows when menu is closed */
-.sidebar-collapse .sidebar-toggle-svg i {
-  transform: scaleX(-1);
+/*** Group Management - Lists ***/
+/* Table icons legend */
+.list-status-0 {
+  color: #7d7d7d;
+}
+.list-status-1 {
+  color: #74c700;
+}
+.list-status-2 {
+  color: #98ca52;
+}
+.list-status-3 {
+  color: #ff8c00;
+}
+.list-status-4 {
+  color: #cc0000;
 }
 
-/* reverse side menu collapse arrows on mobile screens */
-@media (max-width: 767px) {
-  .sidebar-toggle-svg i {
-    transform: scaleX(-1);
-  }
-  .sidebar-open .sidebar-toggle-svg i {
-    transform: scaleX(1);
-  }
-}
-
-.icon-bounce {
-  display: inline-block;
-  position: relative;
-  animation: icon-bounce 2.4s 3 ease-in-out;
-  font-size: 1.6em;
-}
-
-@keyframes icon-bounce {
-  0%,
-  15%,
-  50%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-5px);
-  }
-  30% {
-    transform: translateY(4px);
-  }
-  35% {
-    transform: translateY(-3px);
-  }
-  40% {
-    transform: translateY(2px);
-  }
-  45% {
-    transform: translateY(-1px);
-  }
-}
-
-/* Page title container (flex) */
-.flex-header {
+.list-icon-legend-block {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
+  gap: 15px 60px;
 }
 
-.flex-header h1 {
-  margin: 10px 30px 10px 0;
-  flex: 1 0 auto;
-}
-
-.navbar-nav > .user-menu {
-  margin-left: 15px;
-  width: 50px;
-  text-align: center;
-}
-@media screen and (min-width: 767px) {
-  .navbar-nav > .user-menu {
-    background: rgba(0, 0, 0, 0.1);
-  }
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
-  height: auto;
-  padding: 15px 15px 5px;
-  font-weight: 600;
-  color: var(--bs-navbar-brand-color);
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
-  height: 50px;
-  width: 50px;
-  border: none;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-body {
-  border-radius: 0;
-  border-color: #fff;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-  padding: 10px 15px;
-  background: #fff;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
-  background: transparent !important;
-  padding: 6px 0;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu {
-  width: 240px;
-  border: none;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
-  margin: 1px;
-}
-
-.dropdown-menu > li > a {
-  color: inherit;
-}
-
-.user-menu hr {
-  margin: 5px 0;
-  opacity: 0.5;
-}
-
-#apiTokenIframe {
-  width: 100%;
-  border: 0;
-  height: 500px;
-}
-
-#apiTokenModal pre {
-  background: #fff;
-}
-
-.no-danger-area {
-  margin: 0.5em 0 1em;
-  border-left: 2px solid green;
-  border-right: 2px solid green;
-  padding: 1px 1em 0.5em;
-  box-shadow: 0 0 2px -1px #bbb;
-  border-radius: 6px;
-}
-
-.danger-area {
-  margin: 0.5em 0 1em;
-  border-left: 2px solid red;
-  border-right: 2px solid red;
-  padding: 1px 1em 0.5em;
-  box-shadow: 0 0 2px -1px #bbb;
-  border-radius: 6px;
-}
-
-.menu-icon {
-  margin-right: 0.5em;
-}
-
-.user-footer .menu-icon {
-  max-height: 1.75rem;
-  vertical-align: middle;
-}
-
-div.dt-buttons {
-  margin: 2px 0 5px;
-}
-@media screen and (max-width: 767px) {
-  div.dt-buttons {
-    margin-bottom: 5px;
-    float: none;
-    text-align: center;
-  }
-}
-
-/* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
-  draws the checkbox box itself (it only nudges the margin), so the outline was
-  invisible and the bulk-select column looked empty. Draw the box and the
-  checkmark here so the selection control is visible again. */
-table.dataTable tbody td.select-checkbox,
-table.dataTable tbody th.select-checkbox {
-  position: relative;
-  text-align: center;
-  vertical-align: middle;
-}
-
-table.dataTable tbody td.select-checkbox::before,
-table.dataTable tbody th.select-checkbox::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  margin-left: -8px;
-  border: 2px solid currentColor;
-  border-radius: 3px;
-  box-sizing: border-box;
-  opacity: 0.7;
-}
-
-table.dataTable tr.selected td.select-checkbox::before,
-table.dataTable tr.selected th.select-checkbox::before {
-  opacity: 1;
-}
-
-table.dataTable tr.selected td.select-checkbox::after,
-table.dataTable tr.selected th.select-checkbox::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 9px;
-  margin-top: -6px;
-  margin-left: -2px;
-  border-bottom: 2px solid currentColor;
-  border-right: 2px solid currentColor;
-  transform: rotate(45deg);
-}
-
-.datatable-bt {
-  padding: 3px 8px;
-}
-
-.datatable-bt span {
-  font-size: 17px;
-}
-
-/* DNS settings page - Upstream servers table */
-.upstream-servers-table {
-  table-layout: fixed;
-}
-.upstream-servers-table .server-names {
-  width: 210px;
-}
-.upstream-servers-table > tbody > tr > td {
-  vertical-align: middle;
-}
-
-/* DNS settings page - selection-count label on the Plain/DoT/DoH tabs */
-.nav-tabs .label {
-  position: absolute;
-  top: 4px;
-  right: 5px;
-  font-size: 11px;
-}
-.nav-tabs > li > a:has(.label) {
-  padding-right: 30px;
-}
-
-/* Datatables Select - selected row bgcolor */
-table.table.dataTable > tbody > tr.selected > * {
-  color: inherit;
-  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 20%, transparent);
-}
-table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > * {
-  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 40%, transparent);
-}
-
-#messagesTable pre {
-  word-break: break-word;
-  white-space: pre-wrap;
-}
-
-#output {
-  position: relative;
-  margin: 5px 0;
-  min-height: 36px;
-  padding: 4px 8px;
-  width: 100%;
-  height: 100%;
-}
-
-#output.pre-taillog {
-  display: grid;
-}
-
-.loading::before {
-  content: " ";
-  position: absolute;
-  padding: 1em;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  line-height: 1;
-  background: rgba(35, 60, 85, 0.8);
-  box-shadow: 0 0 6px -3px rgba(0, 0, 0, 0.5);
-}
-.loading::after {
-  content: "\1F553\FE0E  Loading...";
-  position: absolute;
-  padding: 1em;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  color: #fff;
-  line-height: 1;
-  animation: 2s infinite Pulse steps(20);
-}
-
-/* Loading spinner (Dashboard and Long-term data) */
-.overlay .fa-spin {
-  position: relative;
-  opacity: 0.5;
-  font-size: 2.5em;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-}
-
-.pull-nav-right {
-  float: right !important;
-  margin-right: 5px;
-  margin-left: 5px;
-  padding: 5px;
-}
-
-.pre-scrollable {
-  /* use dynamic unit to account for mobile browser interface height */
-  max-height: max(195px, 100dvh - 170px);
-  overflow-y: scroll;
-}
-@media screen and (max-width: 767px) {
-  .pre-scrollable {
-    /* reduce max-height on mobile (higher header) */
-    max-height: max(195px, 100dvh - 220px);
-  }
-}
-@media screen and (max-width: 546px) {
-  .pre-scrollable {
-    /* reduce max-height even more (box-header text wraps, increasing the height) */
-    max-height: max(195px, 100dvh - 240px);
-  }
-}
-
-.hr-small {
-  width: 100%;
-  margin: 0 0 -1px;
-  border-top: 1px solid #ff0000aa;
-}
-
-.qrcode {
-  width: 50%;
-}
-
-.totp_token {
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-  font-family: monospace;
-  letter-spacing: 0.5em;
-}
-
-.totp_token::-moz-placeholder {
-  opacity: 0.1;
-}
-
-.totp_token::placeholder {
-  opacity: 0.1;
-}
-
+/*** Settings ***/
 .save-button-container {
   position: fixed;
   bottom: 1.2em;
@@ -1361,41 +1329,16 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   }
 }
 
-.settings-container {
-  --columns: 2;
-  --gap: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap);
-}
-.settings-container > .card {
-  margin: 0;
-  --bs-card-spacer-y: 0.7rem;
-  --bs-card-spacer-x: 1rem;
-  width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
-  border: none;
-  --bs-border-color-translucent: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 1px var(--bs-border-color-translucent);
-}
-.settings-container .card-header {
-  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
-}
-.settings-container .card-footer {
-  background-color: var(--bs-card-bg);
+/* Settings tabs */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: var(--bs-nav-pills-link-active-color);
+  background-color: var(--bs-nav-pills-link-active-bg);
 }
 
-.settings-box .control-label small {
-  font-weight: normal;
-  display: block;
-}
-
-/* Settings containers without modified items and with hidden boxes will display this text */
-.settings-container:not(:has(h3[data-modified="true"])):has(
-    .card[style*="display: none;"]
-  )::before {
-  content: "No modified settings to display";
-  opacity: 0.7;
-  font-style: italic;
+.list-group {
+  --bs-list-group-active-bg: var(--bs-blue);
+  --bs-list-group-active-border-color: var(--bs-blue);
 }
 
 #advanced-settings-menu {
@@ -1414,12 +1357,42 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
 #advanced-settings-menu ul > li a {
   display: block;
   width: 100%;
-  box-sizing: border-box;
-  border-radius: 3px;
 }
 
 #advanced-settings-tabs > .tab-pane {
   margin-bottom: 2em;
+}
+
+.settings-container {
+  --columns: 2;
+  --gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+.settings-container > .card {
+  margin: 0;
+  width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
+  border: none;
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px var(--bs-border-color-translucent);
+}
+.settings-container .card-footer {
+  background-color: var(--bs-card-bg);
+}
+
+.settings-box .control-label small {
+  font-weight: normal;
+  display: block;
+}
+
+/* Settings containers without modified items and with hidden boxes will display this text */
+.settings-container:not(:has(h3[data-modified="true"])):has(
+    .card[style*="display: none;"]
+  )::before {
+  content: "No modified settings to display";
+  opacity: 0.7;
+  font-style: italic;
 }
 
 @media screen and (min-width: 2250px) {
@@ -1441,32 +1414,30 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   }
 }
 
-@keyframes error-border {
-  0%,
-  100% {
-    border-color: rgba(255, 0, 0, 0.5);
-  }
-  50% {
-    border-color: rgba(255, 0, 0, 0.2);
-  }
+.box-icons {
+  margin: 0 5px;
+}
+.box-icons i {
+  margin: 0 4px;
 }
 
-.error-box {
-  border-width: 2px;
-  border-style: solid;
-  animation: error-border 1s infinite;
+/*** Web and API settings page ***/
+.qrcode {
+  width: 50%;
 }
 
-.button-pad {
-  margin: 2px;
-}
-
-.error-headline {
-  float: none;
+.totp_token {
+  font-size: 1.5em;
+  font-weight: bold;
   text-align: center;
-  font-size: 100px;
-  font-weight: 600;
-  padding-right: 20px;
+  font-family: monospace;
+  letter-spacing: 0.5em;
+}
+.totp_token::-moz-placeholder {
+  opacity: 0.1;
+}
+.totp_token::placeholder {
+  opacity: 0.1;
 }
 
 .password_background {
@@ -1480,46 +1451,27 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   );
 }
 
-/* Dashboard graphics: reset zoom button and info tooltip */
-.zoom-reset {
-  display: none;
-  margin-top: -1px;
+/*** DNS settings page ***/
+/* Upstream servers table */
+.upstream-servers-table {
+  table-layout: fixed;
+}
+.upstream-servers-table .server-names {
+  width: 210px;
+}
+.upstream-servers-table > tbody > tr > td {
+  vertical-align: middle;
 }
 
-/* General layout - Row containing flex elements */
-.row-flex {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5em;
-  margin: 0.5em 0;
-  align-items: start;
+/* Selection-count label on the Plain/DoT/DoH tabs */
+.nav-tabs .label {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  font-size: 11px;
 }
-.row-flex .form-control {
-  width: auto;
-}
-
-.log-entry {
-  padding-left: 0.5em;
-}
-
-.align-click-options {
-  align-items: center;
-  display: grid;
-  grid-auto-flow: column;
-  grid-column-gap: 15px;
-}
-
-.overflow-wrap {
-  overflow-wrap: break-word;
-  inline-size: auto;
-}
-
-.box-icons {
-  margin: 0 5px;
-}
-
-.box-icons i {
-  margin: 0 4px;
+.nav-tabs > li > a:has(.label) {
+  padding-right: 30px;
 }
 
 /* Used in Settings DNS page */
@@ -1578,30 +1530,6 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   content: "Domain name (optional)";
 }
 
-/* Used in interfaces page */
-.list-group-item {
-  background: transparent;
-  border-color: rgba(127, 127, 127, 0.27);
-}
-.bstreeview .list-group-item:hover {
-  background-color: rgba(127, 127, 127, 0.18);
-}
-.child-interface-icon {
-  line-height: 0.5em;
-  font-size: 1.7em;
-}
-
-.hidden-entry {
-  opacity: 0;
-}
-.fade-2s {
-  animation: fadeOut 2s forwards;
-}
-.fade-in-transition {
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
-}
-
 #StaticDHCPTable,
 .table-responsive:has(#StaticDHCPTable) {
   margin: 0;
@@ -1627,9 +1555,8 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   padding: 4px;
   font-size: 13px;
 }
-.btn-xs .fa-fw {
-  width: 1em;
-}
+
+/*** DHCP Settings ***/
 
 /* Show hint message on the static DHCP lease table, when at least one Save button exists */
 div:has(> .table-responsive #StaticDHCPTable) {
@@ -1728,53 +1655,161 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   margin: 0 0 1em;
 }
 
-/* Used in query log page */
-td.dnssec {
-  padding-inline-start: 2.25em !important;
-  text-indent: -1.25em;
-}
-td.dnssec i {
-  text-indent: 0;
-  margin-left: -0.5rem;
+/*** Tools - Update Gravity and Tail Log ***/
+#output {
+  position: relative;
+  margin: 5px 0;
+  min-height: 36px;
+  padding: 4px 8px;
+  width: 100%;
+  height: 100%;
 }
 
-/* Keep the two single-icon columns (list status and list type) on the
-  subscribed-lists table the same width, and centre their icons. */
-#listsTable td.details-control,
-#listsTable th.details-control {
-  min-width: 3.5rem;
+.hr-small {
+  width: 100%;
+  margin: 0 0 -1px;
+  border-top: 1px solid #ff0000aa;
+}
+
+.log-entry {
+  padding-left: 0.5em;
+}
+.hidden-entry {
+  opacity: 0;
+}
+.fade-2s {
+  animation: fadeOut 2s forwards;
+}
+.fade-in-transition {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+#output.pre-taillog {
+  display: grid;
+}
+
+.pre-scrollable {
+  /* use dynamic unit to account for mobile browser interface height */
+  max-height: max(195px, 100dvh - 170px);
+  overflow-y: scroll;
+}
+@media screen and (max-width: 767px) {
+  .pre-scrollable {
+    /* reduce max-height on mobile (higher header) */
+    max-height: max(195px, 100dvh - 220px);
+  }
+}
+@media screen and (max-width: 546px) {
+  .pre-scrollable {
+    /* reduce max-height even more (box-header text wraps, increasing the height) */
+    max-height: max(195px, 100dvh - 240px);
+  }
+}
+
+.log-red {
+  color: var(--text-red);
+}
+.log-green {
+  color: var(--text-green);
+}
+.log-yellow {
+  color: var(--text-yellow);
+}
+.log-blue {
+  color: var(--text-blue);
+}
+.log-purple {
+  color: var(--text-purple);
+}
+.log-cyan {
+  color: var(--text-cyan);
+}
+.log-gray {
+  color: var(--text-gray);
+}
+
+/*** Tools - Pi-hole diagnosis ***/
+#messagesTable pre {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/*** Tools - Interface ***/
+.list-group-item {
+  background: transparent;
+  border-color: rgba(127, 127, 127, 0.27);
+}
+.bstreeview .list-group-item:hover {
+  background-color: rgba(127, 127, 127, 0.18);
+}
+.child-interface-icon {
+  line-height: 0.5em;
+  font-size: 1.7em;
+}
+
+@keyframes Pulse {
+  from {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes error-border {
+  0%,
+  100% {
+    border-color: rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(255, 0, 0, 0.2);
+  }
+}
+
+/*** Tools Network - table colors ***/
+.network-never {
+  background-color: var(--ph-network-never);
+}
+.network-recent {
+  background-color: var(--ph-network-recent);
+}
+.network-old {
+  background-color: var(--ph-network-old);
+}
+.network-older {
+  background-color: var(--ph-network-older);
+}
+.network-gradient {
+  background-image: linear-gradient(
+    to right,
+    var(--ph-network-recent) 0%,
+    var(--ph-network-old) 100%
+  );
+}
+
+/*** Error pages ***/
+.error-headline {
   text-align: center;
+  font-size: 100px;
+  font-weight: 600;
 }
 
-/* Tom Select general styles */
-.ts-control,
-.ts-control input,
-.ts-dropdown {
-  font-size: 12px;
+.toast {
+  --bs-toast-bg: var(--bs-toast-header-bg);
+  color: var(--bs-toast-header-color);
 }
 
-/* Tom Select - Dark theme colors */
-/* Dropdown menu background and border alignment */
-[data-bs-theme="dark"] .ts-dropdown {
-  color: var(--bs-dropdown-link-color);
-}
-
-/* Dropdown individual option items */
-[data-bs-theme="dark"] .ts-dropdown .option {
-  color: var(--bs-dropdown-link-color);
-}
-
-/* Selected multi-select pills (Tags) */
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div {
-  background-color: var(--bs-tertiary-bg);
-  color: var(--bs-body-color);
-  border: 1px solid var(--bs-border-color);
-}
-
-/* Remove button X inside multi-select pills */
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove {
-  border-left-color: var(--bs-border-color);
-}
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove:hover {
-  background: rgba(255, 255, 255, 0.1);
+/* TODO: fix this using the new BS5 classes */
+/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
+  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
+  login field, the diagnosis warning-count badge and the "reset sorting"
+  buttons - so restore it here, otherwise those elements are always shown. */
+.hidden {
+  display: none !important;
 }
