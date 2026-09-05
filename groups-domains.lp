@@ -174,7 +174,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
     </div><!-- /.container-fluid -->
 </div><!-- /.app-content -->
 
-<script src="<?=pihole.fileversion('vendor/tom-select/tom-select.complete.min.js')?>"></script>
+<script src="<?=pihole.fileversion('vendor/bootstrap-multiselect/bootstrap-multiselect.min.js')?>"></script>
 <script src="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.jquery.min.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/groups-common.js')?>"></script>
 <script src="<?=pihole.fileversion('scripts/js/groups-domains.js')?>"></script>

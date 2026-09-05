@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
 
 "use strict";
 
@@ -368,49 +368,150 @@ function validateHostnameStrict(name) {
 }
 
 /**
- * Create a Tom Select multi-select out of a <select multiple> element, with
- * "Select all"/"Select none" actions injected into the dropdown (bootstrap-
- * select used to provide this via its actionsBox option).
+ * Create a bootstrap-multiselect out of a <select multiple> element, with
+ * "Select all"/"Select none" actions injected above the options.
  * @param {HTMLElement|jQuery} selectEl - The <select multiple> element (or a jQuery wrapper around it)
- * @param {object} [options] - Extra options merged into the Tom Select config
- * @returns {TomSelect} The created Tom Select instance
+ * @param {object} [options] - Extra options merged into the bootstrap-multiselect config
+ * @returns {object} A small wrapper exposing compatibility helpers used by callers
  */
 function createGroupSelect(selectEl, options = {}) {
-  const el = selectEl instanceof HTMLElement ? selectEl : selectEl[0];
-  const allValues = [...el.options].map(option => option.value);
+  const select = selectEl instanceof HTMLElement ? $(selectEl) : selectEl;
+  const allValues = select
+    .find("option")
+    .map((_, option) => option.value)
+    .get();
+  const { onChange, onDropdownClose, onInitialized, ...multiselectOptions } = options;
 
-  const ts = new TomSelect(el, {
-    plugins: ["remove_button"],
-    create: false,
-    placeholder: "none selected",
-    // Tom Select keeps the placeholder visible on multi-selects by default;
-    // hide it once at least one group is selected so the "none selected"
-    // hint does not sit below the selected item chips.
-    hidePlaceholder: true,
-    // Render the dropdown into <body> instead of nesting it in the table
-    // cell, since ancestors like .table-responsive/.card clip overflow and
-    // would otherwise cut it off (bootstrap-select used container: "body"
-    // for the same reason).
-    dropdownParent: "body",
-    ...options,
+  select.multiselect({
+    nonSelectedText: "none selected",
+    buttonContainer: '<div class="btn-group w-100" />',
+    buttonWidth: "100%",
+    onChange(option, checked) {
+      if (typeof onChange === "function") {
+        onChange(option, checked);
+      }
+    },
+    onDropdownHidden(event) {
+      if (typeof onDropdownClose === "function") {
+        onDropdownClose(event);
+      }
+    },
+    onInitialized(initializedSelect, initializedContainer) {
+      if (typeof onInitialized === "function") {
+        onInitialized(initializedSelect, initializedContainer);
+      }
+    },
+    ...multiselectOptions,
   });
 
-  const actionsBox = document.createElement("div");
-  actionsBox.className = "ts-actions-box";
-  actionsBox.innerHTML =
-    '<div class="btn-group btn-group-sm">' +
-    '<button type="button" class="btn btn-secondary btn-sm select-all">All</button>' +
-    '<button type="button" class="btn btn-secondary btn-sm select-none">None</button>' +
-    "</div>";
-  actionsBox.querySelector(".select-all").addEventListener("click", () => {
-    ts.setValue(allValues);
-  });
-  actionsBox.querySelector(".select-none").addEventListener("click", () => {
-    ts.clear();
-  });
-  ts.dropdown.prepend(actionsBox);
+  const multiselect = select.data("multiselect");
+  const container = multiselect ? multiselect.$container : $();
+  const button = multiselect ? multiselect.$button : $();
+  const dropdown = multiselect ? multiselect.$popupContainer : $();
+  const dropdownParent = dropdown.parent();
+  const updateDropdownPosition = () => {
+    if (button.length === 0 || dropdown.length === 0) {
+      return;
+    }
 
-  return ts;
+    const rect = button[0].getBoundingClientRect();
+    dropdown[0].style.setProperty("--multiselect-trigger-left", `${rect.left}px`);
+    dropdown[0].style.setProperty("--multiselect-trigger-bottom", `${rect.bottom}px`);
+    dropdown[0].style.setProperty("--multiselect-trigger-width", `${rect.width}px`);
+  };
+
+  const cleanupDropdown = () => {
+    $(globalThis).off("resize", updateDropdownPosition).off("scroll", updateDropdownPosition);
+
+    if (dropdown.length === 0 || dropdownParent.length === 0) {
+      return;
+    }
+
+    dropdown.removeClass("multiselect-floating-menu show");
+    dropdown[0].style.removeProperty("--multiselect-trigger-left");
+    dropdown[0].style.removeProperty("--multiselect-trigger-bottom");
+    dropdown[0].style.removeProperty("--multiselect-trigger-width");
+    dropdown.appendTo(dropdownParent);
+  };
+
+  container
+    .on("shown.bs.dropdown.multiselectPortal", () => {
+      if (dropdown.length === 0 || dropdownParent.length === 0) {
+        return;
+      }
+
+      dropdown.detach().appendTo(document.body);
+      dropdown.addClass("multiselect-floating-menu");
+      updateDropdownPosition();
+      $(globalThis).on("resize", updateDropdownPosition).on("scroll", updateDropdownPosition);
+    })
+    .on("hidden.bs.dropdown.multiselectPortal", () => {
+      cleanupDropdown();
+    });
+
+  const actionsItem = $(
+    '<div class="multiselect-actions">' +
+      '<div class="multiselect-actions-box">' +
+      '<div class="btn-group btn-group-sm">' +
+      '<button type="button" class="btn btn-secondary btn-sm select-all">All</button>' +
+      '<button type="button" class="btn btn-secondary btn-sm select-none">None</button>' +
+      "</div>" +
+      "</div>" +
+      "</div>"
+  );
+
+  actionsItem.find(".select-all").on("click", event => {
+    event.preventDefault();
+    select.multiselect("select", allValues, true);
+  });
+
+  actionsItem.find(".select-none").on("click", event => {
+    event.preventDefault();
+    const selectedValues = select
+      .find("option:selected")
+      .map((_, option) => option.value)
+      .get();
+    select.multiselect("deselect", selectedValues, true);
+  });
+
+  dropdown.prepend(actionsItem);
+
+  return {
+    setValue(values) {
+      const selectedValues = select
+        .find("option:selected")
+        .map((_, option) => option.value)
+        .get();
+
+      if (selectedValues.length > 0) {
+        select.multiselect("deselect", selectedValues);
+      }
+
+      if (Array.isArray(values) && values.length > 0) {
+        select.multiselect("select", values);
+      }
+
+      select.multiselect("updateButtonText");
+    },
+    clear() {
+      const selectedValues = select
+        .find("option:selected")
+        .map((_, option) => option.value)
+        .get();
+
+      if (selectedValues.length > 0) {
+        select.multiselect("deselect", selectedValues);
+      }
+
+      select.multiselect("updateButtonText");
+    },
+    close() {
+      button.removeClass("show").attr("aria-expanded", "false");
+      container.removeClass("show");
+      cleanupDropdown();
+    },
+    dropdown,
+  };
 }
 
 const backupStorage = {};
