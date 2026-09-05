@@ -11,6 +11,7 @@
 
 let dhcpLeaesTable = null;
 const toasts = {};
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 // DHCP leases tooltips
 // Bootstrap 5 has no jQuery-plugin tooltip delegation, so lazily instantiate
@@ -50,6 +51,7 @@ $(() => {
       url: document.body.dataset.apiurl + "/dhcp/leases",
       type: "GET",
       dataSrc: "leases",
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     order: [[1, "asc"]],
     columns: [

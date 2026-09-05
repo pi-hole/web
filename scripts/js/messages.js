@@ -11,6 +11,7 @@
 
 let table;
 const toasts = {};
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 $(() => {
   const url = document.body.dataset.apiurl + "/info/messages";
@@ -19,6 +20,7 @@ $(() => {
       url,
       type: "GET",
       dataSrc: "messages",
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     order: [[0, "asc"]],
     columns: [

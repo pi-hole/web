@@ -9,6 +9,8 @@
 
 "use strict";
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
 // These values are provided by the API
 // We initialize them as null and populate them during page init.
 let beginningOfTime = null; // seconds since epoch
@@ -592,6 +594,7 @@ $(() => {
       url: apiURL,
       error: handleAjaxError,
       dataSrc: "queries",
+      headers: { "X-CSRF-TOKEN": csrfToken },
       data(d) {
         if (cursor !== null) {
           d.cursor = cursor;
@@ -730,9 +733,8 @@ $(() => {
         .columns()
         .every(function () {
           // Skip columns that are not searchable
-          const colIdx = this.index();
-          const bSearchable = this.context[0].aoColumns[colIdx].bSearchable;
-          if (!bSearchable) {
+          const searchable = this.init().searchable ?? true;
+          if (!searchable) {
             return null;
           }
 

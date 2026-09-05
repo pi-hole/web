@@ -8,6 +8,7 @@
 /* global utils: false, apiFailure:false, setConfigValues: false */
 
 "use strict";
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
@@ -82,6 +83,7 @@ function populateDataTable(endpoint) {
       url: document.body.dataset.apiurl + "/config/dns/" + endpoint,
       type: "GET",
       dataSrc: `config.dns.${endpoint}`,
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     autoWidth: false,
     columns,

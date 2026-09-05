@@ -11,6 +11,7 @@
 "use strict";
 
 let table;
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 function reloadClientSuggestions() {
   $.ajax({
@@ -107,6 +108,7 @@ function initTable() {
       url: document.body.dataset.apiurl + "/clients",
       dataSrc: "clients",
       type: "GET",
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     order: [[0, "asc"]],
     columns: [

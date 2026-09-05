@@ -12,6 +12,7 @@
 
 let table;
 let GETDict = {};
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
 $(() => {
   GETDict = utils.parseQueryString();
@@ -176,6 +177,7 @@ function initTable() {
       url: document.body.dataset.apiurl + "/lists",
       dataSrc: "lists",
       type: "GET",
+      headers: { "X-CSRF-TOKEN": csrfToken },
     },
     order: [[0, "asc"]],
     columns: [
