@@ -29,7 +29,7 @@
             </div>
             <!-- sidebar menu -->
             <nav class="mt-2" aria-label="Main navigation">
-                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="false" id="sidebar-navigation">
+                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" data-accordion="true" id="sidebar-navigation">
                     <li class="nav-header text-uppercase">Main</li>
                     <!-- Home Page -->
                     <li class="nav-item menu-main">
