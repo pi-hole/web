@@ -534,9 +534,7 @@ tfoot.add-new-item > tr > th {
   --bs-form-select-bg-img: url("../../style/icons/form-select-arrow-dark.svg");
 }
 
-/* Tom Select "Select all / Select none" actions, injected above the
-  options list to replace bootstrap-select's actionsBox feature */
-.ts-actions-box {
+.multiselect-actions-box {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em;
@@ -544,14 +542,39 @@ tfoot.add-new-item > tr > th {
   border-bottom: 1px solid var(--bs-border-color);
 }
 
-.ts-actions-box .btn {
+.multiselect-actions-box .btn {
   flex: 1 0 auto;
 }
 
-.ts-actions-box .btn-group {
+.multiselect-actions-box .btn-group {
   display: flex;
   gap: 2px;
   width: 100%;
+}
+
+.multiselect-floating-menu {
+  position: fixed;
+  inset: auto;
+  top: var(--multiselect-trigger-bottom);
+  left: var(--multiselect-trigger-left);
+  min-width: var(--multiselect-trigger-width);
+  max-width: calc(100vw - var(--multiselect-trigger-left) - 16px);
+  z-index: 1055;
+}
+
+.multiselect-container .multiselect-option.dropdown-item.active {
+  color: var(--bs-dropdown-link-active-color);
+  background-color: var(--bs-dropdown-link-active-bg);
+}
+.multiselect-container .multiselect-option.dropdown-item.active input.form-check-input {
+  filter: saturate(0) invert(1) brightness(2);
+}
+
+.multiselect-container .multiselect-option.dropdown-item:active,
+.multiselect-container .multiselect-option.dropdown-item:focus,
+.multiselect-container .multiselect-option.dropdown-item:hover {
+  color: var(--bs-dropdown-link-hover-color) !important;
+  background-color: var(--bs-dropdown-link-hover-bg) !important;
 }
 
 .sidebar-menu .nav-link p {
@@ -1744,37 +1767,4 @@ td.dnssec i {
 #listsTable th.details-control {
   min-width: 3.5rem;
   text-align: center;
-}
-
-/* Tom Select general styles */
-.ts-control,
-.ts-control input,
-.ts-dropdown {
-  font-size: 12px;
-}
-
-/* Tom Select - Dark theme colors */
-/* Dropdown menu background and border alignment */
-[data-bs-theme="dark"] .ts-dropdown {
-  color: var(--bs-dropdown-link-color);
-}
-
-/* Dropdown individual option items */
-[data-bs-theme="dark"] .ts-dropdown .option {
-  color: var(--bs-dropdown-link-color);
-}
-
-/* Selected multi-select pills (Tags) */
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div {
-  background-color: var(--bs-tertiary-bg);
-  color: var(--bs-body-color);
-  border: 1px solid var(--bs-border-color);
-}
-
-/* Remove button X inside multi-select pills */
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove {
-  border-left-color: var(--bs-border-color);
-}
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
