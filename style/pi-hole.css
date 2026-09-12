@@ -1262,13 +1262,17 @@ div.dt-buttons {
 table.dataTable tbody td.select-checkbox,
 table.dataTable tbody th.select-checkbox {
   position: relative;
+  min-width: 2.4rem;
 }
 
 table.dataTable tbody td.select-checkbox::before,
 table.dataTable tbody th.select-checkbox::before {
   content: "";
   position: absolute;
+  display: block;
   top: 12px;
+  left: 50%;
+  transform: translate(-50%, 0);
   width: 16px;
   height: 16px;
   border: 2px solid currentColor;
@@ -1287,12 +1291,12 @@ table.dataTable tr.selected th.select-checkbox::after {
   content: "";
   position: absolute;
   top: 14px;
-  left: 12px;
+  left: 50%;
   width: 6px;
-  height: 10px;
+  height: 9px;
   border-bottom: 2px solid currentColor;
   border-right: 2px solid currentColor;
-  transform: rotate(45deg);
+  transform: translate(-3px, 0) rotate(45deg);
 }
 
 /* Datatables selected row bgcolor */
