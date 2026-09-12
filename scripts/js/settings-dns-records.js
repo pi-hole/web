@@ -155,6 +155,18 @@ function populateDataTable(endpoint) {
   });
 }
 
+function loadHostsLocal() {
+  $.ajax({
+    url: document.body.dataset.apiurl + "/config/dns/hostsLocal?detailed=true",
+  })
+    .done(data => {
+      setConfigValues("dns", "dns", data.config.dns);
+    })
+    .fail(data => {
+      apiFailure(data);
+    });
+}
+
 function deleteRecord() {
   if ($(this).attr("data-type") === "hosts") {
     delHosts($(this).attr("data-tag"));
@@ -227,6 +239,7 @@ function delCNAME(elem) {
 $(() => {
   populateDataTable("hosts");
   populateDataTable("cnameRecords");
+  loadHostsLocal();
 
   $("#btnAdd-host").on("click", () => {
     utils.disableAll();
