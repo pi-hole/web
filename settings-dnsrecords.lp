@@ -50,6 +50,8 @@ PageTitle = "Local DNS Settings"
                                 </table>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-check">
