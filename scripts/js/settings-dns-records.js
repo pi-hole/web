@@ -155,16 +155,28 @@ function populateDataTable(endpoint) {
   });
 }
 
+// Set when an environment variable owns dns.hostsLocal, in which case the
+// checkbox has to stay read-only across the operations below
+let hostsLocalReadOnly = false;
+
 function loadHostsLocal() {
   $.ajax({
     url: document.body.dataset.apiurl + "/config/dns/hostsLocal?detailed=true",
   })
     .done(data => {
+      hostsLocalReadOnly = data.config.dns.hostsLocal?.flags?.env_var === true;
       setConfigValues("dns", "dns", data.config.dns);
     })
     .fail(data => {
       apiFailure(data);
     });
+}
+
+// utils.enableAll() re-enables every input on the page, which would make an
+// environment-controlled dns.hostsLocal editable again
+function enableInputs() {
+  utils.enableAll();
+  $("#dns\\.hostsLocal").prop("disabled", hostsLocalReadOnly);
 }
 
 function deleteRecord() {
@@ -185,12 +197,12 @@ function delHosts(elem) {
     method: "DELETE",
   })
     .done(() => {
-      utils.enableAll();
+      enableInputs();
       utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted DNS record", elem);
       $("#hosts-Table").DataTable().ajax.reload(null, false);
     })
     .fail((data, exception) => {
-      utils.enableAll();
+      enableInputs();
       apiFailure(data);
       utils.showAlert(
         "error",
@@ -212,7 +224,7 @@ function delCNAME(elem) {
     method: "DELETE",
   })
     .done(() => {
-      utils.enableAll();
+      enableInputs();
       utils.showAlert(
         "success",
         "fas fa-trash-alt",
@@ -224,7 +236,7 @@ function delCNAME(elem) {
       $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
     })
     .fail((data, exception) => {
-      utils.enableAll();
+      enableInputs();
       apiFailure(data);
       utils.showAlert(
         "error",
@@ -251,14 +263,14 @@ $(() => {
       method: "PUT",
     })
       .done(() => {
-        utils.enableAll();
+        enableInputs();
         utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
         $("#Hdomain").val("");
         $("#Hip").val("");
         $("#hosts-Table").DataTable().ajax.reload(null, false);
       })
       .fail((data, exception) => {
-        utils.enableAll();
+        enableInputs();
         apiFailure(data);
         utils.showAlert("error", "", "Error while adding DNS record", data.responseText);
         console.log(exception); // eslint-disable-line no-console
@@ -282,7 +294,7 @@ $(() => {
       method: "PUT",
     })
       .done(() => {
-        utils.enableAll();
+        enableInputs();
         utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
         // Show loading overlay
         utils.loadingOverlay(true);
@@ -291,7 +303,7 @@ $(() => {
         $("#cnameRecords-Table").DataTable().ajax.reload(null, false);
       })
       .fail((data, exception) => {
-        utils.enableAll();
+        enableInputs();
         apiFailure(data);
         utils.showAlert("error", "", "Error while adding CNAME record", data.responseText);
         console.log(exception); // eslint-disable-line no-console
