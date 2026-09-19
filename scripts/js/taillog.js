@@ -80,12 +80,7 @@ function escapeCSV(value) {
 
   const text = String(value);
 
-  if (
-    text.includes(",") ||
-    text.includes('"') ||
-    text.includes("\n") ||
-    text.includes("\r")
-  ) {
+  if (text.includes(",") || text.includes('"') || text.includes("\n") || text.includes("\r")) {
     return `"${text.replaceAll('"', '""')}"`;
   }
 
@@ -239,10 +234,7 @@ function closeDateTimePicker(event) {
 
   input.dataset.previousValue = currentValue;
 
-  if (
-    input.dataset.hourChanged === "true" &&
-    input.dataset.minuteChanged === "true"
-  ) {
+  if (input.dataset.hourChanged === "true" && input.dataset.minuteChanged === "true") {
     requestAnimationFrame(() => {
       input.blur();
     });
@@ -259,10 +251,7 @@ function showExportModal() {
     return;
   }
 
-  if (
-    globalThis.jQuery &&
-    typeof globalThis.jQuery.fn.modal === "function"
-  ) {
+  if (globalThis.jQuery && typeof globalThis.jQuery.fn.modal === "function") {
     globalThis.jQuery(modalElement).modal("show");
     return;
   }
@@ -275,9 +264,7 @@ function showExportModal() {
 
   document.body.classList.add("modal-open");
 
-  let backdrop = document.getElementById(
-    "export-queries-modal-backdrop"
-  );
+  let backdrop = document.getElementById("export-queries-modal-backdrop");
 
   if (!backdrop) {
     backdrop = document.createElement("div");
@@ -310,10 +297,7 @@ function hideExportModal() {
     }
   }
 
-  if (
-    globalThis.jQuery &&
-    typeof globalThis.jQuery.fn.modal === "function"
-  ) {
+  if (globalThis.jQuery && typeof globalThis.jQuery.fn.modal === "function") {
     globalThis.jQuery(modalElement).modal("hide");
     return;
   }
@@ -326,15 +310,12 @@ function hideExportModal() {
 
   document.body.classList.remove("modal-open");
 
-  document
-    .getElementById("export-queries-modal-backdrop")
-    ?.remove();
+  document.getElementById("export-queries-modal-backdrop")?.remove();
 }
 
 async function exportQueries() {
   const exportButton = document.getElementById("export-confirm");
-  const removeDuplicates =
-    document.getElementById("export-remove-duplicates").checked;
+  const removeDuplicates = document.getElementById("export-remove-duplicates").checked;
 
   const selectedColumns = getExportColumns();
 
@@ -366,9 +347,7 @@ async function exportQueries() {
     return;
   }
 
-  const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
   const pageLength = 1000;
   const queries = [];
@@ -384,10 +363,7 @@ async function exportQueries() {
 
   try {
     while (true) {
-      const url = new URL(
-        `${document.body.dataset.apiurl}/queries`,
-        globalThis.location.origin
-      );
+      const url = new URL(`${document.body.dataset.apiurl}/queries`, globalThis.location.origin);
 
       url.searchParams.set("from", from);
       url.searchParams.set("until", until);
@@ -429,10 +405,7 @@ async function exportQueries() {
         break;
       }
 
-      if (
-        Number.isFinite(recordsFiltered) &&
-        queries.length >= recordsFiltered
-      ) {
+      if (Number.isFinite(recordsFiltered) && queries.length >= recordsFiltered) {
         break;
       }
 
@@ -442,10 +415,7 @@ async function exportQueries() {
 
       const lastQuery = pageQueries.at(-1);
 
-      if (
-        !lastQuery ||
-        !Number.isInteger(lastQuery.id)
-      ) {
+      if (!lastQuery || !Number.isInteger(lastQuery.id)) {
         throw new Error("Invalid query ID returned by the API.");
       }
 
@@ -470,23 +440,16 @@ async function exportQueries() {
 
     const headers = selectedColumns.map(column => column.header);
 
-    const rows = exportQueriesData.map(query =>
-      selectedColumns.map(column => column.value(query))
-    );
+    const rows = exportQueriesData.map(query => selectedColumns.map(column => column.value(query)));
 
     const csv = [
       headers.map(value => escapeCSV(value)).join(","),
-      ...rows.map(row =>
-        row.map(value => escapeCSV(value)).join(",")
-      ),
+      ...rows.map(row => row.map(value => escapeCSV(value)).join(",")),
     ].join("\r\n");
 
-    const blob = new Blob(
-      [csv],
-      {
-        type: "text/csv;charset=utf-8",
-      }
-    );
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8",
+    });
 
     const downloadURL = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -508,11 +471,7 @@ async function exportQueries() {
     }
 
     console.error(error);
-    showExportError(
-      error instanceof Error
-        ? error.message
-        : "Failed to export queries."
-    );
+    showExportError(error instanceof Error ? error.message : "Failed to export queries.");
   } finally {
     exportAbortController = null;
     exportButton.disabled = false;
@@ -560,13 +519,9 @@ function getData() {
     return;
   }
 
-  const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-  const url =
-    `${document.body.dataset.apiurl}/logs/${queryParams.file}` +
-    `?nextID=${nextID}`;
+  const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}` + `?nextID=${nextID}`;
 
   fetch(url, {
     method: "GET",
@@ -574,9 +529,7 @@ function getData() {
       "X-CSRF-TOKEN": csrfToken,
     },
   })
-    .then(response =>
-      response.ok ? response.json() : apiFailure(response)
-    )
+    .then(response => (response.ok ? response.json() : apiFailure(response)))
     .then(data => {
       // Set filename
       document.getElementById("filename").textContent = data.file;
@@ -585,9 +538,7 @@ function getData() {
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
           outputElement.innerHTML +=
-            '<div><em class="text-danger">' +
-            "*** FTL restarted ***" +
-            "</em></div>";
+            '<div><em class="text-danger">' + "*** FTL restarted ***" + "</em></div>";
         }
 
         // Remember PID
@@ -603,8 +554,7 @@ function getData() {
       // Set placeholder text if log file is empty and we have no new lines
       if (data.log.length === 0) {
         if (nextID === 0) {
-          outputElement.innerHTML =
-            "<div><em>*** Log file is empty ***</em></div>";
+          outputElement.innerHTML = "<div><em>*** Log file is empty ***</em></div>";
         }
 
         utils.setTimer(getData, REFRESH_INTERVAL.logs);
@@ -627,9 +577,7 @@ function getData() {
       // Limit output to <maxlines> lines
       // Check if adding these new lines would exceed maxlines
       const totalAfterAdding =
-        outputElement.children.length +
-        data.log.length +
-        (markUpdates && nextID > 0 ? 1 : 0);
+        outputElement.children.length + data.log.length + (markUpdates && nextID > 0 ? 1 : 0);
 
       // If we'll exceed maxlines, remove old elements first
       if (totalAfterAdding > maxlines) {
@@ -654,16 +602,11 @@ function getData() {
         // Create and add new log entry to fragment
         const logEntry = document.createElement("div");
 
-        const logEntryDate = moment(
-          1000 * line.timestamp
-        ).format("YYYY-MM-DD HH:mm:ss.SSS");
+        const logEntryDate = moment(1000 * line.timestamp).format("YYYY-MM-DD HH:mm:ss.SSS");
 
-        logEntry.className =
-          `log-entry${fadeIn ? " hidden-entry" : ""}`;
+        logEntry.className = `log-entry${fadeIn ? " hidden-entry" : ""}`;
 
-        logEntry.innerHTML =
-          `<span class="text-muted">${logEntryDate}</span> ` +
-          `${line.message}`;
+        logEntry.innerHTML = `<span class="text-muted">${logEntryDate}</span> ` + `${line.message}`;
 
         fragment.append(logEntry);
       }
@@ -673,8 +616,7 @@ function getData() {
 
       if (fadeIn) {
         // Fade in the new log entries
-        const newEntries =
-          outputElement.querySelectorAll(".hidden-entry");
+        const newEntries = outputElement.querySelectorAll(".hidden-entry");
 
         for (const entry of newEntries) {
           entry.classList.add("fade-in-transition");
@@ -737,26 +679,17 @@ document.getElementById("output").addEventListener(
     // By subtracting the inner height and the scroll top from the scroll height,
     // you get the distance from the bottom of the scrollable area.
 
-    const {
-      scrollHeight,
-      clientHeight,
-      scrollTop,
-    } = output;
+    const { scrollHeight, clientHeight, scrollTop } = output;
 
     // Add a tolerance of four line heights
-    const tolerance =
-      4 * Number.parseFloat(
-        getComputedStyle(output).lineHeight
-      );
+    const tolerance = 4 * Number.parseFloat(getComputedStyle(output).lineHeight);
 
     // Determine if the output is scrolled to the bottom within the tolerance
-    const isAtBottom =
-      scrollHeight - clientHeight - scrollTop <= tolerance;
+    const isAtBottom = scrollHeight - clientHeight - scrollTop <= tolerance;
 
     gAutoScrolling = isAtBottom;
 
-    const autoScrollingElement =
-      document.getElementById("autoscrolling");
+    const autoScrollingElement = document.getElementById("autoscrolling");
 
     if (isAtBottom) {
       autoScrollingElement.classList.add("fa-check");
@@ -776,23 +709,17 @@ $(() => {
   const feedIcon = document.getElementById("feed-icon");
   const title = document.getElementById("title");
 
-  const exportQueriesButton =
-    document.getElementById("export-queries");
+  const exportQueriesButton = document.getElementById("export-queries");
 
-  const exportConfirm =
-    document.getElementById("export-confirm");
+  const exportConfirm = document.getElementById("export-confirm");
 
-  const exportModalClose =
-    document.getElementById("export-modal-close");
+  const exportModalClose = document.getElementById("export-modal-close");
 
-  const exportModalCancel =
-    document.getElementById("export-modal-cancel");
+  const exportModalCancel = document.getElementById("export-modal-cancel");
 
-  const exportFrom =
-    document.getElementById("export-from");
+  const exportFrom = document.getElementById("export-from");
 
-  const exportUntil =
-    document.getElementById("export-until");
+  const exportUntil = document.getElementById("export-until");
 
   const queryParams = utils.parseQueryString();
 
@@ -806,46 +733,24 @@ $(() => {
     });
   }
 
-  exportModalClose.addEventListener(
-    "click",
-    hideExportModal
-  );
+  exportModalClose.addEventListener("click", hideExportModal);
 
-  exportModalCancel.addEventListener(
-    "click",
-    hideExportModal
-  );
+  exportModalCancel.addEventListener("click", hideExportModal);
 
-  exportConfirm.addEventListener(
-    "click",
-    exportQueries
-  );
+  exportConfirm.addEventListener("click", exportQueries);
 
-  exportFrom.addEventListener(
-    "focus",
-    initializeDateTimePicker
-  );
+  exportFrom.addEventListener("focus", initializeDateTimePicker);
 
-  exportUntil.addEventListener(
-    "focus",
-    initializeDateTimePicker
-  );
+  exportUntil.addEventListener("focus", initializeDateTimePicker);
 
-  exportFrom.addEventListener(
-    "input",
-    closeDateTimePicker
-  );
+  exportFrom.addEventListener("input", closeDateTimePicker);
 
-  exportUntil.addEventListener(
-    "input",
-    closeDateTimePicker
-  );
+  exportUntil.addEventListener("input", closeDateTimePicker);
 
   // Clicking on the element with ID "live-feed" will toggle the play/pause state
   liveFeed.addEventListener("click", event => {
     // Determine current state based on whether feedIcon has the "fa-play" class
-    const isPlaying =
-      feedIcon.classList.contains("fa-play");
+    const isPlaying = feedIcon.classList.contains("fa-play");
 
     if (isPlaying) {
       feedIcon.classList.add("fa-pause");
