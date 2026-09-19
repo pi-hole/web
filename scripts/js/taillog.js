@@ -154,7 +154,10 @@ function removeDuplicateQueries(queries) {
     }
   }
 
-  return latestQueries.values().toArray().toSorted((a, b) => b.time - a.time);
+  return latestQueries
+    .values()
+    .toArray()
+    .toSorted((a, b) => b.time - a.time);
 }
 
 function showExportError(message) {
@@ -542,7 +545,8 @@ function getData() {
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
-          outputElement.innerHTML += '<div><em class="text-danger">*** FTL restarted ***</em></div>';
+          outputElement.innerHTML +=
+            '<div><em class="text-danger">*** FTL restarted ***</em></div>';
         }
 
         // Remember PID
