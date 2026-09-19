@@ -11,6 +11,7 @@
 
 let nextID = 0;
 let lastPID = -1;
+let exportAbortController = null;
 
 // Maximum number of lines to display
 const maxlines = 5000;
@@ -291,6 +292,13 @@ function showExportModal() {
 }
 
 function hideExportModal() {
+  // Abort any export currently in flight so closing the modal
+  // (Cancel, the X button, or clicking outside) actually stops it
+  if (exportAbortController) {
+    exportAbortController.abort();
+    exportAbortController = null;
+  }
+
   const modalElement = document.getElementById("export-queries-modal");
 
   if (globalThis.bootstrap?.Modal) {
@@ -368,6 +376,9 @@ async function exportQueries() {
   let cursor = null;
   let recordsFiltered = null;
 
+  exportAbortController = new AbortController();
+  const { signal } = exportAbortController;
+
   exportButton.disabled = true;
   exportButton.textContent = "Exporting...";
 
@@ -392,6 +403,7 @@ async function exportQueries() {
         headers: {
           "X-CSRF-TOKEN": csrfToken,
         },
+        signal,
       });
 
       if (!response.ok) {
@@ -490,6 +502,11 @@ async function exportQueries() {
 
     hideExportModal();
   } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      // Export was cancelled by the user, nothing to report
+      return;
+    }
+
     console.error(error);
     showExportError(
       error instanceof Error
@@ -497,6 +514,7 @@ async function exportQueries() {
         : "Failed to export queries."
     );
   } finally {
+    exportAbortController = null;
     exportButton.disabled = false;
     exportButton.textContent = "Export";
   }
