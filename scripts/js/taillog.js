@@ -134,7 +134,7 @@ function getExportColumns() {
   const selectedColumns = [];
 
   for (const checkbox of document.querySelectorAll(".export-column:checked")) {
-    if (columns[checkbox.value]) {
+    if (Object.hasOwn(columns, checkbox.value)) {
       selectedColumns.push(columns[checkbox.value]);
     }
   }
@@ -146,7 +146,7 @@ function removeDuplicateQueries(queries) {
   const latestQueries = new Map();
 
   for (const query of queries) {
-    const key = `${query.domain}\u0000${query.type}`;
+    const key = `${query.domain}\u{0}${query.type}`;
     const current = latestQueries.get(key);
 
     if (!current || query.time > current.time) {
@@ -154,7 +154,7 @@ function removeDuplicateQueries(queries) {
     }
   }
 
-  return [...latestQueries.values()].sort((a, b) => b.time - a.time);
+  return latestQueries.values().toArray().toSorted((a, b) => b.time - a.time);
 }
 
 function showExportError(message) {
@@ -202,17 +202,8 @@ function closeDateTimePicker(event) {
   const previousValue = input.dataset.previousValue || input.value;
   const currentValue = input.value;
 
-  const previousDate = previousValue.split("T")[0];
-  const currentDate = currentValue.split("T")[0];
-
-  const previousTime = previousValue.split("T")[1] || "";
-  const currentTime = currentValue.split("T")[1] || "";
-
-  const previousHour = previousTime.split(":")[0];
-  const currentHour = currentTime.split(":")[0];
-
-  const previousMinute = previousTime.split(":")[1];
-  const currentMinute = currentTime.split(":")[1];
+  const previousDate = previousValue.split("T", 1)[0];
+  const currentDate = currentValue.split("T", 1)[0];
 
   if (previousDate !== currentDate) {
     input.dataset.previousValue = currentValue;
@@ -223,6 +214,15 @@ function closeDateTimePicker(event) {
 
     return;
   }
+
+  const previousTime = previousValue.split("T", 2)[1] || "";
+  const currentTime = currentValue.split("T", 2)[1] || "";
+
+  const previousHour = previousTime.split(":", 1)[0];
+  const currentHour = currentTime.split(":", 1)[0];
+
+  const previousMinute = previousTime.split(":", 2)[1];
+  const currentMinute = currentTime.split(":", 2)[1];
 
   if (previousHour !== currentHour) {
     input.dataset.hourChanged = "true";
@@ -251,8 +251,8 @@ function showExportModal() {
     return;
   }
 
-  if (globalThis.jQuery && typeof globalThis.jQuery.fn.modal === "function") {
-    globalThis.jQuery(modalElement).modal("show");
+  if (jQuery && typeof jQuery.fn.modal === "function") {
+    jQuery(modalElement).modal("show");
     return;
   }
 
@@ -297,8 +297,8 @@ function hideExportModal() {
     }
   }
 
-  if (globalThis.jQuery && typeof globalThis.jQuery.fn.modal === "function") {
-    globalThis.jQuery(modalElement).modal("hide");
+  if (jQuery && typeof jQuery.fn.modal === "function") {
+    jQuery(modalElement).modal("hide");
     return;
   }
 
@@ -363,7 +363,7 @@ async function exportQueries() {
 
   try {
     while (true) {
-      const url = new URL(`${document.body.dataset.apiurl}/queries`, globalThis.location.origin);
+      const url = new URL(`${document.body.dataset.apiurl}/queries`, location.origin);
 
       url.searchParams.set("from", from);
       url.searchParams.set("until", until);
@@ -374,6 +374,7 @@ async function exportQueries() {
         url.searchParams.set("cursor", cursor);
       }
 
+      // eslint-disable-next-line no-await-in-loop -- each page depends on the previous cursor
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -383,10 +384,12 @@ async function exportQueries() {
       });
 
       if (!response.ok) {
+        // eslint-disable-next-line no-await-in-loop -- reporting failure before stopping
         await apiFailure(response);
         return;
       }
 
+      // eslint-disable-next-line no-await-in-loop -- each page depends on the previous cursor
       const data = await response.json();
       const pageQueries = data.queries || [];
 
@@ -415,7 +418,7 @@ async function exportQueries() {
 
       const lastQuery = pageQueries.at(-1);
 
-      if (!lastQuery || !Number.isInteger(lastQuery.id)) {
+      if (!lastQuery || !Number.isSafeInteger(lastQuery.id)) {
         throw new Error("Invalid query ID returned by the API.");
       }
 
@@ -470,6 +473,7 @@ async function exportQueries() {
       return;
     }
 
+    // eslint-disable-next-line no-console -- surface unexpected export failures for debugging
     console.error(error);
     showExportError(error instanceof Error ? error.message : "Failed to export queries.");
   } finally {
@@ -492,19 +496,20 @@ function getData() {
   }
 
   const queryParams = utils.parseQueryString();
-  const outputElement = document.getElementById("output");
-  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
 
   // Check if file parameter exists
   if (!queryParams.file) {
     // Add default file parameter and redirect
-    const url = new URL(globalThis.location.href);
+    const url = new URL(location.href);
 
     url.searchParams.set("file", "dnsmasq");
 
-    globalThis.location.href = url.toString();
+    location.assign(url.href);
     return;
   }
+
+  const outputElement = document.getElementById("output");
+  const allowedFileParams = ["dnsmasq", "ftl", "webserver"];
 
   // Validate that file parameter is one of the allowed values
   if (!allowedFileParams.includes(queryParams.file)) {
@@ -512,16 +517,16 @@ function getData() {
       `Invalid file parameter: ${queryParams.file}. ` +
       `Allowed values are: ${allowedFileParams.join(", ")}`;
 
-    outputElement.innerHTML =
-      `<div><em class="text-danger">*** Error: ` +
-      `${utils.escapeHtml(errorMessage)} ***</em></div>`;
+    outputElement.innerHTML = `<div><em class="text-danger">*** Error: ${utils.escapeHtml(
+      errorMessage
+    )} ***</em></div>`;
 
     return;
   }
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-  const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}` + `?nextID=${nextID}`;
+  const url = `${document.body.dataset.apiurl}/logs/${queryParams.file}?nextID=${nextID}`;
 
   fetch(url, {
     method: "GET",
@@ -537,8 +542,7 @@ function getData() {
       // Check if we have a new PID -> FTL was restarted
       if (lastPID !== data.pid) {
         if (lastPID !== -1) {
-          outputElement.innerHTML +=
-            '<div><em class="text-danger">' + "*** FTL restarted ***" + "</em></div>";
+          outputElement.innerHTML += '<div><em class="text-danger">*** FTL restarted ***</em></div>';
         }
 
         // Remember PID
@@ -606,7 +610,7 @@ function getData() {
 
         logEntry.className = `log-entry${fadeIn ? " hidden-entry" : ""}`;
 
-        logEntry.innerHTML = `<span class="text-muted">${logEntryDate}</span> ` + `${line.message}`;
+        logEntry.innerHTML = `<span class="text-muted">${logEntryDate}</span> ${line.message}`;
 
         fragment.append(logEntry);
       }
