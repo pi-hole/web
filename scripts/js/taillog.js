@@ -670,6 +670,7 @@ function getData() {
 gAutoScrolling = true;
 
 document.getElementById("output").addEventListener(
+  // eslint-disable-next-line unicorn/prefer-observer-apis
   "scroll",
   event => {
     const output = event.currentTarget;
@@ -690,6 +691,7 @@ document.getElementById("output").addEventListener(
     const { scrollHeight, clientHeight, scrollTop } = output;
 
     // Add a tolerance of four line heights
+    // eslint-disable-next-line unicorn/prefer-number-coercion
     const tolerance = 4 * Number.parseFloat(getComputedStyle(output).lineHeight);
 
     // Determine if the output is scrolled to the bottom within the tolerance
