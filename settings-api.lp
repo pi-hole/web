@@ -29,7 +29,7 @@ PageTitle = "Web Interface - API Settings"
                                         <label for="webserver.interface.theme">Theme:</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-control" placeholder="">
+                                        <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-select" placeholder="">
                                             <option disabled selected>Loading...</option>
                                         </select>
                                     </div>

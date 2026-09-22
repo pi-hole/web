@@ -54,7 +54,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Domain*</label>
-                                    <select id="domain_filter" class="form-control" placeholder="">
+                                    <select id="domain_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -62,7 +62,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Client (by IP)*</label>
-                                    <select id="client_ip_filter" class="form-control" placeholder="">
+                                    <select id="client_ip_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -70,7 +70,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Client (by name)*</label>
-                                    <select id="client_name_filter" class="form-control" placeholder="">
+                                    <select id="client_name_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -78,7 +78,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Upstream*</label>
-                                    <select id="upstream_filter" class="form-control" placeholder="">
+                                    <select id="upstream_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -86,7 +86,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Type</label>
-                                    <select id="type_filter" class="form-control" placeholder="">
+                                    <select id="type_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -94,7 +94,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Status</label>
-                                    <select id="status_filter" class="form-control" placeholder="">
+                                    <select id="status_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -102,7 +102,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>Reply</label>
-                                    <select id="reply_filter" class="form-control" placeholder="">
+                                    <select id="reply_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
@@ -110,7 +110,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <div class="mb-3">
                                     <label>DNSSEC status</label>
-                                    <select id="dnssec_filter" class="form-control" placeholder="">
+                                    <select id="dnssec_filter" class="form-select" placeholder="">
                                         <option disabled selected>Loading...</option>
                                     </select>
                                 </div>
