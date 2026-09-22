@@ -44,11 +44,12 @@ mg.include('scripts/lua/header.lp','r')
                         <input type="text" id="username" value="pi.hole" autocomplete="username" hidden>
                         <!-- hidden label for screen readers -->
                         <label class="visually-hidden" for="loginPassword">Password</label>
-                        <div class="input-group mb-3">
+                        <div class="input-group has-validation mb-3">
                             <input type="password" class="form-control" placeholder="Password" value="" spellcheck="false" autocomplete="current-password" id="current-password" autofocus required>
                             <button class="btn btn-secondary" id="toggle-password" type="button" title="Show password as plain text. Warning: this will display your password on the screen.">
                                 <span class="fa fa-fw fa-eye field-icon"></span>
                             </button>
+                            <div id="current-password-error" class="invalid-feedback" role="alert"></div>
                         </div>
                     </div>
                     <div class="mb-3 hidden" id="totp_input">
