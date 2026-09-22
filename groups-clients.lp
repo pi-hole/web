@@ -37,7 +37,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label for="select">Known clients:</label>
-                                <select id="select" class="form-control" placeholder="">
+                                <select id="select" class="form-select" placeholder="">
                                     <option disabled selected>Loading...</option>
                                 </select>
                             </div>
