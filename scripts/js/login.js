@@ -30,73 +30,78 @@ function showErrorMessage(errorMessage) {
   $("#error-label").show();
 }
 
-function wrongPassword(isError = false, isSuccess = false, data = null) {
-  if (isError) {
-    let isErrorResponse = false;
-    let isInvalidTOTP = false;
-    let errorMessage = "Wrong password!";
-    // Reset hint and error message
-    $("#error-message").text("");
-    $("#error-hint").hide();
-    $("#error-hint").text("");
+function loginFailure(data) {
+  let isErrorResponse = false;
+  let isInvalidTOTP = false;
+  let errorMessage = "Wrong password!";
+  // Reset hint and error message
+  $("#error-message").text("");
+  $("#error-hint").hide();
+  $("#error-hint").text("");
 
-    if ("error" in data.responseJSON && "message" in data.responseJSON.error) {
-      isErrorResponse = true;
-      // Check if the error is caused by an invalid TOTP token
-      isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
-      errorMessage = data.responseJSON.error.message;
-      if ("hint" in data.responseJSON.error && data.responseJSON.error.hint !== null) {
-        $("#error-hint").text(data.responseJSON.error.hint);
-        $("#error-hint").show();
-      }
+  if ("error" in data.responseJSON && "message" in data.responseJSON.error) {
+    isErrorResponse = true;
+    // Check if the error is caused by an invalid TOTP token
+    isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
+    errorMessage = data.responseJSON.error.message;
+    if ("hint" in data.responseJSON.error && data.responseJSON.error.hint !== null) {
+      $("#error-hint").text(data.responseJSON.error.hint);
+      $("#error-hint").show();
     }
-
-    // A wrong password comes back as a session that is not valid rather than as
-    // an error object. Of the error objects, only the invalid 2FA token is about
-    // what was typed - the others are refusals of the server's own (no seats
-    // left, a read-only configuration) and blame neither field
-    showErrorMessage(errorMessage);
-    // Highlight the TOTP field only when the token was rejected
-    if (isInvalidTOTP) {
-      $("#totp_input").addClass("has-error");
-
-      // Only show the invalid 2FA box if the error is caused by an invalid TOTP token
-      $("#invalid2fa-box").removeClass("hidden");
-    }
-
-    // ...and the password field only when the password was
-    if (!isErrorResponse) {
-      $("#pw-field").addClass("has-error");
-    }
-
-    // Only show the forgot password box if the error is NOT caused by an
-    // invalid TOTP token and this is no error response (= password is wrong)
-    if (!isErrorResponse && !isInvalidTOTP) {
-      const forgotPwBox = document.getElementById("forgot-pw-box");
-      forgotPwBox.classList.replace("card-info", "card-danger");
-      utils.toggleBoxCollapse(forgotPwBox, true);
-    }
-
-    return;
   }
 
-  if (isSuccess) {
-    $("#pw-field").addClass("has-success");
-    $("#totp_input").addClass("has-success");
-  } else {
-    $("#pw-field").removeClass("has-error");
-    $("#totp_input").removeClass("has-error");
-    $("#error-label").hide();
+  // A wrong password comes back as a session that is not valid rather than as
+  // an error object. Of the error objects, only the invalid 2FA token is about
+  // what was typed - the others are refusals of the server's own (no seats
+  // left, a read-only configuration) and blame neither field
+  showErrorMessage(errorMessage);
+  // Highlight the TOTP field only when the token was rejected
+  if (isInvalidTOTP) {
+    $("#totp_input").addClass("has-error");
+
+    // Only show the invalid 2FA box if the error is caused by an invalid TOTP token
+    $("#invalid2fa-box").show();
   }
 
-  $("#invalid2fa-box").addClass("hidden");
+  // ...and the password field only when the password was
+  if (!isErrorResponse) {
+    $("#pw-field").addClass("has-error");
+  }
+
+  // Only show the forgot password box if the error is NOT caused by an
+  // invalid TOTP token and this is no error response (= password is wrong)
+  if (!isErrorResponse && !isInvalidTOTP) {
+    const forgotPwBox = document.getElementById("forgot-pw-box");
+    forgotPwBox.classList.replace("card-info", "card-danger");
+    utils.toggleBoxCollapse(forgotPwBox, true);
+  }
+}
+
+function collapseForgotPwBox() {
   const forgotPwBox = document.getElementById("forgot-pw-box");
   forgotPwBox.classList.replace("card-danger", "card-info");
   utils.toggleBoxCollapse(forgotPwBox, false);
 }
 
+function resetLoginMessages() {
+  $("#pw-field").removeClass("has-error");
+  $("#totp_input").removeClass("has-error");
+  $("#error-label").hide();
+
+  $("#invalid2fa-box").hide();
+  collapseForgotPwBox();
+}
+
+function loginSuccess() {
+  $("#pw-field").addClass("has-success");
+  $("#totp_input").addClass("has-success");
+
+  $("#invalid2fa-box").hide();
+  collapseForgotPwBox();
+}
+
 function doLogin(password) {
-  wrongPassword(false, false, null);
+  resetLoginMessages();
   NProgress.start();
   utils.disableAll();
   $.ajax({
@@ -110,20 +115,22 @@ function doLogin(password) {
       totp: $("#totp").val() === "" ? NaN : Math.trunc($("#totp").val()),
     }),
   })
+    // eslint-disable-next-line no-unused-vars
     .done(data => {
-      wrongPassword(false, true, data);
-      NProgress.done();
+      loginSuccess();
       redirect();
     })
     .fail(data => {
       if (!data || !data.responseJSON) {
         showErrorMessage("Server unreachable!");
       } else {
-        wrongPassword(true, false, data);
+        loginFailure(data);
       }
 
-      NProgress.done();
       utils.enableAll();
+    })
+    .always(() => {
+      NProgress.done();
     });
 }
 
