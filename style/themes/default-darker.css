@@ -285,14 +285,6 @@ table,
   background-color: rgb(39, 42, 44);
 }
 
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:focus,
-.nav-pills > li.active > a:hover {
-  color: rgb(232, 230, 227);
-  background-color: rgb(41, 98, 146);
-  border-top-color: rgb(44, 103, 137);
-}
-
 .navbar {
   border-color: transparent;
 }
@@ -624,9 +616,8 @@ Maybe the elements need a different class, but this is probably not used anymore
   background-color: rgb(29, 31, 32);
   background-image: none;
 }
-.nav-pills > li > a {
-  border-top-color: transparent;
-  color: rgb(189, 183, 175);
+.nav-pills .nav-link {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .table.no-border,

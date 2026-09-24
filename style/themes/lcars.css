@@ -1993,17 +1993,17 @@ div:has(.settings-selector) {
   border-radius: 2rem;
 }
 
-#advanced-settings-menu ul > li a {
+.nav-pills > .nav-item .nav-link {
   border: none;
   border-radius: 20px;
   color: #000;
 }
-#advanced-settings-menu ul > li:not(.active) a:hover,
-#advanced-settings-menu ul > li a:focus {
-  background: #fff;
+.nav-pills .nav-link {
+  background: var(--bs-body-color);
 }
-#advanced-settings-menu ul > li:not(.active) a {
-  color: #000;
+.nav-pills > li .nav-link:not(.active):hover,
+.nav-pills > li .nav-link:not(.active):focus {
+  background: #fff;
 }
 
 /*** Tools > Interface page ***/
