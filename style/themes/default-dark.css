@@ -212,6 +212,14 @@ h4 {
   border-top-color: #dd4b39;
 }
 
+.nav-pills .nav-link {
+  background: rgba(127, 127, 127, 0.15);
+}
+.nav-pills .nav-link:focus,
+.nav-pills .nav-link:hover {
+  --nav-link-border-color: rgba(127, 127, 127, 0.5);
+}
+
 .app-header.navbar {
   background-color: var(--bs-tertiary-bg);
 }
