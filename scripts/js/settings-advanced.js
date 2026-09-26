@@ -9,6 +9,9 @@
 
 "use strict";
 
+// Settings the API refuses to change, mapped to the reason FTL gives
+let readOnlyKeys = new Map();
+
 function addAllowedValues(allowed) {
   if (typeof allowed === "object") {
     return (
@@ -34,6 +37,9 @@ function boxIcons(value) {
       : "") +
     (value.flags.env_var
       ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
+      : "") +
+    (value.readOnly && !value.flags.env_var
+      ? '<i class="fas fa-lock text-orange" title="' + utils.escapeHtml(value.readOnly) + '"></i>'
       : "") +
     "</span>"
   );
@@ -73,7 +79,7 @@ function valueDetails(key, value) {
   }
 
   // Define extraAttributes, if needed
-  const extraAttributes = value.flags.env_var ? " disabled" : "";
+  const extraAttributes = value.locked ? " disabled" : "";
 
   // Format the output depending on the value type
   let content = "";
@@ -267,6 +273,8 @@ function generateRow(topic, key, value) {
   }
 
   // else: we have a setting we can display
+  value.readOnly = readOnlyKeys.get(key);
+  value.locked = value.flags.env_var || value.readOnly !== undefined;
   const box =
     '<div class="card settings-box">' +
     '<div class="card-header">' +
@@ -291,10 +299,29 @@ function generateRow(topic, key, value) {
   elem.append(box);
 }
 
+function getReadOnlyKeys() {
+  // An FTL without this endpoint has no such settings
+  return $.ajax({
+    url: document.body.dataset.apiurl + "/config/_properties",
+  }).then(
+    data =>
+      new Map(
+        data.config.read_only
+          .filter(item => item.reason === "read_only")
+          .map(item => [item.key, item.description])
+      ),
+    () => $.Deferred().resolve(new Map())
+  );
+}
+
 function createDynamicConfigTabs() {
-  $.ajax({
-    url: document.body.dataset.apiurl + "/config?detailed=true",
-  })
+  getReadOnlyKeys()
+    .then(keys => {
+      readOnlyKeys = keys;
+      return $.ajax({
+        url: document.body.dataset.apiurl + "/config?detailed=true",
+      });
+    })
     .done(data => {
       // Create the tabs for the advanced dynamic config topics
       for (const topic of Object.values(data.topics)) {
