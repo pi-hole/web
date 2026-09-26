@@ -121,7 +121,7 @@ end
 
 <? if is_authenticated then ?>
     <? if startsWith(scriptname, 'groups') then ?>
-        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/tom-select/tom-select.bootstrap5.min.css')?>">
+        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-multiselect/bootstrap-multiselect.min.css')?>">
     <? end ?>
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/dataTables.bootstrap5.min.css')?>">
