@@ -248,6 +248,13 @@
                         </ul>
                     </li>
 
+                    <!-- HA cluster -->
+                    <li class="nav-item">
+                        <a href="<?=webhome?>cluster" class="nav-link<? if scriptname == 'cluster' then ?> active<? end ?>">
+                            <i class="nav-icon fa fa-fw fa-diagram-project"></i> <p>HA cluster</p>
+                        </a>
+                    </li>
+
                     <!-- Donate button -->
                     <li class="nav-header text-uppercase">Donate</li>
                     <li class="nav-item">

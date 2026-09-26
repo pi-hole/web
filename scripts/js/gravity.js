@@ -30,7 +30,23 @@ function eventsource() {
     method: "POST",
     headers: { "X-CSRF-TOKEN": csrfToken },
   })
-    .then(response => (response.ok ? response : apiFailure(response)))
+    .then(response => {
+      if (response.ok) {
+        return response;
+      }
+
+      // Anything that is not ok arrives before the stream starts, so there is
+      // no output to append to and the page has to say so itself. Without this
+      // the button stays disabled and the "updating" notice stays up for good,
+      // with only a console error to show for it. 409 is a real answer: a
+      // rebuild is already running, started here or by a cluster peer
+      apiFailure(response);
+      const reason =
+        response.status === 409
+          ? "A gravity run is already in progress"
+          : `The server answered ${response.status}`;
+      throw new Error(reason);
+    })
     // Retrieve the response as ReadableStream
     .then(response =>
       handleResponseStream({
@@ -41,7 +57,11 @@ function eventsource() {
         alertSuccess: $alertSuccess,
       })
     )
-    .catch(error => console.error(error)); // eslint-disable-line no-console
+    .catch(error => {
+      $alertInfo.hide();
+      utils.showAlert("error", "", "Gravity could not be started", error.message);
+      gravityBtn.disabled = false;
+    });
 }
 
 function handleResponseStream({ response, outputElement, alertInfo, gravityBtn, alertSuccess }) {
