@@ -94,8 +94,8 @@ function parseLines(outputElement, text) {
       line = line.replaceAll("\r\u{1B}[K", "\n").replaceAll("\r", "\n");
 
       // Last line from the textarea will be overwritten, so we remove it
-      const lastLineIndex = outputElement.innerHTML.lastIndexOf("\n");
-      outputElement.innerHTML = outputElement.innerHTML.substring(0, lastLineIndex);
+      const lastLineIndex = outputElement.getHTML().lastIndexOf("\n");
+      outputElement.innerHTML = outputElement.getHTML().substring(0, lastLineIndex);
     }
 
     // Track the number of opening spans

@@ -365,10 +365,12 @@ function initTable() {
         .column(0, { order: "current" })
         .data()
         .indexOf(Math.trunc(GETDict.domainid));
-      if (pos !== -1) {
-        const page = Math.floor(pos / table.page.info().length);
-        table.page(page).draw(false);
+      if (pos === -1) {
+        return;
       }
+
+      const page = Math.floor(pos / table.page.info().length);
+      table.page(page).draw(false);
     },
   });
   // Disable autocorrect in the search box

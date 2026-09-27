@@ -111,10 +111,12 @@ $(() => {
       // If x_forwarded_for is != null, the session is using a proxy
       // Show x-forwarded-for instead of the remote address in italics
       // and show the remote address in the title attribute
-      if (data.x_forwarded_for !== null) {
-        $("td:eq(8)", row).html("<em>" + utils.escapeHtml(data.x_forwarded_for) + "</em>");
-        $("td:eq(8)", row).attr("title", "Original remote address: " + data.remote_addr);
+      if (data.x_forwarded_for === null) {
+        return;
       }
+
+      $("td:eq(8)", row).html("<em>" + utils.escapeHtml(data.x_forwarded_for) + "</em>");
+      $("td:eq(8)", row).attr("title", "Original remote address: " + data.remote_addr);
     },
     select: {
       style: "multi",
@@ -419,14 +421,16 @@ $("#totp_code").on("paste", event => {
 
 $("#totp_code").on("keyup", function () {
   const code = $(this).val() === "" ? NaN : Math.trunc($(this).val());
-  if (Number.isFinite(code) && TOTPdata.codes.includes(code)) {
-    $("#totp_div").removeClass("has-error");
-    $("#totp_div").addClass("has-success");
-    $("#totp_code").prop("disabled", true);
-    $("#totp_submit").prop("disabled", false);
-    $("#totp_submit").removeClass("btn-secondary");
-    $("#totp_submit").addClass("btn-success");
+  if (!(Number.isFinite(code) && TOTPdata.codes.includes(code))) {
+    return;
   }
+
+  $("#totp_div").removeClass("has-error");
+  $("#totp_div").addClass("has-success");
+  $("#totp_code").prop("disabled", true);
+  $("#totp_submit").prop("disabled", false);
+  $("#totp_submit").removeClass("btn-secondary");
+  $("#totp_submit").addClass("btn-success");
 });
 
 function setTOTPSecret(secret) {

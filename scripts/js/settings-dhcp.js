@@ -368,12 +368,14 @@ $(document).on("click", ".save-static-row", function () {
   $("td", row).blur();
 
   // Check if all rows were already saved (no rows are still being edited)
-  if ($("#StaticDHCPTable .save-static-row").length === 0) {
-    // Re-enable all table buttons
-    $("#StaticDHCPTable button").prop("disabled", false);
-    // and re-enable the textarea
-    $("#dhcp-hosts").prop("disabled", false);
+  if ($("#StaticDHCPTable .save-static-row").length > 0) {
+    return;
   }
+
+  // Re-enable all table buttons
+  $("#StaticDHCPTable button").prop("disabled", false);
+  // and re-enable the textarea
+  $("#dhcp-hosts").prop("disabled", false);
 });
 
 // Cancel button: restores the original line value when editing a row
@@ -407,12 +409,14 @@ $(document).on("click", ".cancel-static-row", function () {
   $(this).remove();
 
   // Check if all rows were already saved or canceled (no rows are still being edited)
-  if ($("#StaticDHCPTable .save-static-row").length === 0) {
-    // Re-enable all table buttons
-    $("#StaticDHCPTable button").prop("disabled", false);
-    // and re-enable the textarea
-    $("#dhcp-hosts").prop("disabled", false);
+  if ($("#StaticDHCPTable .save-static-row").length > 0) {
+    return;
   }
+
+  // Re-enable all table buttons
+  $("#StaticDHCPTable button").prop("disabled", false);
+  // and re-enable the textarea
+  $("#dhcp-hosts").prop("disabled", false);
 });
 
 // Delete button for each row removes that line from the textarea and updates the table
@@ -466,27 +470,29 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
   $("#StaticDHCPTable .delete-static-row, #StaticDHCPTable .add-static-row").prop("disabled", true);
 
   // Add save button (a hint asking to click on the button will be shown below the table - CSS pseudo-element)
-  if (row.find(".save-static-row").length === 0) {
-    const idx = row.attr("data-row");
-    const saveBtn = $(
-      '<button type="button" class="btn btn-success btn-xs save-static-row"><span class="fa fa-fw fa-check"></span></button>'
-    )
-      .attr("data-row", idx)
-      .attr("title", "Confirm changes to this line")
-      .attr("data-bs-toggle", "tooltip");
-    const cancelBtn = $(
-      '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><span class="fa fa-fw fa-undo"></span></button>'
-    )
-      .attr("data-row", idx)
-      .attr("title", "Cancel changes and restore original values")
-      .attr("data-bs-toggle", "tooltip");
-
-    // Add the save button to the actions column
-    row.find("td").last().prepend(saveBtn, " ", cancelBtn, " ");
-
-    // Disable the textarea to avoid losing unsaved changes to the table
-    $("#dhcp-hosts").prop("disabled", true);
+  if (row.find(".save-static-row").length > 0) {
+    return;
   }
+
+  const idx = row.attr("data-row");
+  const saveBtn = $(
+    '<button type="button" class="btn btn-success btn-xs save-static-row"><span class="fa fa-fw fa-check"></span></button>'
+  )
+    .attr("data-row", idx)
+    .attr("title", "Confirm changes to this line")
+    .attr("data-bs-toggle", "tooltip");
+  const cancelBtn = $(
+    '<button type="button" class="btn btn-warning btn-xs cancel-static-row"><span class="fa fa-fw fa-undo"></span></button>'
+  )
+    .attr("data-row", idx)
+    .attr("title", "Cancel changes and restore original values")
+    .attr("data-bs-toggle", "tooltip");
+
+  // Add the save button to the actions column
+  row.find("td").last().prepend(saveBtn, " ", cancelBtn, " ");
+
+  // Disable the textarea to avoid losing unsaved changes to the table
+  $("#dhcp-hosts").prop("disabled", true);
 });
 
 // On table redraw, ensure all buttons are enabled and hints are removed

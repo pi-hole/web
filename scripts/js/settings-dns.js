@@ -104,13 +104,15 @@ function fillDNSupstreams(value, servers) {
       $("#DNSupstreamsTable-dot").append(dotRow);
     }
 
-    if (element.doh && (element.doh.v4 || element.doh.v6)) {
-      let dohRow = "<tr>";
-      dohRow += checkboxCell(element.doh.v4, false);
-      dohRow += checkboxCell(element.doh.v6, false);
-      dohRow += "<td>" + element.name + "</td></tr>";
-      $("#DNSupstreamsTable-doh").append(dohRow);
+    if (!element.doh || (!element.doh.v4 && !element.doh.v6)) {
+      continue;
     }
+
+    let dohRow = "<tr>";
+    dohRow += checkboxCell(element.doh.v4, false);
+    dohRow += checkboxCell(element.doh.v6, false);
+    dohRow += "<td>" + element.name + "</td></tr>";
+    $("#DNSupstreamsTable-doh").append(dohRow);
   }
 
   // Add event listener to checkboxes (shared across the Plain/DoT/DoH tabs)
@@ -188,11 +190,8 @@ function getMergedDNSupstreams(manualUpstreams) {
   // For plain DNS, selected "IP" also covers manual "IP#53".
   for (const line of manualUpstreams) {
     const upstream = line.trim();
-    if (!upstream) {
-      continue;
-    }
-
     if (
+      !upstream ||
       selectedUpstreamsSet.has(upstream) ||
       isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet)
     ) {
