@@ -21,7 +21,6 @@ module.exports = defineConfig([
     // built-in Prettier style
     prettier: "compat",
     space: 2,
-    ignores: ["**/vendor/**"],
     rules: {
       "@stylistic/spaced-comment": "off",
       "camelcase": [
@@ -80,6 +79,9 @@ module.exports = defineConfig([
       "unicorn/prevent-abbreviations": "off",
       "unicorn/switch-case-braces": "off",
     },
+  },
+  {
+    ignores: ["**/vendor/**"],
   },
   // Must be a separate config item so it lands after the prettier-compat config that XO injects
   //  - enforce double quotes
