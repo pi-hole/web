@@ -1320,7 +1320,7 @@ table.dataTable thead .sorting::before {
   bottom: 16px;
   right: 8px;
   display: block;
-  font-family: "Glyphicons Halflings";
+  font-family: "Glyphicons Halflings", sans-serif;
   opacity: 0.3;
   font-size: 0.6em;
 }

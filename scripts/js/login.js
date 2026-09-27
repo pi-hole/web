@@ -185,12 +185,14 @@ $(() => {
     .fail(xhr => {
       const session = xhr.responseJSON.session;
       // If TOPT is enabled, show the input field and add the required attribute
-      if (session.totp === true) {
-        $("#totp_input").removeClass("hidden");
-        $("#totp").attr("required", "required");
-        $("#totp-forgotten-title").removeClass("hidden");
-        $("#totp-forgotten-body").removeClass("hidden");
+      if (session.totp !== true) {
+        return;
       }
+
+      $("#totp_input").removeClass("hidden");
+      $("#totp").attr("required", "required");
+      $("#totp-forgotten-title").removeClass("hidden");
+      $("#totp-forgotten-body").removeClass("hidden");
     });
 
   // Get information about HTTPS port and DNS status
@@ -202,17 +204,19 @@ $(() => {
     }
 
     // Generate HTTPS redirection link (only used if not already HTTPS)
-    if (location.protocol !== "https:" && data.https_port !== 0) {
-      let url = "https://" + location.hostname;
-      if (data.https_port !== 443) {
-        url += ":" + data.https_port;
-      }
-
-      url += location.pathname + location.search + location.hash;
-
-      $("#https-link").attr("href", url);
-      $("#insecure-box").show();
+    if (location.protocol === "https:" || data.https_port === 0) {
+      return;
     }
+
+    let url = "https://" + location.hostname;
+    if (data.https_port !== 443) {
+      url += ":" + data.https_port;
+    }
+
+    url += location.pathname + location.search + location.hash;
+
+    $("#https-link").attr("href", url);
+    $("#insecure-box").show();
   });
 
   // Clear TOTP field

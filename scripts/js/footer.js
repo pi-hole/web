@@ -617,12 +617,14 @@ $(() => {
     $("#cookieInfo").show();
   }
 
-  if (!globalThis._isLoginPage) {
-    // Run check immediately after page loading ...
-    utils.checkMessages();
-    // ... and then periodically
-    utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
+  if (globalThis._isLoginPage) {
+    return;
   }
+
+  // Run check immediately after page loading ...
+  utils.checkMessages();
+  // ... and then periodically
+  utils.setInter(utils.checkMessages, REFRESH_INTERVAL.messages);
 });
 
 // Handle Enable/Disable

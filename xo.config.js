@@ -73,6 +73,8 @@ module.exports = defineConfig([
       "unicorn/prefer-minimal-ternary": "off",
       "unicorn/prefer-module": "off",
       "unicorn/prefer-query-selector": "off",
+      "unicorn/prefer-simple-condition-first": "off",
+      "unicorn/single-line-block-comment-style": "off",
       "unicorn/prefer-string-slice": "off",
       "unicorn/prefer-string-raw": "off",
       "unicorn/prefer-ternary": "off",
@@ -81,7 +83,7 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ["**/vendor/**", "package.json"],
+    ignores: ["**/vendor/**", "package.json", ".devcontainer/devcontainer.json"],
   },
   // Must be a separate config item so it lands after the prettier-compat config that XO injects
   //  - enforce double quotes
