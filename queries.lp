@@ -134,8 +134,8 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                 <div class="card" id="recent-queries">
                     <div class="card-header">
                         <h3 class="card-title">Recent Queries</h3>
-                        <div class="float-end align-click-options">
-                            <span class="form-check"><input class="form-check-input" type="checkbox" id="live"><label class="form-check-label" for="live">Live update</label></span>
+                        <div class="card-header-options">
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="live"><label class="form-check-label m-0" for="live">Live update</label></div>
                             <button type="button" id="refresh" class="btn btn-sm btn-info btn-flat">Refresh</button>
                         </div>
                     </div>

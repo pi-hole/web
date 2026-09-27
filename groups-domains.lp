@@ -136,7 +136,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                         <h3 class="card-title">
                             List of domains
                         </h3>
-                        <div class="filter_types">
+                        <div class="card-header-options">
                             <div class="line">
                                 <span class="form-check"><input class="form-check-input" type="checkbox" name="typ" value="allow/exact" id="typ0" checked><label class="form-check-label" for="typ0">Exact allow</label></span>
                                 <span class="form-check"><input class="form-check-input" type="checkbox" name="typ" value="allow/regex" id="typ2" checked><label class="form-check-label" for="typ2">Regex allow</label></span>
