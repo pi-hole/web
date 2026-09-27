@@ -999,27 +999,6 @@ table.dataTable .allowed-row td {
   background-color: var(--ph-allowed-bg);
 }
 
-/* Query Log options */
-
-/*
-TODO: remove this class and replace it with .card-header-options
-*/
-.align-click-options {
-  align-items: center;
-  display: grid;
-  grid-auto-flow: column;
-  grid-column-gap: 15px;
-}
-
-/*
-TODO: remove this class (and also all other classes from "divStart" - queries.js) and replace them with .w-auto
-      The elements will wrap, since the .row is already flex, with flex-wrap.
-*/
-.overflow-wrap {
-  overflow-wrap: break-word;
-  inline-size: auto;
-}
-
 /* Bootstrap 5 light/dark styles for daterangepicker */
 .daterangepicker {
   font-family: inherit;

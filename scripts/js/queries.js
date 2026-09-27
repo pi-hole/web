@@ -350,7 +350,7 @@ function formatInfo(data) {
   // Parse Query Status
   const dnssec = parseDNSSEC(data);
   const queryStatus = parseQueryStatus(data);
-  const divStart = '<div class="col-xl-2 col-lg-4 col-md-6 col-12 overflow-wrap">';
+  const divStart = '<div class="w-auto">';
   let statusInfo = "";
   if (queryStatus.colorClass !== false) {
     statusInfo =
