@@ -81,7 +81,7 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ["**/vendor/**"],
+    ignores: ["**/vendor/**", "package.json"],
   },
   // Must be a separate config item so it lands after the prettier-compat config that XO injects
   //  - enforce double quotes
