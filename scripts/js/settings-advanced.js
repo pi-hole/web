@@ -35,6 +35,9 @@ function boxIcons(value) {
     (value.flags.env_var
       ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
       : "") +
+    (value.flags.write_only
+      ? '<i class="fas fa-eye-slash text-orange" title="Write-only setting, the value cannot be read back"></i>'
+      : "") +
     "</span>"
   );
 }
@@ -80,11 +83,13 @@ function valueDetails(key, value) {
   switch (value.type) {
     case "IPv4 address":
     case "IPv6 address":
+    case "password (write-only string)":
     case "string": {
+      const inputType = value.flags.write_only ? "password" : "text";
       content +=
         '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
         '<div class="col-sm-10">' +
-        '<input type="text" class="form-control" value="' +
+        `<input type="${inputType}" class="form-control" value="` +
         utils.escapeHtml(value.value) +
         '" data-key="' +
         utils.escapeHtml(key) +
@@ -226,24 +231,6 @@ function valueDetails(key, value) {
       }
 
       content += "</div>";
-
-      break;
-    }
-
-    case "password (write-only string)": {
-      content +=
-        '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
-        '<div class="col-sm-10">' +
-        '<input type="password" class="form-control" value="' +
-        value.value +
-        '" data-key="' +
-        key +
-        '"' +
-        extraAttributes +
-        "> " +
-        defaultValueHint +
-        addAllowedValues(value.allowed) +
-        "</div>";
 
       break;
     }
