@@ -2111,6 +2111,60 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   font-weight: 600;
 }
 
+/* Select2 custom styles to match BS5 colors, instead of using hard-coded colors */
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+  border-color: var(--bs-primary);
+  box-shadow: none;
+  padding-right: 3.2rem; /* Increased space to fit the delete button */
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__clear,
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__clear {
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' stroke='%23808080' stroke-width='3' stroke-linecap='round' fill='none'%3E%3Cpath d='m13 3-10 10m0-10 10 10'%2F%3E%3C%2Fsvg%3E")
+    center/0.75rem auto no-repeat !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__clear:hover,
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__clear:hover {
+  filter: contrast(0.5) sepia(1) hue-rotate(-45deg) saturate(10); /* Change the image color to red instead of using a different image */
+}
+
+.select2-container--bootstrap-5 .select2-dropdown {
+  border-color: var(--bs-primary);
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-search {
+  padding: 0.375rem;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field:focus {
+  border-color: var(--bs-primary);
+}
+
+.select2-container--bootstrap-5
+  .select2-dropdown
+  .select2-results__options
+  .select2-results__option.select2-results__option--highlighted {
+  color: var(--bs-body-color);
+  background-color: var(--bs-secondary-bg);
+}
+.select2-container--bootstrap-5
+  .select2-dropdown
+  .select2-results__options
+  .select2-results__option.select2-results__option--selected,
+.select2-container--bootstrap-5
+  .select2-dropdown
+  .select2-results__options
+  .select2-results__option[aria-selected="true"]:not(.select2-results__option--highlighted) {
+  background-color: var(--bs-primary);
+}
+
+.select2-container--bootstrap-5 .select2-selection--single {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23808080' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
 /* TODO: replace this class with new BS5 classes (and fix javascript code that uses them) */
 /* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
   provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
