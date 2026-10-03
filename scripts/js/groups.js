@@ -105,17 +105,19 @@ $(() => {
 
       $("td:eq(4)", row).empty();
       // Show delete button for all but the default group
-      if (data.id !== 0) {
-        const button =
-          '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
-          dataId +
-          '" data-id="' +
-          dataId +
-          '">' +
-          '<span class="far fa-trash-alt"></span>' +
-          "</button>";
-        $("td:eq(4)", row).html(button);
+      if (data.id === 0) {
+        return;
       }
+
+      const button =
+        '<button type="button" class="btn btn-danger btn-xs" id="deleteGroup_' +
+        dataId +
+        '" data-id="' +
+        dataId +
+        '">' +
+        '<span class="far fa-trash-alt"></span>' +
+        "</button>";
+      $("td:eq(4)", row).html(button);
     },
     select: {
       style: "multi",

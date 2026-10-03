@@ -68,12 +68,14 @@ function updateCachePie(data) {
       k.push(item);
     }
 
-    if (value.stale > 0) {
-      // There are no stale empty entries
-      v.push((100 * value.stale) / cacheSize);
-      c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
-      k.push(item + " (stale)");
+    if (!(value.stale > 0)) {
+      continue;
     }
+
+    // There are no stale empty entries
+    v.push((100 * value.stale) / cacheSize);
+    c.push(THEME_COLORS[i++ % THEME_COLORS.length]);
+    k.push(item + " (stale)");
   }
 
   // Build a single dataset with the data to be pushed

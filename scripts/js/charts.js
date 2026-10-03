@@ -245,10 +245,12 @@ function setTooltipContent(tooltipEl, tooltip) {
     const num = body[0].split(": ");
     // Do not display entries with value of 0 in bar chart,
     // but pass through entries with "0.0%" (in pie charts)
-    if (num[1] !== "0") {
-      tooltipHtml += `<tr><td>${span}${body}</td></tr>`;
-      printed++;
+    if (num[1] === "0") {
+      continue;
     }
+
+    tooltipHtml += `<tr><td>${span}${body}</td></tr>`;
+    printed++;
   }
 
   if (printed < 1) {
