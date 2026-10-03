@@ -169,7 +169,7 @@ function initTable() {
       $("td:eq(2)", row).html(
         '<select id="type_' +
           dataId +
-          '" class="form-control">' +
+          '" class="form-select">' +
           '<option value="allow/exact"' +
           (data.type === "allow" && data.kind === "exact" ? " selected" : "") +
           ">Exact allow</option>" +
@@ -401,7 +401,7 @@ function initTable() {
 
 // Enable "filter by type" functionality, using checkboxes
 $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
-  const types = $(".filter_types input:checkbox:checked")
+  const types = $(".card-header-options input:checkbox:checked")
     .map(function () {
       return this.value;
     })
@@ -410,7 +410,7 @@ $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
   const typeStr = rowData.type + "/" + rowData.kind;
   return Boolean(types.includes(typeStr));
 });
-$(".filter_types input:checkbox").on("change", () => {
+$(".card-header-options input:checkbox").on("change", () => {
   table.draw();
 });
 

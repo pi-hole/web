@@ -28,9 +28,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <div class="card-header">
                         <div id="domain-search-block" class="input-group">
                             <input id="domain" type="url" class="form-control" placeholder="Domain to look for (example.com or sub.example.com)" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
-                            <span class="input-group-btn">
-                                <button type="button" id="btnSearch" class="btn btn-secondary">Search</button>
-                            </span>
+                            <button type="button" id="btnSearch" class="btn btn-secondary">Search</button>
                         </div>
                     </div>
                     <div class="card-body">
