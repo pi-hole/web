@@ -619,16 +619,20 @@ function parseQueryString() {
   return Object.fromEntries(params.entries());
 }
 
+// Six hex digits per code point, not four: code points go up to U+10FFFF, so
+// four digits only cover the basic multilingual plane. Anything above it (e.g.
+// emoji) would be encoded as a wider group that hexDecode() cannot split off
+// again, garbling the rest of the string. Both functions must agree on six.
 function hexEncode(text) {
   if (typeof text !== "string" || text.length === 0) return "";
 
-  return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
+  return [...text].map(char => char.codePointAt(0).toString(16).padStart(6, "0")).join("");
 }
 
 function hexDecode(text) {
   if (typeof text !== "string" || text.length === 0) return "";
 
-  const hexes = text.match(/.{1,4}/gu);
+  const hexes = text.match(/.{1,6}/gu);
   if (!hexes || hexes.length === 0) return "";
 
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
