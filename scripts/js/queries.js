@@ -808,7 +808,7 @@ $(() => {
   });
 });
 
-function refreshTable(keepPage = false) {
+function refreshTable(resetPage = false) {
   // Set cursor to NULL so we pick up newer queries
   cursor = null;
 
