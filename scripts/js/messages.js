@@ -10,7 +10,6 @@
 "use strict";
 
 let table;
-const toasts = {};
 
 $(() => {
   const url = document.body.dataset.apiurl + "/info/messages";
@@ -96,10 +95,13 @@ $(() => {
         className: "btn-sm datatable-bt deleteSelected",
         action() {
           // For each ".selected" row ...
+          const ids = [];
           $("tr.selected").each(function () {
-            // ... delete the row identified by "data-id".
-            delMsg($(this).attr("data-id"));
+            // ... add the row identified by "data-id".
+            ids.push($(this).attr("data-id"));
           });
+          // Delete all selected rows at once
+          delMsgs(ids);
         },
       },
     ],
@@ -145,16 +147,21 @@ $.fn.dataTable.Buttons.defaults.dom.container.className = "dt-buttons";
 
 function deleteMessage() {
   // Passes the button data-del-id attribute as ID
-  delMsg($(this).attr("data-del-id"));
+  delMsgs([$(this).attr("data-del-id")]);
 }
 
-function delMsg(id) {
-  id = Math.trunc(Number(id));
+function delMsgs(ids) {
+  // The API deletes several messages in one request when given comma-separated IDs
+  ids = ids.map(id => Math.trunc(Number(id)));
+  const what = ids.length > 1 ? ids.length + " messages" : "message";
+  // The ID column is hidden, so only show the ID when deleting a single message
+  const detail = ids.length > 1 ? "" : "ID: " + ids[0];
+  const errorTitle = "Error while deleting " + (ids.length > 1 ? what : "message: " + ids[0]);
   utils.disableAll();
-  toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
+  const toast = utils.showAlert("info", "", "Deleting " + what + "...", detail, null);
 
   $.ajax({
-    url: document.body.dataset.apiurl + "/info/messages/" + id,
+    url: document.body.dataset.apiurl + "/info/messages/" + ids.join(","),
     method: "DELETE",
   })
     .done(response => {
@@ -163,21 +170,13 @@ function delMsg(id) {
         utils.showAlert(
           "success",
           "far fa-trash-alt",
-          "Successfully deleted message",
-          "ID: " + id,
-          toasts[id]
+          "Successfully deleted " + what,
+          detail,
+          toast
         );
-        table.row(id).remove();
-
         table.draw(false).ajax.reload(null, false);
       } else {
-        utils.showAlert(
-          "error",
-          "",
-          "Error while deleting message: " + id,
-          response.message,
-          toasts[id]
-        );
+        utils.showAlert("error", "", errorTitle, response.message, toast);
       }
 
       // Clear selection after deletion
@@ -185,17 +184,11 @@ function delMsg(id) {
       utils.changeTableButtonStates(table);
     })
     .done(
-      utils.checkMessages() // Update icon warnings count
+      () => utils.checkMessages() // Update icon warnings count
     )
     .fail((jqXHR, exception) => {
       utils.enableAll();
-      utils.showAlert(
-        "error",
-        "",
-        "Error while deleting message: " + id,
-        jqXHR.responseText,
-        toasts[id]
-      );
+      utils.showAlert("error", "", errorTitle, jqXHR.responseText, toast);
       console.log(exception); // eslint-disable-line no-console
     });
 }
