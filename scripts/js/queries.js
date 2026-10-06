@@ -555,7 +555,8 @@ $("#live").on("click", function () {
 
 function liveUpdate() {
   if (liveMode) {
-    refreshTable();
+    // Keep the user on the page they are viewing
+    refreshTable(true);
   }
 }
 
@@ -792,7 +793,8 @@ $(() => {
     }
   });
 
-  $("#refresh").on("click", refreshTable);
+  // Applying (new) filters starts again from the first page
+  $("#refresh").on("click", () => refreshTable());
 
   // Disable live mode when #disk is checked
   $("#disk").on("click", function () {
@@ -806,7 +808,7 @@ $(() => {
   });
 });
 
-function refreshTable() {
+function refreshTable(keepPage = false) {
   // Set cursor to NULL so we pick up newer queries
   cursor = null;
 
@@ -818,5 +820,6 @@ function refreshTable() {
   activeFilters.from = from;
   activeFilters.until = until;
   const apiUrl = getAPIURL(activeFilters);
-  table.ajax.url(apiUrl).draw();
+  // draw(false) keeps the current paging position, draw() resets to page 1
+  table.ajax.url(apiUrl).draw(!keepPage);
 }
