@@ -248,7 +248,7 @@ function parseStaticDHCPLine(line) {
     };
 
   // Advanced if line contains id:, set:, tag, or "*":
-  if (/id:|set:|tag:\*/u.test(line)) return "advanced";
+  if (/id:|set:|tag:|\*/u.test(line)) return "advanced";
 
   // Split the line by commas and trim whitespace
   const parts = line.split(",").map(s => s.trim());
