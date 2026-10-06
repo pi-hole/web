@@ -311,7 +311,7 @@ $(document).on("click", ".save-static-row", function () {
   // Validate MAC and IP before saving
   const macValid = !hwaddr || utils.validateMAC(hwaddr);
   const ipValid = !ipaddr || utils.validateIPv4(ipaddr) || utils.validateIPv6Brackets(ipaddr);
-  const nameValid = !hostname || utils.validateHostnameStrict(hostname);
+  const nameValid = !hostname || utils.validateHostnameDHCP(hostname);
   if (!macValid || !ipValid || !nameValid) {
     utils.showAlert(
       "error",
@@ -500,7 +500,7 @@ function renderStaticDHCPTable() {
       }
 
       const tdHostname = $(cell).addClass("static-hostname").text(parsed.hostname);
-      if (parsed.hostname && !utils.validateHostnameStrict(parsed.hostname)) {
+      if (parsed.hostname && !utils.validateHostnameDHCP(parsed.hostname)) {
         tdHostname.addClass("table-danger");
       }
 
@@ -613,9 +613,12 @@ $(document).on("input blur paste", "#StaticDHCPTable td.static-ipaddr", function
 
 $(document).on("input blur paste", "#StaticDHCPTable td.static-hostname", function () {
   const val = $(this).text().trim();
-  if (val && !utils.validateHostnameStrict(val)) {
+  if (val && !utils.validateHostnameDHCP(val)) {
     $(this).addClass("table-danger");
-    $(this).attr("title", "Invalid hostname: only letters, digits, hyphens, and dots allowed");
+    $(this).attr(
+      "title",
+      "Invalid hostname: letters, digits, hyphens, dots, and underscores allowed"
+    );
   } else {
     $(this).removeClass("table-danger");
     $(this).attr("title", "");

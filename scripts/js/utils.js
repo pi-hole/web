@@ -342,6 +342,13 @@ function validateHostnameStrict(name) {
   return hostnameValidator.test(name.trim());
 }
 
+function validateHostnameDHCP(name) {
+  // Static DHCP host names may additionally contain underscores inside a label
+  const hostnameValidator =
+    /^[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?)*$/u;
+  return hostnameValidator.test(name.trim());
+}
+
 // set bootstrap-select defaults
 function setBsSelectDefaults() {
   const bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
@@ -827,6 +834,7 @@ globalThis.utils = (function () {
     validateMAC,
     validateHostname,
     validateHostnameStrict,
+    validateHostnameDHCP,
     addFromQueryLog,
     addTD,
     toPercent,
