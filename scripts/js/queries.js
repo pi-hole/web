@@ -821,5 +821,5 @@ function refreshTable(keepPage = false) {
   activeFilters.until = until;
   const apiUrl = getAPIURL(activeFilters);
   // draw(false) keeps the current paging position, draw() resets to page 1
-  table.ajax.url(apiUrl).draw(!keepPage);
+  table.ajax.url(apiUrl).draw(resetPage);
 }
