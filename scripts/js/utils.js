@@ -447,10 +447,28 @@ function addFromQueryLog(domain, list) {
           }, 10_000);
         }
       },
-      error() {
-        // Network Error
+      error(xhr) {
         alProcessing.hide();
-        alNetworkErr.show();
+        // A duplicate domain (or any other database error) comes back as an
+        // HTTP error carrying a JSON body - show its message instead of the
+        // generic network error, e.g. "The item is already present"
+        let apiError = xhr.responseJSON && xhr.responseJSON.error;
+        if (!apiError && xhr.responseText) {
+          try {
+            apiError = JSON.parse(xhr.responseText).error;
+          } catch {
+            // Not a JSON response, treat as a genuine network error
+          }
+        }
+
+        if (apiError) {
+          alNetworkErr.hide();
+          alCustomErr.text(apiError.hint || apiError.message);
+        } else {
+          alNetworkErr.show();
+          alCustomErr.text("");
+        }
+
         alFailure.fadeIn(1000);
         setTimeout(() => {
           alertModal.modal("hide");
