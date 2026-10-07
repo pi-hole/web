@@ -820,6 +820,8 @@ function refreshTable(resetPage = true) {
   activeFilters.from = from;
   activeFilters.until = until;
   const apiUrl = getAPIURL(activeFilters);
+  // Changed filters start again from page 1, as the current page may no longer exist
+  const filtersChanged = apiUrl !== table.ajax.url();
   // draw(false) keeps the current paging position, draw() resets to page 1
-  table.ajax.url(apiUrl).draw(resetPage);
+  table.ajax.url(apiUrl).draw(resetPage || filtersChanged);
 }
