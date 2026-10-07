@@ -556,7 +556,7 @@ $("#live").on("click", function () {
 function liveUpdate() {
   if (liveMode) {
     // Keep the user on the page they are viewing
-    refreshTable(true);
+    refreshTable(false);
   }
 }
 
@@ -808,7 +808,7 @@ $(() => {
   });
 });
 
-function refreshTable(resetPage = false) {
+function refreshTable(resetPage = true) {
   // Set cursor to NULL so we pick up newer queries
   cursor = null;
 
