@@ -529,7 +529,7 @@ function getAPIURL(filters) {
 
   if ($("#disk").prop("checked")) apiurl += "&disk=true";
 
-  return encodeURI(apiurl);
+  return apiurl;
 }
 
 let liveMode = false;

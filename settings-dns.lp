@@ -118,7 +118,7 @@ mg.include('scripts/lua/settings_header.lp','r')
                                 <div>
                                     <input type="radio" name="DNSinterface" id="dns.listeningMode-LOCAL" data-key="dns.listeningMode" value="local">
                                     <label for="dns.listeningMode-LOCAL"><strong>Allow only local requests</strong></label>
-                                    <p class="help-block">Allows only queries from devices that are at most one hop away (local devices)</p>
+                                    <p class="help-block">Allows only queries from devices that are on a subnet directly connected to this Pi-hole (local devices).</p>
                                 </div>
                             </div>
                             <div class="danger-area">
