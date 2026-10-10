@@ -10,6 +10,7 @@
 "use strict";
 
 let tableApi;
+globalThis.toasts ??= {};
 
 // How many IPs do we show at most per device?
 const MAXIPDISPLAY = 3;
@@ -66,7 +67,13 @@ function deleteNetworkEntry() {
   const hwaddr = tr.attr("data-hwaddr");
 
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting network table entry...");
+  globalThis.toasts.deleteNetworkEntry = utils.showAlert(
+    "info",
+    "",
+    "Deleting network table entry...",
+    hwaddr,
+    null
+  );
   $.ajax({
     url: document.body.dataset.apiurl + "/network/devices/" + id,
     method: "DELETE",
@@ -76,7 +83,8 @@ function deleteNetworkEntry() {
         "success",
         "far fa-trash-alt",
         "Successfully deleted network table entry",
-        hwaddr
+        hwaddr,
+        globalThis.toasts.deleteNetworkEntry
       );
       tableApi.row(tr).remove().draw(false).ajax.reload(null, false);
     },
@@ -87,7 +95,8 @@ function deleteNetworkEntry() {
         "error",
         "",
         "Error while deleting network table entry with ID " + id,
-        data.responseText
+        data.responseText,
+        globalThis.toasts.deleteNetworkEntry
       );
       console.log(exception); // eslint-disable-line no-console
     },

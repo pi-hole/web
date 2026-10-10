@@ -9,6 +9,8 @@
 
 "use strict";
 
+globalThis.toasts ??= {};
+
 function hostsDomain(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
@@ -165,7 +167,7 @@ function deleteRecord() {
 
 function delHosts(elem) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting DNS record...", elem);
+  globalThis.toasts.delHosts = utils.showAlert("info", "", "Deleting DNS record...", elem, null);
   const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
 
   $.ajax({
@@ -174,7 +176,13 @@ function delHosts(elem) {
   })
     .done(() => {
       utils.enableAll();
-      utils.showAlert("success", "fas fa-trash-alt", "Successfully deleted DNS record", elem);
+      utils.showAlert(
+        "success",
+        "fas fa-trash-alt",
+        "Successfully deleted DNS record",
+        elem,
+        globalThis.toasts.delHosts
+      );
       $("#hosts-Table").DataTable().ajax.reload(null, false);
     })
     .fail((data, exception) => {
@@ -184,7 +192,8 @@ function delHosts(elem) {
         "error",
         "",
         "Error while deleting DNS record: <code>" + elem + "</code>",
-        data.responseText
+        data.responseText,
+        globalThis.toasts.delHosts
       );
       console.log(exception); // eslint-disable-line no-console
     });
@@ -192,7 +201,13 @@ function delHosts(elem) {
 
 function delCNAME(elem) {
   utils.disableAll();
-  utils.showAlert("info", "", "Deleting local CNAME record...", elem);
+  globalThis.toasts.delCNAME = utils.showAlert(
+    "info",
+    "",
+    "Deleting local CNAME record...",
+    elem,
+    null
+  );
   const url = document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
 
   $.ajax({
@@ -205,7 +220,8 @@ function delCNAME(elem) {
         "success",
         "fas fa-trash-alt",
         "Successfully deleted local CNAME record",
-        elem
+        elem,
+        globalThis.toasts.delCNAME
       );
       // Show loading overlay
       utils.loadingOverlay(true);
@@ -218,7 +234,8 @@ function delCNAME(elem) {
         "error",
         "",
         "Error while deleting CNAME record: <code>" + elem + "</code>",
-        data.responseText
+        data.responseText,
+        globalThis.toasts.delCNAME
       );
       console.log(exception); // eslint-disable-line no-console
     });
@@ -232,14 +249,20 @@ $(() => {
     utils.disableAll();
     const elem = $("#Hip").val().trim() + " " + $("#Hdomain").val().trim();
     const url = document.body.dataset.apiurl + "/config/dns/hosts/" + encodeURIComponent(elem);
-    utils.showAlert("info", "", "Adding DNS record...", elem);
+    globalThis.toasts.addHosts = utils.showAlert("info", "", "Adding DNS record...", elem, null);
     $.ajax({
       url,
       method: "PUT",
     })
       .done(() => {
         utils.enableAll();
-        utils.showAlert("success", "fas fa-plus", "Successfully added DNS record", elem);
+        utils.showAlert(
+          "success",
+          "fas fa-plus",
+          "Successfully added DNS record",
+          elem,
+          globalThis.toasts.addHosts
+        );
         $("#Hdomain").val("");
         $("#Hip").val("");
         $("#hosts-Table").DataTable().ajax.reload(null, false);
@@ -247,7 +270,13 @@ $(() => {
       .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
-        utils.showAlert("error", "", "Error while adding DNS record", data.responseText);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while adding DNS record",
+          data.responseText,
+          globalThis.toasts.addHosts
+        );
         console.log(exception); // eslint-disable-line no-console
       });
   });
@@ -263,14 +292,20 @@ $(() => {
 
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
-    utils.showAlert("info", "", "Adding DNS record...", elem);
+    globalThis.toasts.addCNAME = utils.showAlert("info", "", "Adding DNS record...", elem, null);
     $.ajax({
       url,
       method: "PUT",
     })
       .done(() => {
         utils.enableAll();
-        utils.showAlert("success", "fas fa-plus", "Successfully added CNAME record", elem);
+        utils.showAlert(
+          "success",
+          "fas fa-plus",
+          "Successfully added CNAME record",
+          elem,
+          globalThis.toasts.addCNAME
+        );
         // Show loading overlay
         utils.loadingOverlay(true);
         $("#Cdomain").val("");
@@ -280,7 +315,13 @@ $(() => {
       .fail((data, exception) => {
         utils.enableAll();
         apiFailure(data);
-        utils.showAlert("error", "", "Error while adding CNAME record", data.responseText);
+        utils.showAlert(
+          "error",
+          "",
+          "Error while adding CNAME record",
+          data.responseText,
+          globalThis.toasts.addCNAME
+        );
         console.log(exception); // eslint-disable-line no-console
       });
   });
