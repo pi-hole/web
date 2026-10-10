@@ -151,7 +151,7 @@ function deleteMessage() {
 function delMsg(id) {
   id = Math.trunc(Number(id));
   utils.disableAll();
-  globalThis.toasts.deleteMessage = utils.showAlert(
+  globalThis.toasts["deleteMessage" + id] = utils.showAlert(
     "info",
     "",
     "Deleting message...",
@@ -171,7 +171,7 @@ function delMsg(id) {
           "far fa-trash-alt",
           "Successfully deleted message",
           "ID: " + id,
-          globalThis.toasts.deleteMessage
+          globalThis.toasts["deleteMessage" + id]
         );
         table.row(id).remove();
 
@@ -182,7 +182,7 @@ function delMsg(id) {
           "",
           "Error while deleting message: " + id,
           response.message,
-          globalThis.toasts.deleteMessage
+          globalThis.toasts["deleteMessage" + id]
         );
       }
 
@@ -200,7 +200,7 @@ function delMsg(id) {
         "",
         "Error while deleting message: " + id,
         jqXHR.responseText,
-        globalThis.toasts.deleteMessage
+        globalThis.toasts["deleteMessage" + id]
       );
       console.log(exception); // eslint-disable-line no-console
     });
