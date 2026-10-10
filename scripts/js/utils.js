@@ -452,15 +452,21 @@ function validateMAC(mac) {
   return macvalidator.test(mac.trim());
 }
 
-function validateHostname(name) {
-  const namevalidator = /[^<>;"]/u;
-  return namevalidator.test(name.trim());
+function validateClientPattern(name) {
+  // A client that is neither an IP/subnet nor a MAC address can only be a host
+  // name or an interface (prefaced with a colon). FTL matches both verbatim and
+  // only ever records names built from these characters, so anything else can
+  // never describe a client.
+  const clientValidator = /^:?[\w.-]+$/u;
+  return clientValidator.test(name.trim());
 }
 
-function validateHostnameStrict(name) {
-  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
-  const hostnameValidator =
-    /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
+function validateHostname(name) {
+  // These end up in comma-separated dnsmasq config lines, so a space or a comma
+  // is never acceptable. The rest is what dnsmasq's legal_hostname() takes: an
+  // alphanumeric first character, then letters, digits, hyphens, underscores
+  // and dots.
+  const hostnameValidator = /^[a-zA-Z0-9][\w.-]*$/u;
   return hostnameValidator.test(name.trim());
 }
 
@@ -783,12 +789,16 @@ function parseQueryString() {
   return Object.fromEntries(params);
 }
 
+// Six hex digits per code point, not four: code points go up to U+10FFFF, so
+// four digits only cover the basic multilingual plane. Anything above it (e.g.
+// emoji) would be encoded as a wider group that hexDecode() cannot split off
+// again, garbling the rest of the string. Both functions must agree on six.
 function hexEncode(text) {
   if (typeof text !== "string" || text.length === 0) {
     return "";
   }
 
-  return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
+  return [...text].map(char => char.codePointAt(0).toString(16).padStart(6, "0")).join("");
 }
 
 function hexDecode(text) {
@@ -796,7 +806,7 @@ function hexDecode(text) {
     return "";
   }
 
-  const hexes = text.match(/.{1,4}/gu);
+  const hexes = text.match(/.{1,6}/gu);
   if (!hexes || hexes.length === 0) {
     return "";
   }
@@ -985,8 +995,8 @@ globalThis.utils = (function () {
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
+    validateClientPattern,
     validateHostname,
-    validateHostnameStrict,
     addFromQueryLog,
     addTD,
     toPercent,
