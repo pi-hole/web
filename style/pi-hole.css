@@ -1,38 +1,809 @@
-/* Pi-hole: A black hole for Internet advertisements
-*  (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+/*
+* Pi-hole: A black hole for Internet advertisements
+*  (c) 2026 Pi-hole, LLC (https://pi-hole.net)
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */
+*  Please see LICENSE file for your rights under this license.
+*/
 
 :root {
-  /* Datatables Select - bgcolor */
-  --datatable-selected-bg: #90b6ff;
+  --ph-main: #3f90bf;
+  --ph-main-rgb: 63, 144, 191;
+  --ph-main-dimmed: #327da9;
+  --ph-main-dimmed-rgb: 50, 125, 169;
 
-  /* Used in settings save button */
-  --overlay-bgcolor: rgba(212, 220, 232, 0.55);
-
-  /* Dashboard graphic bars colors */
+  /* Dashboard graphic bar colors */
   --allowed-color: #00a65a;
   --blocked-color: #b00000;
-  --cached-color: #9be;
+  --cached-color: #88b6ff;
   --other-color: #908878;
 
-  /* AdminLTE root variables */
-  --bs-body-font-size: 15px;
+  /* Dashboard graphic grid colors */
+  --grid-color: rgba(0, 0, 0, 0.1);
+  --ticks-color: #000;
+
+  /* Network table colors (use hex colors) */
+  --ph-network-never: #ffd0cc;
+  --ph-network-recent: #ebfce6;
+  --ph-network-old: #fffddd;
+  --ph-network-older: #ffeeda;
+
+  /* Query Log table cells background colors - usually semi-transparent */
+  --ph-allowed-bg: rgb(70, 149, 74, 0.1);
+  --ph-blocked-bg: rgb(229, 83, 75, 0.1);
+
+  /* Datatables Select (RGB colors) */
+  --dt-row-selected: 80, 147, 255;
+  --dt-row-selected-text: var(--bs-body-color-rgb);
+  --dt-row-selected-link: var(--bs-link-color-rgb);
+
+  /* Text colors used in buttons, icons, gravity and tail log outputs */
+  --text-black: #000;
+  --text-light-green: #7fff00;
+  --text-green: #008400;
+  --text-yellow: #c48200;
+  --text-red: #d80000;
+  --text-blue: #005af8;
+  --text-purple: #b0e;
+  --text-cyan: #008892;
+  --text-gray: #999;
+
+  /* Overlay color - Used in settings save button */
+  --save-button-overlay: rgba(212, 220, 232, 0.55);
+
+  /* Border color for some focused elements */
+  --ph-focus-color: #88b6ff;
+  --ph-focus-color-rgb: 134, 182, 255;
 }
 
-/* AdminLTE Color variables */
+/* AdminLTE root variables */
+:root,
+[data-bs-theme="light"] {
+  --bs-body-font-size: 15px;
+  --lte-sidebar-width: 238px;
+  --lte-callout-bg: var(--bs-tertiary-bg);
+
+  --bs-blue: var(--ph-main);
+  --bs-primary: var(--ph-main);
+  --bs-primary-rgb: var(--ph-main-rgb);
+
+  --bs-green: #008649;
+  --bs-success: var(--bs-green);
+  --bs-success-rgb: 0, 134, 73;
+
+  --bs-yellow: #f69600;
+  --bs-warning: var(--bs-yellow);
+  --bs-warning-rgb: 238, 158, 0;
+
+  --bs-cyan: #00abd4;
+  --bs-info: var(--bs-cyan);
+  --bs-info-rgb: 0, 171, 212;
+
+  --bs-red: #db3626;
+  --bs-danger: var(--bs-red);
+  --bs-danger-rgb: 219, 54, 38;
+
+  --bs-gray-100: #f4f6f8;
+  --bs-gray-200: #ecf0f5;
+  --bs-gray-600: var(--bs-gray);
+  --bs-gray-800: var(--bs-gray-dark);
+
+  --bs-body-color: var(--bs-dark);
+  --bs-body-color-rgb: var(--bs-dark-rgb);
+  --bs-highlight-color: var(--bs-gray-900);
+  --bs-highlight-bg: var(--bs-warning-bg-subtle);
+
+  --bs-light: var(--bs-gray-100);
+  --bs-light-rgb: 248, 249, 250;
+  --bs-light-text-emphasis: var(--bs-gray-700);
+  --bs-light-border-subtle: var(--bs-gray-200);
+
+  --bs-dark: var(--bs-gray-900);
+  --bs-dark-rgb: 33, 37, 41;
+  --bs-dark-text-emphasis: var(--bs-gray-700);
+  --bs-dark-border-subtle: var(--bs-gray-500);
+
+  --bs-secondary: var(--bs-gray);
+  --bs-secondary-color: rgba(var(--bs-dark-rgb), 0.75);
+  --bs-secondary-color-rgb: var(--bs-dark-rgb);
+  --bs-secondary-bg: var(--bs-gray-200);
+  --bs-tertiary-color: rgba(var(--bs-dark-rgb), 0.5);
+  --bs-tertiary-color-rgb: var(--bs-dark-rgb);
+  --bs-tertiary-bg: var(--bs-gray-100);
+  --bs-tertiary-bg-rgb: var(--bs-light-rgb);
+  --bs-link-color: var(--bs-blue);
+  --bs-link-color-rgb: var(--bs-primary-rgb);
+  --bs-link-hover-color: rgb(var(--ph-main-dimmed-rgb));
+  --bs-link-hover-color-rgb: var(--ph-main-dimmed-rgb);
+
+  --bs-code-color: #d63384;
+  --bs-border-color: var(--bs-gray-300);
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+
+  --bs-focus-ring-color: rgba(var(--bs-primary-rgb), 0.25);
+  --bs-form-valid-color: var(--bs-green);
+  --bs-form-valid-border-color: var(--bs-green);
+  --bs-form-invalid-color: var(--bs-red);
+  --bs-form-invalid-border-color: var(--bs-red);
+}
+@media screen and (min-width: 1260px) {
+  body:not(.layout-boxed) {
+    --lte-sidebar-width: 250px;
+  }
+}
+
+/* Sidebar and top header always use dark themes, even when the page is using a light theme */
+[data-bs-theme="dark"] {
+  --bs-body-color: var(--bs-gray-300);
+  --bs-secondary-color-rgb: var(--bs-body-color-rgb);
+  --bs-secondary-bg: var(--bs-gray-dark);
+  --bs-tertiary-color-rgb: var(--bs-body-color-rgb);
+  --bs-success-text-emphasis: var(--bs-success-text-emphasis);
+  --bs-danger-text-emphasis: var(--bs-danger-text-emphasis);
+  --bs-light-text-emphasis: var(--bs-gray-100);
+  --bs-dark-text-emphasis: var(--bs-gray-300);
+  --bs-light-bg-subtle: var(--bs-gray-dark);
+  --bs-light-border-subtle: var(--bs-gray-700);
+  --bs-dark-border-subtle: var(--bs-gray-dark);
+  --bs-link-color: var(--bs-primary-text-emphasis);
+  --bs-highlight-color: var(--bs-gray-300);
+  --bs-highlight-bg: var(--bs-warning-text-emphasis);
+  --bs-border-color: var(--bs-gray-700);
+  --bs-form-valid-color: var(--bs-success-text-emphasis);
+  --bs-form-valid-border-color: var(--bs-success-text-emphasis);
+  --bs-form-invalid-color: var(--bs-danger-text-emphasis);
+  --bs-form-invalid-border-color: var(--bs-danger-text-emphasis);
+
+  --lte-callout-bg: var(--bs-tertiary-bg);
+}
+
 .navbar[data-bs-theme="dark"] {
   --bs-navbar-color: rgb(255, 255, 255);
   --bs-border-color: var(--bs-gray-300);
+}
+
+[data-bs-theme="dark"].app-sidebar {
+  --ph-menu-item-bg: rgba(184, 199, 206, 0.06);
+  --lte-sidebar-hover-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-color: #b8c7ce;
+  --lte-sidebar-hover-color: #fff;
+  --lte-sidebar-active-color: #fff;
+  --lte-sidebar-menu-active-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-menu-active-color: #fff;
+  --lte-sidebar-submenu-bg: transparent;
+  --lte-sidebar-submenu-color: #a1b5be;
+  --lte-sidebar-submenu-hover-color: #fff;
+  --lte-sidebar-submenu-hover-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-submenu-active-color: #fff;
+  --lte-sidebar-submenu-active-bg: var(--ph-menu-item-bg);
+  --lte-sidebar-header-color: #a1b5be;
+}
+
+/*** Sidebar ***/
+
+.sidebar-brand {
+  height: 54px;
+}
+
+/* "Pi-hole" brand as logo (no image) - use a bigger font for the brand */
+.sidebar-brand .brand-text {
+  margin: 0;
+  font-size: 1.35em;
+}
+
+/* Status panel */
+.user-panel {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  gap: 1em;
+}
+
+.user-panel,
+.user-panel .info {
+  white-space: nowrap;
+}
+
+.user-panel .image {
+  margin-left: 0.5rem;
+}
+
+.user-panel .image img {
+  max-width: 52px;
+  min-width: 30px;
+  height: auto;
+}
+
+.user-panel .info {
+  line-height: 1.05;
+  color: var(--lte-sidebar-active-color);
+}
+
+.user-panel > .info > p {
+  margin-bottom: 6px;
+}
+.user-panel > .info > span {
+  display: inline-block;
+  margin: 2px 0;
+  font-size: 11px;
+}
+
+/* Menu and submenus */
+.sidebar-wrapper .nav-icon {
+  min-width: 1.4rem;
+  max-width: 1.4rem;
+}
+
+/* Smaller text to ensure the countdown will fit on the button */
+#enableLabel {
+  font-size: 13.5px;
+}
+
+.sidebar-menu .badge {
+  margin-top: 2px;
+  padding: 0.3em 0.6em;
+}
+.sidebar-menu .nav-badge:has(+ .nav-arrow) {
+  margin-right: 1.6rem;
+}
+.sidebar-menu .nav-treeview .nav-link :is(.nav-badge, .nav-arrow) {
+  right: var(--bs-nav-link-padding-x) !important;
+}
+
+.sidebar-menu > .nav-header {
+  font-size: 0.8rem;
+}
+.sidebar-menu > .nav-item .nav-link {
+  border-left: 3px solid transparent;
+}
+.sidebar-menu > .nav-item > .nav-link.active,
+.sidebar-menu > .nav-item > .nav-link:hover {
+  border-color: var(--ph-main);
+}
+
+.sidebar-menu .nav-item {
+  margin-bottom: 0.2em;
+}
+.sidebar-menu .nav-item:last-child > .nav-link {
+  margin: 0;
+}
+
+.sidebar-menu .nav-treeview {
+  padding: 2px 4px;
+}
+.sidebar-menu .nav-link:has(+ .nav-treeview) {
+  margin: 0 !important;
+}
+
+.sidebar-menu .nav-item.menu-open {
+  background-color: var(--lte-sidebar-menu-active-bg);
+  border-radius: 0.375rem;
+}
+
+.sidebar-menu .nav-treeview .nav-item > .nav-link {
+  --bs-nav-link-padding-x: 0.75rem;
+}
+.sidebar-menu .nav-treeview .nav-item > .nav-link:not(:hover) {
+  background-color: transparent !important;
+}
+.sidebar-menu .nav-treeview .nav-item .nav-item > .nav-link {
+  padding-left: 2em;
+}
+
+/*** Warning icon and count ***/
+.warning-count {
+  border-radius: 2em;
+  padding: 0.25em 0.5em 0.3em !important;
+}
+.app-header .warning-count {
+  top: 55%;
+  font-size: 12px;
+}
+.menu-open > a .warning-count {
+  display: none;
+}
+
+/* Used in the Query Log table and Status Panel */
+.text-black {
+  color: var(--text-black) !important;
+}
+.text-green-light {
+  color: var(--text-light-green);
+}
+
+.text-red,
+.log-red {
+  color: var(--text-red);
+}
+.text-green,
+.log-green {
+  color: var(--text-green);
+}
+.text-orange,
+.log-yellow {
+  color: var(--text-yellow);
+}
+.log-blue {
+  color: var(--text-blue);
+}
+.log-purple {
+  color: var(--text-purple);
+}
+.log-cyan {
+  color: var(--text-cyan);
+}
+.log-gray {
+  color: var(--text-gray);
+}
+
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+.text-success {
+  color: var(--text-green) !important;
+}
+.text-info {
+  color: var(--text-cyan) !important;
+}
+.text-warning {
+  color: var(--text-yellow) !important;
+}
+.text-danger {
+  color: var(--text-red) !important;
+}
+
+/* Boxed layout */
+.layout-boxed {
+  background: url("../img/boxed-bg.png") repeat fixed;
+}
+.layout-boxed .app-wrapper {
+  max-width: 1250px;
+  margin: 0 auto;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  background-color: var(--bs-secondary-bg);
+  overflow: hidden;
 }
 
 html {
   font-size: var(--bs-body-font-size);
 }
 
-/* Dashboard graphic bars */
+code {
+  background-color: var(--bs-tertiary-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+kbd {
+  box-shadow:
+    inset 1.5px 1.5px 2px 0.5px rgba(255, 255, 255, 0.5),
+    inset -1.5px -1.5px 2px 0.5px rgba(0, 0, 0, 0.5);
+  background: light-dark(#444, #bbb);
+}
+
+label:not(.btn) {
+  margin-bottom: 0.4rem;
+}
+
+table a {
+  text-decoration: none;
+}
+table a:hover {
+  text-decoration: underline;
+}
+
+footer a {
+  text-decoration: none;
+}
+.version-info {
+  margin-top: 10px;
+}
+
+.form-check-input:checked {
+  background-color: var(--bs-blue);
+  border-color: var(--bs-blue);
+}
+
+/*** Top bar and dropdown-menu ***/
+.app-header.navbar {
+  background-color: var(--bs-primary);
+}
+
+.sidebar-collapse .sidebar-toggle-svg i {
+  transform: scaleX(-1);
+}
+
+.navbar-nav > .nav-item .nav-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav > .user-menu {
+  margin-left: 0.75rem;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu {
+  --bs-dropdown-color: var(--bs-body-color);
+  --bs-dropdown-bg: var(--bs-primary);
+  --bs-dropdown-border-color: var(--bs-border-color-translucent);
+  --bs-dropdown-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  --bs-dropdown-link-color: var(--bs-body-color);
+  --bs-dropdown-link-hover-color: var(--ph-main-dimmed);
+  --bs-dropdown-link-hover-bg: transparent;
+  --bs-dropdown-link-active-color: var(--ph-main);
+  --bs-dropdown-link-active-bg: transparent;
+  --bs-dropdown-item-padding-x: 0.65rem;
+  --bs-dropdown-item-padding-y: 0.4rem;
+  --bs-dropdown-header-color: var(--bs-navbar-brand-color);
+
+  /* Pi-hole colors */
+  --ph-dropdown-body-bg: var(--bs-secondary-bg);
+  --ph-dropdown-body-border-color: #fff;
+  --ph-dropdown-footer-bg: #fff;
+
+  width: 260px;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+  font-weight: 600;
+  color: var(--bs-dropdown-header-color);
+  display: block;
+  min-height: unset;
+  padding: 2em 0;
+}
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header p {
+  margin-bottom: 0;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+  height: 50px;
+  border: none;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-body {
+  background: var(--ph-dropdown-body-bg);
+  border-color: var(--ph-dropdown-body-border-color);
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+  background: var(--ph-dropdown-footer-bg);
+}
+.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
+  text-decoration: none;
+}
+
+.user-footer .menu-icon {
+  max-height: 1.55rem;
+}
+
+/*** Main content ***/
+.app-content {
+  padding-top: 1em;
+}
+
+.page-header {
+  margin-bottom: 1rem;
+}
+.page-header code {
+  background: none;
+}
+
+.card {
+  border-radius: 8px;
+  --bs-card-spacer-x: 0.85rem;
+  --bs-card-spacer-y: 0.85rem;
+  border-top-width: 3px;
+  --lte-card-variant-bg: rgb(var(--lte-card-variant-bg-rgb));
+}
+.card:not(.card-outline):has(> [data-lte-toggle="card-collapse"]) {
+  border-top-width: 0;
+}
+
+.card.card-primary {
+  --lte-card-variant-bg-rgb: var(--bs-primary-rgb);
+}
+.card.card-info {
+  --lte-card-variant-bg-rgb: var(--bs-info-rgb);
+}
+.card.card-danger {
+  --lte-card-variant-bg-rgb: var(--bs-danger-rgb);
+}
+.card.card-warning {
+  --lte-card-variant-bg-rgb: var(--bs-warning-rgb);
+}
+.card.card-success {
+  --lte-card-variant-bg-rgb: var(--bs-success-rgb);
+}
+
+.card-header {
+  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+}
+.collapsed-card .card-header {
+  border-radius: var(--bs-border-radius);
+}
+
+/* Add default margin for cards */
+.app-content .card {
+  margin-bottom: var(--bs-gutter-x);
+}
+/*
+  But do not add the default margin to cards inside cards.
+  When needed, they should be applied using BS5 classes.
+*/
+.card .card {
+  margin-bottom: 0;
+}
+
+/* Nav tabs */
+
+/* card-header-tabs (inside card-header element) */
+.card:has(> .nav-tabs-custom .card-header-tabs) {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* card-body element that holds tab-content */
+.card:has(> .nav-tabs-custom .card-header-tabs) .card-body {
+  border: 1px solid var(--bs-border-color);
+  background-color: var(--bs-body-bg);
+}
+
+.nav-tabs {
+  --bs-nav-tabs-border-radius: 0;
+  margin: 0 0 -1px;
+  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+}
+
+.nav-tabs-custom > .nav-tabs > .nav-item {
+  margin-right: 1px;
+}
+.nav-tabs-custom > .nav-tabs > .nav-item > .nav-link {
+  color: var(--bs-secondary);
+  background-color: var(--bs-body-bg);
+  border-top-width: 3px;
+  border-color: var(--bs-border-color);
+  box-shadow: inset 0 -4px 5px -4px rgba(var(--bs-secondary-rgb), 0.25);
+}
+.nav-tabs-custom > .nav-tabs > .nav-item > .nav-link.active {
+  border-top-color: var(--bs-primary);
+  border-bottom-color: transparent;
+  box-shadow: none;
+  color: var(--bs-primary);
+}
+.nav-tabs-custom > .nav-tabs > .nav-item .nav-link:not(.active):hover {
+  border-top-color: var(--bs-secondary);
+}
+.nav-tabs-custom > .nav-tabs > .nav-item > .nav-link:focus-visible {
+  box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color) !important;
+}
+
+/*** Buttons ***/
+.btn-primary,
+.btn-success,
+.btn-info,
+.btn-warning,
+.btn-danger,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning,
+.btn-outline-danger {
+  --button-bg: var(--bs-gray-600);
+  --button-hover-bg: oklch(from var(--button-bg) calc(l - 0.08) c h);
+
+  --bs-btn-bg: var(--button-bg);
+  --bs-btn-border-color: var(--button-bg);
+  --bs-btn-hover-bg: var(--button-hover-bg);
+  --bs-btn-hover-border-color: var(--button-hover-bg);
+  --bs-btn-focus-shadow-rgb: var(--ph-focus-color-rgb);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--button-hover-bg);
+  --bs-btn-active-border-color: var(--button-hover-bg);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--button-bg);
+  --bs-btn-disabled-border-color: var(--button-bg);
+}
+
+.btn-secondary {
+  --bs-btn-color: var(--bs-secondary-color);
+  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-border-color: rgba(var(--bs-secondary-color-rgb), 0.25);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: color-mix(var(--bs-primary) 88%, #fff);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-focus-shadow-rgb: var(--ph-focus-color-rgb);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: rgba(var(--bs-primary), 0.75);
+  --bs-btn-active-border-color: var(--ph-main-dimmed);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: var(--bs-gray);
+  --bs-btn-disabled-bg: var(--bs-tertiary-bg);
+  --bs-btn-disabled-border-color: var(--bs-gray-500);
+}
+
+.btn-primary,
+.btn-outline-primary {
+  --button-bg: var(--bs-primary);
+}
+.btn-secondary,
+.btn-outline-secondary {
+  --button-bg: var(--bs-secondary);
+}
+.btn-success,
+.btn-outline-success {
+  --button-bg: var(--bs-success);
+}
+.btn-info,
+.btn-outline-info {
+  --button-bg: var(--bs-info);
+}
+.btn-warning,
+.btn-outline-warning {
+  --button-bg: var(--bs-warning);
+}
+.btn-danger,
+.btn-outline-danger {
+  --button-bg: var(--bs-danger);
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning,
+.btn-outline-danger {
+  --button-hover-bg: var(--button-bg);
+  --bs-btn-bg: transparent;
+}
+
+.btn-link {
+  --bs-btn-font-weight: 400;
+  --bs-btn-color: var(--bs-link-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--bs-link-hover-color);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--bs-link-hover-color);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-color: var(--bs-gray);
+  --bs-btn-disabled-border-color: transparent;
+  --bs-btn-box-shadow: 0 0 0 #000;
+  --bs-btn-focus-shadow-rgb: var(--ph-focus-color-rgb);
+  text-decoration: underline;
+}
+
+.btn-xs {
+  padding: 0.3rem 0.25rem;
+}
+.btn-xs .fa-fw {
+  width: 1em;
+}
+
+.bg-primary,
+.card-primary,
+.text-bg-primary {
+  --lte-card-variant-bg: var(--bs-primary);
+  --lte-card-variant-bg-rgb: var(--bs-primary-rgb);
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: 255, 255, 255;
+}
+.bg-secondary,
+.card-secondary,
+.text-bg-secondary {
+  --lte-card-variant-bg: var(--bs-secondary);
+  --lte-card-variant-bg-rgb: var(--bs-secondary-rgb);
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: 255, 255, 255;
+}
+.bg-success,
+.card-success,
+.text-bg-success {
+  --lte-card-variant-bg: var(--bs-success);
+  --lte-card-variant-bg-rgb: var(--bs-success-rgb);
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: 255, 255, 255;
+}
+.bg-info,
+.card-info,
+.text-bg-info {
+  --lte-card-variant-bg: var(--bs-info);
+  --lte-card-variant-bg-rgb: var(--bs-info-rgb);
+  --lte-card-variant-color: #000;
+  --lte-card-variant-color-rgb: 0, 0, 0;
+}
+.bg-warning,
+.card-warning,
+.text-bg-warning {
+  --lte-card-variant-bg: var(--bs-warning);
+  --lte-card-variant-bg-rgb: var(--bs-warning-rgb);
+  --lte-card-variant-color: #000;
+  --lte-card-variant-color-rgb: 0, 0, 0;
+}
+.bg-danger,
+.card-danger,
+.text-bg-danger {
+  --lte-card-variant-bg: var(--bs-danger);
+  --lte-card-variant-bg-rgb: var(--bs-danger-rgb);
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: 255, 255, 255;
+}
+
+.text-bg-primary,
+.text-bg-secondary,
+.text-bg-success,
+.text-bg-info,
+.text-bg-warning,
+.text-bg-danger {
+  color: var(--lte-card-variant-color) !important;
+}
+
+/*** Dashboard ***/
+
+/* Dashboard boxes */
+.small-box {
+  border-radius: 8px;
+  z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
+  overflow: hidden;
+}
+
+.small-box .icon {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  color: rgba(0, 0, 0, 0.15);
+  font-size: 76px;
+  z-index: -1; /* sends the icon behind the text */
+}
+
+/* Background icons grow on hover, but remain centered */
+.small-box:hover .icon {
+  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
+  transform: scale(1.06);
+}
+
+.small-box span {
+  transition-duration: 0.5s;
+}
+
+.small-box-footer span {
+  transition-duration: 0s;
+}
+
+.small-box p {
+  margin: 0 0 5px;
+}
+
+.small-box > .inner {
+  padding: 10px 10px 0;
+}
+
+.small-box > .small-box-footer {
+  color: color-mix(currentColor 70%, transparent);
+  background-color: rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  transition: all 0.5s;
+}
+.small-box > .small-box-footer:hover {
+  color: currentColor;
+}
+
+@media screen and (min-width: 768px) {
+  .small-box > .small-box-footer {
+    text-align: right;
+    padding: 3px;
+  }
+}
+
+.small-box-footer i {
+  margin: 0 5px;
+  font-size: 13px;
+}
+
+/* Dashboard graphic bar colors */
 .queries-permitted {
   background-color: var(--allowed-color);
 }
@@ -45,226 +816,39 @@ html {
 .queries-other {
   background-color: var(--other-color);
 }
-
-.layout-boxed {
-  background: url("../img/boxed-bg.png") repeat fixed;
+.graphs-grid {
+  background-color: var(--grid-color);
 }
-.layout-boxed .app-wrapper {
-  max-width: 1250px;
-  margin: 0 auto;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-  position: relative;
+.graphs-ticks {
+  color: var(--ticks-color);
+}
+.progress {
   background-color: var(--bs-secondary-bg);
-  overflow: hidden;
 }
 
-/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
-  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
-  login field, the diagnosis warning-count badge and the "reset sorting"
-  buttons - so restore it here, otherwise those elements are always shown. */
-.hidden {
-  display: none !important;
-}
-
-/* AdminLTE 4 resets `.card` bottom margin to 0 and expects per-card spacing
-  utilities. Restore the vertical rhythm between stacked cards that AdminLTE
-  2's `.box` used to provide, unless a card opts out with its own `mb-*`. */
-.app-content .card {
-  margin-bottom: 1rem;
-}
-
-/* AdminLTE 4's `.app-content` has no vertical padding in this build, so page
-  content sits flush against the header. Add consistent top spacing so every
-  page has breathing room below the header. */
-.app-content {
-  padding-top: 1rem;
-}
-
-/* DataTables renders its pager as a Bootstrap `.pagination` but no longer
-  right-aligns it, so it drifted to the middle of its column. Restore the
-  conventional right-aligned position. */
-.dataTables_wrapper ul.pagination,
-.dt-container ul.pagination,
-.card ul.pagination {
-  justify-content: flex-end;
-  margin-bottom: 0;
-}
-
-/* Space out the button groups inside a toolbar (Bootstrap 5's `.btn-toolbar`
-  no longer adds a gap between adjacent groups). */
-.btn-toolbar {
-  gap: 0.5rem;
-}
-
-/* Bootstrap 5 removed `.form-group` (which carried the bottom margin between
-  form rows) and `.help-block` (muted helper text). The templates still use
-  both throughout, so restore their spacing/appearance rather than rewrite
-  every form to `.mb-3`/`.form-text`. */
-.form-group {
-  margin-bottom: 1rem;
-}
-.help-block {
-  display: block;
-  margin-top: 0.25rem;
-  color: var(--bs-secondary-color);
-}
-
-.sidebar-brand .brand-text {
-  margin: 0;
-  font-size: 1.35em;
-}
-
-@keyframes Pulse {
-  from {
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-p#dhcpnotice[hidden] {
-  display: none;
-}
-
-.lookatme #dhcpnotice {
-  display: block;
-}
-
-td.lookatme {
-  display: table-cell;
-}
-
-.lookatme {
-  color: #630030;
-  opacity: 1;
-  position: relative;
-  display: inline-block;
-}
-
-/* this pseudo element will be faded in and out in front /*
-/* of the lookatme element to create an efficient animation. */
-.lookatme:after {
-  color: #e33100;
-  text-shadow: 0 0 5px #e33100;
-  /* in the html, the data-lookatme-text attribute must */
-  /* contain the same text as the .lookatme element */
-  content: attr(data-lookatme-text);
-  padding: inherit;
+/* Loading overlay and spinner (Dashboard and Long-term data) */
+.card > .overlay {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  /* 20 steps / 2 seconds = 10fps */
-  animation: 2s infinite Pulse steps(20);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  background-color: var(--bs-body-bg);
+  opacity: 0.9;
+  border-radius: var(--bs-card-border-radius);
+}
+.overlay .fa-spin {
+  font-size: 2.5rem;
 }
 
-.table-responsive {
-  -webkit-overflow-scrolling: touch;
-  /* Keep the horizontal scrollbar visible on wide tables (e.g. the network
-    overview) instead of relying on overlay scrollbars that stay hidden until
-    scrolling, which made it look like content was simply cut off. */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(128, 128, 128, 0.6) transparent;
-}
-.table-responsive::-webkit-scrollbar {
-  height: 8px;
-}
-.table-responsive::-webkit-scrollbar-thumb {
-  background-color: rgba(128, 128, 128, 0.6);
-  border-radius: 4px;
+/* Dashboard graphics: reset zoom button and info tooltip */
+.zoom-reset {
+  display: none;
+  margin: -1px 0 0 0.5rem;
 }
 
-/* Optimize Queries-Table for small screens */
-/* Time column */
-#all-queries td:nth-of-type(1),
-/* Reply time column */
-#all-queries td:nth-of-type(6) {
-  white-space: nowrap;
-}
-
-/* Domain column */
-#all-queries td:nth-of-type(4) {
-  min-width: 200px;
-  word-break: break-all;
-  white-space: pre-wrap;
-}
-
-/* Client column */
-#all-queries td:nth-of-type(5) {
-  word-break: break-all;
-}
-
-/* Allow Info String to wrap (useful while filtering entries on small screen) */
-#all-queries_info {
-  white-space: unset;
-}
-
-/* adjust the buttons width */
-#all-queries_wrapper .pagination > li > a {
-  padding-left: 6px;
-  padding-right: 6px;
-  min-width: 34px;
-  text-align: center;
-}
-
-@media screen and (max-width: 500px), screen and (min-width: 767px) and (max-width: 1000px) {
-  /* Hide "Previous" & "Next"-Buttons in Pagination */
-  #all-queries_wrapper .pagination > li.previous,
-  #all-queries_wrapper .pagination > li.next {
-    display: none;
-  }
-
-  #all-queries_wrapper .pagination > li:nth-of-type(2) a {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-  }
-
-  #all-queries_wrapper .pagination > li:nth-last-of-type(2) a {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-}
-
-#resetButton {
-  font-weight: 700;
-}
-
-.vertical-alignment-helper {
-  display: table;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.vertical-alignment-helper > .vertical-align-center {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.vertical-alignment-helper > .vertical-align-center > .modal-content {
-  width: 250px;
-  margin-left: auto;
-  margin-right: auto;
-  word-wrap: break-word;
-  pointer-events: all;
-}
-
-.alSpinner {
-  top: 0.1em;
-  left: 0.1em;
-  width: 0.8em;
-  height: 0.8em;
-  border-radius: 50%;
-  border: 4px solid #c0c0c0;
-  border-right-color: transparent;
-  animation: fa-spin 1s infinite linear;
-}
-
+/* Graphic tooltips and legends */
 .chartjs-tooltip {
   opacity: 0;
   position: absolute;
@@ -339,7 +923,7 @@ td.lookatme {
 }
 
 .chart-legend {
-  overflow: auto;
+  /*! overflow: auto; */
   display: flex;
   justify-content: center;
   align-self: center;
@@ -360,13 +944,12 @@ td.lookatme {
   margin: 0 0 8px;
   align-items: center;
   display: flex;
-  flex-direction: row;
 }
 
 .chart-legend li span {
   cursor: pointer;
   display: inline-block;
-  margin: 0 10px;
+  margin: 0 8px;
 }
 
 .colorBoxWrapper {
@@ -379,315 +962,21 @@ td.lookatme {
 
 .chart-legend li .legend-label-text {
   color: inherit;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
   word-break: break-word;
+  text-decoration: none;
 }
 
 .chart-legend li a.legend-label-text.clickable:hover {
   text-decoration: underline;
+  color: var(--bs-primary);
 }
 
 .chart-legend li a.legend-label-text.clickable {
   cursor: pointer; /* Pointer cursor only for clickable items */
 }
 
-.sidebar-menu > li > a > .nav-icon.fab,
-.sidebar-menu > li > a > .nav-icon.far,
-.sidebar-menu > li > a > .nav-icon.fas {
-  width: 20px;
-}
-
-/* Utilities */
-.text-underline {
-  text-decoration: underline;
-}
-
-.breakall {
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
-}
-
-.no-user-select {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.user-panel {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-}
-
-.user-panel .image {
-  flex: 0 0 auto;
-  margin: 0 8px;
-  text-align: center;
-}
-
-.user-panel > .image > img {
-  max-width: 52px;
-  min-width: 30px;
-}
-
-.user-panel > .info {
-  padding: 0;
-  position: relative;
-  line-height: 1.05;
-  flex: 1 1 auto;
-  left: auto;
-  min-width: 0;
-  color: #fff;
-}
-
-.user-panel > .info > p {
-  margin-bottom: 6px;
-}
-
-.user-panel > .info > span {
-  display: inline-block;
-  padding: 0;
-  margin: 2px 0;
-  font-size: 11px;
-}
-
-.user-panel > .info i {
-  margin-right: 3px;
-}
-
-/* AdminLTE 4 only knows how to hide nav-link text in mini/collapsed sidebar
-  mode; the user-panel is pi-hole's own block, so it needs the same rule. */
-.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .info {
-  display: none;
-}
-.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image > img {
-  max-width: 45px;
-  height: auto;
-}
-.sidebar-mini.sidebar-collapse .app-sidebar:not(:hover) .user-panel > .image {
-  margin: 0 auto;
-}
-.row-centered > div[class^="col-"] {
-  display: inline-block;
-  float: none;
-}
-
-.version-info {
-  margin-top: 10px;
-}
-
-.daterangepicker {
-  font-family: inherit;
-}
-
-.form-inline .dataTable .form-control {
-  display: inline-block;
-  width: 100%;
-  vertical-align: middle;
-}
-
-/* Table footer row used to add new items, using inline input fields */
-tfoot.add-new-item > tr > th {
-  font-weight: normal;
-  vertical-align: inherit;
-}
-
-.select2-container--default .select2-results > .select2-results__options {
-  max-height: 400px;
-}
-
-/* Pi-hole's webserver sends a strict CSP with img-src 'self', which blocks
-  the inline data: URI SVG background-images Bootstrap 5 (and its plugins)
-  normally ship with for checkboxes/radios, the modal close button, select
-  dropdown arrows, and the select2 dropdown arrow. Re-host those exact icons
-  as local files and point the same CSS custom properties (or, for select2,
-  the same rule) at them instead - this changes nothing visually, only where
-  the icon loads from.
-
-  Note: a url() stored in a custom property resolves relative to the
-  stylesheet that consumes it via var() - here that's always
-  vendor/adminLTE/adminlte.min.css, not this file - so these paths go up
-  from vendor/adminLTE/ rather than from style/. */
-.form-check-input:checked[type="checkbox"] {
-  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-checked.svg");
-}
-.form-check-input:checked[type="radio"] {
-  --bs-form-check-bg-image: url("../../style/icons/form-check-radio-checked.svg");
-}
-.form-check-input[type="checkbox"]:indeterminate {
-  --bs-form-check-bg-image: url("../../style/icons/form-check-checkbox-indeterminate.svg");
-}
-.btn-close {
-  --bs-btn-close-bg: url("../../style/icons/btn-close.svg");
-}
-.form-select {
-  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow.svg");
-}
-[data-bs-theme="dark"] .form-select {
-  --bs-form-select-bg-img: url("../../style/icons/form-select-arrow-dark.svg");
-}
-
-/* Tom Select "Select all / Select none" actions, injected above the
-  options list to replace bootstrap-select's actionsBox feature */
-.ts-actions-box {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25em;
-  padding: 0.5em;
-  border-bottom: 1px solid var(--bs-border-color);
-}
-
-.ts-actions-box .btn {
-  flex: 1 0 auto;
-}
-
-.ts-actions-box .btn-group {
-  display: flex;
-  gap: 2px;
-  width: 100%;
-}
-
-.sidebar-menu .nav-link p {
-  width: 100%;
-}
-
-.sidebar-menu li > a > .nav-arrow.fa-angle-left {
-  height: 1em;
-}
-
-.sidebar-menu .badge {
-  margin-top: 2px;
-  padding: 0.25em 0.6em 0.35em;
-}
-
-.sidebar-menu > li.nav-header {
-  color: transparent;
-  padding: 5px;
-}
-
-.app-header.navbar .nav > li.user > a > .fa,
-.app-header.navbar .nav > li.user > a > .glyphicon,
-.app-header.navbar .nav > li.user > a > .ion {
-  margin-right: 0;
-}
-
-.card {
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.card-header-tabs {
-  margin: -1px;
-  border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
-}
-.nav-tabs-custom .nav-link {
-  border-radius: 0;
-}
-
-.small-box {
-  border-radius: 8px;
-  z-index: 0; /* fix the small-box z-index (related to '.small-box .icon') */
-  overflow: hidden;
-}
-
-.small-box-header {
-  padding: 4px 8px;
-}
-
-.small-box span {
-  transition-duration: 0.5s;
-}
-
-.small-box-footer span {
-  transition-duration: 0s;
-}
-
-.small-box p {
-  margin: 0 0 5px;
-}
-
-.small-box > .inner {
-  padding: 10px 10px 0;
-}
-
-.small-box > .small-box-footer {
-  color: rgba(255, 255, 255, 0.75);
-  transition: all 0.5s;
-}
-
-@media screen and (min-width: 768px) {
-  .small-box > .small-box-footer {
-    text-align: right;
-    padding: 3px 7px;
-  }
-}
-
-.small-box-footer i {
-  margin: 0 5px;
-  font-size: 13px;
-}
-
-/* AdminLTE 4 dropped its font-icon corner icon (it now expects an inline SVG),
-  so pi-hole keeps styling its own Font Awesome version here. */
-.small-box .icon {
-  position: absolute;
-  top: auto;
-  bottom: 5px;
-  right: 5px;
-  color: rgba(0, 0, 0, 0.15);
-  font-size: 76px;
-  z-index: -1; /* sends the icon behind the text */
-}
-
-/*** Icons grow on hover, but remain centered ***/
-.small-box:hover .icon {
-  font-size: 80px; /* keep the same font-size, to avoid shifting the position */
-  transform: scale(1.06);
-}
-
-.list-status-0 {
-  color: #7d7d7d;
-}
-
-.list-status-1 {
-  color: #74c700;
-}
-
-.list-status-2 {
-  color: #98ca52;
-}
-
-.list-status-3 {
-  color: #ff8c00;
-}
-
-.list-status-4 {
-  color: #cc0000;
-}
-
-.list-icon-legend-block {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px 60px;
-}
-
-td.details-control {
-  cursor: pointer;
-  text-align: center;
-}
-
-.dataTables-child td {
-  padding: 2px 5px;
-}
-
-/* Query Log - Allow and Deny buttons */
+/*** Query Log page ***/
+/* Allow and Deny buttons */
 .btn-whitelist {
   --bs-btn-bg: var(--bs-body-bg);
   --bs-btn-color: var(--bs-success);
@@ -701,25 +990,173 @@ td.details-control {
   --bs-btn-hover-color: #fff;
 }
 
-/* Query Log - Allow and Deny row background colors */
+/* Allow and Deny row background colors */
 table.dataTable .blocked-row td {
-  background-color: rgb(229, 83, 75, 0.1);
+  background-color: var(--ph-blocked-bg);
 }
 
 table.dataTable .allowed-row td {
-  background-color: rgb(70, 149, 74, 0.1);
+  background-color: var(--ph-allowed-bg);
 }
 
-.reload-box {
-  display: none;
+/* Bootstrap 5 light/dark styles for daterangepicker */
+.daterangepicker {
+  font-family: inherit;
+  background-color: var(--bs-body-bg);
+  border-color: var(--bs-border-color);
+  box-shadow: 0 0 10px -2px var(--bs-gray-500);
 }
-.reload-box div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+[data-bs-theme="dark"] .daterangepicker {
+  box-shadow: 0 0 10px -2px #000;
 }
-.reload-box span {
-  padding-right: 20px;
+
+@media (min-width: 730px) {
+  .daterangepicker[style*="display: block"] {
+    display: grid !important; /* Force display grid when the JS code sets display block */
+    grid-template-columns: 24% 1fr 1fr;
+    gap: 0;
+  }
+  .daterangepicker .drp-buttons {
+    grid-column: span 3;
+  }
+  .daterangepicker.show-calendar .ranges {
+    margin: 0;
+    padding: 8px 0;
+  }
+  .daterangepicker .drp-calendar {
+    margin: 0 !important;
+  }
+  .daterangepicker .drp-calendar.left {
+    padding: 8px 0 8px 8px !important;
+  }
+  .daterangepicker .drp-calendar.right {
+    padding: 8px 8px 8px 0 !important;
+  }
+}
+@media (max-width: 729px) {
+  .daterangepicker.show-calendar .ranges ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 10px !important;
+    width: auto;
+  }
+  .daterangepicker.show-calendar .ranges li {
+    flex: 0 1 auto;
+    min-width: 110px;
+  }
+}
+
+.daterangepicker:before {
+  border-bottom-color: var(--bs-border-color);
+}
+.daterangepicker:after {
+  border-bottom-color: var(--bs-body-bg);
+  transform: translate(0, 1px);
+}
+
+.daterangepicker.drop-up:before,
+.daterangepicker.drop-up:after {
+  border-top-color: var(--bs-border-color);
+}
+
+.daterangepicker .calendar-table .next span,
+.daterangepicker .calendar-table .prev span {
+  border-color: var(--bs-body-color);
+}
+
+.daterangepicker .calendar-table {
+  background: transparent;
+  border-color: transparent;
+}
+
+.daterangepicker .calendar-table td {
+  opacity: 0.9999;
+  font-size: 13px;
+}
+.daterangepicker .calendar-table td:not(.end-date, .start-date) {
+  border-radius: 0;
+}
+
+.daterangepicker td.off,
+.daterangepicker td.off.end-date,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date {
+  color: var(--bs-body-color);
+  background-color: rgba(var(--bs-secondary-rgb), 0.1);
+}
+.daterangepicker option.disabled,
+.daterangepicker td.disabled {
+  color: rgba(var(--bs-body-color-rgb), 0.15);
+}
+
+.daterangepicker td.in-range {
+  color: var(--bs-body-color);
+  background-color: rgba(var(--bs-primary-rgb), 0.3);
+}
+
+.daterangepicker td.available:hover,
+.daterangepicker th.available:hover {
+  background-color: rgba(var(--bs-secondary-rgb), 0.3);
+  color: var(--bs-body-color);
+}
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+  background-color: var(--bs-primary);
+  color: #fff;
+}
+
+.daterangepicker select.yearselect,
+.daterangepicker select.monthselect,
+.daterangepicker select.ampmselect,
+.daterangepicker select.hourselect,
+.daterangepicker select.minuteselect,
+.daterangepicker select.secondselect {
+  font-size: 13px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.daterangepicker .calendar-time select.disabled {
+  color: var(--bs-secondary);
+}
+
+.daterangepicker .drp-buttons,
+.daterangepicker.show-ranges.single.rtl .drp-calendar.left,
+.daterangepicker.show-ranges.single.ltr .drp-calendar.left,
+.daterangepicker.show-ranges.rtl .drp-calendar.right,
+.daterangepicker.show-ranges.ltr .drp-calendar.left {
+  border-color: var(--bs-border-color);
+}
+
+.daterangepicker.show-calendar .ranges li {
+  font-size: 13px;
+}
+.daterangepicker .ranges li:hover {
+  background-color: rgba(var(--bs-secondary-rgb), 0.3);
+  color: var(--bs-body-color);
+}
+.daterangepicker .ranges li.active {
+  background-color: var(--bs-primary);
+  color: #fff;
+}
+
+.daterangepicker .drp-selected {
+  padding: 8px;
+  vertical-align: bottom;
+}
+
+/* Query Log table */
+td.dnssec {
+  padding-inline-start: 2.25em !important;
+  text-indent: -1.25em;
+}
+td.dnssec i {
+  text-indent: 0;
+  margin-left: -0.5rem;
 }
 
 /*** Login page ***/
@@ -743,63 +1180,31 @@ table.dataTable .allowed-row td {
   border: none;
 }
 
+.login-box section > .card {
+  box-shadow: none !important;
+  border: none;
+  background: transparent;
+}
+.login-card-body {
+  background: transparent;
+  padding: 0;
+}
+.login-footer {
+  padding: 0;
+}
+
 .loginpage-logo {
   margin: 0 0 10px;
 }
 
-.login-options {
-  display: flex;
-  margin: 0 0 15px -15px;
-  flex-wrap: wrap;
-}
-
-.login-options div {
-  position: relative;
-  margin-left: 15px;
-}
-
-.login-options div:last-child {
-  margin-right: 2px;
-  margin-bottom: 0 !important;
-  font-size: 95%;
+.error-box {
+  border-width: 2px;
+  border-style: solid;
+  animation: error-border 1s infinite;
 }
 
 .pwd-field {
   flex: 1 0 auto;
-}
-
-/* Bootstrap 3's form validation state classes (.has-error/.has-warning/
-  .has-success) were removed in Bootstrap 5 (replaced by .is-invalid/
-  .is-valid on the input itself), but a few pages still toggle them via JS
-  for simple color-coded feedback, so pi-hole defines them itself here. */
-.has-error .form-control,
-.has-error .form-control:focus {
-  border-color: #a94442;
-}
-
-.has-warning .form-control,
-.has-warning .form-control:focus {
-  border-color: #8a6d3b;
-}
-
-.has-success .form-control,
-.has-success .form-control:focus {
-  border-color: #3c763d;
-}
-
-.has-error label,
-.has-error .control-label {
-  color: #a94442;
-}
-
-.has-warning label,
-.has-warning .control-label {
-  color: #8a6d3b;
-}
-
-.has-success label,
-.has-success .control-label {
-  color: #3c763d;
 }
 
 .login-footer a {
@@ -817,53 +1222,234 @@ table.dataTable .allowed-row td {
   padding: 15px;
 }
 
-/*** Warning icon and count ***/
-.warning-count {
+/* TODO: remove all .has-* and replace them with proper BS5 classes */
+/* Inherited form validation state classes (.has-error/.has-warning/.has-success)
+  from Bootstrap 3. They are still toggled via JS for simple color-coded feedback,
+  so pi-hole defines them itself here. */
+.has-error .form-control,
+.has-error .form-control:focus {
+  border-color: #a94442;
+}
+
+.has-success .form-control,
+.has-success .form-control:focus {
+  border-color: #3c763d;
+}
+
+.has-error label,
+.has-error .control-label {
+  color: #a94442;
+}
+
+.has-success label,
+.has-success .control-label {
+  color: #3c763d;
+}
+
+/*** Datatables ***/
+div.dt-buttons {
+  margin: 2px 0 5px;
+}
+@media screen and (max-width: 767px) {
+  div.dt-buttons {
+    margin-bottom: 5px;
+    float: none;
+    text-align: center;
+  }
+}
+
+.dt-buttons :is(.fa, .far) {
+  width: auto;
+}
+
+/* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
+  draws the checkbox box itself (it only nudges the margin), so the outline was
+  invisible and the bulk-select column looked empty. Draw the box and the
+  checkmark here so the selection control is visible again. */
+table.dataTable tbody td.select-checkbox,
+table.dataTable tbody th.select-checkbox {
+  position: relative;
+  min-width: 2.4rem;
+}
+
+table.dataTable tbody td.select-checkbox::before,
+table.dataTable tbody th.select-checkbox::before {
+  content: "";
   position: absolute;
-  display: inline-block;
-  text-align: center;
-  background: #e08e0b;
-  color: #fff;
-  line-height: 1;
-  padding: 0.25em 0.5em;
-  margin: -0.7em 4px;
-  border-radius: 2em;
-  right: 3em;
-  top: 50%;
-  font-size: 12px;
-}
-
-#top-warning-count {
-  top: 55%;
+  display: block;
+  top: 12px;
   left: 50%;
-  right: unset;
-  margin: 0;
+  transform: translate(-50%, 0);
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  box-sizing: border-box;
+  opacity: 0.7;
 }
 
-.nav-treeview .warning-count {
-  margin-right: 0;
-  font-size: 10px;
+table.dataTable tr.selected td.select-checkbox::before,
+table.dataTable tr.selected th.select-checkbox::before {
+  opacity: 1;
 }
 
-.menu-open > a > span.warning-count {
-  display: none;
+table.dataTable tr.selected td.select-checkbox::after,
+table.dataTable tr.selected th.select-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 6px;
+  height: 9px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: translate(-3px, 0) rotate(45deg);
 }
 
-/* hide submenu warning count during animation */
-li:not(.menu-open) .nav-treeview .warning-count {
-  display: none;
+/* Datatables selected row bgcolor */
+table.table.dataTable > tbody > tr.selected > * {
+  color: inherit;
+  --row-opacity: 0.16;
+  box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), var(--row-opacity)) !important;
+}
+table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > * {
+  --row-opacity: 0.24;
 }
 
-/* hide warning count when hover a collapsed sidebar */
-.sidebar-mini:not(.sidebar-mini-expand-feature).sidebar-collapse
-  .sidebar-menu
-  > li:hover
-  > a
-  > span.warning-count {
-  display: none !important;
+.datatable-bt {
+  --bs-btn-padding-y: 0.1rem;
+  --bs-btn-padding-x: 0.3rem;
 }
 
-/* Fix some Domains page datatables layout on small screens */
+.datatable-bt span {
+  font-size: 17px;
+}
+
+/* Pagination */
+.pagination {
+  /* Force right aligned pagination */
+  justify-content: flex-end;
+
+  --bs-pagination-padding-x: 0.25rem;
+  --bs-pagination-padding-y: 0.25rem;
+  --bs-pagination-font-size: 1.1rem;
+
+  --bs-pagination-color: var(--bs-secondary);
+
+  --bs-pagination-hover-color: currentColor;
+  --bs-pagination-hover-bg: var(--bs-secondary-bg);
+
+  --bs-pagination-focus-color: currentColor;
+  --bs-pagination-focus-bg: var(--bs-secondary-bg);
+  --bs-pagination-focus-box-shadow: none;
+
+  --bs-pagination-active-color: #fff;
+  --bs-pagination-active-bg: var(--bs-primary);
+  --bs-pagination-active-border-color: var(--bs-primary);
+
+  --bs-pagination-disabled-color: var(--bs-secondary-border-subtle);
+  --bs-pagination-disabled-bg: var(--bs-tertiary-bg);
+  --bs-pagination-disabled-border-color: var(--bs-body-bg);
+}
+
+.pagination .page-link {
+  min-width: 36px;
+  min-height: 34px;
+  line-height: 1.5;
+}
+
+/* Hide the default button text in the pagination controls (.first, .last, .previous, .next) */
+.pagination .page-link:is(.first, .last, .previous, .next) {
+  font-size: 0;
+}
+
+/* Use font-awesome glyphs for pagination control buttons */
+.pagination .page-link:is(.first, .last, .previous, .next)::before {
+  font-family: "Font Awesome 7 Free";
+  font-size: 11px;
+  color: currentColor;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  font-weight: 900;
+  text-align: center;
+  text-rendering: auto;
+  width: 1em;
+  transform: translate(-50%, -50%);
+}
+.pagination .page-link.first::before {
+  content: "\f049";
+}
+.pagination .page-link.last::before {
+  content: "\f050";
+}
+.pagination .page-link.previous::before {
+  content: "\f04b";
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+.pagination .page-link.next::before {
+  content: "\f04b";
+}
+
+.pagination .page-link:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  z-index: 1;
+  color: var(--bs-pagination-focus-color);
+  background-color: var(--bs-pagination-focus-bg);
+}
+
+/* Table footer row used to add new items, using inline input fields */
+tfoot.add-new-item > tr > th {
+  font-weight: normal;
+  vertical-align: inherit;
+}
+
+/* Lists page - list details row */
+.dataTables-child td {
+  padding: 2px 5px;
+}
+
+/* TODO: maybe we should use the "Responsive" datatables plugin to automatically handle too many columns */
+/* Optimize Queries-Table for small screens */
+/* Time column */
+#all-queries td:nth-of-type(1),
+/* Reply time column */
+#all-queries td:nth-of-type(6) {
+  white-space: nowrap;
+}
+
+/* Domain column */
+#all-queries td:nth-of-type(4) {
+  min-width: 200px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+/* Client column */
+#all-queries td:nth-of-type(5) {
+  word-break: break-all;
+}
+
+/* Allow Info String to wrap (useful while filtering entries on small screen) */
+#all-queries_info {
+  white-space: unset;
+}
+
+/* adjust the buttons width */
+#all-queries_wrapper .pagination > li > a {
+  padding-left: 6px;
+  padding-right: 6px;
+  min-width: 34px;
+  text-align: center;
+}
+
+/*** Group Management pages ***/
+
+/*** Group Management - Domains ***/
+/* Adjust datatables layout on small screens */
 @media screen and (max-width: 767px) {
   #domainsTable_wrapper .table-responsive {
     border: none;
@@ -939,9 +1525,9 @@ li:not(.menu-open) .nav-treeview .warning-count {
     content: "Comment:";
   }
 }
+
 @media screen and (min-width: 767px) {
-  #domainsTable select.form-control {
-    padding: 0 0 0 5px;
+  #domainsTable .form-select {
     width: auto;
   }
 }
@@ -951,402 +1537,76 @@ li:not(.menu-open) .nav-treeview .warning-count {
   }
 }
 
-/* Domains table: filter by type */
-#domains-list .card-header {
+/* Card options: right-aligned container in card-header - used in Query Log and Domains pages */
+.card-header:has(.card-header-options) {
   display: flex;
   flex-wrap: wrap;
-  padding: 5px 10px;
+  padding: 0 var(--bs-card-cap-padding-x);
+  justify-content: space-between;
+  align-items: center;
 }
-#domains-list .card-header h3 {
+.card-header :is(h3, .card-title):has(+ .card-header-options) {
   flex: 1 1 auto;
-  margin: 0.5em 0;
-  width: auto;
-  min-width: 130px;
+  margin: 0.85rem 0;
 }
-.filter_types {
+.card-header-options {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 1 auto;
   margin: 5px auto;
 }
-.filter_types div {
-  margin: 2px 0 0;
-}
-.filter_types span {
-  display: inline-block;
-  margin: 0 0 2px 10px !important;
-  width: 120px;
-  min-height: 1.2em;
-}
 
-/* Domains table: filter by type - smaller checkboxes */
-.filter_types .form-check-input {
-  width: 1.2em;
-  height: 1.2em;
-}
-.filter_types .form-check-label {
-  line-height: 1.2em;
-  min-height: 1.2em;
-}
-
-/* reverse side menu collapse arrows when menu is closed */
-.sidebar-collapse .sidebar-toggle-svg i {
-  transform: scaleX(-1);
-}
-
-/* reverse side menu collapse arrows on mobile screens */
-@media (max-width: 767px) {
-  .sidebar-toggle-svg i {
-    transform: scaleX(-1);
-  }
-  .sidebar-open .sidebar-toggle-svg i {
-    transform: scaleX(1);
-  }
-}
-
-.icon-bounce {
-  display: inline-block;
-  position: relative;
-  animation: icon-bounce 2.4s 3 ease-in-out;
-  font-size: 1.6em;
-}
-
-@keyframes icon-bounce {
-  0%,
-  15%,
-  50%,
-  100% {
-    transform: translateY(0);
-  }
-  25% {
-    transform: translateY(-5px);
-  }
-  30% {
-    transform: translateY(4px);
-  }
-  35% {
-    transform: translateY(-3px);
-  }
-  40% {
-    transform: translateY(2px);
-  }
-  45% {
-    transform: translateY(-1px);
-  }
-}
-
-/* Page title container (flex) */
-.flex-header {
+.card-header-options > .line {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.card-header-options > .line > span {
+  display: inline-block;
+  min-height: 1.2em;
+  min-width: 7rem;
+}
+.card-header-options :is(.form-check, .form-check-label) {
+  margin: 0;
+}
+.card-header-options .form-check-input {
+  margin-top: 0.3rem;
 }
 
-.flex-header h1 {
-  margin: 10px 30px 10px 0;
-  flex: 1 0 auto;
+/*** Group Management - Lists ***/
+/* Table icons legend */
+.list-status-0 {
+  color: #7d7d7d;
+}
+.list-status-1 {
+  color: #74c700;
+}
+.list-status-2 {
+  color: #98ca52;
+}
+.list-status-3 {
+  color: #ff8c00;
+}
+.list-status-4 {
+  color: #cc0000;
 }
 
-.navbar-nav > .user-menu {
-  margin-left: 15px;
-  width: 50px;
-  text-align: center;
-}
-@media screen and (min-width: 767px) {
-  .navbar-nav > .user-menu {
-    background: rgba(0, 0, 0, 0.1);
-  }
+.list-icon-legend-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 60px;
 }
 
-.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
-  height: auto;
-  padding: 15px 15px 5px;
-  font-weight: 600;
-  color: var(--bs-navbar-brand-color);
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
-  height: 50px;
-  width: 50px;
-  border: none;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-body {
-  border-radius: 0;
-  border-color: #fff;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer {
-  padding: 10px 15px;
-  background: #fff;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu > .user-footer a {
-  background: transparent !important;
-  padding: 6px 0;
-}
-
-.navbar-nav > .user-menu > .dropdown-menu {
-  width: 240px;
-  border: none;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
-  margin: 1px;
-}
-
-.dropdown-menu > li > a {
-  color: inherit;
-}
-
-.user-menu hr {
-  margin: 5px 0;
-  opacity: 0.5;
-}
-
-#apiTokenIframe {
-  width: 100%;
-  border: 0;
-  height: 500px;
-}
-
-#apiTokenModal pre {
-  background: #fff;
-}
-
-.no-danger-area {
-  margin: 0.5em 0 1em;
-  border-left: 2px solid green;
-  border-right: 2px solid green;
-  padding: 1px 1em 0.5em;
-  box-shadow: 0 0 2px -1px #bbb;
-  border-radius: 6px;
-}
-
-.danger-area {
-  margin: 0.5em 0 1em;
-  border-left: 2px solid red;
-  border-right: 2px solid red;
-  padding: 1px 1em 0.5em;
-  box-shadow: 0 0 2px -1px #bbb;
-  border-radius: 6px;
-}
-
-.menu-icon {
-  margin-right: 0.5em;
-}
-
-.user-footer .menu-icon {
-  max-height: 1.75rem;
-  vertical-align: middle;
-}
-
-div.dt-buttons {
-  margin: 2px 0 5px;
-}
-@media screen and (max-width: 767px) {
-  div.dt-buttons {
-    margin-bottom: 5px;
-    float: none;
-    text-align: center;
-  }
-}
-
-/* Datatables Select - checkbox outline. The Bootstrap 5 Select build no longer
-  draws the checkbox box itself (it only nudges the margin), so the outline was
-  invisible and the bulk-select column looked empty. Draw the box and the
-  checkmark here so the selection control is visible again. */
-table.dataTable tbody td.select-checkbox,
-table.dataTable tbody th.select-checkbox {
-  position: relative;
-  text-align: center;
-  vertical-align: middle;
-}
-
-table.dataTable tbody td.select-checkbox::before,
-table.dataTable tbody th.select-checkbox::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  margin-left: -8px;
-  border: 2px solid currentColor;
-  border-radius: 3px;
-  box-sizing: border-box;
-  opacity: 0.7;
-}
-
-table.dataTable tr.selected td.select-checkbox::before,
-table.dataTable tr.selected th.select-checkbox::before {
-  opacity: 1;
-}
-
-table.dataTable tr.selected td.select-checkbox::after,
-table.dataTable tr.selected th.select-checkbox::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 9px;
-  margin-top: -6px;
-  margin-left: -2px;
-  border-bottom: 2px solid currentColor;
-  border-right: 2px solid currentColor;
-  transform: rotate(45deg);
-}
-
-.datatable-bt {
-  padding: 3px 8px;
-}
-
-.datatable-bt span {
-  font-size: 17px;
-}
-
-/* DNS settings page - Upstream servers table */
-.upstream-servers-table {
-  table-layout: fixed;
-}
-.upstream-servers-table .server-names {
-  width: 210px;
-}
-.upstream-servers-table > tbody > tr > td {
-  vertical-align: middle;
-}
-
-/* DNS settings page - selection-count label on the Plain/DoT/DoH tabs */
-.nav-tabs .label {
-  position: absolute;
-  top: 4px;
-  right: 5px;
-  font-size: 11px;
-}
-.nav-tabs > li > a:has(.label) {
-  padding-right: 30px;
-}
-
-/* Datatables Select - selected row bgcolor */
-table.table.dataTable > tbody > tr.selected > * {
-  color: inherit;
-  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 20%, transparent);
-}
-table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > * {
-  box-shadow: inset 0 0 0 9999px color-mix(var(--datatable-selected-bg) 40%, transparent);
-}
-
-#messagesTable pre {
-  word-break: break-word;
-  white-space: pre-wrap;
-}
-
-#output {
-  position: relative;
-  margin: 5px 0;
-  min-height: 36px;
-  padding: 4px 8px;
-  width: 100%;
-  height: 100%;
-}
-
-#output.pre-taillog {
-  display: grid;
-}
-
-.loading::before {
-  content: " ";
-  position: absolute;
-  padding: 1em;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  line-height: 1;
-  background: rgba(35, 60, 85, 0.8);
-  box-shadow: 0 0 6px -3px rgba(0, 0, 0, 0.5);
-}
-.loading::after {
-  content: "\1F553\FE0E  Loading...";
-  position: absolute;
-  padding: 1em;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  color: #fff;
-  line-height: 1;
-  animation: 2s infinite Pulse steps(20);
-}
-
-/* Loading spinner (Dashboard and Long-term data) */
-.overlay .fa-spin {
-  position: relative;
-  opacity: 0.5;
-  font-size: 2.5em;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-}
-
-.pull-nav-right {
-  float: right !important;
-  margin-right: 5px;
-  margin-left: 5px;
-  padding: 5px;
-}
-
-.pre-scrollable {
-  /* use dynamic unit to account for mobile browser interface height */
-  max-height: max(195px, 100dvh - 170px);
-  overflow-y: scroll;
-}
-@media screen and (max-width: 767px) {
-  .pre-scrollable {
-    /* reduce max-height on mobile (higher header) */
-    max-height: max(195px, 100dvh - 220px);
-  }
-}
-@media screen and (max-width: 546px) {
-  .pre-scrollable {
-    /* reduce max-height even more (box-header text wraps, increasing the height) */
-    max-height: max(195px, 100dvh - 240px);
-  }
-}
-
-.hr-small {
-  width: 100%;
-  margin: 0 0 -1px;
-  border-top: 1px solid #ff0000aa;
-}
-
-.qrcode {
-  width: 50%;
-}
-
-.totp_token {
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-  font-family: monospace;
-  letter-spacing: 0.5em;
-}
-
-.totp_token::-moz-placeholder {
-  opacity: 0.1;
-}
-
-.totp_token::placeholder {
-  opacity: 0.1;
-}
-
+/*** Settings ***/
 .save-button-container {
   position: fixed;
   bottom: 1.2em;
   right: 0.6em;
   z-index: 10;
-  background: var(--overlay-bgcolor);
+  background: var(--save-button-overlay);
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 0.5em;
@@ -1361,6 +1621,55 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   }
 }
 
+/* Settings tabs */
+.nav-pills {
+  --bs-nav-link-color: var(--bs-body-color);
+  --bs-nav-link-hover-color: var(--bs-body-color);
+  --bs-nav-link-disabled-color: var(--bs-secondary-color);
+  --bs-nav-pills-link-active-color: #fff;
+  --bs-nav-pills-link-active-bg: var(--bs-primary);
+  --nav-link-border-color: rgba(127, 127, 127, 0.2);
+}
+.nav-pills .nav-link {
+  background: var(--bs-tertiary-bg);
+  border: var(--bs-border-width) solid var(--nav-link-border-color);
+}
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  border-color: var(--bs-nav-pills-link-active-bg);
+}
+.nav-pills .nav-link:not(.active):focus,
+.nav-pills .nav-link:not(.active):hover {
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.list-group {
+  --bs-list-group-active-bg: var(--bs-blue);
+  --bs-list-group-active-border-color: var(--bs-blue);
+}
+
+#advanced-settings-menu {
+  margin-bottom: 1.5em;
+}
+
+#advanced-settings-menu .nav-pills {
+  gap: 0.5em;
+}
+
+#advanced-settings-menu .nav-pills > .nav-item {
+  min-width: 115px;
+  flex: 1 1 auto;
+}
+
+#advanced-settings-menu .nav-pills > .nav-item > .nav-link {
+  display: block;
+  width: 100%;
+}
+
+#advanced-settings-tabs > .tab-pane {
+  margin-bottom: 2em;
+}
+
 .settings-container {
   --columns: 2;
   --gap: 20px;
@@ -1370,15 +1679,10 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
 }
 .settings-container > .card {
   margin: 0;
-  --bs-card-spacer-y: 0.7rem;
-  --bs-card-spacer-x: 1rem;
   width: calc((100% - (var(--gap) * (var(--columns) - 1))) / var(--columns));
   border: none;
   --bs-border-color-translucent: rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 1px var(--bs-border-color-translucent);
-}
-.settings-container .card-header {
-  padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
 }
 .settings-container .card-footer {
   background-color: var(--bs-card-bg);
@@ -1389,6 +1693,30 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   display: block;
 }
 
+/* Add an overlay over all read-only settings */
+.settings-box:has(.box-icons > .fa-lock) {
+  overflow: hidden;
+  box-shadow: 0 0 1px var(--bs-secondary-border-subtle);
+  --ph-overlay-rgb: var(--bs-secondary-bg-rgb);
+}
+.settings-box:has(.box-icons > .fa-lock)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  background: rgba(var(--ph-overlay-rgb), 0.6);
+}
+.settings-box:has(.box-icons > .fa-lock):hover::before {
+  content: "\f023";
+  font-family: var(--fa-family-classic);
+  font-weight: bold;
+  color: var(--bs-warning);
+  background: rgba(var(--ph-overlay-rgb), 0.8);
+}
+
 /* Settings containers without modified items and with hidden boxes will display this text */
 .settings-container:not(:has(h3[data-modified="true"])):has(
     .card[style*="display: none;"]
@@ -1396,30 +1724,6 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   content: "No modified settings to display";
   opacity: 0.7;
   font-style: italic;
-}
-
-#advanced-settings-menu {
-  margin-bottom: 1.5em;
-}
-
-#advanced-settings-menu ul {
-  gap: 0.5em;
-}
-
-#advanced-settings-menu ul > li {
-  min-width: 112px;
-  flex: 1 1 auto;
-}
-
-#advanced-settings-menu ul > li a {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 3px;
-}
-
-#advanced-settings-tabs > .tab-pane {
-  margin-bottom: 2em;
 }
 
 @media screen and (min-width: 2250px) {
@@ -1441,32 +1745,30 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   }
 }
 
-@keyframes error-border {
-  0%,
-  100% {
-    border-color: rgba(255, 0, 0, 0.5);
-  }
-  50% {
-    border-color: rgba(255, 0, 0, 0.2);
-  }
+.box-icons {
+  margin: 0 5px;
+}
+.box-icons i {
+  margin: 0 4px;
 }
 
-.error-box {
-  border-width: 2px;
-  border-style: solid;
-  animation: error-border 1s infinite;
+/*** Web and API settings page ***/
+.qrcode {
+  width: 50%;
 }
 
-.button-pad {
-  margin: 2px;
-}
-
-.error-headline {
-  float: none;
+.totp_token {
+  font-size: 1.5em;
+  font-weight: bold;
   text-align: center;
-  font-size: 100px;
-  font-weight: 600;
-  padding-right: 20px;
+  font-family: monospace;
+  letter-spacing: 0.5em;
+}
+.totp_token::-moz-placeholder {
+  opacity: 0.1;
+}
+.totp_token::placeholder {
+  opacity: 0.1;
 }
 
 .password_background {
@@ -1480,46 +1782,27 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   );
 }
 
-/* Dashboard graphics: reset zoom button and info tooltip */
-.zoom-reset {
-  display: none;
-  margin-top: -1px;
+/*** DNS settings page ***/
+/* Upstream servers table */
+.upstream-servers-table {
+  table-layout: fixed;
+}
+.upstream-servers-table .server-names {
+  width: 210px;
+}
+.upstream-servers-table > tbody > tr > td {
+  vertical-align: middle;
 }
 
-/* General layout - Row containing flex elements */
-.row-flex {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5em;
-  margin: 0.5em 0;
-  align-items: start;
+/* Selection-count label on the Plain/DoT/DoH tabs */
+.nav-tabs .label {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  font-size: 11px;
 }
-.row-flex .form-control {
-  width: auto;
-}
-
-.log-entry {
-  padding-left: 0.5em;
-}
-
-.align-click-options {
-  align-items: center;
-  display: grid;
-  grid-auto-flow: column;
-  grid-column-gap: 15px;
-}
-
-.overflow-wrap {
-  overflow-wrap: break-word;
-  inline-size: auto;
-}
-
-.box-icons {
-  margin: 0 5px;
-}
-
-.box-icons i {
-  margin: 0 4px;
+.nav-tabs > li > a:has(.label) {
+  padding-right: 30px;
 }
 
 /* Used in Settings DNS page */
@@ -1578,30 +1861,6 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   content: "Domain name (optional)";
 }
 
-/* Used in interfaces page */
-.list-group-item {
-  background: transparent;
-  border-color: rgba(127, 127, 127, 0.27);
-}
-.bstreeview .list-group-item:hover {
-  background-color: rgba(127, 127, 127, 0.18);
-}
-.child-interface-icon {
-  line-height: 0.5em;
-  font-size: 1.7em;
-}
-
-.hidden-entry {
-  opacity: 0;
-}
-.fade-2s {
-  animation: fadeOut 2s forwards;
-}
-.fade-in-transition {
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
-}
-
 #StaticDHCPTable,
 .table-responsive:has(#StaticDHCPTable) {
   margin: 0;
@@ -1619,7 +1878,7 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
 }
 
 .table-danger {
-  background-color: #d337;
+  background-color: rgba(var(--bs-danger-rgb), 0.45);
 }
 
 #revServers-table .btn-xs,
@@ -1627,9 +1886,8 @@ table.table.dataTable.table-striped > tbody > tr.selected:nth-of-type(2n + 1) > 
   padding: 4px;
   font-size: 13px;
 }
-.btn-xs .fa-fw {
-  width: 1em;
-}
+
+/*** DHCP Settings ***/
 
 /* Show hint message on the static DHCP lease table, when at least one Save button exists */
 div:has(> .table-responsive #StaticDHCPTable) {
@@ -1647,7 +1905,7 @@ div:has(> .table-responsive #StaticDHCPTable .save-static-row)::after {
   color: #000;
   font-style: italic;
   text-align: right;
-  background: #eedd88;
+  background: rgba(var(--bs-warning-rgb), 0.4);
   float: right;
 }
 
@@ -1695,7 +1953,7 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   text-align: center;
   font-style: italic;
   color: #000;
-  background: #ed8;
+  background: rgba(var(--bs-warning-rgb), 0.4);
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
   cursor: not-allowed;
   z-index: 10;
@@ -1710,9 +1968,9 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   -moz-user-select: none;
   user-select: none;
   text-align: right;
-  color: #aaa;
+  color: var(--bs-gray-500);
   border: 1px solid transparent;
-  border-right-color: #ddd;
+  border-right-color: var(--bs-gray-300);
   padding: 8px 4px 8px 0;
   font-size: 14px;
   min-width: 2em;
@@ -1728,53 +1986,190 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   margin: 0 0 1em;
 }
 
-/* Used in query log page */
-td.dnssec {
-  padding-inline-start: 2.25em !important;
-  text-indent: -1.25em;
-}
-td.dnssec i {
-  text-indent: 0;
-  margin-left: -0.5rem;
+/*** Tools - Update Gravity and Tail Log ***/
+#output {
+  position: relative;
+  margin: 5px 0;
+  min-height: 36px;
+  padding: 4px 8px;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  background: var(--bs-tertiary-bg);
 }
 
-/* Keep the two single-icon columns (list status and list type) on the
-  subscribed-lists table the same width, and centre their icons. */
-#listsTable td.details-control,
-#listsTable th.details-control {
-  min-width: 3.5rem;
+.hr-small {
+  width: 100%;
+  margin: 0 0 -1px;
+  border-top: 1px solid rgba(var(--bs-danger-rgb), 0.7);
+}
+
+.log-entry {
+  padding-left: 0.5em;
+}
+.hidden-entry {
+  opacity: 0;
+}
+.fade-2s {
+  animation: fadeOut 2s forwards;
+}
+.fade-in-transition {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+#output.pre-taillog {
+  display: grid;
+}
+
+.pre-scrollable {
+  /* use dynamic unit to account for mobile browser interface height */
+  max-height: max(195px, 100dvh - 170px);
+  overflow-y: scroll;
+}
+@media screen and (max-width: 767px) {
+  .pre-scrollable {
+    /* reduce max-height on mobile (higher header) */
+    max-height: max(195px, 100dvh - 220px);
+  }
+}
+@media screen and (max-width: 546px) {
+  .pre-scrollable {
+    /* reduce max-height even more (box-header text wraps, increasing the height) */
+    max-height: max(195px, 100dvh - 240px);
+  }
+}
+
+/*** Tools - Pi-hole diagnosis ***/
+#messagesTable pre {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/*** Tools - Interface ***/
+.list-group-item {
+  background: transparent;
+  border-color: rgba(127, 127, 127, 0.27);
+}
+.bstreeview .list-group-item:hover {
+  background-color: rgba(127, 127, 127, 0.18);
+}
+.child-interface-icon {
+  line-height: 0.5em;
+  font-size: 1.7em;
+}
+
+@keyframes Pulse {
+  from {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes error-border {
+  0%,
+  100% {
+    border-color: rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(255, 0, 0, 0.2);
+  }
+}
+
+/*** Tools - Network: table colors ***/
+.network-never {
+  background-color: var(--ph-network-never);
+}
+.network-recent {
+  background-color: var(--ph-network-recent);
+}
+.network-old {
+  background-color: var(--ph-network-old);
+}
+.network-older {
+  background-color: var(--ph-network-older);
+}
+.network-gradient {
+  background-image: linear-gradient(
+    to right,
+    var(--ph-network-recent) 0%,
+    var(--ph-network-old) 100%
+  );
+}
+
+/*** Error pages ***/
+.error-headline {
   text-align: center;
+  font-size: 100px;
+  font-weight: 600;
 }
 
-/* Tom Select general styles */
-.ts-control,
-.ts-control input,
-.ts-dropdown {
-  font-size: 12px;
+/* Select2 custom styles to match BS5 colors, instead of using hard-coded colors */
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+  border-color: var(--bs-primary);
+  box-shadow: none;
+  padding-right: 3.2rem; /* Increased space to fit the delete button */
 }
 
-/* Tom Select - Dark theme colors */
-/* Dropdown menu background and border alignment */
-[data-bs-theme="dark"] .ts-dropdown {
-  color: var(--bs-dropdown-link-color);
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__clear,
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__clear {
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' stroke='%23808080' stroke-width='3' stroke-linecap='round' fill='none'%3E%3Cpath d='m13 3-10 10m0-10 10 10'%2F%3E%3C%2Fsvg%3E")
+    center/0.75rem auto no-repeat !important;
 }
 
-/* Dropdown individual option items */
-[data-bs-theme="dark"] .ts-dropdown .option {
-  color: var(--bs-dropdown-link-color);
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__clear:hover,
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__clear:hover {
+  filter: contrast(0.5) sepia(1) hue-rotate(-45deg) saturate(10); /* Change the image color to red instead of using a different image */
 }
 
-/* Selected multi-select pills (Tags) */
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div {
-  background-color: var(--bs-tertiary-bg);
+.select2-container--bootstrap-5 .select2-dropdown {
+  border-color: var(--bs-primary);
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-search {
+  padding: 0.375rem;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-search .select2-search__field:focus {
+  border-color: var(--bs-primary);
+}
+
+.select2-container--bootstrap-5
+  .select2-dropdown
+  .select2-results__options
+  .select2-results__option.select2-results__option--highlighted {
   color: var(--bs-body-color);
-  border: 1px solid var(--bs-border-color);
+  background-color: var(--bs-secondary-bg);
+}
+.select2-container--bootstrap-5
+  .select2-dropdown
+  .select2-results__options
+  .select2-results__option.select2-results__option--selected,
+.select2-container--bootstrap-5
+  .select2-dropdown
+  .select2-results__options
+  .select2-results__option[aria-selected="true"]:not(.select2-results__option--highlighted) {
+  background-color: var(--bs-primary);
 }
 
-/* Remove button X inside multi-select pills */
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove {
-  border-left-color: var(--bs-border-color);
+.select2-container--bootstrap-5 .select2-selection--single {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23808080' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
-[data-bs-theme="dark"] .ts-wrapper.multi .ts-control > div .remove:hover {
-  background: rgba(255, 255, 255, 0.1);
+
+/* TODO: replace this class with new BS5 classes (and fix javascript code that uses them) */
+/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
+  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
+  login field, the diagnosis warning-count badge and the "reset sorting"
+  buttons - so restore it here, otherwise those elements are always shown. */
+.hidden {
+  display: none !important;
 }

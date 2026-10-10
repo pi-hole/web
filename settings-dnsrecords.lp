@@ -24,8 +24,6 @@ PageTitle = "Local DNS Settings"
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3 class="card-title">List of local DNS records</h3>
-                                    <!-- /.card-header -->
                                 <table id="hosts-Table" class="table table-striped table-bordered" width="100%">
                                     <thead>
                                         <tr>
@@ -65,8 +63,6 @@ PageTitle = "Local DNS Settings"
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <h3 class="card-title">List of local CNAME records</h3>
-                                    <!-- /.card-header -->
                                 <table id="cnameRecords-Table" class="table table-striped table-bordered" width="100%">
                                     <thead>
                                         <tr>
