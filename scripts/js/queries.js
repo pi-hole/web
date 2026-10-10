@@ -546,6 +546,7 @@ function getAPIURL(queryFilters) {
 }
 
 let liveMode = false;
+const expandedRows = new Set();
 $("#live").prop("checked", liveMode);
 $("#live").on("click", function () {
   liveMode = $(this).prop("checked");
@@ -724,6 +725,25 @@ $(() => {
         $("td:eq(6)", row).html(querystatus.buttontext);
       }
     },
+    drawCallback() {
+      // Re-open details rows that were expanded before the table was redrawn
+      if (expandedRows.size === 0) {
+        return;
+      }
+
+      //eslint-disable-next-line no-void
+      void this.api()
+        .rows()
+        .every(function () {
+          const data = this.data();
+          if (expandedRows.has(data.id)) {
+            this.child(formatInfo(data), "details-row").show();
+            $(this.node()).addClass("shown");
+          }
+
+          return null;
+        });
+    },
     initComplete() {
       //eslint-disable-next-line no-void
       void this.api()
@@ -781,14 +801,18 @@ $(() => {
     const tr = $(this);
     const row = table.row(tr);
 
+    const queryId = row.data().id;
+
     if (row.child.isShown()) {
       // This row is already open - close it
       row.child.hide();
       tr.removeClass("shown");
+      expandedRows.delete(queryId);
     } else {
       // Open this row. Add a class to the row
       row.child(formatInfo(row.data()), "details-row").show();
       tr.addClass("shown");
+      expandedRows.add(queryId);
     }
   });
 
