@@ -542,7 +542,7 @@ function getAPIURL(queryFilters) {
     apiurl += "&disk=true";
   }
 
-  return encodeURI(apiurl);
+  return apiurl;
 }
 
 let liveMode = false;

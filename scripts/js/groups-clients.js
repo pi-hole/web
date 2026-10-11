@@ -360,17 +360,17 @@ function addClient() {
   // - IPv4 address (with and without CIDR)
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
-  // - host name (arbitrary form, we're only checking against some reserved characters)
+  // - host name, or an interface prefaced with a colon (like :eth0)
   for (const [index, ip] of ips.entries()) {
     if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
       // Convert input to upper case (important for MAC addresses)
       ips[index] = ip.toUpperCase();
-    } else if (!utils.validateHostname(ip)) {
+    } else if (!utils.validateClientPattern(ip)) {
       utils.showAlert(
         "warning",
         "",
         "Warning",
-        "Input is neither a valid IP or MAC address nor a valid host name!"
+        "Input is neither a valid IP or MAC address nor a valid host name or interface!"
       );
       return;
     }

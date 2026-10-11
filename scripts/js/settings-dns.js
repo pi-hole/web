@@ -564,7 +564,7 @@ $(document).on("input blur paste", ".revserver-ip", function () {
 });
 $(document).on("input blur paste", ".revserver-domain", function () {
   const val = $(this).text().trim();
-  if (val && !utils.validateHostnameStrict(val)) {
+  if (val && !utils.validateHostname(val)) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid domain");
     $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);
