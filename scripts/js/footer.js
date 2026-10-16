@@ -617,6 +617,19 @@ $(() => {
     $("#cookieInfo").show();
   }
 
+  // AdminLTE only sizes .content-wrapper on load and window resize, so refit when
+  // the header/footer change height (e.g. after the version info is fetched)
+  if (globalThis.ResizeObserver) {
+    const layoutObserver = new ResizeObserver(() => {
+      if ($("body").data("lte.layout")) {
+        $("body").layout("fix");
+      }
+    });
+    for (const el of document.querySelectorAll(".main-header, .main-footer")) {
+      layoutObserver.observe(el);
+    }
+  }
+
   if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...
     utils.checkMessages();
