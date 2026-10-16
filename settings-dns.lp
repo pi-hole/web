@@ -282,7 +282,7 @@ PageTitle = "DNS Settings"
                                             <th id="network-revServers" class="revserver-network" contenteditable="true"></th>
                                             <th id="ip-revServers" class="revserver-ip" contenteditable="true"></th>
                                             <th id="domain-revServers" class="revserver-domain" contenteditable="true"></th>
-                                            <th>
+                                            <th class="actions">
                                                 <button type="button" id="btnAddRevServers" class="btn btn-primary btn-xs saveRevServers" title="Save the new entry"><i class="fa fa-plus"></i></button>
                                             </th>
                                         </tr>
