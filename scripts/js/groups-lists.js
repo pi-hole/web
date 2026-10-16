@@ -50,31 +50,31 @@ function format(data) {
       ? Math.trunc(data.invalid_domains).toLocaleString()
       : "N/A";
 
-  return `<table>
-      <tr class="dataTables-child">
-        <td>Type:&nbsp;&nbsp;</td><td>${setTypeIcon(data.type)}${data.type}list</td>
+  return `<table class="dataTables-child">
+      <tr>
+        <td>Type:</td><td>${setTypeIcon(data.type)}&nbsp;${data.type}list</td>
       </tr>
-      <tr class="dataTables-child">
-        <td>Health status:&nbsp;&nbsp;</td><td>${statusText}</td>
+      <tr>
+        <td>Health status:</td><td>${statusText}</td>
       </tr>
-      <tr class="dataTables-child">
-        <td>Added to Pi-hole:&nbsp;&nbsp;</td>
+      <tr>
+        <td>Added to Pi-hole:</td>
         <td>${utils.datetimeRelative(data.date_added)}&nbsp;(${dateAddedISO})</td>
       </tr>
-      <tr class="dataTables-child">
-        <td>Database entry last modified:&nbsp;&nbsp;</td>
+      <tr>
+        <td>Database entry last modified:</td>
         <td>${utils.datetimeRelative(data.date_modified)}&nbsp;(${dateModifiedISO})</td>
       </tr>
-      <tr class="dataTables-child">
-        <td>Content last updated on:&nbsp;&nbsp;</td><td>${dateUpdated}</td>
+      <tr>
+        <td>Content last updated on:</td><td>${dateUpdated}</td>
       </tr>
-      <tr class="dataTables-child">
-        <td>Number of entries:&nbsp;&nbsp;</td><td>${numberOfEntries}</td>
+      <tr>
+        <td>Number of entries:</td><td>${numberOfEntries}</td>
       </tr>
-      <tr class="dataTables-child">
-        <td>Number of non-domains:&nbsp;&nbsp;</td><td>${nonDomains}</td>
+      <tr>
+        <td>Number of non-domains:</td><td>${nonDomains}</td>
       </tr>
-      <tr class="dataTables-child">
+      <tr>
         <td>Database ID:</td><td>${data.id}</td>
       </tr>
     </table>`;
@@ -177,16 +177,23 @@ function initTable() {
       dataSrc: "lists",
       type: "GET",
     },
+    autoWidth: false,
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "2rem" },
-      { data: "status", searchable: false, class: "details-control" },
-      { data: "type", searchable: false, class: "details-control" },
+      { data: null, visible: true, orderable: false, width: "2.4rem" },
+      {
+        data: "status",
+        searchable: false,
+        class: "details-control",
+        width: "2.4rem",
+        type: "html",
+      },
+      { data: "type", searchable: false, class: "details-control", width: "2.4rem", type: "html" },
       { data: "address" },
       { data: "enabled", searchable: false },
       { data: "comment" },
-      { data: "groups", searchable: false },
+      { data: "groups", searchable: false, type: "html" },
       { data: null, width: "22px", orderable: false },
     ],
     columnDefs: [

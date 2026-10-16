@@ -49,7 +49,7 @@ mg.include('header.lp','r')
                 <li class="nav-item">
                     <a class="nav-link sidebar-toggle-svg" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle Navigation">
                         <i aria-hidden="true" class="fa fa-angle-double-left"></i>
-                        <span class="warning-count hidden" id="top-warning-count"></span>
+                        <span class="warning-count navbar-badge badge text-bg-warning hidden" id="top-warning-count"></span>
                     </a>
                 </li>
             </ul>

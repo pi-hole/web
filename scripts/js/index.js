@@ -345,9 +345,9 @@ function updateTopClientsTable(blocked) {
       // Add row to table
       clienttable.append(
         "<tr> " +
-          utils.addTD(url) +
-          utils.addTD(client.count) +
-          utils.addTD(utils.colorBar(percentage, sum, style)) +
+          `<td>${url}</td>` +
+          `<td>${client.count}</td>` +
+          `<td class="align-middle">${utils.colorBar(percentage, sum, style)}</td>` +
           "</tr> "
       );
     }
@@ -418,9 +418,9 @@ function updateTopDomainsTable(blocked) {
       const percentage = (item.count / sum) * 100;
       domaintable.append(
         "<tr> " +
-          utils.addTD(url) +
-          utils.addTD(item.count) +
-          utils.addTD(utils.colorBar(percentage, sum, style)) +
+          `<td>${url}</td>` +
+          `<td>${item.count}</td>` +
+          `<td class="align-middle">${utils.colorBar(percentage, sum, style)}</td>` +
           "</tr> "
       );
     }

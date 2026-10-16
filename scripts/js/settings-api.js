@@ -420,8 +420,8 @@ $("#totp_code").on("paste", event => {
 $("#totp_code").on("keyup", function () {
   const code = $(this).val() === "" ? NaN : Math.trunc($(this).val());
   if (Number.isFinite(code) && TOTPdata.codes.includes(code)) {
-    $("#totp_div").removeClass("has-error");
-    $("#totp_div").addClass("has-success");
+    $("#totp_code").removeClass("border-danger");
+    $("#totp_code").addClass("border-success");
     $("#totp_code").prop("disabled", true);
     $("#totp_submit").prop("disabled", false);
     $("#totp_submit").removeClass("btn-secondary");
