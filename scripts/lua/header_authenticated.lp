@@ -9,7 +9,6 @@
 ]]--
 mg.include('header.lp','r')
 ?>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables/dataTables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables/dataTables.bootstrap5.min.js')?>"></script>
@@ -38,6 +37,9 @@ mg.include('header.lp','r')
     </div>
     <!-- /JS Warning -->
 </noscript>
+
+<!-- Toast container to display notifications, should be present before the toast is generated to be recognized by by assistive technologies-->
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toast-container" style="z-index: 9999"></div>
 
 <!-- Send token to JS -->
 <div id="enableTimer" hidden></div>

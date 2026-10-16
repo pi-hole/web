@@ -8,6 +8,7 @@
 /* global utils:false, setConfigValues: false, apiFailure: false */
 
 "use strict";
+globalThis.toasts ??= {};
 
 // Get the manually entered upstream servers from the textarea
 function getManualDNSupstreams() {
@@ -354,7 +355,7 @@ function addRevServer() {
   // Reject empty network range and server IP
   if (values[1] === "" || values[2] === "") {
     // Show error message
-    utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
+    utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "", null);
     return;
   }
 
@@ -395,7 +396,7 @@ function saveRecord() {
   // Reject empty network range and server IP
   if (values[1] === "" || values[2] === "") {
     // Show error message
-    utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "");
+    utils.showAlert("error", "fa fa-ban", "Network Range and Server IP are required", "", null);
     return;
   }
 
@@ -429,7 +430,7 @@ function restoreRecord() {
   });
 
   // Show cancellation message
-  utils.showAlert("info", "fas fa-undo", "Canceled", "Original values restored");
+  utils.showAlert("info", "fas fa-undo", "Canceled", "Original values restored", null);
 
   // Make sure all highlighted cells are restored
   // Remove "editing" class from the row. The buttons will be shown/hidden via CSS
@@ -489,6 +490,13 @@ function saveRevServerData(msg) {
   // Get the data from the textarea
   const data = getRevServerLines();
 
+  globalThis.toasts.revServers = utils.showAlert(
+    "info",
+    "",
+    "Saving Conditional Forwarding settings...",
+    null,
+    null
+  );
   // Call the API to save only the dns.revServers option
   $.ajax({
     url: document.body.dataset.apiurl + "/config",
@@ -504,7 +512,8 @@ function saveRevServerData(msg) {
         "success",
         "fa-solid fa-fw fa-floppy-disk",
         "Conditional Forwarding settings successfully saved",
-        msg
+        msg,
+        globalThis.toasts.revServers
       );
       // Show loading overlay (without reloading the page)
       utils.loadingOverlay(false);
@@ -516,7 +525,13 @@ function saveRevServerData(msg) {
     })
     .fail((response, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while applying settings", response.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while applying settings",
+        response.responseText,
+        globalThis.toasts.revServers
+      );
       console.log(exception); // eslint-disable-line no-console
       apiFailure(response);
     });
