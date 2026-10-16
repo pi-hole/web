@@ -24,9 +24,33 @@ PageTitle = "Teleporter"
                     <div class="card-body">
                         <p><strong>Warning:</strong><br>This archive contains sensitive information about your Pi-hole installation, e.g. your 2FA-TOTP secret (if enabled). Please be careful with this file and do not share it with anyone even if they claim to help you.<br> Your long-term history database <code>pihole-FTL.db</code> must be backed up separately.</p>
                         <p class='text-danger' id="encryption-warning" style="display: none;"><strong>Warning:</strong><br>You are currently not using an end-to-end encryption. This means that secrets like your 2FA-TOTP secret will be transmitted in plain text. We recommend to use HTTPS when exporting your configuration.</p>
-                        <div class="float-end">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="export-encrypt" checked>
+                            <label class="form-check-label" for="export-encrypt"><strong>Protect with a password</strong></label>
+                        </div>
+                        <div id="export-password-group">
+                            <div class="row g-2">
+                                <div class="col-sm-6">
+                                    <label class="visually-hidden" for="export-password">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fa fa-fw fa-lock"></i></span>
+                                        <input type="password" class="form-control" id="export-password" placeholder="Password" autocomplete="new-password" spellcheck="false">
+                                        <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#export-password,#export-password-repeat" title="Show password as plain text">
+                                            <span class="fa fa-fw fa-eye field-icon"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="visually-hidden" for="export-password-repeat">Repeat password</label>
+                                    <input type="password" class="form-control" id="export-password-repeat" placeholder="Repeat password" autocomplete="new-password" spellcheck="false">
+                                    <div class="invalid-feedback">Passwords do not match</div>
+                                </div>
+                            </div>
+                            <p class="form-text mb-0">The archive is encrypted with AES-256 and can only be imported with this password. A forgotten password cannot be recovered.</p>
+                        </div>
+                        <div class="float-end mt-3">
                             <a class="btn btn-app btn-success" id="GETTeleporter" target="_blank">
-                                <i class="fa fa-save fa-xl"></i><br>Export
+                                <i class="fa fa-lock fa-xl" id="export-icon"></i><br>Export
                             </a>
                         </div>
                     </div>
@@ -40,9 +64,20 @@ PageTitle = "Teleporter"
                     <div class="card-body">
                         <div class="form-group">
                             <label for="file">File input</label>
-                            <input type="file" name="file" id="file" accept="application/gzip,application/zip">
-                            <br>
-                            <p class="help-block">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
+                            <input type="file" class="form-control" name="file" id="file" accept="application/gzip,application/zip,.enc">
+                            <p class="help-block mt-2">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
+                        </div>
+                        <div class="form-group mb-3" id="import-password-group" style="display: none;">
+                            <div class="alert alert-info py-2 mb-2"><i class="fa fa-fw fa-lock"></i> This archive is password-protected.</div>
+                            <label class="visually-hidden" for="import-password">Password</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" id="import-password" placeholder="Password" autocomplete="off" spellcheck="false">
+                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#import-password" title="Show password as plain text">
+                                    <span class="fa fa-fw fa-eye field-icon"></span>
+                                </button>
+                                <div class="invalid-feedback" id="import-password-feedback"></div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="import-selection">Select what to import</label>
