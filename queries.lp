@@ -120,7 +120,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <!-- /.card-body -->
                     <div class="card-footer clearfix">
                         <span class="float-start">* These input fields allow manual input as well. Use <code>*</code> for wildcard search. An <code>_</code> can be used as a single-character wildcard. If you want to search for <code>_</code> explicitly, then you must escape it like <code>\_</code></span>
-                        <span class="float-end">Click "Refresh" below to apply.</span>
+                        <span class="float-end">Click "Refresh" below to apply. With "Live update" enabled, changes are also applied automatically.</span>
                     </div>
                     <!-- /.card -->
                 </div>
