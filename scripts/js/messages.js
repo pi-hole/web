@@ -49,9 +49,6 @@ $(() => {
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.id);
@@ -152,7 +149,7 @@ function deleteMessage() {
 }
 
 function delMsg(id) {
-  id = Number.parseInt(id, 10);
+  id = Math.trunc(Number(id));
   utils.disableAll();
   toasts[id] = utils.showAlert("info", "", "Deleting message...", "ID: " + id, null);
 

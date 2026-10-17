@@ -51,10 +51,12 @@ function mixColors(ratio, rgb1, rgb2) {
 }
 
 function parseColor(input) {
-  const match = input.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/iu);
+  const match = input.match(
+    /^rgb\s*\(\s*(?<red>\d+)\s*,\s*(?<green>\d+)\s*,\s*(?<blue>\d+)\s*\)$/iu
+  );
 
   if (match) {
-    return [match[1], match[2], match[3]];
+    return [match.groups.red, match.groups.green, match.groups.blue];
   }
 }
 
@@ -97,7 +99,7 @@ $(() => {
     rowCallback(row, data) {
       let color;
       let iconClasses;
-      const lastQuery = Number.parseInt(data.lastQuery, 10);
+      const lastQuery = Math.trunc(data.lastQuery);
       const diff = getTimestamp() - lastQuery;
       const networkRecent = $(".network-recent").css("background-color");
       const networkOld = $(".network-old").css("background-color");
@@ -123,8 +125,10 @@ $(() => {
         iconClasses = "fas fa-times";
       }
 
-      // Set determined background color
-      $(row).css("background-color", color);
+      // Set determined background color. Bootstrap 5 paints the cell
+      // backgrounds from `--bs-table-bg`, so colour the row through that
+      // variable instead of `background-color` (which the cells cover).
+      $(row).css("--bs-table-bg", color);
       $("td:eq(6)", row).html('<i class="' + iconClasses + '"></i>');
 
       // Insert "Never" into Last Query field when we have
@@ -156,7 +160,7 @@ $(() => {
         let iptext = ip;
 
         if (name !== null && name.length > 0) {
-          iptext = `${iptext} (${name})`;
+          iptext += ` (${name})`;
         }
 
         iptitles.push(iptext);
@@ -258,8 +262,6 @@ $(() => {
 
     drawCallback() {
       $('button[id^="deleteNetworkEntry_"]').on("click", deleteNetworkEntry);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     lengthMenu: [
       [10, 25, 50, 100, -1],

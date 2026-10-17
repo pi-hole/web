@@ -42,8 +42,8 @@ function piholeChanged(blocking, timer = null) {
   const dis = $("#pihole-disable");
   const enaT = $("#enableTimer");
 
-  if (timer !== null && Number.parseFloat(timer) > 0) {
-    enaT.text(Date.now() + Number.parseFloat(timer) * 1000);
+  if (timer !== null && Number(timer) > 0) {
+    enaT.text(Date.now() + Number(timer) * 1000);
     setTimeout(countDown, 100);
   }
 
@@ -85,15 +85,16 @@ function piholeChanged(blocking, timer = null) {
 
 function countDown() {
   const ena = $("#enableLabel");
-  const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.text(), 10));
-  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   //Stop and remove timer when user enabled early
   if ($("#pihole-enable").is(":hidden")) {
     ena.text("Enable Blocking");
     return;
   }
+
+  const enaT = $("#enableTimer");
+  const target = new Date(Math.trunc(Number(enaT.text())));
+  const seconds = Math.round((target.getTime() - Date.now()) / 1000);
 
   if (seconds > 0) {
     setTimeout(countDown, 1000);
@@ -145,14 +146,16 @@ function piholeChange(action, duration) {
     contentType: "application/json; charset=utf-8",
     data: JSON.stringify({
       blocking: action === "enable",
-      timer: Number.parseInt(duration, 10) > 0 ? Number.parseInt(duration, 10) : null,
+      timer: Math.trunc(Number(duration)) > 0 ? Math.trunc(Number(duration)) : null,
     }),
   })
     .done(data => {
-      if (data.blocking === action + "d") {
-        btnStatus.html("");
-        piholeChanged(data.blocking, data.timer);
+      if (data.blocking !== action + "d") {
+        return;
       }
+
+      btnStatus.html("");
+      piholeChanged(data.blocking, data.timer);
     })
     .fail(data => {
       apiFailure(data);
@@ -174,22 +177,6 @@ function testCookies() {
   return ret;
 }
 
-function applyCheckboxRadioStyle() {
-  // Get all radio/checkboxes for theming, with the exception of:
-  // - the two radio buttons on the custom disable timer,
-  // - radio/checkboxes elements with class "no-icheck",
-  // - every element with an id that starts with "status_"
-  const sel = $("input[type='radio'],input[type='checkbox']")
-    .not("#selSec")
-    .not("#selMin")
-    .not("#expert-settings")
-    .not("#only-changed")
-    .not(".no-icheck")
-    .not("[id^=status_]");
-  sel.parent().removeClass();
-  sel.parent().addClass("icheck-primary");
-}
-
 let systemTimer;
 let versionTimer;
 function updateInfo() {
@@ -200,7 +187,7 @@ function updateInfo() {
 }
 
 function updateQueryFrequency(intl, frequency) {
-  let freq = Number.parseFloat(frequency) * 60;
+  let freq = Number(frequency) * 60;
   let unit = "q/min";
   let title = "Queries per minute";
   if (freq > 100) {
@@ -401,7 +388,7 @@ function updateSystemInfo() {
 function apiFailure(data) {
   if (data.status === 401) {
     // Unauthorized, reload page
-    globalThis.location.reload();
+    location.reload();
   }
 }
 
@@ -423,7 +410,7 @@ function versionCompare(v1, v2) {
   }
 
   // loop until both string are processed
-  for (let i = 0, j = 0; i < v1.length || j < v2.length; ) {
+  for (let i = 0, j = 0; i < v1.length || j < v2.length;) {
     // storing numeric part of version 1 in vnum1
     while (i < v1.length && v1[i] !== ".") {
       vnum1 = vnum1 * 10 + (v1[i] - "0");
@@ -436,8 +423,13 @@ function versionCompare(v1, v2) {
       j++;
     }
 
-    if (vnum1 > vnum2) return 1;
-    if (vnum2 > vnum1) return -1;
+    if (vnum1 > vnum2) {
+      return 1;
+    }
+
+    if (vnum2 > vnum1) {
+      return -1;
+    }
 
     // if equal, reset variables and go for next numeric part
     vnum1 = 0;
@@ -505,77 +497,81 @@ function updateVersionInfo() {
     }
 
     for (const v of versions) {
-      if (v.local !== null) {
-        // reset update status for each component
-        let updateComponentAvailable = false;
-        let localVersion = v.local;
-        if (v.branch !== null && v.hash !== null) {
-          if (v.branch === "master") {
-            localVersion = v.local.split("-")[0];
-            localVersion =
-              '<a href="' +
-              v.url +
-              "/" +
-              localVersion +
-              '" rel="noopener noreferrer" target="_blank">' +
-              localVersion +
-              "</a>";
-            if (v.remote === null) {
-              // No remote version available, we cannot determine if an update is available
-              versionWarning = true;
-            } else if (versionCompare(v.local, v.remote) === -1) {
-              // Update available
-              updateComponentAvailable = true;
-            }
-          } else {
-            // non-master branch
-            localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
-            if (v.hash_remote && v.hash !== v.hash_remote) {
-              // hash differ > Update available
-              updateComponentAvailable = true;
-              // link to the commit history instead of release page
-              v.url = v.url.replace("releases", "commits/" + v.branch);
-            }
-          }
-        }
+      if (v.local === null) {
+        continue;
+      }
 
-        if (v.name === "Docker Tag") {
+      // reset update status for each component
+      let updateComponentAvailable = false;
+      let localVersion = v.local;
+      if (v.branch !== null && v.hash !== null) {
+        if (v.branch === "master") {
+          localVersion = v.local.split("-", 1)[0];
+          localVersion =
+            '<a href="' +
+            v.url +
+            "/" +
+            localVersion +
+            '" rel="noopener noreferrer" target="_blank">' +
+            localVersion +
+            "</a>";
           if (v.remote === null) {
             // No remote version available, we cannot determine if an update is available
             versionWarning = true;
           } else if (versionCompare(v.local, v.remote) === -1) {
-            // Display update information for the docker tag
+            // Update available
             updateComponentAvailable = true;
-            dockerUpdate = true;
-          } else if (/^\d{4}\.\d{2}\.\d+/u.test(v.local)) {
-            // Display the link if the current tag is a normal date-based tag
-            localVersion =
-              '<a href="' +
-              v.url +
-              "/" +
-              localVersion +
-              '" rel="noopener noreferrer" target="_blank">' +
-              localVersion +
-              "</a>";
+          }
+        } else {
+          // non-master branch
+          localVersion = "vDev (" + v.branch + ", " + v.hash + ")";
+          if (v.hash_remote && v.hash !== v.hash_remote) {
+            // hash differ > Update available
+            updateComponentAvailable = true;
+            // link to the commit history instead of release page
+            v.url = v.url.replace("releases", () => "commits/" + v.branch);
           }
         }
+      }
 
-        // Display update information of individual components only if we are not running in a Docker container
-        if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
-          $("#versions").append(
-            "<li><strong>" +
-              v.name +
-              "</strong> " +
-              localVersion +
-              '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
-              v.url +
-              '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
-          );
-          // if at least one component can be updated, display the update-hint footer
-          updateAvailable = true;
-        } else {
-          $("#versions").append("<li><strong>" + v.name + "</strong> " + localVersion + "</li>");
+      if (v.name === "Docker Tag") {
+        if (v.remote === null) {
+          // No remote version available, we cannot determine if an update is available
+          versionWarning = true;
+        } else if (versionCompare(v.local, v.remote) === -1) {
+          // Display update information for the docker tag
+          updateComponentAvailable = true;
+          dockerUpdate = true;
+        } else if (/^\d{4}\.\d{2}\.\d+/u.test(v.local)) {
+          // Display the link if the current tag is a normal date-based tag
+          localVersion =
+            '<a href="' +
+            v.url +
+            "/" +
+            localVersion +
+            '" rel="noopener noreferrer" target="_blank">' +
+            localVersion +
+            "</a>";
         }
+      }
+
+      // Display update information of individual components only if we are not running in a Docker container
+      if ((!isDocker || v.name === "Docker Tag") && updateComponentAvailable) {
+        $("#versions").append(
+          '<li class="list-inline-item"><strong>' +
+            v.name +
+            "</strong> " +
+            localVersion +
+            '&nbsp;&middot; <a class="lookatme" data-lookatme-text="Update available!" href="' +
+            v.url +
+            '" rel="noopener noreferrer" target="_blank">Update available!</a></li>'
+        );
+        // if at least one component can be updated, display the update-hint footer
+        updateAvailable = true;
+      } else {
+        $("#versions").append(
+          '<li class="list-inline-item"><strong>' + v.name + "</strong> " + localVersion + "</li>"
+        );
       }
     }
 
@@ -586,14 +582,19 @@ function updateVersionInfo() {
       );
     }
 
-    if (dockerUpdate)
-      $("#update-hint").html(
-        'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
-      );
-    else if (updateAvailable)
-      $("#update-hint").html(
-        'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
-      );
+    if (dockerUpdate) {
+      $("#update-hint")
+        .html(
+          'To install updates, <a href="https://github.com/pi-hole/docker-pi-hole#upgrading-persistence-and-customizations" rel="noopener noreferrer" target="_blank">replace this old container with a fresh upgraded image</a>.'
+        )
+        .addClass("w-100");
+    } else if (updateAvailable) {
+      $("#update-hint")
+        .html(
+          'To install updates, run <code><a href="https://docs.pi-hole.net/main/update/" rel="noopener noreferrer" target="_blank">pihole -up</a></code>.'
+        )
+        .addClass("w-100");
+    }
 
     clearTimeout(versionTimer);
     versionTimer = utils.setTimer(updateVersionInfo, REFRESH_INTERVAL.version);
@@ -601,9 +602,12 @@ function updateVersionInfo() {
 }
 
 $(() => {
-  if (!globalThis._isLoginPage) updateInfo();
+  if (!globalThis._isLoginPage) {
+    updateInfo();
+  }
+
   const enaT = $("#enableTimer");
-  const target = new Date(Number.parseInt(enaT.text(), 10));
+  const target = new Date(Math.trunc(Number(enaT.text())));
   const seconds = Math.round((target.getTime() - Date.now()) / 1000);
   if (seconds > 0) {
     setTimeout(countDown, 100);
@@ -612,9 +616,6 @@ $(() => {
   if (!testCookies() && $("#cookieInfo").length > 0) {
     $("#cookieInfo").show();
   }
-
-  // Apply icheckbox/iradio style
-  applyCheckboxRadioStyle();
 
   if (!globalThis._isLoginPage) {
     // Run check immediately after page loading ...
@@ -646,11 +647,11 @@ $("#pihole-disable-5m").on("click", e => {
   e.preventDefault();
   piholeChange("disable", "300");
 });
-$("#pihole-disable-custom").on("click", e => {
-  e.preventDefault();
-  let custVal = $("#customTimeout").val();
-  custVal = $("#btnMins").hasClass("active") ? custVal * 60 : custVal;
-  piholeChange("disable", custVal);
+$("#pihole-disable-custom").on("click", event => {
+  event.preventDefault();
+  let custValue = $("#customTimeout").val();
+  custValue = $("#selMin").is(":checked") ? custValue * 60 : custValue;
+  piholeChange("disable", custValue);
 });
 
 function initSettingsLevel() {
@@ -660,7 +661,9 @@ function initSettingsLevel() {
   const expertSettingsElement = document.getElementById("expert-settings");
 
   // Skip init if element is not present (e.g. on login page)
-  if (!expertSettingsElement) return;
+  if (!expertSettingsElement) {
+    return;
+  }
 
   // Restore settings level from local storage (if available) or default to "false"
   const storedExpertSettings = localStorage.getItem("expert_settings");
@@ -672,8 +675,8 @@ function initSettingsLevel() {
 
   // Init the settings level toggle
   $(expertSettingsElement).bootstrapToggle({
-    on: "Expert",
-    off: "Basic",
+    onlabel: "Expert",
+    offlabel: "Basic",
     size: "small",
     offstyle: "success",
     onstyle: "danger",
@@ -692,12 +695,18 @@ function initSettingsLevel() {
 // If "expert_settings" is not set, we default to !"true"
 function applyExpertSettings() {
   const expertSettingsNodes = document.querySelectorAll(".settings-level-expert");
-  if (expertSettingsNodes.length === 0) return;
+  if (expertSettingsNodes.length === 0) {
+    return;
+  }
 
   if (localStorage.getItem("expert_settings") === "true") {
-    for (const element of expertSettingsNodes) element.classList.remove("d-none");
+    for (const element of expertSettingsNodes) {
+      element.classList.remove("d-none");
+    }
   } else {
-    for (const element of expertSettingsNodes) element.classList.toggle("d-none", true);
+    for (const element of expertSettingsNodes) {
+      element.classList.toggle("d-none", true);
+    }
 
     // If we left with an empty page (no visible boxes) after switching from
     // Expert to Basic settings, redirect to admin/settings/system instead
@@ -706,8 +715,8 @@ function applyExpertSettings() {
     //    settings page as well, even when the button has "only modified"
     //    functionality there), and
     //  - there are no visible boxes (the page is empty)
-    if (document.querySelector(".settings-selector") && $(".box:visible").length === 0) {
-      globalThis.location.href = `${document.body.dataset.webhome}settings/system`;
+    if (document.querySelector(".settings-selector") && $(".card:visible").length === 0) {
+      location.assign(`${document.body.dataset.webhome}settings/system`);
     }
   }
 }
@@ -719,8 +728,8 @@ function addAdvancedInfo() {
   const clientIP = advancedInfoSource.data("client-ip");
   const xffData = advancedInfoSource.data("xff") || "";
   const XForwardedFor = xffData ? utils.base64ToString(xffData) : null;
-  const starttime = Number.parseFloat(advancedInfoSource.data("starttime"));
-  const endtime = Number.parseFloat(advancedInfoSource.data("endtime"));
+  const starttime = Number(advancedInfoSource.data("starttime"));
+  const endtime = Number(advancedInfoSource.data("endtime"));
   const totaltime = 1e3 * (endtime - starttime);
 
   // Show advanced info

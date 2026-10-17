@@ -5,20 +5,50 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global utils:false, applyCheckboxRadioStyle:false, setConfigValues: false, apiFailure: false */
+/* global utils:false, setConfigValues: false, apiFailure: false */
 
 "use strict";
 
-// Remove an element from an array (inline)
-function removeFromArray(arr, what) {
-  let found = arr.indexOf(what);
+// Get the manually entered upstream servers from the textarea
+function getManualDNSupstreams() {
+  return $("#DNSupstreamsTextfield")
+    .val()
+    .split(/\r?\n/u)
+    .map(line => line.trim())
+    .filter(Boolean);
+}
 
-  while (found !== -1) {
-    arr.splice(found, 1);
-    found = arr.indexOf(what);
+// Get the upstream servers selected in the pre-filled provider tables
+function getSelectedDNSupstreams() {
+  const selectedUpstreams = [];
+  $("#DNSupstreamTabs table input:checked").each(function () {
+    const title = $(this).closest("td").attr("title");
+    if (title && !selectedUpstreams.includes(title)) {
+      selectedUpstreams.push(title);
+    }
+  });
+
+  return selectedUpstreams;
+}
+
+// Check if a manual upstream server is already covered by a selected Plain upstream server
+function isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet) {
+  return upstream.endsWith("#53") && selectedUpstreamsSet.has(upstream.slice(0, -3));
+}
+
+// Show how many upstreams are selected on each Plain/DoT/DoH tab, so it's not
+// hidden behind whichever tab happens to be active
+function updateUpstreamTabBadges() {
+  for (const protocol of ["plain", "dot", "doh"]) {
+    const count = $("#DNSupstreamsTable-" + protocol + " input:checked").length;
+    $("#upstreams-count-" + protocol)
+      .text(count)
+      .toggle(count > 0)
+      .attr("title", "Selected servers: " + count);
   }
 }
 
+// Fill the upstreams tables with the given servers, and initialize the manual upstreams textarea with the given value.
 function fillDNSupstreams(value, servers) {
   let disabledStr = "";
   if (value.flags.env_var === true) {
@@ -27,75 +57,82 @@ function fillDNSupstreams(value, servers) {
   }
 
   let i = 0;
-  let customServers = value.value.length;
-  for (const element of servers) {
-    let row = "<tr>";
-    // Build checkboxes for IPv4 and IPv6
-    const addresses = [element.v4, element.v6];
-    // Loop over address types (IPv4, IPv6)
-    for (let v = 0; v < 2; v++) {
-      const address = addresses[v];
-      // Loop over available addresses (up to 2)
-      for (let index = 0; index < 2; index++) {
-        if (address.length > index) {
-          let checkedStr = "";
-          if (
-            value.value.includes(address[index]) ||
-            value.value.includes(address[index] + "#53")
-          ) {
-            checkedStr = "checked";
-            customServers--;
-          }
 
-          row += `<td title="${address[index]}">
-                    <div>
-                      <input type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
-                      <label for="DNSupstreams-${i++}"></label>
-                    </div>
-                  </td>`;
-        } else {
-          row += "<td></td>";
-        }
-      }
+  // Build a single checkbox <td> for the given address, tracking selection
+  // state and consuming a custom-server slot when it matches. Plain v4/v6
+  // addresses also match the default-port-suffixed form; the pinned DoT/DoH
+  // URIs are matched verbatim only. Returns an empty cell when there is no
+  // address for this slot (only used within the Plain table, since a vendor
+  // may only publish one of the two plain addresses in a family).
+  function checkboxCell(address, portSuffix) {
+    if (!address) {
+      return "<td></td>";
     }
 
-    // Add server name
-    row += "<td>" + element.name + "</td>";
+    let checkedStr = "";
+    if (value.value.includes(address) || (portSuffix && value.value.includes(address + "#53"))) {
+      checkedStr = "checked";
+    }
 
-    // Close table row
-    row += "</tr>";
-
-    // Add row to table
-    $("#DNSupstreamsTable").append(row);
+    return `<td title="${address}">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="DNSupstreams-${i}" ${disabledStr} ${checkedStr}>
+                <label class="form-check-label" for="DNSupstreams-${i++}"></label>
+              </div>
+            </td>`;
   }
 
-  // Add event listener to checkboxes
-  $("input[id^='DNSupstreams-']").on("change", () => {
-    const upstreams = $("#DNSupstreamsTextfield").val().split("\n");
-    let customServers = 0;
-    $("#DNSupstreamsTable input").each(function () {
-      const title = $(this).closest("td").attr("title");
-      if (this.checked && !upstreams.includes(title)) {
-        // Add server to array
-        upstreams.push(title);
-      } else if (!this.checked && upstreams.includes(title)) {
-        // Remove server from array
-        removeFromArray(upstreams, title);
-      }
+  for (const element of servers) {
+    // Plain IPv4/IPv6 addresses always get a row, even if a vendor only
+    // publishes one address per family
+    let plainRow = "<tr>";
+    plainRow += checkboxCell(element.v4[0], true);
+    plainRow += checkboxCell(element.v4[1], true);
+    plainRow += checkboxCell(element.v6[0], true);
+    plainRow += checkboxCell(element.v6[1], true);
+    plainRow += "<td>" + element.name + "</td></tr>";
+    $("#DNSupstreamsTable-plain").append(plainRow);
 
-      if (upstreams.includes(title)) customServers--;
-    });
-    // The variable will contain a negative value, we need to add the length to
-    // get the correct number of custom servers
-    customServers += upstreams.length;
-    updateDNSserversTextfield(upstreams, customServers);
+    // DoT/DoH only get a row when the vendor actually publishes a pinned URI
+    // for at least one address family, so those tabs never fill up with rows
+    // that are entirely empty
+    if (element.dot && (element.dot.v4 || element.dot.v6)) {
+      let dotRow = "<tr>";
+      dotRow += checkboxCell(element.dot.v4, false);
+      dotRow += checkboxCell(element.dot.v6, false);
+      dotRow += "<td>" + element.name + "</td></tr>";
+      $("#DNSupstreamsTable-dot").append(dotRow);
+    }
+
+    if (element.doh && (element.doh.v4 || element.doh.v6)) {
+      let dohRow = "<tr>";
+      dohRow += checkboxCell(element.doh.v4, false);
+      dohRow += checkboxCell(element.doh.v6, false);
+      dohRow += "<td>" + element.name + "</td></tr>";
+      $("#DNSupstreamsTable-doh").append(dohRow);
+    }
+  }
+
+  // Add event listener to checkboxes (shared across the Plain/DoT/DoH tabs)
+  $("input[id^='DNSupstreams-']").on("change", () => {
+    updateCustomDNSserversTitle(getManualDNSupstreams().length);
+    updateUpstreamTabBadges();
   });
 
+  // Keep only truly manual entries in the custom textfield
+  const selectedUpstreamsSet = new Set(getSelectedDNSupstreams());
+  const manualUpstreams = value.value.filter(
+    upstream =>
+      !selectedUpstreamsSet.has(upstream) &&
+      !isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet)
+  );
+
   // Initialize textfield
-  updateDNSserversTextfield(value.value, customServers);
+  updateDNSserversTextfield(manualUpstreams);
+  updateUpstreamTabBadges();
 
   // Expand the box if there are custom servers
-  if (customServers > 0) {
+  if (manualUpstreams.length > 0) {
     const customBox = document.getElementById("custom-servers-box");
     utils.toggleBoxCollapse(customBox, true);
   }
@@ -103,8 +140,10 @@ function fillDNSupstreams(value, servers) {
   // Hide the loading animation
   $("#dns-upstreams-overlay").hide();
 
-  // Apply styling to the new checkboxes
-  applyCheckboxRadioStyle();
+  // Keep custom server count in sync while the user edits the manual list
+  $("#DNSupstreamsTextfield").on("input", () => {
+    updateCustomDNSserversTitle(getManualDNSupstreams().length);
+  });
 }
 
 function setInterfaceName(name) {
@@ -128,13 +167,48 @@ function setInterfaceName(name) {
   $("#interface-name-2").text(name);
 }
 
-// Update the textfield with all (incl. custom) upstream servers
-function updateDNSserversTextfield(upstreams, customServers) {
-  $("#DNSupstreamsTextfield").val(upstreams.join("\n"));
+// Update the textfield with manual upstream servers only
+function updateDNSserversTextfield(manualUpstreams) {
+  $("#DNSupstreamsTextfield").val(manualUpstreams.join("\n"));
+  updateCustomDNSserversTitle(manualUpstreams.length);
+}
+
+function updateCustomDNSserversTitle(customServerCount) {
   $("#custom-servers-title").text(
-    "(" + customServers + " custom server" + (customServers === 1 ? "" : "s") + " enabled)"
+    "(" + customServerCount + " custom server" + (customServerCount === 1 ? "" : "s") + " enabled)"
   );
 }
+
+function getMergedDNSupstreams(manualUpstreams) {
+  // Start with all upstreams selected in the pre-filled provider tables.
+  const mergedUpstreams = getSelectedDNSupstreams();
+  const selectedUpstreamsSet = new Set(mergedUpstreams);
+
+  // Append manual entries unless already covered by a selected table upstream.
+  // For plain DNS, selected "IP" also covers manual "IP#53".
+  for (const line of manualUpstreams) {
+    const upstream = line.trim();
+    if (!upstream) {
+      continue;
+    }
+
+    if (
+      selectedUpstreamsSet.has(upstream) ||
+      isCoveredBySelectedPlainServer(upstream, selectedUpstreamsSet)
+    ) {
+      continue;
+    }
+
+    // Preserve user-entered order while preventing duplicates.
+    if (!mergedUpstreams.includes(upstream)) {
+      mergedUpstreams.push(upstream);
+    }
+  }
+
+  return mergedUpstreams;
+}
+
+globalThis.getMergedDNSupstreams = getMergedDNSupstreams;
 
 function getRevServerLines() {
   // Return the lines from the textarea (array of lines)
@@ -170,7 +244,7 @@ function createRevServerTable() {
     data: tableRows,
     autoWidth: false,
     columns: [
-      { data: "enabled", width: "54px", className: "revserver-chkbox text-center" },
+      { data: "enabled", width: "76px", className: "revserver-chkbox text-center" },
       { data: "network", className: "revserver-network" },
       { data: "ip", className: "revserver-ip" },
       { data: "domain", className: "revserver-domain" },
@@ -202,6 +276,23 @@ function createRevServerTable() {
         },
       },
     ],
+    initComplete() {
+      $(this.api().table().footer())
+        // Remove elements automatically created by datatables in the table footer
+        .find(".dt-column-footer")
+        .each(function () {
+          const $innerTitle = $(this).find(".dt-column-title");
+
+          // If the inner span has no text or HTML, empty the cell entirely
+          if ($.trim($innerTitle.html()) === "") {
+            $(this).closest("th, td").empty();
+          } else {
+            // Otherwise, safely strip both wrappers to restore original HTML
+            $innerTitle.contents().unwrap();
+            $(this).contents().unwrap();
+          }
+        });
+    },
     drawCallback() {
       $(".deleteRevServers").on("click", deleteRecord);
       $("tbody .saveRevServers").on("click", saveRecord);
@@ -244,7 +335,9 @@ function createRevServerTable() {
     stateLoadCallback() {
       const data = utils.stateLoadCallback("revServers-records-table");
       // Return if not available
-      if (data === null) return null;
+      if (data === null) {
+        return null;
+      }
 
       // Apply loaded state to table
       return data;
@@ -267,7 +360,9 @@ function addRevServer() {
   }
 
   // Domain is optional: if empty, remove it from the array
-  if (values[3] === "") values.pop();
+  if (values[3] === "") {
+    values.pop();
+  }
 
   // Add the new values to the textarea
   $(".revServers").val($(".revServers").val() + "\n" + values.join(","));
@@ -306,7 +401,9 @@ function saveRecord() {
   }
 
   // Domain is optional: if empty, remove it from the array
-  if (values[3] === "") values.pop();
+  if (values[3] === "") {
+    values.pop();
+  }
 
   // Get the values from the textarea
   const lines = getRevServerLines();
@@ -418,11 +515,11 @@ function saveRevServerData(msg) {
       const table = $("#revServers-table").DataTable();
       table.clear().rows.add(getRevServerArray()).draw();
     })
-    .fail((data, exception) => {
+    .fail((response, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      utils.showAlert("error", "", "Error while applying settings", response.responseText);
       console.log(exception); // eslint-disable-line no-console
-      apiFailure(data);
+      apiFailure(response);
     });
 }
 
@@ -468,7 +565,7 @@ $(document).on("input blur paste", ".revserver-ip", function () {
 });
 $(document).on("input blur paste", ".revserver-domain", function () {
   const val = $(this).text().trim();
-  if (val && !utils.validateHostnameStrict(val)) {
+  if (val && !utils.validateHostname(val)) {
     $(this).addClass("table-danger");
     $(this).attr("title", "Invalid domain");
     $(this).siblings(".actions").find(".saveRevServers").prop("disabled", true);

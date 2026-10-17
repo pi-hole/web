@@ -54,13 +54,15 @@ function importZIP() {
       if ("error" in data) {
         $("#modal-import-error").show();
         $("#modal-import-error-title").text("Error: " + data.error.message);
-        if (data.error.hint !== null) $("#modal-import-error-message").text(data.error.hint);
+        if (data.error.hint !== null) {
+          $("#modal-import-error-message").text(data.error.hint);
+        }
       } else if ("files" in data) {
         $("#modal-import-success").show();
         $("#modal-import-success-title").text("Import successful");
         let text = "<p>Processed files:</p><ul>";
-        for (const file of data.files) {
-          text += "<li>" + utils.escapeHtml(file) + "</li>";
+        for (const importedFile of data.files) {
+          text += "<li>" + utils.escapeHtml(importedFile) + "</li>";
         }
 
         text += "</ul>";
@@ -87,15 +89,17 @@ $("#GETTeleporter").on("click", () => {
     },
     success(data, status, xhr) {
       const a = document.createElement("a");
-      const url = globalThis.URL.createObjectURL(data);
+      const url = URL.createObjectURL(data);
 
       a.href = url;
-      a.download = xhr.getResponseHeader("Content-Disposition").match(/filename="([^"]*)"/u)[1];
+      a.download = xhr
+        .getResponseHeader("Content-Disposition")
+        .match(/filename="(?<filename>[^"]*)"/u).groups.filename;
       document.body.append(a);
       a.click();
       a.remove();
 
-      globalThis.URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
     },
   });
 });

@@ -10,9 +10,9 @@
 mg.include('scripts/lua/header.lp','r')
 ?>
 </head>
-<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>">
-    <div class="box login-box">
-        <section style="padding: 15px;">
+<body class="hold-transition layout-boxed login-page page-<?=pihole.format_path(scriptname)?>" data-bs-theme="<?= bs_theme ?>">
+    <div class="card login-box">
+        <section class="p-3">
                 <h2 class="error-headline text-danger">403</h2>
                 <div class="error-content">
                     <h3><i class="fa fa-times-circle text-danger"></i> Oops! Access denied.</h3>

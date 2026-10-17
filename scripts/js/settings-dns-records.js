@@ -17,7 +17,7 @@ function hostsDomain(data) {
     .split(/[\t ]+/u)
     .slice(1)
     .join(" ")
-    .split("#")[0]
+    .split("#", 1)[0]
     .trim();
   return utils.escapeHtml(name);
 }
@@ -25,8 +25,8 @@ function hostsDomain(data) {
 function hostsIP(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
-  const ip = data.split(/[\t ]+/u)[0].trim();
-  return utils.escapeHtml(ip);
+  const ip = data.split(/[\t ]+/u, 1)[0].trim();
+  return ip;
 }
 
 function CNAMEdomain(data) {
@@ -93,9 +93,6 @@ function populateDataTable(endpoint) {
     ],
     drawCallback() {
       $(`button[id^="delete${endpoint}"]`).on("click", deleteRecord);
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data);
@@ -159,8 +156,11 @@ function populateDataTable(endpoint) {
 }
 
 function deleteRecord() {
-  if ($(this).attr("data-type") === "hosts") delHosts($(this).attr("data-tag"));
-  else delCNAME($(this).attr("data-tag"));
+  if ($(this).attr("data-type") === "hosts") {
+    delHosts($(this).attr("data-tag"));
+  } else {
+    delCNAME($(this).attr("data-tag"));
+  }
 }
 
 function delHosts(elem) {
@@ -255,10 +255,12 @@ $(() => {
   $("#btnAdd-cname").on("click", () => {
     utils.disableAll();
     let elem = $("#Cdomain").val().trim() + "," + $("#Ctarget").val().trim();
-    const ttlVal = Number.parseInt($("#Cttl").val(), 10);
-    // TODO Fix eslint
-    // eslint-disable-next-line unicorn/prefer-number-properties
-    if (isFinite(ttlVal) && ttlVal >= 0) elem += "," + ttlVal;
+    const ttlInput = $("#Cttl").val();
+    const ttlVal = ttlInput === "" ? NaN : Math.trunc(ttlInput);
+    if (Number.isFinite(ttlVal) && ttlVal >= 0) {
+      elem += "," + ttlVal;
+    }
+
     const url =
       document.body.dataset.apiurl + "/config/dns/cnameRecords/" + encodeURIComponent(elem);
     utils.showAlert("info", "", "Adding DNS record...", elem);

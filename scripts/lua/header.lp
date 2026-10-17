@@ -62,8 +62,16 @@ hostname = sanitize_hostname(hostname)
 -- Variable to check if user is already authenticated
 is_authenticated = mg.request_info.is_authenticated
 
+bs_theme = theme.dark and 'dark' or 'light'
+if theme.name == 'default-auto' then
+    bs_theme = 'auto'
+elseif theme.name == 'default-light' then
+    bs_theme = 'light'
+elseif theme.name == 'default-dark' or theme.name == 'lcars' then
+    bs_theme = 'dark'
+end
 ?>
-<html lang="en">
+<html lang="en" data-bs-theme="<?=bs_theme?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -88,32 +96,42 @@ is_authenticated = mg.request_info.is_authenticated
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/fonts/source-sans-pro/source-sans-pro.css')?>">
 <? end ?>
 
-<? if theme.dark then ?>
+<? if bs_theme == 'dark' then ?>
     <style>
         html { background-color: #000; }
+    </style>
+<? elseif bs_theme == 'auto' then ?>
+    <!-- The "auto" theme's actual light/dark resolution only happens once
+    theme.js runs and the CSS finishes loading, so use a media query
+    here (evaluated immediately, no JS/network wait) to avoid a flash
+    of white background on every navigation when the OS prefers dark. -->
+    <style>
+        @media (prefers-color-scheme: dark) {
+            html { background-color: #000; }
+        }
     </style>
 <? end ?>
 
     <!-- Common styles -->
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap/css/bootstrap.min.css')?>">
+    <!-- AdminLTE.min.css already bundles Bootstrap 5, so no separate Bootstrap CSS is needed -->
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/animate/animate.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/font-awesome/css/all.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/nprogress/nprogress.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/adminLTE/AdminLTE.min.css')?>">
 
 <? if is_authenticated then ?>
     <? if startsWith(scriptname, 'groups') then ?>
-        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-select/bootstrap-select.min.css')?>">
+        <link rel="stylesheet" href="<?=pihole.fileversion('vendor/tom-select/tom-select.bootstrap5.min.css')?>">
     <? end ?>
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/icheck/icheck-bootstrap.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bstreeview/bstreeview.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/datatables.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/datatables.buttons.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/datatables.select.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables/dataTables.bootstrap5.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-buttons/buttons.bootstrap5.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/datatables-select/select.bootstrap5.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/daterangepicker/daterangepicker.min.css')?>">
-    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap-toggle/bootstrap-toggle.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/bootstrap5-toggle/bootstrap5-toggle.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/waitMe-js/waitMe.min.css')?>">
     <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2.min.css')?>">
+    <link rel="stylesheet" href="<?=pihole.fileversion('vendor/select2/select2-bootstrap-5-theme.min.css')?>">
 <? end ?>
 
     <!-- Theme styles (<?= theme.name ?>) -->
@@ -129,7 +147,8 @@ is_authenticated = mg.request_info.is_authenticated
 
     <!-- scripts -->
     <script src="<?=pihole.fileversion('vendor/jquery/jquery.min.js')?>"></script>
-    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script src="<?=pihole.fileversion('vendor/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/adminLTE/adminlte.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/nprogress/nprogress.min.js')?>"></script>
     <script src="<?=pihole.fileversion('scripts/js/utils.js')?>"></script>
+    <script src="<?=pihole.fileversion('scripts/js/theme.js')?>" defer></script>

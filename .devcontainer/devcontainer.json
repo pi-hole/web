@@ -6,7 +6,10 @@
     "customizations": {
       // Configure properties specific to VS Code.
         "vscode": {
-          "settings": {},
+          "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": { "bash": { "path": "/bin/bash" } }
+          },
           "extensions": [
             "eamodio.gitlens",
             "EditorConfig.EditorConfig",

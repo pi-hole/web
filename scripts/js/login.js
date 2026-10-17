@@ -22,7 +22,7 @@ function redirect() {
   }
 
   // Redirect to target
-  globalThis.location.replace(target);
+  location.replace(target);
 }
 
 function showErrorMessage(errorMessage) {
@@ -73,7 +73,7 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     // invalid TOTP token and this is no error response (= password is wrong)
     if (!isErrorResponse && !isInvalidTOTP) {
       const forgotPwBox = document.getElementById("forgot-pw-box");
-      forgotPwBox.classList.replace("box-info", "box-danger");
+      forgotPwBox.classList.replace("card-info", "card-danger");
       utils.toggleBoxCollapse(forgotPwBox, true);
     }
 
@@ -91,7 +91,7 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
 
   $("#invalid2fa-box").addClass("hidden");
   const forgotPwBox = document.getElementById("forgot-pw-box");
-  forgotPwBox.classList.replace("box-danger", "box-info");
+  forgotPwBox.classList.replace("card-danger", "card-info");
   utils.toggleBoxCollapse(forgotPwBox, false);
 }
 
@@ -105,7 +105,10 @@ function doLogin(password) {
     dataType: "json",
     processData: false,
     contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ password, totp: Number.parseInt($("#totp").val(), 10) }),
+    data: JSON.stringify({
+      password,
+      totp: $("#totp").val() === "" ? NaN : Math.trunc($("#totp").val()),
+    }),
   })
     .done(data => {
       wrongPassword(false, true, data);
@@ -175,7 +178,9 @@ $(() => {
   })
     .done(data => {
       // If we are already logged in, redirect to dashboard
-      if (data.session.valid === true) redirect();
+      if (data.session.valid === true) {
+        redirect();
+      }
     })
     .fail(xhr => {
       const session = xhr.responseJSON.session;
@@ -192,12 +197,17 @@ $(() => {
   $.ajax({
     url: document.body.dataset.apiurl + "/info/login",
   }).done(data => {
-    if (data.dns === false) showDNSfailure();
+    if (data.dns === false) {
+      showDNSfailure();
+    }
 
     // Generate HTTPS redirection link (only used if not already HTTPS)
     if (location.protocol !== "https:" && data.https_port !== 0) {
       let url = "https://" + location.hostname;
-      if (data.https_port !== 443) url += ":" + data.https_port;
+      if (data.https_port !== 443) {
+        url += ":" + data.https_port;
+      }
+
       url += location.pathname + location.search + location.hash;
 
       $("#https-link").attr("href", url);

@@ -5,7 +5,7 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false */
+/* global moment:false, apiFailure: false, updateFtlInfo: false, NProgress:false, WaitMe:false, TomSelect: false */
 
 "use strict";
 
@@ -25,7 +25,6 @@ $(() => {
  * @param {string} base64 - Base64 encoded string
  * @returns {string} Decoded UTF-8 string
  */
-// eslint-disable-next-line no-unused-vars -- Used by other scripts (e.g., footer.js)
 function base64ToString(base64) {
   // Remove padding and whitespace
   const cleanBase64 = base64.replaceAll(/[=\s]/gu, "");
@@ -41,8 +40,13 @@ function base64ToString(base64) {
 
     /* eslint-disable no-bitwise -- Bitwise operations required for base64 decoding */
     bytes.push((encoded1 << 2) | (encoded2 >> 4));
-    if (encoded3 !== -1) bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
-    if (encoded4 !== -1) bytes.push(((encoded3 & 3) << 6) | encoded4);
+    if (encoded3 !== -1) {
+      bytes.push(((encoded2 & 15) << 4) | (encoded3 >> 2));
+    }
+
+    if (encoded4 !== -1) {
+      bytes.push(((encoded3 & 3) << 6) | encoded4);
+    }
     /* eslint-enable no-bitwise */
   }
 
@@ -52,6 +56,11 @@ function base64ToString(base64) {
 
 // Credit: https://stackoverflow.com/a/4835406
 function escapeHtml(text) {
+  // Return early when text is not a string
+  if (typeof text !== "string") {
+    return text;
+  }
+
   const map = {
     "&": "&amp;",
     "<": "&lt;",
@@ -60,13 +69,14 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
 
-  // Return early when text is not a string
-  if (typeof text !== "string") return text;
-
   return text.replaceAll(/[&<>"']/gu, m => map[m]);
 }
 
 function unescapeHtml(text) {
+  if (text === null) {
+    return null;
+  }
+
   const map = {
     "&amp;": "&",
     "&lt;": "<",
@@ -81,8 +91,6 @@ function unescapeHtml(text) {
     "&ouml;": "ö",
     "&szlig;": "ß",
   };
-
-  if (text === null) return null;
 
   return text.replaceAll(
     /&(?:amp|lt|gt|quot|#039|Uuml|uuml|Auml|auml|Ouml|ouml|szlig);/gu,
@@ -104,6 +112,7 @@ function showAlert(type, icon, title, message, toast) {
   const settings = {
     type,
     delay: 5000, // default value
+    z_index: 9999, // increased to avoid overlapping issues with the AdminLTE header
     mouse_over: "pause",
     animate: {
       enter: "animate__animated animate__fadeInDown",
@@ -124,8 +133,10 @@ function showAlert(type, icon, title, message, toast) {
       break;
     case "error":
       options.icon = "fas fa-times";
-      if (title.length === 0)
+      if (title.length === 0) {
         options.title = "&nbsp;<strong>Error, something went wrong!</strong><br>";
+      }
+
       settings.delay *= 2;
 
       // If the message is an API object, nicely format the error message
@@ -136,7 +147,9 @@ function showAlert(type, icon, title, message, toast) {
         if (data.error !== undefined) {
           options.title = "&nbsp;<strong>" + escapeHtml(data.error.message) + "</strong><br>";
 
-          if (data.error.hint !== null) options.message = escapeHtml(data.error.hint);
+          if (data.error.hint !== null) {
+            options.message = escapeHtml(data.error.hint);
+          }
         }
       } catch {
         // Do nothing
@@ -184,7 +197,7 @@ function datetime(date, html, humanReadable) {
   }
 
   const format =
-    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z";
+    html === false ? "Y-MM-DD HH:mm:ss z" : "Y-MM-DD [<br class='d-xl-none'>]HH:mm:ss z";
   const timestr = moment.unix(Math.floor(date)).format(format).trim();
   return humanReadable
     ? '<span title="' + timestr + '">' + moment.unix(Math.floor(date)).fromNow() + "</span>"
@@ -218,10 +231,10 @@ function enableAll() {
 // Pi-hole IPv4/CIDR validator by DL6ER, see regexr.com/50csh
 function validateIPv4CIDR(ip) {
   // One IPv4 element is 8bit: 0 - 255
-  const ipv4elem = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
+  const ipv4elem = "(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]?|0)";
 
   // CIDR for IPv4 is 1 - 32 bit (optional)
-  const v4cidr = "(\\/([1-9]|[1-2][0-9]|3[0-2])){0,1}";
+  const v4cidr = "(?:\\/(?:[1-9]|[1-2][0-9]|3[0-2])){0,1}";
 
   // Build the complete IPv4/CIDR validator
   // Format: xxx.xxx.xxx.xxx[/yy] where each xxx is 0-255 and optional yy is 1-32
@@ -243,14 +256,15 @@ function validateIPv4(ip) {
 // Pi-hole IPv6/CIDR validator by DL6ER, see regexr.com/50csn
 function validateIPv6CIDR(ip) {
   // One IPv6 element is 16bit: 0000 - FFFF
-  const ipv6elem = "[0-9A-Fa-f]{1,4}";
+  const ipv6elem = "[0-9a-f]{1,4}";
 
   // CIDR for IPv6 is 1-128 bit (optional)
-  const v6cidr = "(\\/([1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
+  const v6cidr = "(?:\\/(?:[1-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8])){0,1}";
 
   const ipv6validator = new RegExp(
+    // eslint-disable-next-line regexp/no-useless-non-capturing-group, regexp/no-unused-capturing-group, regexp/prefer-named-capture-group
     `^(((?:${ipv6elem}))*((?::${ipv6elem}))*::((?:${ipv6elem}))*((?::${ipv6elem}))*|((?:${ipv6elem}))((?::${ipv6elem})){7})${v6cidr}$`,
-    "u"
+    "iu"
   );
 
   return ipv6validator.test(ip);
@@ -266,7 +280,9 @@ function validateIPv6(ip) {
 function validateIPv6Brackets(ip) {
   const trimmedIp = ip.trim();
   // Check if the IPv6 is enclosed in brackets and return in case of failure
-  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) return false;
+  if (!trimmedIp.startsWith("[") || !trimmedIp.endsWith("]")) {
+    return false;
+  }
 
   // Strip brackets before validating the IPv6
   const ipWithoutBrackets = trimmedIp.slice(1, -1);
@@ -276,11 +292,13 @@ function validateIPv6Brackets(ip) {
 
 function validatePort(port) {
   // Ports containing spaces are not valid
-  if (port.trim() !== port) return false;
+  if (port.trim() !== port) {
+    return false;
+  }
 
   // Check if the port is an integer and within the valid network port range
   const portNum = Number(port);
-  return Number.isInteger(portNum) && portNum >= 1 && portNum <= 65_535;
+  return Number.isSafeInteger(portNum) && portNum >= 1 && portNum <= 65_535;
 }
 
 // Validates the IPv4 server address used by dns.revServers, with an optional port
@@ -292,10 +310,14 @@ function validateIPv4WithPort(ip) {
 
   // The port is optional
   // If no "#" is present, validate just the IP
-  if (!ip.includes("#")) return validateIPv4(ip);
+  if (!ip.includes("#")) {
+    return validateIPv4(ip);
+  }
 
   const parts = ip.split("#");
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) {
+    return false;
+  }
 
   const [ipv4, port] = parts;
 
@@ -312,10 +334,14 @@ function validateIPv6WithPort(ip) {
 
   // The port is optional
   // If no "#" is present, validate just the IP
-  if (!ip.includes("#")) return validateIPv6(ip);
+  if (!ip.includes("#")) {
+    return validateIPv6(ip);
+  }
 
   const parts = ip.split("#");
-  if (parts.length !== 2) return false;
+  if (parts.length !== 2) {
+    return false;
+  }
 
   const [ipv6, port] = parts;
 
@@ -326,47 +352,73 @@ function validateIPv6WithPort(ip) {
 function validateMAC(mac) {
   // Format: xx:xx:xx:xx:xx:xx where each xx is 0-9 or a-f (case insensitive)
   // Also allows dashes as separator, e.g. xx-xx-xx-xx-xx-xx
+  // eslint-disable-next-line regexp/no-useless-non-capturing-group, regexp/prefer-named-capture-group
   const macvalidator = /^(?:[\da-f]{2}([:-]))(?:[\da-f]{2}\1){4}[\da-f]{2}$/iu;
   return macvalidator.test(mac.trim());
 }
 
+function validateClientPattern(name) {
+  // A client that is neither an IP/subnet nor a MAC address can only be a host
+  // name or an interface (prefaced with a colon). FTL matches both verbatim and
+  // only ever records names built from these characters, so anything else can
+  // never describe a client.
+  const clientValidator = /^:?[\w.-]+$/u;
+  return clientValidator.test(name.trim());
+}
+
 function validateHostname(name) {
-  const namevalidator = /[^<>;"]/u;
-  return namevalidator.test(name.trim());
-}
-
-function validateHostnameStrict(name) {
-  // Hostnames must not contain spaces, commas, or characters invalid in DNS names
-  const hostnameValidator =
-    /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
+  // These end up in comma-separated dnsmasq config lines, so a space or a comma
+  // is never acceptable. The rest is what dnsmasq's legal_hostname() takes: an
+  // alphanumeric first character, then letters, digits, hyphens, underscores
+  // and dots.
+  const hostnameValidator = /^[a-zA-Z0-9][\w.-]*$/u;
   return hostnameValidator.test(name.trim());
 }
 
-function validateHostnameDHCP(name) {
-  // Static DHCP host names may additionally contain underscores inside a label
-  const hostnameValidator =
-    /^[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?)*$/u;
-  return hostnameValidator.test(name.trim());
-}
+/**
+ * Create a Tom Select multi-select out of a <select multiple> element, with
+ * "Select all"/"Select none" actions injected into the dropdown (bootstrap-
+ * select used to provide this via its actionsBox option).
+ * @param {HTMLElement|jQuery} selectEl - The <select multiple> element (or a jQuery wrapper around it)
+ * @param {object} [options] - Extra options merged into the Tom Select config
+ * @returns {TomSelect} The created Tom Select instance
+ */
+function createGroupSelect(selectEl, options = {}) {
+  const el = selectEl instanceof HTMLElement ? selectEl : selectEl[0];
+  const allValues = [...el.options].map(option => option.value);
 
-// set bootstrap-select defaults
-function setBsSelectDefaults() {
-  const bsSelectDefaults = $.fn.selectpicker.Constructor.DEFAULTS;
-  bsSelectDefaults.noneSelectedText = "none selected";
-  bsSelectDefaults.selectedTextFormat = "count > 1";
-  bsSelectDefaults.actionsBox = true;
-  bsSelectDefaults.width = "fit";
-  bsSelectDefaults.container = "body";
-  bsSelectDefaults.dropdownAlignRight = "auto";
-  bsSelectDefaults.selectAllText = "All";
-  bsSelectDefaults.deselectAllText = "None";
-  bsSelectDefaults.countSelectedText = function (num, total) {
-    if (num === total) {
-      return "All selected (" + num + ")";
-    }
+  const ts = new TomSelect(el, {
+    plugins: ["remove_button"],
+    create: false,
+    placeholder: "none selected",
+    // Tom Select keeps the placeholder visible on multi-selects by default;
+    // hide it once at least one group is selected so the "none selected"
+    // hint does not sit below the selected item chips.
+    hidePlaceholder: true,
+    // Render the dropdown into <body> instead of nesting it in the table
+    // cell, since ancestors like .table-responsive/.card clip overflow and
+    // would otherwise cut it off (bootstrap-select used container: "body"
+    // for the same reason).
+    dropdownParent: "body",
+    ...options,
+  });
 
-    return num + " selected";
-  };
+  const actionsBox = document.createElement("div");
+  actionsBox.className = "ts-actions-box";
+  actionsBox.innerHTML =
+    '<div class="btn-group btn-group-sm">' +
+    '<button type="button" class="btn btn-secondary btn-sm select-all">All</button>' +
+    '<button type="button" class="btn btn-secondary btn-sm select-none">None</button>' +
+    "</div>";
+  actionsBox.querySelector(".select-all").addEventListener("click", () => {
+    ts.setValue(allValues);
+  });
+  actionsBox.querySelector(".select-none").addEventListener("click", () => {
+    ts.clear();
+  });
+  ts.dropdown.prepend(actionsBox);
+
+  return ts;
 }
 
 const backupStorage = {};
@@ -410,98 +462,62 @@ function stateLoadCallback(itemName) {
 }
 
 function addFromQueryLog(domain, list) {
-  const alertModal = $("#alertModal");
-  const alProcessing = alertModal.find(".alProcessing");
-  const alSuccess = alertModal.find(".alSuccess");
-  const alFailure = alertModal.find(".alFailure");
-  const alNetworkErr = alertModal.find(".alFailure #alNetErr");
-  const alCustomErr = alertModal.find(".alFailure #alCustomErr");
-  const alList = "#alList";
-  const alDomain = "#alDomain";
-
-  // Exit the function here if the Modal is already shown (multiple running interlock)
-  if (alertModal.css("display") !== "none") {
-    return;
-  }
-
   const listtype = list === "allow" ? "Allowlist" : "Denylist";
 
-  alProcessing.children(alDomain).text(domain);
-  alProcessing.children(alList).text(listtype);
-  alertModal.modal("show");
+  disableAll();
+  showAlert("info", "", "Adding from Query Log", `Adding ${domain} to the ${listtype}...`);
 
-  // add Domain to List after Modal has faded in
-  alertModal.one("shown.bs.modal", () => {
-    $.ajax({
-      url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
-      method: "post",
-      dataType: "json",
-      processData: false,
-      contentType: "application/json; charset=utf-8",
-      data: JSON.stringify({
-        domain,
-        comment: "Added from Query Log",
-        type: list,
-        kind: "exact",
-      }),
-      success(response) {
-        alProcessing.hide();
-        if ("domains" in response && response.domains.length > 0) {
-          // Success
-          alSuccess.children(alDomain).text(domain);
-          alSuccess.children(alList).text(listtype);
-          alSuccess.fadeIn(1000);
-          // Update domains counter in the menu
-          updateFtlInfo();
-          setTimeout(() => {
-            alertModal.modal("hide");
-          }, 2000);
-        } else {
-          // Failure
-          alNetworkErr.hide();
-          alCustomErr.html(response.message);
-          alFailure.fadeIn(1000);
-          setTimeout(() => {
-            alertModal.modal("hide");
-          }, 10_000);
+  $.ajax({
+    url: document.body.dataset.apiurl + "/domains/" + list + "/exact",
+    method: "post",
+    dataType: "json",
+    processData: false,
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify({
+      domain,
+      comment: "Added from Query Log",
+      type: list,
+      kind: "exact",
+    }),
+    success(response) {
+      enableAll();
+      if ("domains" in response && response.domains.length > 0) {
+        // Success
+        showAlert(
+          "success",
+          "fas fa-plus",
+          "Added from Query Log",
+          `${domain} successfully added to the ${listtype}`
+        );
+
+        // Update domains counter in the menu
+        updateFtlInfo();
+      } else {
+        // Failure
+        showAlert("error", "", `Failure adding ${domain} to ${listtype}`, response.message);
+      }
+    },
+    error(xhr) {
+      // A duplicate domain (or any other database error) comes back as an
+      // HTTP error carrying a JSON body - show its message instead of the
+      // generic network error, e.g. "The item is already present"
+      let apiError = xhr.responseJSON && xhr.responseJSON.error;
+      if (!apiError && xhr.responseText) {
+        try {
+          apiError = JSON.parse(xhr.responseText).error;
+        } catch {
+          // Not a JSON response, treat as a genuine network error
         }
-      },
-      error(xhr) {
-        alProcessing.hide();
-        // A duplicate domain (or any other database error) comes back as an
-        // HTTP error carrying a JSON body - show its message instead of the
-        // generic network error, e.g. "The item is already present"
-        let apiError = xhr.responseJSON && xhr.responseJSON.error;
-        if (!apiError && xhr.responseText) {
-          try {
-            apiError = JSON.parse(xhr.responseText).error;
-          } catch {
-            // Not a JSON response, treat as a genuine network error
-          }
-        }
+      }
 
-        if (apiError) {
-          alNetworkErr.hide();
-          alCustomErr.text(apiError.hint || apiError.message);
-        } else {
-          alNetworkErr.show();
-          alCustomErr.text("");
-        }
+      let errorMsg = "Timeout or Network Connection Error!";
+      if (apiError) {
+        errorMsg = apiError.hint || apiError.message;
+      }
 
-        alFailure.fadeIn(1000);
-        setTimeout(() => {
-          alertModal.modal("hide");
-        }, 8000);
-      },
-    });
-  });
-
-  // Reset Modal after it has faded out
-  alertModal.one("hidden.bs.modal", () => {
-    alProcessing.show();
-    alSuccess.add(alFailure).hide();
-    alProcessing.add(alSuccess).children(alDomain).html("").end().children(alList).html("");
-    alCustomErr.html("");
+      enableAll();
+      showAlert("error", "", `Failure adding ${domain} to ${listtype}`, errorMsg);
+    },
   });
 }
 
@@ -558,7 +574,7 @@ function doLogout(url) {
     url: document.body.dataset.apiurl + "/auth",
     method: "DELETE",
   }).always(() => {
-    globalThis.location = url;
+    location.assign(url);
   });
 }
 
@@ -595,22 +611,55 @@ function changeTableButtonStates(table) {
 
   if (selectedRows === 0) {
     // Nothing selected
-    for (const el of selectAllElements) el.classList.remove("hidden");
-    for (const el of selectMoreElements) el.classList.add("hidden");
-    for (const el of removeAllElements) el.classList.add("hidden");
-    for (const el of deleteSelectedElements) el.classList.add("hidden");
+    for (const el of selectAllElements) {
+      el.classList.remove("hidden");
+    }
+
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of deleteSelectedElements) {
+      el.classList.add("hidden");
+    }
   } else if (selectedRows >= pageLength || selectedRows === allRows) {
     // Whole page is selected (or all available messages were selected)
-    for (const el of selectAllElements) el.classList.add("hidden");
-    for (const el of selectMoreElements) el.classList.add("hidden");
-    for (const el of removeAllElements) el.classList.remove("hidden");
-    for (const el of deleteSelectedElements) el.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of selectMoreElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of removeAllElements) {
+      el.classList.remove("hidden");
+    }
+
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
+    }
   } else {
     // Some rows are selected, but not all
-    for (const el of selectAllElements) el.classList.add("hidden");
-    for (const el of selectMoreElements) el.classList.remove("hidden");
-    for (const el of removeAllElements) el.classList.add("hidden");
-    for (const el of deleteSelectedElements) el.classList.remove("hidden");
+    for (const el of selectAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of selectMoreElements) {
+      el.classList.remove("hidden");
+    }
+
+    for (const el of removeAllElements) {
+      el.classList.add("hidden");
+    }
+
+    for (const el of deleteSelectedElements) {
+      el.classList.remove("hidden");
+    }
   }
 }
 
@@ -622,8 +671,8 @@ function getCSSval(cssclass, cssproperty) {
 }
 
 function parseQueryString() {
-  const params = new URLSearchParams(globalThis.location.search);
-  return Object.fromEntries(params.entries());
+  const params = new URLSearchParams(location.search);
+  return Object.fromEntries(params);
 }
 
 // Six hex digits per code point, not four: code points go up to U+10FFFF, so
@@ -631,16 +680,22 @@ function parseQueryString() {
 // emoji) would be encoded as a wider group that hexDecode() cannot split off
 // again, garbling the rest of the string. Both functions must agree on six.
 function hexEncode(text) {
-  if (typeof text !== "string" || text.length === 0) return "";
+  if (typeof text !== "string" || text.length === 0) {
+    return "";
+  }
 
   return [...text].map(char => char.codePointAt(0).toString(16).padStart(6, "0")).join("");
 }
 
 function hexDecode(text) {
-  if (typeof text !== "string" || text.length === 0) return "";
+  if (typeof text !== "string" || text.length === 0) {
+    return "";
+  }
 
   const hexes = text.match(/.{1,6}/gu);
-  if (!hexes || hexes.length === 0) return "";
+  if (!hexes || hexes.length === 0) {
+    return "";
+  }
 
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
 }
@@ -649,7 +704,6 @@ function listsAlert(type, items, data) {
   // Show simple success message if there is no "processed" object in "data" or
   // if all items were processed successfully
   const successLength = data.processed.success.length;
-  const errorsLength = data.processed.errors.length;
 
   if (data.processed === undefined || successLength === items.length) {
     showAlert(
@@ -660,6 +714,8 @@ function listsAlert(type, items, data) {
     );
     return;
   }
+
+  const errorsLength = data.processed.errors.length;
 
   // Show a more detailed message if there is a "processed" object in "data" and
   // not all items were processed successfully
@@ -736,7 +792,7 @@ function loadingOverlayTimeoutCallback(reloadAfterTimeout) {
 
 function loadingOverlay(reloadAfterTimeout = false) {
   NProgress.start();
-  waitMe = new WaitMe(".wrapper", {
+  waitMe = new WaitMe(".app-wrapper", {
     effect: "bounce",
     text: "Pi-hole is currently applying your changes...",
     bg: "rgba(0,0,0,0.7)",
@@ -756,7 +812,7 @@ function loadingOverlay(reloadAfterTimeout = false) {
 function callIfVisible(func) {
   if (document.hidden) {
     // Page is not visible, try again in 1 second
-    globalThis.setTimeout(callIfVisible, 1000, func);
+    setTimeout(callIfVisible, 1000, func);
     return;
   }
 
@@ -771,43 +827,34 @@ function callIfVisible(func) {
 // visible again.
 function setTimer(func, interval) {
   // Cancel possibly running timer
-  globalThis.clearTimeout(func.timer);
+  clearTimeout(func.timer);
   // Start new timer
-  func.timer = globalThis.setTimeout(callIfVisible, interval, func);
+  func.timer = setTimeout(callIfVisible, interval, func);
 }
 
 // Same as setTimer() but calls the function every <interval> milliseconds
 function setInter(func, interval) {
   // Cancel possibly running timer
-  globalThis.clearTimeout(func.timer);
+  clearTimeout(func.timer);
   // Start new timer
-  func.timer = globalThis.setTimeout(callIfVisible, interval, func);
+  func.timer = setTimeout(callIfVisible, interval, func);
   // Restart timer
-  globalThis.setTimeout(setInter, interval, func, interval);
+  setTimeout(setInter, interval, func, interval);
 }
 
 /**
- * Toggle or set the collapse state of a box element
- * @param {HTMLElement} box - The box element
- * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the box
+ * Toggle or set the collapse state of a card element
+ * @param {HTMLElement} card - The card element
+ * @param {boolean} [expand=true] - Whether to expand (true) or collapse (false) the card
  */
 // Not using the AdminLTE API so that the expansion is not animated
-// Otherwise, we could use `$(customBox).boxWidget("expand")`
-function toggleBoxCollapse(box, expand = true) {
-  if (!box) return;
-
-  const icon = box.querySelector(".btn-box-tool > i");
-  const body = box.querySelector(".box-body");
-
-  if (expand) {
-    box.classList.remove("collapsed-box");
-    if (icon) icon.classList.replace("fa-plus", "fa-minus");
-    if (body) body.style = "";
-  } else {
-    box.classList.add("collapsed-box");
-    if (icon) icon.classList.replace("fa-minus", "fa-plus");
-    if (body) body.style.display = "none";
+// Otherwise, we could use `CardWidget.getOrCreateInstance(customCard).expand()`
+function toggleBoxCollapse(card, expand = true) {
+  if (!card) {
+    return;
   }
+
+  card.classList.toggle("collapsed-card", !expand);
 }
 
 globalThis.utils = (function () {
@@ -828,13 +875,12 @@ globalThis.utils = (function () {
     validatePort,
     validateIPv4WithPort,
     validateIPv6WithPort,
-    setBsSelectDefaults,
+    createGroupSelect,
     stateSaveCallback,
     stateLoadCallback,
     validateMAC,
+    validateClientPattern,
     validateHostname,
-    validateHostnameStrict,
-    validateHostnameDHCP,
     addFromQueryLog,
     addTD,
     toPercent,

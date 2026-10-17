@@ -29,6 +29,7 @@ function updateCachePie(data) {
 
   // Compute total number of cache entries
   cacheEntries = 0;
+  //eslint-disable-next-line unicorn/prefer-object-iterable-methods
   for (const item of Object.keys(data)) {
     cacheEntries += data[item].valid;
     cacheEntries += data[item].stale;
@@ -206,7 +207,7 @@ $(".confirm-restartdns").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
+  cancelButtonClass: "btn-secondary",
   dialogClass: "modal-dialog",
 });
 
@@ -230,7 +231,7 @@ $(".confirm-flushlogs").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
+  cancelButtonClass: "btn-secondary",
   dialogClass: "modal-dialog",
 });
 
@@ -254,7 +255,7 @@ $(".confirm-flusharp").confirm({
   cancelButton: "No, go back",
   post: true,
   confirmButtonClass: "btn-danger",
-  cancelButtonClass: "btn-default",
+  cancelButtonClass: "btn-secondary",
   dialogClass: "modal-dialog",
 });
 
@@ -275,7 +276,7 @@ $(() => {
       maintainAspectRatio: true,
       elements: {
         arc: {
-          borderColor: $(".box").css("background-color"),
+          borderColor: $(".card").css("background-color"),
         },
       },
       plugins: {

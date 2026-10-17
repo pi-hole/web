@@ -26,14 +26,14 @@ function doSearch() {
   const ta = $("#output");
   // process with the current visible domain input field
   const q = $("input[id^='domain']:visible").val().trim().toLowerCase();
-  const N = $("#number").val();
-  // Partial matching?
-  const partial = $("#partialMatch").is(":checked");
 
+  // Partial matching?
   if (q.length === 0) {
     return;
   }
 
+  const N = $("#number").val();
+  const partial = $("#partialMatch").is(":checked");
   const verb = partial ? "partially" : "exactly";
 
   $.ajax({
@@ -59,7 +59,7 @@ function doSearch() {
         (numDomains !== 1 ? "s" : "") +
         " <em>" +
         verb +
-        "</em> matching '<strong class='text-blue'>" +
+        "</em> matching '<strong class='text-primary'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
         (numDomains > 0 ? ":" : ".") +
@@ -112,11 +112,12 @@ function doSearch() {
         (numLists !== 1 ? "s" : "") +
         " <em>" +
         verb +
-        "</em> matching '<strong class='text-blue'>" +
+        "</em> matching '<strong class='text-primary'>" +
         utils.escapeHtml(q) +
         "</strong>'" +
         (numLists > 0 ? ":" : ".") +
         "<br><br>";
+      //eslint-disable-next-line unicorn/prefer-object-iterable-methods
       for (const listId of Object.keys(grouped)) {
         const list = grouped[listId][0];
         const color = list.type === "block" ? "red" : "green";
@@ -151,7 +152,9 @@ function doSearch() {
           "<br>    matching entries:<br>";
         for (const lists of grouped[listId]) {
           result +=
-            "    - <strong class='text-blue'>" + utils.escapeHtml(lists.domain) + "</strong><br>";
+            "    - <strong class='text-primary'>" +
+            utils.escapeHtml(lists.domain) +
+            "</strong><br>";
         }
 
         result += "<br>";
@@ -159,19 +162,19 @@ function doSearch() {
 
       result += "Number of results per type:<br>";
       result +=
-        "  - <strong class='text-blue'>" +
+        "  - <strong class='text-primary'>" +
         data.search.results.domains.exact +
         "</strong> exact domain matches<br>";
       result +=
-        "  - <strong class='text-blue'>" +
+        "  - <strong class='text-primary'>" +
         data.search.results.domains.regex +
         "</strong> regex domain matches<br>";
       result +=
-        "  - <strong class='text-blue'>" +
+        "  - <strong class='text-primary'>" +
         data.search.results.gravity.allow +
         "</strong> allowlist (antigravity) matches<br>";
       result +=
-        "  - <strong class='text-blue'>" +
+        "  - <strong class='text-primary'>" +
         data.search.results.gravity.block +
         "</strong> blocklist (gravity) matches<br>";
 

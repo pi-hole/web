@@ -145,6 +145,11 @@ function handleAjaxError(xhr, textStatus) {
 }
 
 function parseQueryStatus(data) {
+  const buttonAllow =
+    '<button type="button" class="btn btn-sm text-nowrap btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+  const buttonDeny =
+    '<button type="button" class="btn btn-sm text-nowrap btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+
   // Parse query status
   let fieldtext;
   let buttontext;
@@ -157,8 +162,7 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity)";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      buttontext = buttonAllow;
       blocked = true;
       break;
     case "FORWARDED":
@@ -167,30 +171,26 @@ function parseQueryStatus(data) {
       fieldtext =
         (data.reply.type !== "UNKNOWN" ? "Forwarded, reply from " : "Forwarded to ") +
         utils.escapeHtml(data.upstream);
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      buttontext = buttonDeny;
       break;
     case "CACHE":
       colorClass = "text-green";
       icon = "fa-solid fa-database";
       fieldtext = "Served from cache";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      buttontext = buttonDeny;
       break;
     case "REGEX":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex)";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      buttontext = buttonAllow;
       blocked = true;
       break;
     case "DENYLIST":
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (exact)";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      buttontext = buttonAllow;
       blocked = true;
       break;
     case "EXTERNAL_BLOCKED_IP":
@@ -225,8 +225,7 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (gravity, CNAME)";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      buttontext = buttonAllow;
       isCNAME = true;
       blocked = true;
       break;
@@ -234,8 +233,7 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (regex denied, CNAME)";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      buttontext = buttonAllow;
       isCNAME = true;
       blocked = true;
       break;
@@ -243,8 +241,7 @@ function parseQueryStatus(data) {
       colorClass = "text-red";
       icon = "fa-solid fa-ban";
       fieldtext = "Blocked (exact denied, CNAME)";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-green btn-whitelist"><i class="fas fa-check"></i> Allow</button>';
+      buttontext = buttonAllow;
       isCNAME = true;
       blocked = true;
       break;
@@ -264,15 +261,13 @@ function parseQueryStatus(data) {
       colorClass = "text-green";
       icon = "fa-solid fa-hourglass-half";
       fieldtext = "Already forwarded, awaiting reply";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      buttontext = buttonDeny;
       break;
     case "CACHE_STALE":
       colorClass = "text-green";
       icon = "fa-solid fa-infinity";
       fieldtext = "Served by cache optimizer";
-      buttontext =
-        '<button type="button" class="btn btn-default btn-sm text-red btn-blacklist"><i class="fa fa-ban"></i> Deny</button>';
+      buttontext = buttonDeny;
       break;
     case "SPECIAL_DOMAIN":
       colorClass = "text-red";
@@ -475,9 +470,11 @@ function addSelectSuggestion(name, dict, data) {
   obj.append($("<option />"));
 
   // Add GET parameter as first suggestion (if present and not already included)
-  if (name in dict) {
+  if (Object.hasOwn(dict, name)) {
     value = decodeURIComponent(dict[name]);
-    if (!data.includes(value)) data.unshift(value);
+    if (!data.includes(value)) {
+      data.unshift(value);
+    }
   }
 
   // Add data obtained from API
@@ -486,7 +483,7 @@ function addSelectSuggestion(name, dict, data) {
   }
 
   // Select GET parameter (if present)
-  if (name in dict) {
+  if (Object.hasOwn(dict, name)) {
     obj.val(value);
   }
 }
@@ -508,26 +505,42 @@ function parseFilters() {
 }
 
 function filterOn(param, dict) {
+  if (!Object.hasOwn(dict, param)) {
+    return false;
+  }
+
   const typ = typeof dict[param];
-  return param in dict && (typ === "number" || (typ === "string" && dict[param].length > 0));
+  return typ === "number" || (typ === "string" && dict[param].length > 0);
 }
 
-function getAPIURL(filters) {
+function getAPIURL(queryFilters) {
   let apiurl = document.body.dataset.apiurl + "/queries?";
-  for (const [key, filter] of Object.entries(filters)) {
-    if (filterOn(key, filters)) {
-      if (!apiurl.endsWith("?")) apiurl += "&";
-      apiurl += `${key}=${encodeURIComponent(filter)}`;
+  for (const [key, filter] of Object.entries(queryFilters)) {
+    if (!filterOn(key, queryFilters)) {
+      continue;
     }
+
+    if (!apiurl.endsWith("?")) {
+      apiurl += "&";
+    }
+
+    apiurl += `${key}=${encodeURIComponent(filter)}`;
   }
 
   // Omit from/until filtering if we cannot reach these times. This will speed
   // up the database lookups notably on slow devices. The API accepts timestamps
   // in seconds since epoch
-  if (from > beginningOfTime) apiurl += "&from=" + from;
-  if (until > beginningOfTime && until < endOfTime) apiurl += "&until=" + until;
+  if (from > beginningOfTime) {
+    apiurl += "&from=" + from;
+  }
 
-  if ($("#disk").prop("checked")) apiurl += "&disk=true";
+  if (until > beginningOfTime && until < endOfTime) {
+    apiurl += "&until=" + until;
+  }
+
+  if ($("#disk").prop("checked")) {
+    apiurl += "&disk=true";
+  }
 
   return apiurl;
 }
@@ -555,6 +568,7 @@ $(() => {
 
   for (const [sel, element] of Object.entries(filters)) {
     $(`#${element}_filter`).select2({
+      theme: "bootstrap-5",
       width: "100%",
       tags: sel < 4, // Only the first four (client(IP/name), domain, upstream) are allowed to freely specify input
       placeholder: "Select...",
@@ -579,7 +593,9 @@ $(() => {
       error: handleAjaxError,
       dataSrc: "queries",
       data(d) {
-        if (cursor !== null) d.cursor = cursor;
+        if (cursor !== null) {
+          d.cursor = cursor;
+        }
       },
       dataFilter(d) {
         const json = JSON.parse(d);
@@ -611,7 +627,7 @@ $(() => {
         width: "10%",
         render(data, type) {
           if (type === "display") {
-            return moment.unix(data).format("Y-MM-DD [<br class='hidden-lg'>]HH:mm:ss z");
+            return moment.unix(data).format("Y-MM-DD [<br class='d-xl-none'>]HH:mm:ss z");
           }
 
           return data;
@@ -637,7 +653,11 @@ $(() => {
     stateLoadCallback() {
       const state = utils.stateLoadCallback("query_log_table");
       // Default to 25 entries if "All" was previously selected
-      if (state) state.length = state.length === -1 ? 25 : state.length;
+      if (state) {
+        const pageLength = state.length;
+        state.length = pageLength === -1 ? 25 : pageLength;
+      }
+
       return state;
     },
     rowCallback(row, data) {
@@ -705,7 +725,8 @@ $(() => {
       }
     },
     initComplete() {
-      this.api()
+      //eslint-disable-next-line no-void
+      void this.api()
         .columns()
         .every(function () {
           // Skip columns that are not searchable
@@ -752,13 +773,13 @@ $(() => {
 
   // Add event listener for opening and closing details, except on rows with "details-row" class
   $("#all-queries tbody").on("click", "tr:not(.details-row)", function () {
-    const tr = $(this);
-    const row = table.row(tr);
-
-    if (globalThis.getSelection().toString().length > 0) {
+    if (getSelection().toString().length > 0) {
       // This event was triggered by a selection, so don't open the row
       return;
     }
+
+    const tr = $(this);
+    const row = table.row(tr);
 
     if (row.child.isShown()) {
       // This row is already open - close it
@@ -793,9 +814,9 @@ function refreshTable() {
   table.clear();
 
   // Source data from API
-  const filters = parseFilters();
-  filters.from = from;
-  filters.until = until;
-  const apiUrl = getAPIURL(filters);
+  const activeFilters = parseFilters();
+  activeFilters.from = from;
+  activeFilters.until = until;
+  const apiUrl = getAPIURL(activeFilters);
   table.ajax.url(apiUrl).draw();
 }

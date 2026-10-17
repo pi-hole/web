@@ -19,7 +19,6 @@ $(() => {
   $("#btnAddAllow").on("click", { type: "allow" }, addList);
   $("#btnAddBlock").on("click", { type: "block" }, addList);
 
-  utils.setBsSelectDefaults();
   getGroups();
 });
 
@@ -42,17 +41,13 @@ function format(data) {
         ")"
       : "N/A";
   const numberOfEntries =
-    (data.number !== null && numbers === true
-      ? Number.parseInt(data.number, 10).toLocaleString()
-      : "N/A") +
-    (data.abp_entries !== null && Number.parseInt(data.abp_entries, 10) > 0 && numbers === true
-      ? " (out of which " +
-        Number.parseInt(data.abp_entries, 10).toLocaleString() +
-        " are in ABP-style)"
+    (data.number !== null && numbers === true ? Math.trunc(data.number).toLocaleString() : "N/A") +
+    (data.abp_entries !== null && Math.trunc(data.abp_entries) > 0 && numbers === true
+      ? " (out of which " + Math.trunc(data.abp_entries).toLocaleString() + " are in ABP-style)"
       : "");
   const nonDomains =
     data.invalid_domains !== null && numbers === true
-      ? Number.parseInt(data.invalid_domains, 10).toLocaleString()
+      ? Math.trunc(data.invalid_domains).toLocaleString()
       : "N/A";
 
   return `<table>
@@ -87,7 +82,7 @@ function format(data) {
 
 // Define the status icon element
 function setStatusIcon(data) {
-  const statusCode = Number.parseInt(data.status, 10);
+  const statusCode = Math.trunc(data.status);
   const statusTitle = setStatusText(data) + "\nClick for details about this list";
   let statusIcon;
 
@@ -109,7 +104,12 @@ function setStatusIcon(data) {
       break;
   }
 
-  return "<span class='fa fa-fw " + statusIcon + "' title='" + statusTitle + "'></span>";
+  // Match the coloured `list-status-N` classes used by the legend so the
+  // table icons are coloured the same way instead of the default text colour.
+  const statusClass = [1, 2, 3, 4].includes(statusCode)
+    ? `list-status-${statusCode}`
+    : "list-status-0";
+  return `<span class='fa fa-fw ${statusIcon} ${statusClass}' title='${statusTitle}'></span>`;
 }
 
 // Define human-friendly status string
@@ -117,7 +117,7 @@ function setStatusText(data, showdetails = false) {
   let statusText = "Unknown";
   let statusDetails = "";
   if (data.status !== null) {
-    switch (Number.parseInt(data.status, 10)) {
+    switch (Math.trunc(data.status)) {
       case 0:
         statusText =
           data.enabled === 0
@@ -144,13 +144,12 @@ function setStatusText(data, showdetails = false) {
 
       default:
         statusText = "Unknown";
-        statusDetails =
-          ' (<span class="list-status-0">' + Number.parseInt(data.status, 10) + "</span>)";
+        statusDetails = ' (<span class="list-status-0">' + Math.trunc(data.status) + "</span>)";
         break;
     }
   }
 
-  return statusText + (showdetails === true ? statusDetails : "");
+  return statusText + (showdetails ? statusDetails : "");
 }
 
 // Define the type icon element
@@ -167,7 +166,7 @@ function setTypeIcon(type) {
     title = "This is an allowlist";
   }
 
-  return `<span class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></span> `;
+  return `<span class='fa fa-fw ${iconClass}' title='${title}\nClick for details about this list'></span>`;
 }
 
 function initTable() {
@@ -181,7 +180,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "2rem" },
       { data: "status", searchable: false, class: "details-control" },
       { data: "type", searchable: false, class: "details-control" },
       { data: "address" },
@@ -209,8 +208,6 @@ function initTable() {
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteList_"]').on("click", deleteList);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       const dataId = utils.hexEncode(data.address + "_" + data.type);
@@ -222,7 +219,7 @@ function initTable() {
       // If there is no status or the list is disabled, we keep
       // status 0 (== unknown)
       if (data.status !== null && data.enabled) {
-        statusCode = Number.parseInt(data.status, 10);
+        statusCode = Math.trunc(data.status);
       }
 
       $("td:eq(1)", row).addClass("list-status-" + statusCode);
@@ -259,8 +256,8 @@ function initTable() {
       );
       const statusEl = $("#enabled_" + dataId, row);
       statusEl.bootstrapToggle({
-        on: "Enabled",
-        off: "Disabled",
+        onlabel: "Enabled",
+        offlabel: "Disabled",
         size: "small",
         onstyle: "success",
         width: "80px",
@@ -274,40 +271,23 @@ function initTable() {
 
       $("td:eq(6)", row).empty();
       $("td:eq(6)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
+        const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize bootstrap-select
-      selectEl
-        // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", () => {
-          const winWidth = $(globalThis).width();
-          const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
-          }
-        })
-        .on("changed.bs.select", () => {
+      // Initialize Tom Select
+      const ts = utils.createGroupSelect(selectEl, {
+        onChange() {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
@@ -317,25 +297,27 @@ function initTable() {
                 editList.call(selectEl);
               });
           }
-        })
-        .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+        },
+        onDropdownClose() {
+          // Restore values if the dropdown is closed without clicking the Apply button
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
-        })
-        .selectpicker()
-        .siblings(".dropdown-menu")
-        .find(".bs-actionsbox")
-        .prepend(
+
+          ts.setValue(data.groups);
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+        },
+      });
+      $(ts.dropdown)
+        .find(".ts-actions-box")
+        .append(
           '<button type="button" id=btn_apply_' +
             dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+            ' class="btn btn-sm" disabled>Apply</button>'
         );
 
       // Highlight row (if url parameter "listid=" is used)
-      if ("listid" in GETDict && data.id === Number.parseInt(GETDict.listid, 10)) {
+      if ("listid" in GETDict && data.id === Math.trunc(GETDict.listid)) {
         $(row).find("td").addClass("highlight");
       }
 
@@ -422,15 +404,14 @@ function initTable() {
       return data;
     },
     initComplete() {
-      if ("listid" in GETDict) {
-        const pos = table
-          .column(0, { order: "current" })
-          .data()
-          .indexOf(Number.parseInt(GETDict.listid, 10));
-        if (pos !== -1) {
-          const page = Math.floor(pos / table.page.info().length);
-          table.page(page).draw(false);
-        }
+      if (!("listid" in GETDict)) {
+        return;
+      }
+
+      const pos = table.column(0, { order: "current" }).data().indexOf(Math.trunc(GETDict.listid));
+      if (pos !== -1) {
+        const page = Math.floor(pos / table.page.info().length);
+        table.page(page).draw(false);
       }
     },
   });

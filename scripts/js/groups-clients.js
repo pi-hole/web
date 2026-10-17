@@ -51,14 +51,20 @@ function reloadClientSuggestions() {
         }
 
         if (client.macVendor !== null && client.macVendor.length > 0) {
-          if (extraInfo.length > 0) extraInfo += "; ";
+          if (extraInfo.length > 0) {
+            extraInfo += "; ";
+          }
+
           extraInfo += "vendor: " + utils.escapeHtml(client.macVendor);
         }
 
         // Do not add addresses for mock devices as their address is already
         // the hwaddr
         if (client.addresses !== null && client.addresses.length > 0 && !mockDevice) {
-          if (extraInfo.length > 0) extraInfo += "; ";
+          if (extraInfo.length > 0) {
+            extraInfo += "; ";
+          }
+
           // Count number of "," in client.addresses to determine number of addresses
           const numAddresses = client.addresses.split(",").length;
           const pluralAddresses = numAddresses > 1 ? "es" : "";
@@ -66,7 +72,9 @@ function reloadClientSuggestions() {
             numAddresses + " address" + pluralAddresses + ": " + utils.escapeHtml(client.addresses);
         }
 
-        if (extraInfo.length > 0) text += " (" + extraInfo + ")";
+        if (extraInfo.length > 0) {
+          text += " (" + extraInfo + ")";
+        }
 
         sel.append($("<option />").val(key).text(text));
       }
@@ -77,13 +85,13 @@ function reloadClientSuggestions() {
 $(() => {
   $("#btnAdd").on("click", addClient);
   $("#select").select2({
+    theme: "bootstrap-5",
     tags: true,
     placeholder: "Select client...",
     allowClear: true,
   });
 
   reloadClientSuggestions();
-  utils.setBsSelectDefaults();
   getGroups();
 
   $("#select").on("change", () => {
@@ -103,7 +111,7 @@ function initTable() {
     order: [[0, "asc"]],
     columns: [
       { data: "id", visible: false },
-      { data: null, visible: true, orderable: false, width: "15px" },
+      { data: null, visible: true, orderable: false, width: "2rem" },
       { data: "client", type: "ip-address" },
       { data: "comment" },
       { data: "groups", searchable: false },
@@ -128,8 +136,6 @@ function initTable() {
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
 
       $('button[id^="deleteClient_"]').on("click", deleteClient);
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       const dataId = utils.hexEncode(data.client);
@@ -149,7 +155,7 @@ function initTable() {
         '" class="breakall">' +
         utils.escapeHtml(data.client) +
         "</code>";
-      if (data.name !== null && data.name.length > 0)
+      if (data.name !== null && data.name.length > 0) {
         ipName +=
           '<br><code id="name_' +
           dataId +
@@ -158,6 +164,8 @@ function initTable() {
           '" class="breakall">' +
           utils.escapeHtml(data.name) +
           "</code>";
+      }
+
       $("td:eq(1)", row).html(ipName);
 
       $("td:eq(2)", row).html('<input id="comment_' + dataId + '" class="form-control">');
@@ -167,40 +175,23 @@ function initTable() {
 
       $("td:eq(3)", row).empty();
       $("td:eq(3)", row).append(
-        '<select class="selectpicker" id="multiselect_' + dataId + '" multiple></select>'
+        '<select class="group-select" id="multiselect_' + dataId + '" multiple></select>'
       );
       const selectEl = $("#multiselect_" + dataId, row);
       // Add all known groups
       for (const group of groups) {
-        const dataSub = group.enabled ? "" : 'data-subtext="(disabled)"';
+        const label = group.enabled ? group.name : group.name + " (disabled)";
 
-        selectEl.append(
-          $("<option " + dataSub + "/>")
-            .val(group.id)
-            .text(group.name)
-        );
+        selectEl.append($("<option/>").val(group.id).text(label));
       }
 
       const applyBtn = "#btn_apply_" + dataId;
 
       // Select assigned groups
       selectEl.val(data.groups);
-      // Initialize bootstrap-select
-      selectEl
-        // fix dropdown if it would stick out right of the viewport
-        .on("show.bs.select", () => {
-          const winWidth = $(globalThis).width();
-          const dropdownEl = $("body > .bootstrap-select.dropdown");
-          if (dropdownEl.length > 0) {
-            dropdownEl.removeClass("align-right");
-            const width = dropdownEl.width();
-            const left = dropdownEl.offset().left;
-            if (left + width > winWidth) {
-              dropdownEl.addClass("align-right");
-            }
-          }
-        })
-        .on("changed.bs.select", () => {
+      // Initialize Tom Select
+      const ts = utils.createGroupSelect(selectEl, {
+        onChange() {
           // enable Apply button
           if ($(applyBtn).prop("disabled")) {
             $(applyBtn)
@@ -210,21 +201,23 @@ function initTable() {
                 editClient.call(selectEl);
               });
           }
-        })
-        .on("hide.bs.select", function () {
-          // Restore values if drop-down menu is closed without clicking the Apply button
-          if (!$(applyBtn).prop("disabled")) {
-            $(this).val(data.groups).selectpicker("refresh");
-            $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+        },
+        onDropdownClose() {
+          // Restore values if the dropdown is closed without clicking the Apply button
+          if ($(applyBtn).prop("disabled")) {
+            return;
           }
-        })
-        .selectpicker()
-        .siblings(".dropdown-menu")
-        .find(".bs-actionsbox")
-        .prepend(
+
+          ts.setValue(data.groups);
+          $(applyBtn).removeClass("btn-success").prop("disabled", true).off("click");
+        },
+      });
+      $(ts.dropdown)
+        .find(".ts-actions-box")
+        .append(
           '<button type="button" id=btn_apply_' +
             dataId +
-            ' class="btn btn-block btn-sm" disabled>Apply</button>'
+            ' class="btn btn-sm" disabled>Apply</button>'
         );
 
       const button =
@@ -367,17 +360,17 @@ function addClient() {
   // - IPv4 address (with and without CIDR)
   // - IPv6 address (with and without CIDR)
   // - MAC address (in the form AA:BB:CC:DD:EE:FF)
-  // - host name (arbitrary form, we're only checking against some reserved characters)
+  // - host name, or an interface prefaced with a colon (like :eth0)
   for (const [index, ip] of ips.entries()) {
     if (utils.validateIPv4CIDR(ip) || utils.validateIPv6CIDR(ip) || utils.validateMAC(ip)) {
       // Convert input to upper case (important for MAC addresses)
       ips[index] = ip.toUpperCase();
-    } else if (!utils.validateHostname(ip)) {
+    } else if (!utils.validateClientPattern(ip)) {
       utils.showAlert(
         "warning",
         "",
         "Warning",
-        "Input is neither a valid IP or MAC address nor a valid host name!"
+        "Input is neither a valid IP or MAC address nor a valid host name or interface!"
       );
       return;
     }

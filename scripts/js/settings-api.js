@@ -71,9 +71,6 @@ $(() => {
       // Hide buttons if all messages were deleted
       const hasRows = this.api().rows({ filter: "applied" }).data().length > 0;
       $(".datatable-bt").css("visibility", hasRows ? "visible" : "hidden");
-
-      // Remove visible dropdown to prevent orphaning
-      $("body > .bootstrap-select.dropdown").remove();
     },
     rowCallback(row, data) {
       $(row).attr("data-id", data.id);
@@ -156,7 +153,7 @@ $(() => {
           const ids = [];
           $("tr.selected").each(function () {
             // ... add the row identified by "data-id".
-            ids.push(Number.parseInt($(this).attr("data-id"), 10));
+            ids.push(Math.trunc($(this).attr("data-id")));
           });
           // Delete all selected rows at once
           deleteMultipleSessions(ids);
@@ -200,7 +197,7 @@ $(() => {
 function deleteThisSession() {
   // This function is called when a red trash button is clicked
   // We get the ID of the current item from the data-del-id attribute
-  const thisID = Number.parseInt($(this).attr("data-del-id"), 10);
+  const thisID = Math.trunc($(this).attr("data-del-id"));
   deleted = 0;
   deleteOneSession(thisID, 1, false);
 }
@@ -210,15 +207,19 @@ function deleteMultipleSessions(ids) {
   // trash button is clicked
 
   // Check input validity
-  if (!Array.isArray(ids)) return;
+  if (!Array.isArray(ids)) {
+    return;
+  }
 
   // Exploit prevention: return early for non-numeric IDs
   for (const id of ids) {
-    if (!Number.isInteger(id)) return;
+    if (!Number.isSafeInteger(id)) {
+      return;
+    }
   }
 
   // Convert all ids to integers
-  ids = ids.map(value => Number.parseInt(value, 10));
+  ids = ids.map(value => Math.trunc(value));
 
   // Check if own session is selected and remove it when deleting multiple
   // We need this only when multiple sessions are removed to ensure we do not
@@ -250,10 +251,14 @@ function deleteOneSession(id, len, ownSessionDelete) {
   })
     .done(() => {
       // Do not reload page when deleting multiple sessions
-      if (++deleted < len) return;
+      if (++deleted < len) {
+        return;
+      }
 
       // All other sessions have been deleted, now delete own session
-      if (ownSessionDelete) deleteOneSession(ownSessionID, 1, false);
+      if (ownSessionDelete) {
+        deleteOneSession(ownSessionID, 1, false);
+      }
 
       if (id !== ownSessionID) {
         // Reload table to remove session
@@ -280,7 +285,9 @@ function processWebServerConfig() {
         $("#apppw_submit").text("Replace app password");
         $("#apppw_submit").removeClass("btn-success");
         $("#apppw_submit").addClass("btn-warning");
-      } else $("#apppw_clear").hide();
+      } else {
+        $("#apppw_clear").hide();
+      }
     })
     .fail(data => {
       apiFailure(data);
@@ -411,13 +418,13 @@ $("#totp_code").on("paste", event => {
 });
 
 $("#totp_code").on("keyup", function () {
-  const code = Number.parseInt($(this).val(), 10);
-  if (TOTPdata.codes.includes(code)) {
+  const code = $(this).val() === "" ? NaN : Math.trunc($(this).val());
+  if (Number.isFinite(code) && TOTPdata.codes.includes(code)) {
     $("#totp_div").removeClass("has-error");
     $("#totp_div").addClass("has-success");
     $("#totp_code").prop("disabled", true);
     $("#totp_submit").prop("disabled", false);
-    $("#totp_submit").removeClass("btn-default");
+    $("#totp_submit").removeClass("btn-secondary");
     $("#totp_submit").addClass("btn-success");
   }
 });
@@ -478,7 +485,10 @@ $(() => {
   $.ajax({
     url: document.body.dataset.apiurl + "/auth",
   }).done(data => {
-    if (data.session.totp === false) $("#button-enable-totp").removeClass("hidden");
-    else $("#button-disable-totp").removeClass("hidden");
+    if (data.session.totp === false) {
+      $("#button-enable-totp").removeClass("hidden");
+    } else {
+      $("#button-disable-totp").removeClass("hidden");
+    }
   });
 });

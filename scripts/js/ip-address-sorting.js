@@ -7,6 +7,26 @@
 
 "use strict";
 
+function normalizeIPv6Chunk(item) {
+  if (item.length === 0) {
+    return { value: "", count: 0 };
+  }
+
+  if (item.length === 1) {
+    return { value: "000" + item, count: 4 };
+  }
+
+  if (item.length === 2) {
+    return { value: "00" + item, count: 4 };
+  }
+
+  if (item.length === 3) {
+    return { value: "0" + item, count: 4 };
+  }
+
+  return { value: item, count: 4 };
+}
+
 // This code has been taken from
 // https://datatables.net/plug-ins/sorting/ip-address
 // and was modified by the Pi-hole team to support
@@ -63,39 +83,9 @@ $.extend($.fn.dataTableExt.oSort, {
           xa += ":";
         }
 
-        switch (item.length) {
-          case 0: {
-            count += 0;
-
-            break;
-          }
-
-          case 1: {
-            xa += "000" + item;
-            count += 4;
-
-            break;
-          }
-
-          case 2: {
-            xa += "00" + item;
-            count += 4;
-
-            break;
-          }
-
-          case 3: {
-            xa += "0" + item;
-            count += 4;
-
-            break;
-          }
-
-          default: {
-            xa += item;
-            count += 4;
-          }
-        }
+        const normalized = normalizeIPv6Chunk(item);
+        xa += normalized.value;
+        count += normalized.count;
       }
 
       // Padding the ::
