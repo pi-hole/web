@@ -232,7 +232,7 @@ function createRevServerTable() {
       [10, 25, 50, 100, "All"],
     ],
     language: {
-      emptyTable: "No revese DNS servers defined.",
+      emptyTable: "No reverse DNS servers defined.",
     },
     stateSave: true,
     stateDuration: 0,

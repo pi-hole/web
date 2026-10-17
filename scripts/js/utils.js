@@ -283,7 +283,13 @@ function validatePort(port) {
   return Number.isInteger(portNum) && portNum >= 1 && portNum <= 65_535;
 }
 
+// Validates the IPv4 server address used by dns.revServers, with an optional port
 function validateIPv4WithPort(ip) {
+  // If a slash is present, it's a network range, not a server IP
+  if (ip.includes("/")) {
+    return false;
+  }
+
   // The port is optional
   // If no "#" is present, validate just the IP
   if (!ip.includes("#")) return validateIPv4(ip);
@@ -293,11 +299,17 @@ function validateIPv4WithPort(ip) {
 
   const [ipv4, port] = parts;
 
-  // Validate IP part and port
+  // Validate IP and port
   return validateIPv4(ipv4) && validatePort(port);
 }
 
+// Validates the IPv6 server address used by dns.revServers, with an optional port
 function validateIPv6WithPort(ip) {
+  // If a slash is present, it's a network range, not a server IP
+  if (ip.includes("/")) {
+    return false;
+  }
+
   // The port is optional
   // If no "#" is present, validate just the IP
   if (!ip.includes("#")) return validateIPv6(ip);
@@ -307,7 +319,7 @@ function validateIPv6WithPort(ip) {
 
   const [ipv6, port] = parts;
 
-  // Validate IP part and port
+  // Validate IP and port
   return validateIPv6(ipv6) && validatePort(port);
 }
 
@@ -327,6 +339,13 @@ function validateHostnameStrict(name) {
   // Hostnames must not contain spaces, commas, or characters invalid in DNS names
   const hostnameValidator =
     /^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/u;
+  return hostnameValidator.test(name.trim());
+}
+
+function validateHostnameDHCP(name) {
+  // Static DHCP host names may additionally contain underscores inside a label
+  const hostnameValidator =
+    /^[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?)*$/u;
   return hostnameValidator.test(name.trim());
 }
 
@@ -447,10 +466,28 @@ function addFromQueryLog(domain, list) {
           }, 10_000);
         }
       },
-      error() {
-        // Network Error
+      error(xhr) {
         alProcessing.hide();
-        alNetworkErr.show();
+        // A duplicate domain (or any other database error) comes back as an
+        // HTTP error carrying a JSON body - show its message instead of the
+        // generic network error, e.g. "The item is already present"
+        let apiError = xhr.responseJSON && xhr.responseJSON.error;
+        if (!apiError && xhr.responseText) {
+          try {
+            apiError = JSON.parse(xhr.responseText).error;
+          } catch {
+            // Not a JSON response, treat as a genuine network error
+          }
+        }
+
+        if (apiError) {
+          alNetworkErr.hide();
+          alCustomErr.text(apiError.hint || apiError.message);
+        } else {
+          alNetworkErr.show();
+          alCustomErr.text("");
+        }
+
         alFailure.fadeIn(1000);
         setTimeout(() => {
           alertModal.modal("hide");
@@ -589,16 +626,20 @@ function parseQueryString() {
   return Object.fromEntries(params.entries());
 }
 
+// Six hex digits per code point, not four: code points go up to U+10FFFF, so
+// four digits only cover the basic multilingual plane. Anything above it (e.g.
+// emoji) would be encoded as a wider group that hexDecode() cannot split off
+// again, garbling the rest of the string. Both functions must agree on six.
 function hexEncode(text) {
   if (typeof text !== "string" || text.length === 0) return "";
 
-  return [...text].map(char => char.codePointAt(0).toString(16).padStart(4, "0")).join("");
+  return [...text].map(char => char.codePointAt(0).toString(16).padStart(6, "0")).join("");
 }
 
 function hexDecode(text) {
   if (typeof text !== "string" || text.length === 0) return "";
 
-  const hexes = text.match(/.{1,4}/gu);
+  const hexes = text.match(/.{1,6}/gu);
   if (!hexes || hexes.length === 0) return "";
 
   return hexes.map(hex => String.fromCodePoint(Number.parseInt(hex, 16))).join("");
@@ -793,6 +834,7 @@ globalThis.utils = (function () {
     validateMAC,
     validateHostname,
     validateHostnameStrict,
+    validateHostnameDHCP,
     addFromQueryLog,
     addTD,
     toPercent,

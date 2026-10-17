@@ -41,7 +41,6 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
     $("#error-hint").text("");
 
     if ("error" in data.responseJSON && "message" in data.responseJSON.error) {
-      // This is an error, highlight both the password and the TOTP field
       isErrorResponse = true;
       // Check if the error is caused by an invalid TOTP token
       isInvalidTOTP = data.responseJSON.error.message === "Invalid 2FA token";
@@ -52,17 +51,23 @@ function wrongPassword(isError = false, isSuccess = false, data = null) {
       }
     }
 
+    // A wrong password comes back as a session that is not valid rather than as
+    // an error object. Of the error objects, only the invalid 2FA token is about
+    // what was typed - the others are refusals of the server's own (no seats
+    // left, a read-only configuration) and blame neither field
     showErrorMessage(errorMessage);
-    // Always highlight the TOTP field on error
-    if (isErrorResponse) $("#totp_input").addClass("has-error");
+    // Highlight the TOTP field only when the token was rejected
+    if (isInvalidTOTP) {
+      $("#totp_input").addClass("has-error");
 
-    // Only show the invalid 2FA box if the error is caused by an invalid TOTP
-    // token
-    if (isInvalidTOTP) $("#invalid2fa-box").removeClass("hidden");
+      // Only show the invalid 2FA box if the error is caused by an invalid TOTP token
+      $("#invalid2fa-box").removeClass("hidden");
+    }
 
-    // Only highlight the password field if the error is NOT caused by an
-    // invalid TOTP token
-    if (!isInvalidTOTP) $("#pw-field").addClass("has-error");
+    // ...and the password field only when the password was
+    if (!isErrorResponse) {
+      $("#pw-field").addClass("has-error");
+    }
 
     // Only show the forgot password box if the error is NOT caused by an
     // invalid TOTP token and this is no error response (= password is wrong)
