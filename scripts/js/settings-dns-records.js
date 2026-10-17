@@ -19,32 +19,32 @@ function hostsDomain(data) {
     .join(" ")
     .split("#")[0]
     .trim();
-  return name;
+  return utils.escapeHtml(name);
 }
 
 function hostsIP(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
   const ip = data.split(/[\t ]+/u)[0].trim();
-  return ip;
+  return utils.escapeHtml(ip);
 }
 
 function CNAMEdomain(data) {
   // Split record in format <cname>,<target>[,<TTL>]
   const CNAMEarr = data.split(",");
-  return CNAMEarr[0].trim();
+  return utils.escapeHtml(CNAMEarr[0].trim());
 }
 
 function CNAMEtarget(data) {
   // Split record in format <cname>,<target>[,<TTL>]
   const CNAMEarr = data.split(",");
-  return CNAMEarr[1].trim();
+  return utils.escapeHtml(CNAMEarr[1].trim());
 }
 
 function CNAMEttl(data) {
   // Split record in format <cname>,<target>[,<TTL>]
   const CNAMEarr = data.split(",");
-  return CNAMEarr.length > 2 ? CNAMEarr[2] : "-";
+  return CNAMEarr.length > 2 ? utils.escapeHtml(CNAMEarr[2]) : "-";
 }
 
 function populateDataTable(endpoint) {

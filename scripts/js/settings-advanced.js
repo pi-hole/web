@@ -201,7 +201,7 @@ function valueDetails(key, value) {
         '"' +
         extraAttributes +
         ">" +
-        value.value.join("\n") +
+        utils.escapeHtml(value.value.join("\n")) +
         "</textarea> " +
         defaultValueHint +
         addAllowedValues(value.allowed) +
@@ -240,7 +240,7 @@ function valueDetails(key, value) {
         '<label class="col-sm-2 control-label">Value <small>(string)</small></label>' +
         '<div class="col-sm-10">' +
         '<input type="password" class="form-control" value="' +
-        value.value +
+        utils.escapeHtml(value.value) +
         '" data-key="' +
         key +
         '"' +
