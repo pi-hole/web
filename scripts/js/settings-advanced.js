@@ -207,7 +207,7 @@ function valueDetails(key, value) {
         '"' +
         extraAttributes +
         ">" +
-        value.value.join("\n") +
+        utils.escapeHtml(value.value.join("\n")) +
         "</textarea> " +
         defaultValueHint +
         addAllowedValues(value.allowed) +
