@@ -186,15 +186,11 @@ function createToast(alertState) {
   return toast;
 }
 
-function showAlert(type, icon, title, message, oldToastInstance = undefined) {
-  if (oldToastInstance === undefined) {
-    throw new Error("oldToastInstance is required; use null for a new toast");
-  }
-
+function showAlert(type, icon, title, message, oldToastInstance = null) {
   // sets all properties of the alertState object based on the type of alert and the provided parameters
   const alertState = {
     title: escapeHtml(title),
-    message: escapeHtml(message),
+    message: escapeHtml(message ?? ""),
     icon,
     type,
     animation: true,
