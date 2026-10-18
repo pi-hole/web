@@ -26,7 +26,7 @@ function hostsIP(data) {
   // Split record in format IP NAME1 [NAME2 [NAME3 [NAME...]]]
   // We split both on spaces and tabs to support both formats
   const ip = data.split(/[\t ]+/u, 1)[0].trim();
-  return ip;
+  return utils.escapeHtml(ip);
 }
 
 function CNAMEdomain(data) {
