@@ -269,6 +269,7 @@ function createRevServerTable() {
       },
       {
         targets: [1, 2, 3],
+        render: $.fn.dataTable.render.text(),
         // eslint-disable-next-line no-unused-vars
         createdCell(td, cellData, rowData, row, col) {
           $(td).attr("contenteditable", "true").attr("data-initial-value", cellData);
