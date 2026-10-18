@@ -401,7 +401,7 @@ function validatePort(port) {
 
 // Validates the IPv4 server address used by dns.revServers, with an optional port
 function validateIPv4WithPort(ip) {
-  // If a slash is present, its a network range, not a server IP
+  // If a slash is present, it's a network range, not a server IP
   if (ip.includes("/")) {
     return false;
   }
@@ -425,7 +425,7 @@ function validateIPv4WithPort(ip) {
 
 // Validates the IPv6 server address used by dns.revServers, with an optional port
 function validateIPv6WithPort(ip) {
-  // If a slash is present, its a network range, not a server IP
+  // If a slash is present, it's a network range, not a server IP
   if (ip.includes("/")) {
     return false;
   }
