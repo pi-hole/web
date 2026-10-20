@@ -8,10 +8,10 @@
 */
 
 :root {
-  --ph-main: #3f90bf;
-  --ph-main-rgb: 63, 144, 191;
-  --ph-main-dimmed: #327da9;
-  --ph-main-dimmed-rgb: 50, 125, 169;
+  --ph-main: #377da8;
+  --ph-main-rgb: 55, 125, 168;
+  --ph-main-dimmed: #266890;
+  --ph-main-dimmed-rgb: 38, 104, 144;
 
   /* Dashboard graphic bar colors */
   --allowed-color: #00a65a;
@@ -72,17 +72,17 @@
   --bs-success: var(--bs-green);
   --bs-success-rgb: 0, 134, 73;
 
-  --bs-yellow: #f69600;
+  --bs-yellow: #d08400;
   --bs-warning: var(--bs-yellow);
-  --bs-warning-rgb: 238, 158, 0;
+  --bs-warning-rgb: 208, 132, 0;
 
   --bs-cyan: #00abd4;
   --bs-info: var(--bs-cyan);
   --bs-info-rgb: 0, 171, 212;
 
-  --bs-red: #db3626;
+  --bs-red: #d81806;
   --bs-danger: var(--bs-red);
-  --bs-danger-rgb: 219, 54, 38;
+  --bs-danger-rgb: 216, 24, 6;
 
   --bs-gray-100: #f4f6f8;
   --bs-gray-200: #ecf0f5;
@@ -612,11 +612,11 @@ footer a {
   --bs-btn-bg: var(--bs-body-bg);
   --bs-btn-border-color: rgba(var(--bs-secondary-color-rgb), 0.25);
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: color-mix(var(--bs-primary) 88%, #fff);
+  --bs-btn-hover-bg: color-mix(in oklab, var(--bs-primary) 88%, #fff);
   --bs-btn-hover-border-color: var(--bs-primary);
   --bs-btn-focus-shadow-rgb: var(--ph-focus-color-rgb);
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: rgba(var(--bs-primary), 0.75);
+  --bs-btn-active-bg: rgba(var(--bs-primary-rgb), 0.75);
   --bs-btn-active-border-color: var(--ph-main-dimmed);
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: var(--bs-gray);
@@ -782,7 +782,7 @@ footer a {
 }
 
 .small-box > .small-box-footer {
-  color: color-mix(currentColor 70%, transparent);
+  color: color-mix(in oklab, currentColor 70%, transparent);
   background-color: rgba(0, 0, 0, 0.15);
   text-decoration: none;
   transition: all 0.5s;
