@@ -9,7 +9,6 @@
 ]]--
 mg.include('header.lp','r')
 ?>
-    <script src="<?=pihole.fileversion('vendor/bootstrap-notify/bootstrap-notify.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/select2/select2.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables/dataTables.min.js')?>"></script>
     <script src="<?=pihole.fileversion('vendor/datatables/dataTables.bootstrap5.min.js')?>"></script>

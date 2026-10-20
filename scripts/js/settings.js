@@ -8,6 +8,7 @@
 /* global utils:false, apiFailure:false*/
 
 "use strict";
+globalThis.toasts ??= {};
 
 $(() => {
   // Handle hiding of alerts
@@ -173,6 +174,14 @@ function saveSettings() {
     $.extend(true, settings, obj);
   });
 
+  globalThis.toasts.settings = utils.showAlert(
+    "info",
+    "",
+    "Saving and applying settings...",
+    null,
+    null
+  );
+
   // Apply changes
   $.ajax({
     url: document.body.dataset.apiurl + "/config",
@@ -189,14 +198,21 @@ function saveSettings() {
         "success",
         "fa-solid fa-fw fa-floppy-disk",
         "Successfully saved and applied settings",
-        ""
+        "",
+        globalThis.toasts.settings
       );
       // Show loading overlay
       utils.loadingOverlay(true);
     })
     .fail((data, exception) => {
       utils.enableAll();
-      utils.showAlert("error", "", "Error while applying settings", data.responseText);
+      utils.showAlert(
+        "error",
+        "",
+        "Error while applying settings",
+        data.responseText,
+        globalThis.toasts.settings
+      );
       console.log(exception); // eslint-disable-line no-console
       apiFailure(data);
     });
