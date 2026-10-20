@@ -220,6 +220,15 @@ h4 {
   --nav-link-border-color: rgba(127, 127, 127, 0.5);
 }
 
+.nav-tabs-custom > .nav-tabs > .nav-item > .nav-link.active {
+  border-top-color: #fff;
+  color: #fff;
+}
+.nav-tabs-custom > .nav-tabs > .nav-item .nav-link:not(.active):hover {
+  border-top-color: var(--bs-secondary-color);
+  color: var(--bs-secondary-color);
+}
+
 .app-header.navbar {
   background-color: var(--bs-tertiary-bg);
 }
@@ -262,7 +271,7 @@ pre {
 }
 
 code {
-  border: 1px solid color-mix(var(--theme-text) 20%, transparent);
+  border: 1px solid color-mix(in oklab, var(--theme-text) 20%, transparent);
 }
 
 td.highlight {
@@ -368,4 +377,8 @@ input[type="password"]::-webkit-caps-lock-indicator {
 .close:focus,
 .close:hover {
   color: #fff;
+}
+
+.pagination {
+  --bs-pagination-color: var(--bs-secondary-text-emphasis);
 }

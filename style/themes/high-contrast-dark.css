@@ -79,7 +79,7 @@
   --bs-tertiary-bg-rgb: 39, 44, 48;
   --bs-emphasis-color: #fff;
   --bs-emphasis-color-rgb: 255, 255, 255;
-  --bs-code-color: color-mix(var(--bs-warning), #fff);
+  --bs-code-color: color-mix(in oklab, var(--bs-warning), #fff);
 
   --bs-body-color: var(--theme-text);
   --bs-body-bg: #202830;
@@ -273,11 +273,12 @@ Set the color to White or Black (for better contrast), depending on the backgrou
   background-color: var(--bs-secondary-bg);
 }
 .nav-tabs-custom > .nav-tabs > .nav-item > .nav-link.active {
-  border-top-color: var(--bs-primary-text-emphasis);
-  color: var(--bs-primary-text-emphasis);
+  border-top-color: #fff;
+  color: #fff;
 }
 .nav-tabs-custom > .nav-tabs > .nav-item .nav-link:not(.active):hover {
   border-top-color: var(--bs-secondary-color);
+  color: var(--bs-secondary-color);
 }
 
 .nav-pills {

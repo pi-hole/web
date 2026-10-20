@@ -198,7 +198,7 @@ mark {
 }
 
 code {
-  border: 1px solid color-mix(currentColor 20%, transparent);
+  border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
 }
 h3 code {
   border: none;
@@ -608,6 +608,15 @@ Maybe the elements need a different class, but this is probably not used anymore
   background: rgba(0, 0, 0, 0.1);
 }
 
+.nav-tabs-custom > .nav-tabs > .nav-item > .nav-link.active {
+  border-top-color: #fff;
+  color: #fff;
+}
+.nav-tabs-custom > .nav-tabs > .nav-item .nav-link:not(.active):hover {
+  border-top-color: var(--bs-secondary-color);
+  color: var(--bs-secondary-color);
+}
+
 .table.no-border,
 .table.no-border td,
 .table.no-border th {
@@ -676,4 +685,8 @@ input[type="password"]::-webkit-caps-lock-indicator {
 
 td.highlight {
   background-color: rgba(204, 163, 0, 0.33);
+}
+
+.pagination {
+  --bs-pagination-color: var(--bs-secondary-text-emphasis);
 }

@@ -215,6 +215,7 @@ code {
   margin: 0 2px;
   padding: 1px 3px;
   font-family: "Ubuntu Mono", Consolas, "Courier New", monospace;
+  background-color: var(--text-color) !important;
 }
 a code {
   padding: 2px 4px;
@@ -580,11 +581,11 @@ table.table-bordered.dataTable td {
 }
 
 .login-box:has(#forgot-pw-box.card-danger) #current-password {
-  border-color: var(--bs-danger-border-subtle);
+  border-color: var(--bs-danger);
 }
 .login-box:has(#forgot-pw-box.card-danger) #loginform .btn {
   --bs-btn-color: #000;
-  --bs-btn-bg: var(--bs-danger-border-subtle);
+  --bs-btn-bg: var(--bs-danger);
 }
 
 .login-box:has(#forgot-pw-box.card-danger) .btn:not(.btn-tool):hover {
