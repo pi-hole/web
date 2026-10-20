@@ -940,6 +940,16 @@ function setupJoin() {
   const scan = document.querySelector("#join-scan");
   const go = document.querySelector("#join-go");
 
+  // FTL refuses a join without a fingerprint unless certificates are checked
+  // against cluster.tls.ca
+  let haveCA = false;
+  api("/config/cluster/tls/ca").then(answer => {
+    haveCA = Boolean(answer?.config?.cluster?.tls?.ca);
+    if (haveCA) {
+      document.querySelector("#join-pin-note").textContent = "- optional, cluster.tls.ca is set";
+    }
+  });
+
   // FTL refuses both of these unless the connection is encrypted: the password
   // of the other node crosses this one
   if (location.protocol !== "https:") {
@@ -1041,9 +1051,9 @@ function setupJoin() {
       password: document.querySelector("#join-password").value,
     };
 
-    // Optional, and the only thing that can vouch for this one connection:
-    // everything afterwards is signed with the shared secret, which is itself
-    // handed over here
+    // The only thing that can vouch for this one connection: everything
+    // afterwards is signed with the shared secret, which is itself handed over
+    // here
     const pin = document.querySelector("#join-pin").value.trim();
     if (pin !== "") {
       body.pin = pin;
@@ -1058,6 +1068,16 @@ function setupJoin() {
 
     if (body.url === "") {
       utils.showAlert("warning", "", "Nothing to join", "Pick a Pi-hole from the list above");
+      return;
+    }
+
+    if (pin === "" && !haveCA) {
+      utils.showAlert(
+        "warning",
+        "",
+        "Fingerprint missing",
+        "Copy it from the cluster page of the Pi-hole you are joining"
+      );
       return;
     }
 

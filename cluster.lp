@@ -97,17 +97,17 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             </div>
                             <div class="col-12">
                                 <label class="form-label mb-1" for="join-pin">
-                                    Fingerprint of that Pi-hole <span class="text-body-secondary">- optional</span>
+                                    Fingerprint of that Pi-hole <span class="text-body-secondary" id="join-pin-note">- required</span>
                                 </label>
                                 <input type="text" class="form-control font-monospace" id="join-pin"
-                                        autocomplete="off" placeholder="leave empty unless you want it checked">
+                                        autocomplete="off" placeholder="copy it from that Pi-hole's cluster page">
                                 <div class="form-text">
-                                    Every Pi-hole shows its own fingerprint on this page. Leave this
-                                    empty and joining works as it always does. Fill it in and this
-                                    Pi-hole refuses to join through anything that does not present
-                                    exactly that certificate - which protects the one connection a
-                                    cluster cannot check for itself, the one carrying the other
-                                    node's password.
+                                    Every Pi-hole shows its own fingerprint on this page. Copy it from
+                                    the Pi-hole you are joining: this Pi-hole refuses to join through
+                                    anything that does not present exactly that certificate, which
+                                    protects the one connection a cluster cannot check for itself, the
+                                    one carrying the other node's password. It can only be left empty
+                                    when <code>cluster.tls.ca</code> is set here.
                                 </div>
                             </div>
                         </div>
@@ -199,10 +199,9 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <span><i class="fa-solid fa-fingerprint"></i>
                                 <strong>This node's fingerprint</strong></span>
                             <code id="node-pin" class="user-select-all"></code>
-                            <span class="text-body-secondary small ms-auto">Optional. Read it out to
-                                somebody joining through this node and it goes in their
-                                <em>Fingerprint</em> field - carried by hand, because over the
-                                network it would prove nothing</span>
+                            <span class="text-body-secondary small ms-auto">Somebody joining through
+                                this node needs it in their <em>Fingerprint</em> field - carried by
+                                hand, because over the network it would prove nothing</span>
                         </div>
                     </div>
                 </div>
