@@ -52,7 +52,7 @@ mg.include('scripts/lua/header.lp','r')
                             <div id="current-password-error" class="invalid-feedback" role="alert"></div>
                         </div>
                     </div>
-                    <div class="mb-3 hidden" id="totp_input">
+                    <div class="mb-3 d-none" id="totp_input">
                         <div class="input-group">
                             <input type="text" id="totp" size="6" maxlen="6" class="form-control totp_token" placeholder="123456" value="" spellcheck="false" autofocus autocomplete="one-time-code">
                             <span class="input-group-text" data-bs-toggle="tooltip" data-placement="auto" title="TOTP verification code">
@@ -66,7 +66,7 @@ mg.include('scripts/lua/header.lp','r')
                 </form>
                 <div class="row">
                     <div class="col-12">
-                        <div class="card card-danger card-outline hidden mb-3" id="invalid2fa-box">
+                        <div class="card card-danger card-outline d-none mb-3" id="invalid2fa-box">
                             <div class="card-header pointer no-user-select" data-lte-toggle="card-collapse">
                                 <h3 class="card-title">Wrong 2FA token</h3>
                                 <div class="card-tools float-end">

@@ -667,13 +667,13 @@ function checkMessages() {
 
         $(".warning-count").prop("title", title);
         $(".warning-count").text(data.count);
-        $(".warning-count").removeClass("hidden");
+        $(".warning-count").removeClass("d-none");
       } else {
-        $(".warning-count").addClass("hidden");
+        $(".warning-count").addClass("d-none");
       }
     })
     .fail(data => {
-      $(".warning-count").addClass("hidden");
+      $(".warning-count").addClass("d-none");
       apiFailure(data);
     });
 }
@@ -721,53 +721,53 @@ function changeTableButtonStates(table) {
   if (selectedRows === 0) {
     // Nothing selected
     for (const el of selectAllElements) {
-      el.classList.remove("hidden");
+      el.classList.remove("d-none");
     }
 
     for (const el of selectMoreElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
 
     for (const el of removeAllElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
 
     for (const el of deleteSelectedElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
   } else if (selectedRows >= pageLength || selectedRows === allRows) {
     // Whole page is selected (or all available messages were selected)
     for (const el of selectAllElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
 
     for (const el of selectMoreElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
 
     for (const el of removeAllElements) {
-      el.classList.remove("hidden");
+      el.classList.remove("d-none");
     }
 
     for (const el of deleteSelectedElements) {
-      el.classList.remove("hidden");
+      el.classList.remove("d-none");
     }
   } else {
     // Some rows are selected, but not all
     for (const el of selectAllElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
 
     for (const el of selectMoreElements) {
-      el.classList.remove("hidden");
+      el.classList.remove("d-none");
     }
 
     for (const el of removeAllElements) {
-      el.classList.add("hidden");
+      el.classList.add("d-none");
     }
 
     for (const el of deleteSelectedElements) {
-      el.classList.remove("hidden");
+      el.classList.remove("d-none");
     }
   }
 }

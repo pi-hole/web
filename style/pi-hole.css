@@ -2166,15 +2166,6 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23808080' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 
-/* TODO: replace this class with new BS5 classes (and fix javascript code that uses them) */
-/* Bootstrap 5 dropped the `.hidden` utility that Bootstrap 3 (and AdminLTE 2)
-  provided. We still toggle `.hidden` from templates and JS - e.g. the 2FA
-  login field, the diagnosis warning-count badge and the "reset sorting"
-  buttons - so restore it here, otherwise those elements are always shown. */
-.hidden {
-  display: none !important;
-}
-
 .toast {
   --bs-toast-bg: var(--bs-toast-header-bg);
   color: var(--bs-toast-header-color);

@@ -60,7 +60,7 @@ function loginFailure(data) {
     $("#totp_input").addClass("has-error");
 
     // Only show the invalid 2FA box if the error is caused by an invalid TOTP token
-    $("#invalid2fa-box").show();
+    $("#invalid2fa-box").removeClass("d-none");
   }
 
   // ...and the password field only when the password was
@@ -88,7 +88,7 @@ function resetLoginMessages() {
   $("#totp_input").removeClass("has-error");
   $("#error-label").hide();
 
-  $("#invalid2fa-box").hide();
+  $("#invalid2fa-box").addClass("d-none");
   collapseForgotPwBox();
 }
 
@@ -96,7 +96,7 @@ function loginSuccess() {
   $("#pw-field").addClass("has-success");
   $("#totp_input").addClass("has-success");
 
-  $("#invalid2fa-box").hide();
+  $("#invalid2fa-box").addClass("d-none");
   collapseForgotPwBox();
 }
 
@@ -193,10 +193,10 @@ $(() => {
       const session = xhr.responseJSON.session;
       // If TOPT is enabled, show the input field and add the required attribute
       if (session.totp === true) {
-        $("#totp_input").removeClass("hidden");
+        $("#totp_input").removeClass("d-none");
         $("#totp").attr("required", "required");
-        $("#totp-forgotten-title").removeClass("hidden");
-        $("#totp-forgotten-body").removeClass("hidden");
+        $("#totp-forgotten-title").removeClass("d-none");
+        $("#totp-forgotten-body").removeClass("d-none");
       }
     });
 

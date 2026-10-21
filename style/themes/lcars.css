@@ -1028,7 +1028,7 @@ table.table-bordered.dataTable td {
   ) !important;
   border-radius: 25px;
 }
-.sidebar-menu .nav-treeview .nav-link:has(.warning-count:not(.hidden)) {
+.sidebar-menu .nav-treeview .nav-link:has(.warning-count:not(.d-none)) {
   --backlit-color: #fc8;
 }
 
