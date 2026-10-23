@@ -61,7 +61,7 @@ function setConfigValues(topic, key, value) {
     // If this setting has been set by environment variable, display a padlock in the section title
     if (envTitle.find(".env-warning").length === 0) {
       envTitle.append(
-        '<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environmental variable are read-only"></i></span>'
+        '<span class="env-warning">&nbsp;&nbsp;<i class="fas fa-lock text-orange env-warning" title="Settings overwritten by an environment variable are read-only"></i></span>'
       );
     }
 

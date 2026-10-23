@@ -36,7 +36,7 @@ function boxIcons(value) {
       ? '<i class="fas fa-redo text-orange" title="Setting requires FTL restart on change"></i>'
       : "") +
     (value.flags.env_var
-      ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environmental variable are read-only"></i>'
+      ? '<i class="fas fa-lock text-orange" title="Settings overwritten by an environment variable are read-only"></i>'
       : "") +
     (value.readOnly && !value.flags.env_var
       ? '<i class="fas fa-lock text-orange" title="' + utils.escapeHtml(value.readOnly) + '"></i>'
