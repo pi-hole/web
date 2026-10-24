@@ -303,15 +303,16 @@ function getReadOnlyKeys() {
   // An FTL without this endpoint has no such settings
   return $.ajax({
     url: document.body.dataset.apiurl + "/config/_properties",
-  }).then(
-    data =>
-      new Map(
-        data.config.read_only
-          .filter(item => item.reason === "read_only")
-          .map(item => [item.key, item.description])
-      ),
-    () => $.Deferred().resolve(new Map())
-  );
+  })
+    .then(
+      data =>
+        new Map(
+          data.config.read_only
+            .filter(item => item.reason === "read_only")
+            .map(item => [item.key, item.description])
+        )
+    )
+    .catch(() => new Map());
 }
 
 function createDynamicConfigTabs() {

@@ -410,10 +410,12 @@ function initTable() {
       }
 
       const pos = table.column(0, { order: "current" }).data().indexOf(Math.trunc(GETDict.listid));
-      if (pos !== -1) {
-        const page = Math.floor(pos / table.page.info().length);
-        table.page(page).draw(false);
+      if (pos === -1) {
+        return;
       }
+
+      const page = Math.floor(pos / table.page.info().length);
+      table.page(page).draw(false);
     },
   });
 
@@ -453,12 +455,14 @@ function initTable() {
 
   // Disable autocorrect in the search box
   const input = document.querySelector("input[type=search]");
-  if (input !== null) {
-    input.setAttribute("autocomplete", "off");
-    input.setAttribute("autocorrect", "off");
-    input.setAttribute("autocapitalize", "off");
-    input.setAttribute("spellcheck", false);
+  if (input === null) {
+    return;
   }
+
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("spellcheck", false);
 }
 
 // Remove 'bnt-group' class from container, to avoid grouping

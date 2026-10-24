@@ -939,56 +939,58 @@ $(() => {
     updateQueryTypesPie();
   }
 
-  if (document.getElementById("forwardDestinationPieChart")) {
-    ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
-    forwardDestinationPieChart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: [],
-        datasets: [{ data: [], parsing: false }],
-      },
-      plugins: [htmlLegendPlugin],
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        elements: {
-          arc: {
-            borderColor: $(".card").css("background-color"),
-            hoverBorderColor: $(".card").css("background-color"),
-            hoverOffset: 10,
-          },
-        },
-        plugins: {
-          htmlLegend: {
-            containerID: "forward-destinations-legend",
-          },
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            // Disable the on-canvas tooltip
-            enabled: false,
-            external: customTooltips,
-            callbacks: {
-              title() {
-                return "Upstream server";
-              },
-              label: doughnutTooltip,
-            },
-          },
-        },
-        animation: {
-          duration: 750,
-        },
-        layout: {
-          padding: 10,
-        },
-      },
-    });
-
-    // Pull in data via AJAX
-    updateForwardDestinationsPie();
+  if (!document.getElementById("forwardDestinationPieChart")) {
+    return;
   }
+
+  ctx = document.getElementById("forwardDestinationPieChart").getContext("2d");
+  forwardDestinationPieChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: [],
+      datasets: [{ data: [], parsing: false }],
+    },
+    plugins: [htmlLegendPlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      elements: {
+        arc: {
+          borderColor: $(".card").css("background-color"),
+          hoverBorderColor: $(".card").css("background-color"),
+          hoverOffset: 10,
+        },
+      },
+      plugins: {
+        htmlLegend: {
+          containerID: "forward-destinations-legend",
+        },
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          // Disable the on-canvas tooltip
+          enabled: false,
+          external: customTooltips,
+          callbacks: {
+            title() {
+              return "Upstream server";
+            },
+            label: doughnutTooltip,
+          },
+        },
+      },
+      animation: {
+        duration: 750,
+      },
+      layout: {
+        padding: 10,
+      },
+    },
+  });
+
+  // Pull in data via AJAX
+  updateForwardDestinationsPie();
 });
 
 //destroy all chartjs customTooltips on window resize

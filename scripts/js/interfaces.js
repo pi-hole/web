@@ -38,11 +38,7 @@ function extractGateways(gateway) {
   // Get first object in gateway that has family == "inet6"
   const inet6 = gateway.find(obj => obj.family === "inet6");
   // Create a set of the gateways when they are found
-  const gateways = new Set();
-
-  if (inet !== undefined) {
-    gateways.add(inet.gateway);
-  }
+  const gateways = new Set(inet !== undefined ? [inet.gateway] : []);
 
   if (inet6 !== undefined) {
     gateways.add(inet6.gateway);
