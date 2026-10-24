@@ -35,15 +35,15 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <!-- /.card-header -->
                     <div class="card-body">
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="mb-3 col-md-6">
                                 <label for="new_address">Address:</label>
                                 <input id="new_address" type="text" class="form-control" placeholder="URL" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off">
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="mb-3 col-lg-3 col-md-6">
                                 <label for="new_comment">Comment:</label>
                                 <input id="new_comment" type="text" class="form-control" placeholder="List description (optional)">
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="mb-3 col-lg-3 col-md-6">
                                 <label for="new_group">Group assignment:</label>
                                 <div><select class="group-select" id="new_group" multiple></select></div>
                             </div>
@@ -55,7 +55,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <li>Please run <code>pihole -g</code> or update your gravity list <a href="<?=webhome?>gravity">online</a> after modifying your lists.</li>
                             <li>Multiple lists can be added by separating each <em>unique</em> URL with a space or comma</li>
                         </ol>
-                        <div class="btn-toolbar float-end" role="toolbar" aria-label="Toolbar with buttons">
+                        <div class="btn-toolbar float-end gap-2" role="toolbar" aria-label="Toolbar with buttons">
                             <div class="btn-group" role="group">
                                 <button type="button" id="btnAddBlock" class="btn btn-danger float-end">Add blocklist</button>
                             </div>
