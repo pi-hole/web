@@ -23,17 +23,17 @@ mg.include('scripts/lua/header_authenticated.lp','r')
 <div class="app-content">
     <div class="container-fluid">
         <!-- Alerts -->
-        <div id="alertInfo" class="alert alert-info alert-dismissible fade in" role="alert" hidden>
+        <div id="alertInfo" class="alert alert-info alert-dismissible d-none" role="alert">
             <button type="button" class="btn-close" data-hide="alert" aria-label="Close"></button>
             Updating... this may take a while. <strong>Please do not navigate away from or close this page.</strong>
         </div>
-        <div id="alertSuccess" class="alert alert-success alert-dismissible fade in" role="alert" hidden>
+        <div id="alertSuccess" class="alert alert-success alert-dismissible d-none" role="alert">
             <button type="button" class="btn-close" data-hide="alert" aria-label="Close"></button>
             Success!
         </div>
 
         <button type="button" id="gravityBtn" class="btn btn-lg btn-primary w-100">Update</button>
-        <pre id="output" class="bg-body-tertiary text-body mt-3 p-2 border rounded text-body d-none"></pre>
+        <pre id="output" class="mt-3 p-2 border rounded d-none"></pre>
 
     </div><!-- /.container-fluid -->
 </div><!-- /.app-content -->

@@ -339,7 +339,7 @@ $("#modal-apppw").on("shown.bs.modal", () => {
     .done(data => {
       apppwhash = data.app.hash;
       $("#password_code").text(data.app.password);
-      $("#password_display").removeClass("hidden");
+      $("#password_display").removeClass("d-none");
       $("#password-spinner").hide();
     })
     .fail(data => {
@@ -420,8 +420,8 @@ $("#totp_code").on("paste", event => {
 $("#totp_code").on("keyup", function () {
   const code = $(this).val() === "" ? NaN : Math.trunc($(this).val());
   if (Number.isFinite(code) && TOTPdata.codes.includes(code)) {
-    $("#totp_div").removeClass("has-error");
-    $("#totp_div").addClass("has-success");
+    $("#totp_code").removeClass("border-danger");
+    $("#totp_code").addClass("border-success");
     $("#totp_code").prop("disabled", true);
     $("#totp_submit").prop("disabled", false);
     $("#totp_submit").removeClass("btn-secondary");
@@ -439,8 +439,8 @@ function setTOTPSecret(secret) {
     contentType: "application/json; charset=utf-8",
   })
     .done(() => {
-      $("#button-enable-totp").addClass("hidden");
-      $("#button-disable-totp").removeClass("hidden");
+      $("#button-enable-totp").addClass("d-none");
+      $("#button-disable-totp").removeClass("d-none");
       $("#totp_code").val("");
       $("#modal-totp").modal("hide");
       const verb = secret.length > 0 ? "enabled" : "disabled";
@@ -486,9 +486,9 @@ $(() => {
     url: document.body.dataset.apiurl + "/auth",
   }).done(data => {
     if (data.session.totp === false) {
-      $("#button-enable-totp").removeClass("hidden");
+      $("#button-enable-totp").removeClass("d-none");
     } else {
-      $("#button-disable-totp").removeClass("hidden");
+      $("#button-disable-totp").removeClass("d-none");
     }
   });
 });

@@ -23,8 +23,8 @@ function eventsource() {
     outputElement.classList.add("d-none");
   }
 
-  $alertSuccess.hide();
-  $alertInfo.show();
+  $alertSuccess.addClass("d-none");
+  $alertInfo.removeClass("d-none");
 
   fetch(url, {
     method: "POST",
@@ -54,7 +54,7 @@ function handleResponseStream({ response, outputElement, alertInfo, gravityBtn, 
       // When no more data needs to be consumed, close the stream
       if (done) {
         controller.close();
-        alertInfo.hide();
+        alertInfo.addClass("d-none");
         gravityBtn.removeAttribute("disabled");
         return;
       }
@@ -65,7 +65,7 @@ function handleResponseStream({ response, outputElement, alertInfo, gravityBtn, 
       parseLines(outputElement, text);
 
       if (text.includes("Done.")) {
-        alertSuccess.show();
+        alertSuccess.removeClass("d-none");
       }
 
       return pump(controller);
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const hideClass = element.dataset.hide;
       const closestElement = element.closest(`.${hideClass}`);
       if (closestElement) {
-        $(closestElement).hide();
+        $(closestElement).addClass("d-none");
       }
     });
   }

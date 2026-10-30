@@ -41,28 +41,48 @@ PageTitle = "Privacy Settings"
                             <div class="card-header">
                                 <h3 class="card-title" data-configkeys="database.DBimport database.maxDBdays database.network.expire">Privacy-related database settings</h3>
                             </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                            <p>Pi-hole's long-term database is stored at <code id="files.database"></code></p>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="database.DBimport" data-key="database.DBimport" title="log-queries">
-                                            <label class="form-check-label" for="database.DBimport"><strong>Should FTL load queries from the database on (re)start?</strong></label>
+
+                                        <div class="row mb-3">
+                                            <div class="col-lg-12">
+                                                <p>Pi-hole's long-term database is stored at <code id="files.database"></code></p>
+                                                <div class="form-check">
+                                                    <label class="d-inline" for="database.DBimport"><strong>Should FTL load queries from the database on (re)start?</strong>
+                                                        <input class="form-check-input" type="checkbox" id="database.DBimport" data-key="database.DBimport" title="log-queries">
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <br>
-                                        <div class="row-flex">
-                                            <input class="form-control" type="number" id="database.maxDBdays" data-key="database.maxDBdays" data-type="integer" value="" min="0" step="10">
-                                            <label for="database.maxDBdays"><strong>Maximum number of days to keep queries in the database</strong></label>
+
+                                        <div class="row mb-3">
+                                            <div class="col-lg-4">
+                                                <input class="form-control" type="number" id="database.maxDBdays" data-key="database.maxDBdays" data-type="integer" value="" min="0" step="10">
+
+                                            </div>
+                                            <label class="col-lg-8" for="database.maxDBdays"><strong>Maximum number of days to keep queries in the database</strong></label>
                                         </div>
-                                        <div class="row-flex">
-                                            <input class="form-control" type="number" id="database.network.expire" data-key="database.network.expire" data-type="integer" value="" min="0" step="10">
-                                            <label for="database.network.expire"><strong>How long should IP addresses be kept in the network_addresses table [days]?</strong></label>
+
+                                        <div class="row mb-3">
+                                            <div class="col-lg-4">
+                                                <input class="form-control" type="number" id="database.network.expire" data-key="database.network.expire" data-type="integer" value="" min="0" step="10">
+                                            </div>
+                                            <label class="col-lg-8" for="database.network.expire"><strong>How long should IP addresses be kept in the network_addresses table [days]?</strong></label>
                                         </div>
-                                        <p>IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p>IP addresses (and associated host names) older than the specified number of days are removed to avoid dead entries in the network overview table.</p>
+                                            </div>
+                                        </div>
+
+                                    </div><!-- /col-lg-12 -->
+                                </div><!-- /row -->
+                            </div><!-- /card-body -->
+
+                        </div><!-- card -->
                     </div>
                 </div>
             </div>
