@@ -184,7 +184,7 @@ $(() => {
     })
     .fail(xhr => {
       const session = xhr.responseJSON.session;
-      // If TOPT is enabled, show the input field and add the required attribute
+      // If TOTP is enabled, show the input field and add the required attribute
       if (session.totp === true) {
         $("#totp_input").removeClass("hidden");
         $("#totp").attr("required", "required");
