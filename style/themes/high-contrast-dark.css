@@ -84,8 +84,6 @@
   --bs-body-color: var(--theme-text);
   --bs-body-bg: #202830;
   --bs-body-bg-rgb: 32, 40, 48;
-  --bs-success-text-emphasis: var(--bs-success-text-emphasis);
-  --bs-danger-text-emphasis: var(--bs-danger-text-emphasis);
   --bs-light-text-emphasis: var(--bs-gray-100);
   --bs-dark-text-emphasis: var(--bs-gray-300);
   --bs-light-bg-subtle: var(--bs-gray-dark);

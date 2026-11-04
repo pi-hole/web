@@ -139,8 +139,6 @@
   --bs-secondary-color-rgb: var(--bs-body-color-rgb);
   --bs-secondary-bg: var(--bs-gray-dark);
   --bs-tertiary-color-rgb: var(--bs-body-color-rgb);
-  --bs-success-text-emphasis: var(--bs-success-text-emphasis);
-  --bs-danger-text-emphasis: var(--bs-danger-text-emphasis);
   --bs-light-text-emphasis: var(--bs-gray-100);
   --bs-dark-text-emphasis: var(--bs-gray-300);
   --bs-light-bg-subtle: var(--bs-gray-dark);
