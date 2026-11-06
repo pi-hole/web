@@ -1199,7 +1199,7 @@ td.dnssec i {
 .error-box {
   border-width: 2px;
   border-style: solid;
-  animation: error-border 1s infinite;
+  animation: error-border 2s infinite;
 }
 
 .pwd-field {
@@ -2072,13 +2072,36 @@ border-top=1px + padding-top=6px + padding-bottom=6px + border-bottom=1px
   }
 }
 
+.lookatme {
+  color: var(--bs-danger-text-emphasis);
+  opacity: 1;
+  position: relative;
+  display: inline-block;
+}
+
+/* this pseudo element will be faded in and out in front /*
+/* of the lookatme element to create an efficient animation. */
+.lookatme:after {
+  color: var(--bs-danger);
+  text-shadow: 0 0 5px var(--bs-danger);
+  /* in the html, the data-lookatme-text attribute must */
+  /* contain the same text as the .lookatme element */
+  content: attr(data-lookatme-text);
+  padding: inherit;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* 20 steps / 2 seconds = 10fps */
+  animation: 2s infinite Pulse steps(20);
+}
+
 @keyframes error-border {
   0%,
   100% {
-    border-color: rgba(255, 0, 0, 0.5);
+    border-color: rgba(var(--bs-danger-rgb), 0.5);
   }
   50% {
-    border-color: rgba(255, 0, 0, 0.2);
+    border-color: rgba(var(--bs-danger-rgb), 0.2);
   }
 }
 

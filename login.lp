@@ -61,7 +61,7 @@ mg.include('scripts/lua/header.lp','r')
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-primary form-control"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
+                        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;&nbsp;Log in (uses cookie)</button>
                     </div>
                 </form>
                 <div class="row">

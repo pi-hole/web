@@ -600,7 +600,10 @@ input[type="password"]::-webkit-caps-lock-indicator {
 /* Semi-transparent background (alpha=0.5) using the color inverse to the current text color, to ensure high contrast */
 .small-box > .small-box-footer {
   color: currentColor;
-  background: rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 0.5);
+  background: rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 0.36);
+}
+.small-box > .small-box-footer:hover {
+  background: rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 0.64);
 }
 
 /* Tables and Datatables */
