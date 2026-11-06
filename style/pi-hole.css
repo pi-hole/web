@@ -117,7 +117,7 @@
   --bs-link-hover-color: rgb(var(--ph-main-dimmed-rgb));
   --bs-link-hover-color-rgb: var(--ph-main-dimmed-rgb);
 
-  --bs-code-color: #d63384;
+  --bs-code-color: #a90044;
   --bs-border-color: var(--bs-gray-300);
   --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
 
@@ -611,7 +611,7 @@ footer a {
   --bs-btn-bg: var(--bs-body-bg);
   --bs-btn-border-color: rgba(var(--bs-secondary-color-rgb), 0.25);
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: color-mix(in oklab, var(--bs-primary) 88%, #fff);
+  --bs-btn-hover-bg: var(--ph-main-dimmed);
   --bs-btn-hover-border-color: var(--bs-primary);
   --bs-btn-focus-shadow-rgb: var(--ph-focus-color-rgb);
   --bs-btn-active-color: #fff;
@@ -781,13 +781,12 @@ footer a {
 }
 
 .small-box > .small-box-footer {
-  color: color-mix(in oklab, currentColor 70%, transparent);
   background-color: rgba(0, 0, 0, 0.15);
   text-decoration: none;
   transition: all 0.5s;
 }
 .small-box > .small-box-footer:hover {
-  color: currentColor;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 @media screen and (min-width: 768px) {

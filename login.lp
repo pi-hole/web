@@ -23,7 +23,7 @@ mg.include('scripts/lua/header.lp','r')
 
         <div class="card">
             <div class="card-body login-card-body">
-                <div id="cookieInfo" class="card card-danger card-outline text-center text-danger fs-5 p-2 mb-3" hidden>Verify that cookies are allowed</div>
+                <div id="cookieInfo" class="card card-danger card-outline text-center text-danger fs-5 p-2 mb-3 d-none">Verify that cookies are allowed</div>
                 <div class="card card-danger card-outline text-center text-danger fs-5 p-2 mb-3" id="dns-failure-label" style="display: none;">
                     <label>DNS Server failure detected.<br>Log in to see Pi-hole diagnosis messages.</label>
                 </div>

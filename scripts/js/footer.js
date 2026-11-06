@@ -614,7 +614,7 @@ $(() => {
   }
 
   if (!testCookies() && $("#cookieInfo").length > 0) {
-    $("#cookieInfo").show();
+    $("#cookieInfo").removeClass("d-none");
   }
 
   if (!globalThis._isLoginPage) {

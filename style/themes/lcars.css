@@ -1315,7 +1315,7 @@ footer a:focus {
   border: none;
   background-color: var(--text-color);
   box-shadow: none;
-  color: rgba(var(--bs-tertiary-bg-rgb), 0.5);
+  color: rgba(var(--bs-tertiary-bg-rgb), 0.84);
 }
 
 .nav-tabs-custom > .nav-tabs > li > .nav-link.active,

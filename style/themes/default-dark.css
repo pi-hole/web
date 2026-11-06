@@ -8,10 +8,10 @@
 */
 
 :root {
-  --ph-main: #3c8dbc;
-  --ph-main-rgb: 60, 141, 188;
-  --ph-main-dimmed: #2a6384;
-  --ph-main-dimmed-rgb: 42, 99, 132;
+  --ph-main: #14769e;
+  --ph-main-rgb: 20, 118, 158;
+  --ph-main-dimmed: #005e84;
+  --ph-main-dimmed-rgb: 0, 94, 132;
 
   /* Dashboard graphic bars */
   --allowed-color: #12b660;
@@ -122,7 +122,7 @@ html {
 }
 
 h4 {
-  color: var(--bs-primary);
+  color: var(--bs-link-color);
 }
 
 .layout-boxed,
