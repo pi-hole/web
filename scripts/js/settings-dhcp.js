@@ -10,6 +10,7 @@
 "use strict";
 
 let dhcpLeaesTable = null;
+let staticDHCPTable = null;
 globalThis.toasts ??= {};
 
 // DHCP leases tooltips
@@ -374,6 +375,7 @@ $(document).on("click", ".save-static-row", function () {
     $("#StaticDHCPTable button").prop("disabled", false);
     // and re-enable the textarea
     $("#dhcp-hosts").prop("disabled", false);
+    staticDHCPTable.rows().invalidate("dom").draw(false);
   }
 });
 
@@ -413,6 +415,7 @@ $(document).on("click", ".cancel-static-row", function () {
     $("#StaticDHCPTable button").prop("disabled", false);
     // and re-enable the textarea
     $("#dhcp-hosts").prop("disabled", false);
+    staticDHCPTable.rows().invalidate("dom").draw(false);
   }
 });
 
@@ -435,20 +438,12 @@ $(document).on("click", ".add-static-row", function () {
   $("#dhcp-hosts").val(lines.join("\n"));
   // Hide the tooltip
   bootstrap.Tooltip.getInstance(this)?.hide();
-  renderStaticDHCPTable();
-  // Focus the new row after render
-  setTimeout(() => {
-    $("#StaticDHCPTable tbody tr")
-      .eq(rowIdx + 1)
-      .find("td:first")
-      .focus();
-  }, 10);
+  renderStaticDHCPTable(rowIdx + 1);
 });
 
 // Update table on load and whenever textarea changes
 $(() => {
   processDHCPConfig();
-  renderStaticDHCPTable();
   $("#dhcp-hosts").on("input", () => {
     // Don't rebuild the table while a row is being edited (a Save button exists),
     // otherwise unsaved cell edits would be silently destroyed by tbody.empty()
@@ -491,7 +486,10 @@ $(document).on("focus input", "#StaticDHCPTable td[contenteditable]", function (
 });
 
 // On table redraw, ensure all buttons are enabled and hints are removed
-function renderStaticDHCPTable() {
+function renderStaticDHCPTable(focusRow) {
+  const page = staticDHCPTable?.page();
+  // Restore detached pages before rebuilding from the authoritative textarea.
+  staticDHCPTable?.destroy();
   const tbody = $("#StaticDHCPTable tbody");
   tbody.empty();
   const lines = $("#dhcp-hosts").val().split(/\r?\n/u);
@@ -517,7 +515,10 @@ function renderStaticDHCPTable() {
 
     if (parsed === "advanced") {
       tr.addClass("table-warning").append(
-        `<td colspan="3" class="text-muted"><em>Advanced settings present in line</em> ${idx + 1}</td>`
+        $("<td></td>").append(
+          $('<em class="text-muted"></em>').text(`Advanced settings present in line ${idx + 1}`)
+        ),
+        "<td></td><td></td>"
       );
     } else {
       const cell = '<td contenteditable="true"></td>';
@@ -552,6 +553,47 @@ function renderStaticDHCPTable() {
   }
 
   tbody.find(".delete-static-row, .add-static-row").prop("disabled", false);
+  staticDHCPTable = $("#StaticDHCPTable").DataTable({
+    order: [[1, "asc"]],
+    columnDefs: [
+      { targets: 1, type: "ip-address" },
+      { targets: 3, orderable: false, searchable: false },
+    ],
+    // Do not detach a row with unsaved edits when sorting, filtering or paging.
+    preDrawCallback() {
+      return $("#StaticDHCPTable .save-static-row").length === 0;
+    },
+    lengthMenu: [
+      [10, 25, 50, 100, -1],
+      [10, 25, 50, 100, "All"],
+    ],
+    stateSave: true,
+    stateDuration: 0,
+    stateSaveCallback(settings, data) {
+      utils.stateSaveCallback("static-dhcp-table", data);
+    },
+    stateLoadCallback() {
+      return utils.stateLoadCallback("static-dhcp-table");
+    },
+  });
+
+  if (focusRow === undefined) {
+    if (page !== undefined) {
+      staticDHCPTable.page(Math.min(page, staticDHCPTable.page.info().pages - 1)).draw("page");
+    }
+  } else {
+    // A new blank row may not match the current filter or sort next to its source.
+    staticDHCPTable.search("").draw();
+    const row = staticDHCPTable.row(`tr[data-row="${focusRow}"]`);
+    const position = staticDHCPTable
+      .rows({ order: "applied", search: "applied" })
+      .indexes()
+      .indexOf(row.index());
+    const length = staticDHCPTable.page.len();
+    staticDHCPTable.page(length === -1 ? 0 : Math.floor(position / length)).draw("page");
+    $(row.node()).find("td:first").focus();
+  }
+
   showLineNumbers();
 }
 
