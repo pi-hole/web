@@ -24,19 +24,19 @@ PageTitle = "Web Interface - API Settings"
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="row form-group">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label for="webserver.interface.theme">Theme:</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-control" placeholder="">
+                                        <select id="webserver.interface.theme" data-key="webserver.interface.theme" class="form-select" placeholder="">
                                             <option disabled selected>Loading...</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <div class="row form-group">
+                                <div class="row mb-3">
                                     <div class="col-sm-12">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="webserver.interface.boxed" data-key="webserver.interface.boxed">
@@ -73,8 +73,8 @@ PageTitle = "Web Interface - API Settings"
                                 </div>
                             </div>
                             <div class="col-lg-12 pt-3">
-                                <button type="button" id="button-enable-totp" class="btn btn-success hidden" data-bs-toggle="modal" data-bs-target="#modal-totp">Enable 2FA</button>
-                                <button type="button" id="button-disable-totp" class="btn btn-danger hidden" data-bs-toggle="modal" data-bs-target="#modal-totp-disable">Disable 2FA</button>
+                                <button type="button" id="button-enable-totp" class="btn btn-success d-none" data-bs-toggle="modal" data-bs-target="#modal-totp">Enable 2FA</button>
+                                <button type="button" id="button-disable-totp" class="btn btn-danger d-none" data-bs-toggle="modal" data-bs-target="#modal-totp-disable">Disable 2FA</button>
                                 <button type="button" id="button-apppw" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#modal-apppw">Configure app password</button>
                             </div>
                         </div>
@@ -110,31 +110,6 @@ PageTitle = "Web Interface - API Settings"
                     </div>
                 </div>
             </div>
-
-            <!-- TODO: Why is this commented out?
-            <div class="col-md-6">
-                <div class="card card-warning card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">Query Log</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div>
-                                    <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <? if queryLog == 'permittedonly' or queryLog == 'all' then ?>checked<? end ?>>
-                                    <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
-                                    <p class="help-block"><span class="text-red">This will show all permitted domain entries in the query log.</span></p>
-                                </div>
-                                <div>
-                                    <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <? if queryLog == 'blockedonly' or queryLog == 'all' then ?>checked<? end ?>>
-                                    <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
-                                    <p class="help-block"><span class="text-red">This will show all blocked domain entries in the query log.</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
 
             <div class="col-md-12 settings-level-expert d-none">
                 <div class="card card-warning card-outline">
@@ -194,7 +169,7 @@ PageTitle = "Web Interface - API Settings"
                         <div class="row">
                             <div class="col-md-6 offset-md-3">
                                 <div id="totp_div">
-                                    <div class="pwd-field form-group has-error">
+                                    <div class="pwd-field mb-3">
                                         <div class="input-group">
                                             <input type="text" size="6" maxlength="6" class="form-control totp_token" id="totp_code" placeholder="">
                                             <span class="input-group-text" data-bs-toggle="tooltip" data-placement="auto" title="TOTP verification code">
@@ -234,7 +209,7 @@ PageTitle = "Web Interface - API Settings"
                         <div class="text-center">
                             <i id="password-spinner" class="fas fa-spinner fa-pulse fa-5x"></i>
                         </div>
-                        <p id="password_display" class="text-center hidden">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
+                        <p id="password_display" class="text-center d-none">&#x1F510;<br><strong>Your new app password is:</strong><br><code class="password_background m-5" id="password_code"></code></p>
                         <p>IMPORTANT: The app password generated here will only be shown
                         once and cannot be recovered. Make sure to store it in a safe
                         place!</p>

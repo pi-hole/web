@@ -21,7 +21,7 @@ PageTitle = "All Settings"
             </div>
 
             <div class="col-sm-12" id="advanced-settings-menu">
-                <ul class="nav nav-pills" role="tablist">
+                <ul class="nav nav-pills flex-column flex-sm-row" role="tablist">
                     <!-- dynamically filled with content -->
                 </ul>
             </div>

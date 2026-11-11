@@ -38,13 +38,13 @@ PageTitle = "Teleporter"
                         <h3 class="card-title">Import previously exported configuration</h3>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="file">File input</label>
                             <input type="file" name="file" id="file" accept="application/gzip,application/zip">
                             <br>
                             <p class="help-block">When importing settings from a <em>newer</em> version of Pi-hole, not yet existing settings will be ignored. When importing from an <em>older</em> version of Pi-hole, settings for newer features will be initialized with their default values.</p>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="import-selection">Select what to import</label>
                             <div class="form-check"><input class="import-select form-check-input" type="checkbox" id="import.config" data-key="config" checked><label class="form-check-label" for="import.config"><strong>Configuration</strong></label></div>
                             <div class="form-check"><input class="import-select form-check-input" type="checkbox" id="import.dhcp_leases" data-key="dhcp_leases" checked><label class="form-check-label" for="import.dhcp_leases"><strong>DHCP leases</strong></label></div>
