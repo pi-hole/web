@@ -457,10 +457,6 @@ function updateSummaryData(runOnce = false) {
 
     $("span#dns_queries").text(intl.format(newCount));
     $("span#active_clients").text(intl.format(Math.trunc(Number(data.clients.active))));
-    $("a#total_clients").attr(
-      "title",
-      intl.format(Math.trunc(Number(data.clients.total))) + " total clients"
-    );
     $("span#blocked_queries").text(intl.format(Math.trunc(Number(data.queries.blocked))));
     const formattedPercentage = utils.toPercent(data.queries.percent_blocked, 1);
     $("span#percent_blocked").text(formattedPercentage);
