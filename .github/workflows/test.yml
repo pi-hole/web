@@ -9,13 +9,21 @@ on:
     branches:
       - "**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   FORCE_COLOR: 2
+
+permissions: {}
 
 jobs:
   run:
     name: Node
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # to read the repository contents
 
     steps:
       - name: Clone repository

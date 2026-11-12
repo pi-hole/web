@@ -14,6 +14,8 @@ updates:
         dependency-type: "production"
       development-dependencies:
         dependency-type: "development"
+    cooldown:
+      default-days: 7
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
@@ -26,6 +28,8 @@ updates:
       github_action-dependencies:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
   - package-ecosystem: "docker"
     directory: "/.devcontainer/"
     schedule:
@@ -33,3 +37,5 @@ updates:
       day: saturday
       time: "10:00"
     target-branch: development
+    cooldown:
+      default-days: 7

@@ -5,9 +5,18 @@ on:
     branches:
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
 jobs:
   sync-branches:
     runs-on: ubuntu-slim
+    permissions:
+      contents: read # to read the repository contents
+      pull-requests: write # to open the sync pull request
     name: Syncing branches
     steps:
       - name: Clone repository
