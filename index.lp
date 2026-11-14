@@ -57,7 +57,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <div class="icon">
                         <i class="fas fa-chart-pie"></i>
                     </div>
-                    <a href="queries" class="small-box-footer">
+                    <a href="queries?upstream=" class="small-box-footer">
                         List all queries <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>

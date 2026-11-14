@@ -141,6 +141,21 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Query Log view">
+                                <button type="button" class="btn btn-outline-secondary" data-query-view="" aria-pressed="false">All queries</button>
+                                <button type="button" class="btn btn-outline-secondary" data-query-view="blocklist" aria-pressed="false">Blocked only</button>
+                                <button type="button" class="btn btn-outline-secondary" data-query-view="permitted" aria-pressed="false">Allowed only</button>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="default-query-view" class="mb-0 text-nowrap">Default view</label>
+                                <select id="default-query-view" class="form-select form-select-sm w-auto">
+                                    <option value="">All queries</option>
+                                    <option value="blocklist">Blocked only</option>
+                                    <option value="permitted">Allowed only</option>
+                                </select>
+                            </div>
+                        </div>
                         <p>Click on a query log item to obtain additional information for this query.</p>
                         <table id="all-queries" class="table table-striped table-bordered" width="100%">
                             <thead>
