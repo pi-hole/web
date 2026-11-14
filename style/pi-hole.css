@@ -974,6 +974,10 @@ footer a {
 }
 
 /*** Query Log page ***/
+[data-query-view] {
+  --bs-btn-color: var(--bs-body-color);
+}
+
 /* Allow and Deny buttons */
 .btn-whitelist {
   --bs-btn-bg: var(--bs-body-bg);
