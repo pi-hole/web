@@ -336,7 +336,10 @@ function editGroup() {
   utils.disableAll();
   globalThis.toasts.EditGroup = utils.showAlert("info", "", "Editing group...", oldName, null);
   $.ajax({
-    url: document.body.dataset.apiurl + "/groups/" + oldName,
+    // Identify the group with an "item" query parameter rather than a path
+    // segment, so a name of "." or ".." (a WHATWG URL dot segment the browser
+    // strips) survives (requires the FTL "?item=" fallback, pi-hole/FTL#2953).
+    url: document.body.dataset.apiurl + "/groups?item=" + encodeURIComponent(oldName),
     method: "put",
     dataType: "json",
     processData: false,
