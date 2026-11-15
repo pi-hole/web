@@ -25,7 +25,7 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                     <div class="icon">
                         <i class="fas fa-globe-americas"></i>
                     </div>
-                    <a href="network" class="small-box-footer" id="total_clients">
+                    <a href="network" class="small-box-footer">
                         <span id="active_clients">-</span> active clients <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
