@@ -20,6 +20,7 @@ let from = null;
 let until = null;
 
 const dateformat = "MMM Do YYYY, HH:mm";
+const defaultViewKey = "query-log-default-view";
 
 let table = null;
 let cursor = null;
@@ -457,9 +458,8 @@ function formatInfo(data) {
   );
 }
 
-function addSelectSuggestion(name, dict, data) {
+function setSelectSuggestions(name, value, suggestions) {
   const obj = $("#" + name + "_filter");
-  let value = "";
   obj.empty();
 
   // In order for the placeholder value to appear, we have to have a blank
@@ -469,31 +469,25 @@ function addSelectSuggestion(name, dict, data) {
   // placeholder.
   obj.append($("<option />"));
 
-  // Add GET parameter as first suggestion (if present and not already included)
-  if (Object.hasOwn(dict, name)) {
-    value = decodeURIComponent(dict[name]);
-    if (!data.includes(value)) {
-      data.unshift(value);
-    }
+  // Preserve the selected value even when it isn't in the API suggestions.
+  if (value && !suggestions.includes(value)) {
+    obj.append($("<option />").val(value).text(value));
   }
 
-  // Add data obtained from API
-  for (const text of Object.values(data)) {
+  for (const text of suggestions) {
     obj.append($("<option />").val(text).text(text));
   }
 
-  // Select GET parameter (if present)
-  if (Object.hasOwn(dict, name)) {
-    obj.val(value);
-  }
+  obj.val(value ?? "").trigger("change.select2");
 }
 
-function getSuggestions(dict) {
+function getSuggestions() {
   $.get(
     document.body.dataset.apiurl + "/queries/suggestions",
     data => {
-      for (const filter of Object.values(filters)) {
-        addSelectSuggestion(filter, dict, data.suggestions[filter]);
+      const activeFilters = parseFilters();
+      for (const filter of filters) {
+        setSelectSuggestions(filter, activeFilters[filter], data.suggestions[filter]);
       }
     },
     "json"
@@ -502,6 +496,23 @@ function getSuggestions(dict) {
 
 function parseFilters() {
   return Object.fromEntries(filters.map(filter => [filter, $(`#${filter}_filter`).val()]));
+}
+
+function updateViewButtons(upstream) {
+  $("[data-query-view]").each(function () {
+    const selected = this.dataset.queryView === (upstream ?? "");
+    $(this).toggleClass("active", selected).attr("aria-pressed", String(selected));
+  });
+}
+
+function applyQueryView(upstream) {
+  const filter = $("#upstream_filter");
+  if (upstream && [...filter[0].options].every(option => option.value !== upstream)) {
+    filter.append($("<option />").val(upstream).text(upstream));
+  }
+
+  filter.val(upstream).trigger("change.select2");
+  refreshTable();
 }
 
 function filterOn(param, dict) {
@@ -563,10 +574,17 @@ $(() => {
   // Do we want to show DNSSEC icons?
   getDnssecConfig();
 
-  // Do we want to filter queries?
-  const GETDict = utils.parseQueryString();
+  const initialFilters = utils.parseQueryString();
+  const savedView = localStorage.getItem(defaultViewKey);
+  const defaultView = savedView === "blocklist" || savedView === "permitted" ? savedView : "";
+  $("#default-query-view").val(defaultView);
+  // Dashboard and bookmarked links specify their own filters.
+  if (Object.keys(initialFilters).length === 0 && defaultView) {
+    initialFilters.upstream = defaultView;
+  }
 
   for (const [sel, element] of Object.entries(filters)) {
+    setSelectSuggestions(element, initialFilters[element], []);
     $(`#${element}_filter`).select2({
       theme: "bootstrap-5",
       width: "100%",
@@ -576,15 +594,16 @@ $(() => {
     });
   }
 
-  getSuggestions(GETDict);
-  const apiURL = getAPIURL(GETDict);
+  getSuggestions();
+  updateViewButtons(initialFilters.upstream);
+  const apiURL = getAPIURL(initialFilters);
 
-  if ("from" in GETDict) {
-    from = Number(GETDict.from);
+  if ("from" in initialFilters) {
+    from = Number(initialFilters.from);
   }
 
-  if ("until" in GETDict) {
-    until = Number(GETDict.until);
+  if ("until" in initialFilters) {
+    until = Number(initialFilters.until);
   }
 
   table = $("#all-queries").DataTable({
@@ -794,6 +813,12 @@ $(() => {
   });
 
   $("#refresh").on("click", refreshTable);
+  $("[data-query-view]").on("click", event => {
+    applyQueryView(event.currentTarget.dataset.queryView);
+  });
+  $("#default-query-view").on("change", event => {
+    localStorage.setItem(defaultViewKey, event.currentTarget.value);
+  });
 
   // Disable live mode when #disk is checked
   $("#disk").on("click", function () {
@@ -816,6 +841,7 @@ function refreshTable() {
 
   // Source data from API
   const activeFilters = parseFilters();
+  updateViewButtons(activeFilters.upstream);
   activeFilters.from = from;
   activeFilters.until = until;
   const apiUrl = getAPIURL(activeFilters);
