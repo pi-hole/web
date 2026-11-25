@@ -1438,6 +1438,7 @@ tfoot.add-new-item > tr > th {
 
 /* Client column */
 #all-queries td:nth-of-type(5) {
+  min-width: 117px;
   word-break: break-all;
 }
 

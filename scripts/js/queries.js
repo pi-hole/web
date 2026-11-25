@@ -770,7 +770,7 @@ $(() => {
 
           // Replace footer text with input field for searchable columns
           const input = document.createElement("input");
-          input.classList.add("form-control", "form-control-sm", "w-auto");
+          input.classList.add("form-control", "form-control-sm");
           input.placeholder = this.footer().textContent;
           this.footer().replaceChildren(input);
 
