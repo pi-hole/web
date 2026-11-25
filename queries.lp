@@ -161,10 +161,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <thead>
                                 <tr>
                                     <th>Time</th>
-                                    <th></th>
-                                    <th>Type</th>
+                                    <th title="Status"></th>
+                                    <th title="Type"></th>
                                     <th>Domain</th>
                                     <th>Client</th>
+                                    <th>Reply</th>
                                     <th><i class="fas fa-stopwatch" title="Query reply time"></i></th>
                                     <th></th>
                                 </tr>
@@ -172,10 +173,11 @@ mg.include('scripts/lua/header_authenticated.lp','r')
                             <tfoot>
                                 <tr>
                                     <th>Time</th>
-                                    <th></th>
+                                    <th title="Status"></th>
                                     <th>Type</th>
                                     <th>Domain</th>
                                     <th>Client</th>
+                                    <th>Reply</th>
                                     <th><i class="fas fa-stopwatch" title="Query reply time"></i></th>
                                     <th></th>
                                 </tr>

@@ -643,7 +643,7 @@ $(() => {
     columns: [
       {
         data: "time",
-        width: "10%",
+        width: "1%",
         render(data, type) {
           if (type === "display") {
             return moment.unix(data).format("Y-MM-DD [<br class='d-xl-none'>]HH:mm:ss z");
@@ -655,10 +655,22 @@ $(() => {
       },
       { data: "status", width: "1%", searchable: false },
       { data: "type", width: "1%", searchable: false },
-      { data: "domain", width: "45%" },
-      { data: "client.ip", width: "29%", type: "ip-address" },
-      { data: "reply.time", width: "4%", render: formatReplyTime, searchable: false },
-      { data: null, width: "10%", sortable: false, searchable: false },
+      { data: "domain" },
+      { data: "client.ip", type: "ip-address" },
+      {
+        data: "reply",
+        width: "2%",
+        render(data, type) {
+          if (type === "display") {
+            return data.type;
+          }
+
+          return data;
+        },
+        searchable: false,
+      },
+      { data: "reply.time", width: "2%", render: formatReplyTime, searchable: false },
+      { data: null, width: "1%", sortable: false, searchable: false },
     ],
     lengthMenu: [
       [10, 25, 50, 100, 500, 1000],
@@ -736,11 +748,12 @@ $(() => {
 
       // Show X-icon instead of reply time if no reply was received
       if (data.reply.type === "UNKNOWN") {
-        $("td:eq(5)", row).html('<i class="fa fa-times"></i>');
+        $("td:eq(5)", row).html("");
+        $("td:eq(6)", row).html('<i class="fa fa-times"></i>');
       }
 
       if (querystatus.buttontext !== false) {
-        $("td:eq(6)", row).html(querystatus.buttontext);
+        $("td:eq(7)", row).html(querystatus.buttontext);
       }
     },
     initComplete() {
